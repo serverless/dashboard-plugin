@@ -11,6 +11,7 @@
   },
   "description": "Serverless Plugin APM",
   "devDependencies": {
+    "babel-core": "6",
     "babel-loader": "^7.0.0",
     "circular-json": "^0.3.1",
     "cross-spawn": "^6.0.4",
@@ -36,7 +37,7 @@
       "testProjects/"
     ]
   },
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "name": "serverless-plugin-apm",
   "pre-commit": [
     "lint"

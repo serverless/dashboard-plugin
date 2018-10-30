@@ -15,3 +15,4 @@ iopipe-handlers.js
 .iopipe
 iopipe_handlers
 .serverlessUnzipped
+node_modules/*

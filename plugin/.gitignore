@@ -6,7 +6,6 @@
 v8-compile-cache-*
 jest/*
 coverage
-dist
 .serverless_plugins
 testProjects/*/package-lock.json
 testProjects/*/yarn.lock
