@@ -1,8 +1,0 @@
-.DS_Store
-spec/*
-*.test.js
-__mocks__
-__snapshots__
-jest
-coverage
-testProject
