@@ -1,0 +1,14 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "apm-plugin": "git+https://b57e8e23665c5fe425db5f76db627a61b4fab7ed:x-oauth-basic@github.com/serverless/apm-plugin.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
