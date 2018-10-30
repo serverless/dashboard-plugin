@@ -1,0 +1,15 @@
+service: example
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: prod
+  region: us-west-2
+plugins:
+  - serverless-plugin-iopipe
+environment:
+  IOPIPE_TOKEN: ${env:IOPIPE_TOKEN}
+functions:
+  hello:
+    handler: index.handler
+custom:
+  iopipeNoVerify: true

@@ -1,0 +1,20 @@
+{
+  "name": "sls-unit-test-local-invoke",
+  "version": "0.0.0-test",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "@iopipe/iopipe": "^1.5.0",
+    "cross-spawn": "^6.0.5",
+    "got": "^8.3.0",
+    "serverless-offline": "^3.20.2"
+  },
+  "scripts": {
+    "build": "echo 'No need to build'",
+    "start": "SLS_DEBUG=* IOPIPE_TOKEN=test_token node ../../node_modules/serverless/bin/serverless offline start",
+    "test": "IOPIPE_TOKEN=test_token node test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}

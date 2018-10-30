@@ -1,0 +1,32 @@
+{
+  "name": "sls-unit-test-cosmi",
+  "version": "0.0.0-test",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "@iopipe/core": "1.13.0",
+    "@iopipe/event-info": "^0.1.1",
+    "@iopipe/logger": "^1.0.0",
+    "@iopipe/trace": "^0.3.0"
+  },
+  "scripts": {
+    "build": "SLS_DEBUG=* IOPIPE_TOKEN='test-token' node ../../node_modules/serverless/bin/serverless package",
+    "test": "node ../../node_modules/jest/bin/jest.js",
+    "validate": "npm run build && npm run jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "iopipe": {
+    "plugins": [
+      "@iopipe/event-info",
+      "@iopipe/trace",
+      [
+        "@iopipe/logger",
+        {
+          "enabled": true
+        }
+      ]
+    ]
+  }
+}
