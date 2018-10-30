@@ -1,0 +1,47 @@
+service: sls-test
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: prod
+  region: us-west-2
+plugins:
+  - serverless-plugin-iopipe/index.js
+environment:
+  NODE_ENV: ${env:NODE_ENV}
+  IOPIPE_TOKEN: ${env:IOPIPE_TOKEN}
+custom:
+  iopipeQuote: double
+  iopipeExclude: excluded,foo
+  iopipePlaceholder: false
+  extraCustomKey: true
+  iopipeTestInterpolate: ${env:NODE_ENV}
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "logs:*"
+    Resource:
+      - "*"
+functions:
+  simple:
+    handler: handlers/simple.handler
+  multiple:
+    handler: handlers/multiple.handler
+  multipleDifferentHandler:
+    handler: handlers/multiple.differentNameHandler
+  es5:
+    handler: handlers/es5.handler
+  multiple-dots-in-name:
+    handler: handlers/multiple.dots.in.name.handler
+  noModule:
+    handler: handlers/noModule.handler
+  excluded:
+    handler: handlers/excluded.handler
+  syntaxError:
+    handler: handlers/syntaxError.handler
+  es5Named:
+    handler: handlers/es5Named.handler
+  python:
+    handler: python/main.longRunning
+    runtime: python2.7
+  nameMismatch:
+    handler: handlers/differentName.wow

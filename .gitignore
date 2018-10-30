@@ -1,0 +1,13 @@
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.log
+.serverless
+v8-compile-cache-*
+jest/*
+coverage
+.serverless_plugins
+testProjects/*/package-lock.json
+testProjects/*/yarn.lock
+.serverlessUnzipped
+node_modules

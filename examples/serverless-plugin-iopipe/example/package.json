@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "iopipe": "^1.1.0"
+  },
+  "devDependencies": {
+    "serverless": "^1.23.0",
+    "serverless-plugin-iopipe": "^0.3.3"
+  }
+}

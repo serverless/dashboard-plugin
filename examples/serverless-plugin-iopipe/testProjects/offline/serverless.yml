@@ -1,0 +1,23 @@
+service: sls-iopipe-offline-test
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: prod
+  region: us-west-2
+environment:
+  IOPIPE_TOKEN: ${env:IOPIPE_TOKEN}
+plugins:
+  - serverless-plugin-iopipe/index.js
+  - serverless-offline
+functions:
+  index:
+    handler: handlers/index.handler
+    events:
+      - http:
+          path: /
+          method: get
+custom:
+  serverless-offline:
+    port: 4982
+    host: 127.0.0.1
+  iopipeHandlerDir: iopipe_handlers

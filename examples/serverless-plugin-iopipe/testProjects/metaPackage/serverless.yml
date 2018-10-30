@@ -1,0 +1,26 @@
+service: sls-iopipe
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: prod
+  region: us-west-2
+plugins:
+  - serverless-plugin-iopipe/index.js
+environment:
+  NODE_ENV: ${env:NODE_ENV}
+  IOPIPE_TOKEN: ${env:IOPIPE_TOKEN}
+custom:
+  iopipeQuote: double
+  iopipeExclude: excluded,foo
+  iopipePlaceholder: false
+  extraCustomKey: true
+  iopipeTestInterpolate: ${env:NODE_ENV}
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "logs:*"
+    Resource:
+      - "*"
+functions:
+  simple:
+    handler: handlers/simple.handler

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Generated files requires plugin and includes plugin inline 1`] = `
+"const iopipe = require('@iopipe/core')({\\"plugins\\":[require('@iopipe/event-info')(),require('@iopipe/trace')(),require('@iopipe/logger')({\\"enabled\\":true})],\\"token\\":\\"test-token\\",\\"installMethod\\":\\"serverless-plugin-iopipe@0.0.0-semantically-released\\"});
+
+let handler, handlerError;
+// The following is an automatically generated require statement by the plugin,
+// aimed to provide syntax/type errors to the IOpipe service.
+// The original file is imported as text with capitalized tokens replaced.
+try {
+  handler = require('../handlers/simple');
+} catch (err) {
+  handlerError = err;
+}
+
+exports['simple'] = function attemptSimple(event, context, callback) {
+  try {
+    return iopipe((evt, ctx, cb) => {
+      if (handlerError) {
+        return cb(handlerError);
+      }
+      return handler.handler(evt, ctx, cb);
+    })(event, context, callback);
+  } catch (err) {
+    throw err;
+  }
+};
+"
+`;
