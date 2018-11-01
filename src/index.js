@@ -26,7 +26,6 @@ function outputHandlerCode(obj = {}, apmConfig) {
     .replace(/REGION/g, apmConfig.region)
     .replace(/PROVIDER/g, apmConfig.provider)
 }
-
 class ServerlessApmPlugin {
   constructor(sls, options) {
     this.sls = sls
@@ -152,12 +151,6 @@ class ServerlessApmPlugin {
     })
   }
 
-  getInstalledPackageName({ dependencies } = this.package) {
-    return ['@iopipe/iopipe', '@iopipe/core', 'iopipe'].find((s) =>
-      _.keys(dependencies).find((n) => n === s)
-    )
-  }
-
   log(arg1, ...rest) {
     //sls doesn't actually support multiple args to log?
     /*eslint-disable no-console*/
@@ -169,7 +162,6 @@ class ServerlessApmPlugin {
 
   getConfig() {
     const { token } = this.getOptions()
-    /// what does this do?
     const { config: cosmi = {} } =
       cosmiconfig('apm', {
         cache: false,
@@ -179,7 +171,6 @@ class ServerlessApmPlugin {
 
     const plugins = (cosmi.plugins || []).map((plugin) => {
       // plugins can be specified as strings or as arrays with 2 entries
-      // ["@iopipe/trace", ["@iopipe/logger", {"enabled": true}]]
       // create require calls for each scenario
       const pluginModule = _.isArray(plugin) ? plugin[0] : plugin
       const pluginConfig = _.isArray(plugin) ? JSON.stringify(plugin[1]) : ''
@@ -219,7 +210,7 @@ class ServerlessApmPlugin {
     const debug = createDebugger('assignHandlers')
     debug('Assigning apm handlers to sls service')
     const { handlerDir } = this.getOptions()
-    console.log('before funcs', this.funcs)
+
     this.funcs.forEach((obj) => {
       _.set(
         this.sls.service.functions,
@@ -227,7 +218,6 @@ class ServerlessApmPlugin {
         posix.join(handlerDir, `${obj.name}-apm.${obj.name}`)
       )
     })
-    console.log('after funcs', this.funcs)
   }
 
   finish() {
@@ -236,11 +226,6 @@ class ServerlessApmPlugin {
     debug(`Removing ${this.handlerFileName}.js`)
     const { handlerDir = 'apm_handlers' } = this.getOptions()
     fs.removeSync(join(this.originalServicePath, handlerDir))
-    // this.track({
-    //   action: 'finish'
-    // })
-    //   .then(_.noop)
-    //   .catch(debug)
   }
 }
 

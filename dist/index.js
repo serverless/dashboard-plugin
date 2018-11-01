@@ -227,9 +227,6 @@ module.exports = function(modules) {
                 _fsExtra2.default.writeFileSync((0, _path.join)(this.originalServicePath, (0, _path.join)(handlerDir, `${func.name}-apm.js`)), contents);
             });
         }
-        getInstalledPackageName({dependencies: dependencies} = this.package) {
-            return [ "@iopipe/iopipe", "@iopipe/core", "iopipe" ].find(s => _lodash2.default.keys(dependencies).find(n => n === s));
-        }
         log(arg1, ...rest) {
             const logger = this.sls.cli.log || logger.call(this.sls.cli, `serverless-plugin-apm: ${arg1}`, ...rest);
         }
@@ -267,11 +264,9 @@ module.exports = function(modules) {
             const debug = createDebugger("assignHandlers");
             debug("Assigning apm handlers to sls service");
             const {handlerDir: handlerDir} = this.getOptions();
-            console.log("before funcs", this.funcs);
             this.funcs.forEach(obj => {
                 _lodash2.default.set(this.sls.service.functions, `${obj.name}.handler`, _path.posix.join(handlerDir, `${obj.name}-apm.${obj.name}`));
             });
-            console.log("after funcs", this.funcs);
         }
         finish() {
             const debug = createDebugger("finish");
