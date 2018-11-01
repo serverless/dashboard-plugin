@@ -11,7 +11,8 @@ try {
 if (!apm.isStarted()) {
   apm.start({
     serviceName: 'SERVICE_NAME',
-    serverUrl: 'http://apm.signalmalt.com'
+    serverUrl: 'http://apm.signalmalt.com',
+    logLevel: 'debug'
   })
 }
 
@@ -30,7 +31,7 @@ apm.addFilter(function(payload) {
     let functionName
     // strip out the app name (should strip out the stage too)
     if (item.context.custom.lambda.functionName.includes(serverless.applicationName)) {
-      shortFnName = item.context.custom.lambda.functionName.slice(
+      functionName = item.context.custom.lambda.functionName.slice(
         applicationName.length + 1,
         item.context.custom.lambda.functionName.length
       )
