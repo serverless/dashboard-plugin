@@ -55,7 +55,6 @@ class ServerlessApmPlugin {
   run() {
     this.setOptions({})
     this.getApmConfig()
-    console.log(this.options)
     this.getFuncs()
     this.log('Wrapping your functions...')
     this.createFiles()
