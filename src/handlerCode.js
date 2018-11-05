@@ -1,7 +1,5 @@
 let handler, handlerError
-const util = require('util')
 
-const writeFile = util.promisify(fs.writeFile)
 // The following is an automatically generated require statement by the plugin,
 // aimed to provide syntax/type errors to the IOpipe service.
 // The original file is imported as text with capitalized tokens replaced.
