@@ -1,4 +1,7 @@
 let handler, handlerError
+const util = require('util')
+
+const writeFile = util.promisify(fs.writeFile)
 // The following is an automatically generated require statement by the plugin,
 // aimed to provide syntax/type errors to the IOpipe service.
 // The original file is imported as text with capitalized tokens replaced.
@@ -52,15 +55,12 @@ apm.addFilter(function(payload) {
   return payload
 })
 
-exports['EXPORT_NAME'] = function FUNCTION_NAME(event, context, callback) {
-  try {
-    return apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {
-      if (handlerError) {
-        return cb(handlerError)
-      }
-      return handler.METHOD(evt, ctx, cb)
-    })(event, context, callback)
-  } catch (err) {
-    throw err
+const isPromise = (value) => value != null && typeof value.then === 'function'
+
+exports['EXPORT_NAME'] = apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {
+  const result = handler.METHOD(evt, ctx, cb)
+  if (isPromise(result)) {
+    return result.then((result) => cb(null, result)).catch((error) => cb(error))
   }
-}
+  return result
+})

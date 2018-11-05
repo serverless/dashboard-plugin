@@ -43,7 +43,7 @@ module.exports = function(modules) {
     return __webpack_require__(__webpack_require__.s = 7);
 }([ function(module, exports, __webpack_require__) {
     "use strict";
-    module.exports = "let handler, handlerError\n// The following is an automatically generated require statement by the plugin,\n// aimed to provide syntax/type errors to the IOpipe service.\n// The original file is imported as text with capitalized tokens replaced.\ntry {\n  handler = require('../RELATIVE_PATH')\n} catch (err) {\n  handlerError = err\n}\n\nif (!apm.isStarted()) {\n  apm.start({\n    serviceName: 'SERVICE_NAME',\n    serverUrl: 'http://apm.signalmalt.com',\n    logLevel: 'debug'\n  })\n}\n\n// Better way to do this?\napm.addFilter(function(payload) {\n  // the payload can either contain an array of transactions or errors\n  var items = payload.transactions || payload.errors || []\n  const serverless = {\n    tenantId: 'TENANT_NAME',\n    applicationName: 'APPLICATION_NAME',\n    serviceName: 'SERVICE_NAME',\n    region: 'REGION',\n    provider: 'PROVIDER'\n  }\n  items.map((item) => {\n    let functionName\n    // strip out the app name (should strip out the stage too)\n    if (item.context.custom.lambda.functionName.includes(serverless.applicationName)) {\n      functionName = item.context.custom.lambda.functionName.slice(\n        applicationName.length + 1,\n        item.context.custom.lambda.functionName.length\n      )\n    } else {\n      functionName = item.context.custom.lambda.functionName\n    }\n\n    item.context.tags = {\n      ...item.context.tags,\n      ...serverless,\n      functionName\n    }\n    console.log(item.context.tags)\n  })\n\n  payload.service.name = 'SERVICE_NAME'\n\n  return payload\n})\n\nexports['EXPORT_NAME'] = function FUNCTION_NAME(event, context, callback) {\n  try {\n    return apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {\n      if (handlerError) {\n        return cb(handlerError)\n      }\n      return handler.METHOD(evt, ctx, cb)\n    })(event, context, callback)\n  } catch (err) {\n    throw err\n  }\n}\n";
+    module.exports = "let handler, handlerError\nconst util = require('util')\n\nconst writeFile = util.promisify(fs.writeFile)\n// The following is an automatically generated require statement by the plugin,\n// aimed to provide syntax/type errors to the IOpipe service.\n// The original file is imported as text with capitalized tokens replaced.\ntry {\n  handler = require('../RELATIVE_PATH')\n} catch (err) {\n  handlerError = err\n}\n\nif (!apm.isStarted()) {\n  apm.start({\n    serviceName: 'SERVICE_NAME',\n    serverUrl: 'http://apm.signalmalt.com',\n    logLevel: 'debug'\n  })\n}\n\n// Better way to do this?\napm.addFilter(function(payload) {\n  // the payload can either contain an array of transactions or errors\n  var items = payload.transactions || payload.errors || []\n  const serverless = {\n    tenantId: 'TENANT_NAME',\n    applicationName: 'APPLICATION_NAME',\n    serviceName: 'SERVICE_NAME',\n    region: 'REGION',\n    provider: 'PROVIDER'\n  }\n  items.map((item) => {\n    let functionName\n    // strip out the app name (should strip out the stage too)\n    if (item.context.custom.lambda.functionName.includes(serverless.applicationName)) {\n      functionName = item.context.custom.lambda.functionName.slice(\n        applicationName.length + 1,\n        item.context.custom.lambda.functionName.length\n      )\n    } else {\n      functionName = item.context.custom.lambda.functionName\n    }\n\n    item.context.tags = {\n      ...item.context.tags,\n      ...serverless,\n      functionName\n    }\n    console.log(item.context.tags)\n  })\n\n  payload.service.name = 'SERVICE_NAME'\n\n  return payload\n})\n\nconst isPromise = (value) => value != null && typeof value.then === 'function'\n\nexports['EXPORT_NAME'] = apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {\n  const result = handler.METHOD(evt, ctx, cb)\n  if (isPromise(result)) {\n    return result.then((result) => cb(null, result)).catch((error) => cb(error))\n  }\n  return result\n})\n";
 }, function(module, exports) {
     module.exports = {
         name: "serverless-apm-plugin",
@@ -209,6 +209,7 @@ module.exports = function(modules) {
                         file: _lodash2.default.last((handlerArr.slice(-2, -1)[0] || "").split("/"))
                     });
                 }).value();
+                console.log(this.funcs);
             } catch (err) {
                 console.error("Failed to read functions from serverless.yml.");
                 throw new Error(err);
@@ -219,10 +220,10 @@ module.exports = function(modules) {
             debug("Creating file");
             const {inlineConfig: inlineConfig} = this.getConfig();
             const {handlerDir: handlerDir} = this.getOptions();
-            const iopipeInclude = `const apm = require('elastic-apm-node');`;
+            const apmInclude = `const apm = require('elastic-apm-node');`;
             this.funcs.forEach(func => {
                 const handler = outputHandlerCode(func, this.apmConfig);
-                const contents = `${iopipeInclude}\n\n${handler}`;
+                const contents = `${apmInclude}\n\n${handler}`;
                 _fsExtra2.default.ensureDirSync((0, _path.join)(this.originalServicePath, handlerDir));
                 _fsExtra2.default.writeFileSync((0, _path.join)(this.originalServicePath, (0, _path.join)(handlerDir, `${func.name}-apm.js`)), contents);
             });
@@ -264,9 +265,11 @@ module.exports = function(modules) {
             const debug = createDebugger("assignHandlers");
             debug("Assigning apm handlers to sls service");
             const {handlerDir: handlerDir} = this.getOptions();
+            console.log("before func", this.funcs);
             this.funcs.forEach(obj => {
                 _lodash2.default.set(this.sls.service.functions, `${obj.name}.handler`, _path.posix.join(handlerDir, `${obj.name}-apm.${obj.name}`));
             });
+            console.log("after func", this.funcs);
         }
         finish() {
             const debug = createDebugger("finish");

@@ -125,6 +125,7 @@ class ServerlessApmPlugin {
           })
         })
         .value()
+      console.log(this.funcs)
     } catch (err) {
       /*eslint-disable no-console*/
       console.error('Failed to read functions from serverless.yml.')
@@ -138,11 +139,11 @@ class ServerlessApmPlugin {
     debug('Creating file')
     const { inlineConfig } = this.getConfig()
     const { handlerDir } = this.getOptions()
-    const iopipeInclude = `const apm = require('elastic-apm-node');`
+    const apmInclude = `const apm = require('elastic-apm-node');`
 
     this.funcs.forEach((func) => {
       const handler = outputHandlerCode(func, this.apmConfig)
-      const contents = `${iopipeInclude}\n\n${handler}`
+      const contents = `${apmInclude}\n\n${handler}`
       fs.ensureDirSync(join(this.originalServicePath, handlerDir))
       fs.writeFileSync(
         join(this.originalServicePath, join(handlerDir, `${func.name}-apm.js`)),
@@ -211,6 +212,7 @@ class ServerlessApmPlugin {
     debug('Assigning apm handlers to sls service')
     const { handlerDir } = this.getOptions()
 
+    console.log('before func', this.funcs)
     this.funcs.forEach((obj) => {
       _.set(
         this.sls.service.functions,
@@ -218,6 +220,7 @@ class ServerlessApmPlugin {
         posix.join(handlerDir, `${obj.name}-apm.${obj.name}`)
       )
     })
+    console.log('after func', this.funcs)
   }
 
   finish() {
