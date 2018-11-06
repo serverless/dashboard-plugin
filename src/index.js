@@ -125,7 +125,6 @@ class ServerlessApmPlugin {
           })
         })
         .value()
-      console.log(this.funcs)
     } catch (err) {
       /*eslint-disable no-console*/
       console.error('Failed to read functions from serverless.yml.')
@@ -212,7 +211,6 @@ class ServerlessApmPlugin {
     debug('Assigning apm handlers to sls service')
     const { handlerDir } = this.getOptions()
 
-    console.log('before func', this.funcs)
     this.funcs.forEach((obj) => {
       _.set(
         this.sls.service.functions,
@@ -220,7 +218,6 @@ class ServerlessApmPlugin {
         posix.join(handlerDir, `${obj.name}-apm.${obj.name}`)
       )
     })
-    console.log('after func', this.funcs)
   }
 
   finish() {
