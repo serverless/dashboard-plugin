@@ -74,17 +74,18 @@ exports['EXPORT_NAME'] = apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {
     console.log(typeof result)
     if (isPromise(result)) {
       console.log('inside promise', result)
-      return result
+      result
         .then((value) => {
           console.log('this is the cb', cb)
           console.log('calling cb with', value)
           cb(null, value)
         })
         .catch((error) => cb(error))
+      return
     }
+    return result
   } catch (err) {
     console.log('in the error', err)
     throw err
   }
-  return result
 })
