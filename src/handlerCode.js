@@ -55,10 +55,36 @@ apm.addFilter(function(payload) {
 
 const isPromise = (value) => value != null && typeof value.then === 'function'
 
+// exports['EXPORT_NAME'] = function FUNCTION_NAME(event, context, callback) {
+//   try {
+//     return apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {
+//       if (handlerError) {
+//         return cb(handlerError)
+//       }
+//       return handler.METHOD(evt, ctx, cb)
+//     })(event, context, callback)
+//   } catch (err) {
+//     throw err
+//   }
+// }
+
 exports['EXPORT_NAME'] = apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {
-  const result = handler.METHOD(evt, ctx, cb)
-  if (isPromise(result)) {
-    return result.then((result) => cb(null, result)).catch((error) => cb(error))
+  try {
+    const result = handler.METHOD(evt, ctx, cb)
+    console.log(typeof result)
+    if (isPromise(result)) {
+      console.log('inside promise', result)
+      return result
+        .then((value) => {
+          console.log('this is the cb', cb)
+          console.log('calling cb with', value)
+          cb(null, value)
+        })
+        .catch((error) => cb(error))
+    }
+  } catch (err) {
+    console.log('in the error', err)
+    throw err
   }
   return result
 })
