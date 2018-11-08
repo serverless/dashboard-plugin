@@ -7,11 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "elastic-apm-node": "git+https://07a01e4e5f66400a13cbbb3377759512dbfa771f:x-oauth-basic@github.com/westergaards/apm-agent-nodejs.git#demo-agent"
+    "elastic-apm-node": "git+https://{yourtoken}:x-oauth-basic@github.com/serverless/apm-serverless-agent.git#demo-agent"
   },
   "devDependencies": {
-    "serverless": "^1.32.0",
-    "serverless-offline": "^3.30.0"
+    "serverless-apm-plugin": "git+https://{yourtoken}:x-oauth-basic@github.com/serverless/apm-plugin.git",
+    "serverless-offline": "^3.31.0"
   },
   "author": "",
   "license": "ISC"
