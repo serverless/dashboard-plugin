@@ -11,3 +11,4 @@ testProjects/*/package-lock.json
 testProjects/*/yarn.lock
 .serverlessUnzipped
 node_modules
+.vscode/
