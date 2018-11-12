@@ -57,7 +57,9 @@ const isPromise = (value) => value != null && typeof value.then === 'function'
 exports['EXPORT_NAME'] = apm.lambda('PROVIDER-REGION', (evt, ctx, cb) => {
   try {
     const result = handler.METHOD(evt, ctx, cb)
-    console.log(typeof result)
+    if (handlerError) {
+      return cb(handlerError)
+    }
     if (isPromise(result)) {
       result
         .then((value) => {
