@@ -10,7 +10,7 @@
     "webpack": "webpack"
   },
   "dependencies": {
-    "elastic-apm-node": "git+https://07a01e4e5f66400a13cbbb3377759512dbfa771f:x-oauth-basic@github.com/apm-serverless-agent.git#demo-agent",
+    "elastic-apm-node": "git+https://07a01e4e5f66400a13cbbb3377759512dbfa771f:x-oauth-basic@github.com/serverless/apm-serverless-agent.git#demo-agent",
     "cosmiconfig": "^3",
     "debug": "^2.6.8",
     "fs-extra": "^5.0.0",
