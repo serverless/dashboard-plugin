@@ -1,0 +1,19 @@
+{
+  "schemaType": "s-compute-aws-lambda",
+  "schemaVersion": "0.0",
+  "functionName": null,
+  "functionVersion": null,
+  "arn": null,
+  "region": null,
+  "memorySize": null,
+  "invokeId": null,
+  "awsRequestId": null,
+  "xTraceId": null,
+  "logGroupName": null,
+  "logStreamName": null,
+  "envPlatform": null,
+  "envArch": null,
+  "envMemoryTotal": null,
+  "envMemoryFree": null,
+  "envCpus": null
+}

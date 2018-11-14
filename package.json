@@ -1,8 +1,8 @@
 {
-  "name": "platform-plugin",
-  "version": "1.0.0",
+  "name": "serverless-platform-plugin",
+  "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "NODE_ENV=production npm run folder && npm run webpack && npm run uglify",
     "folder": "rm -rf dist && mkdir dist",
@@ -10,39 +10,10 @@
     "webpack": "webpack"
   },
   "dependencies": {
-    "elastic-apm-node": "git+https://07a01e4e5f66400a13cbbb3377759512dbfa771f:x-oauth-basic@github.com/apm-serverless-agent.git#demo-agent",
-    "cosmiconfig": "^3",
-    "debug": "^2.6.8",
-    "fs-extra": "^5.0.0",
-    "babel-core": "^6.26.3",
-    "babel-cli": "^6.26.0",
-    "babel-jest": "^21.2.0",
-    "babel-macros": "^1.2.0",
-    "babel-plugin-dynamic-import-node": "^1.2.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-minify-dead-code-elimination": "^0.2.0",
-    "babel-plugin-module-resolver": "2.7.1",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-inline-environment-variables": "^0.2.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.10",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1"
+    "fs-extra": "^7.0.1"
   },
   "devDependencies": {
-    "adm-zip": "^0.4.7",
-    "babel-loader": "^7.0.0",
-    "circular-json": "^0.3.1",
-    "cross-spawn": "^6.0.4",
-    "pre-commit": "^1.2.2",
-    "raw-loader": "^0.5.1",
-    "serverless": "1.23.0",
-    "uglify-es": "^3.0.27",
-    "webpack": "^2.6.1",
-    "webpack-node-externals": "^1.6.0",
-    "yargs": "^11.0.0"
+    "webpack": "4.24.0"
   },
   "author": "",
   "license": "ISC"

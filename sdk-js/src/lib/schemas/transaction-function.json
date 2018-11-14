@@ -1,0 +1,26 @@
+{
+  "schemaType": "s-transaction-function",
+  "schemaVersion": "0.0",
+  "timestamp": null,
+  "transactionId": null,
+  "traceId": null,
+  "tenantId": null,
+  "applicationName": null,
+  "serviceName": null,
+  "stageName": null,
+  "functionName": null,
+  "compute": {
+    "type": "unknown",
+    "runtime": null,
+    "region": null,
+    "memorySize": null,
+    "duration": null,
+    "custom": {}
+  },
+  "event": {
+    "type": "unknown",
+    "timestamp": null,
+    "source": null,
+    "custom": {}
+  }
+}

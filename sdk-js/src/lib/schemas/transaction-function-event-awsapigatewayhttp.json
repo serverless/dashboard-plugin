@@ -1,0 +1,19 @@
+{
+  "schemaType": "s-event-aws-apigateway-http",
+  "schemaVersion": "0.0",
+  "accountId": null,
+  "apiId": null,
+  "resourceId": null,
+  "domainPrefix": null,
+  "stage": null,
+  "domain": null,
+  "requestId": null,
+  "extendedRequestId": null,
+  "requestTime": null,
+  "requestTimeEpoch": null,
+  "httpPath": null,
+  "httpMethod": null,
+  "xTraceId": null,
+  "xForwardedFor": null,
+  "userAgent": null
+}

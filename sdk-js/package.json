@@ -1,0 +1,24 @@
+{
+  "name": "serverless-sdk-js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "NODE_ENV=production npm run folder && npm run webpack",
+    "folder": "rm -rf dist && mkdir dist",
+    "webpack": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "camelcase-keys": "^5.0.0",
+    "elastic-apm-node": "^1.14.2",
+    "flat": "^4.1.0",
+    "lodash": "^4.17.11",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
