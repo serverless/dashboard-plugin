@@ -47,10 +47,10 @@ class ServerlessPlatformPlugin {
     return async () => {
       switch(hook) {
         case 'before:package:createDeploymentArtifacts':
-          // await wrap(self)
+          await wrap(self)
           break
         case 'after:package:createDeploymentArtifacts':
-          // await wrapClean(self)
+          await wrapClean(self)
           break
         case 'before:deploy:function:packageFunction':
           // await wrap(self)

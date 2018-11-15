@@ -56,6 +56,8 @@ class ServerlessSDK {
     if (missing) throw new Error(`ServerlessSDK: Handler requires a ${missing} property in a config object`)
 
     // Add global defaults
+    // WARNING: This data is accessed in function handlers.  Therefore, DON'T add values that are request-specific.
+    // WARNING: This will result in data from prevous requests affecting the current request
     meta.tenantId = meta.tenantId || (this.$.tenantId || null)
     meta.applicationName = meta.applicationName || (this.$.applicationName || null)
     meta.serviceName = meta.serviceName || (this.$.serviceName || null)
@@ -85,21 +87,30 @@ class ServerlessSDK {
         if (self.$.config.debug) console.log(`ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`)
 
         // Defaults
-        const functionContext = this
         event = event || {}
         context = context || {}
+        const functionContext = this
+        let eventType
 
         /*
         * Auto-Detect: Event Type
         */
 
         // aws.apigateway.http
-        if ((!meta.eventType || meta.eventType === 'unknown') && event.httpMethod && event.headers && event.requestContext) {
-          meta.eventType = 'aws.apigateway.http'
+        if (event.httpMethod && event.headers && event.requestContext) {
+          eventType = 'aws.apigateway.http'
         }
 
         // Start transaction
-        const trans = self.transaction(meta)
+        const trans = self.transaction({
+          tenantId: meta.tenantId,
+          applicationName: meta.applicationName,
+          serviceName: meta.serviceName,
+          stageName: meta.stageName,
+          functionName: meta.functionName,
+          computeType: meta.computeType,
+          eventType: eventType,
+        })
 
         // Capture Compute Data: aws.lambda
         trans.set('compute.runtime', `aws.lambda.nodejs.${process.versions.node}`)
@@ -122,7 +133,7 @@ class ServerlessSDK {
         trans.set('compute.custom.envCpus', JSON.stringify(os.cpus()))
 
         // Capture Event Data: aws.apigateway.http
-        if (meta.eventType === 'aws.apigateway.http') {
+        if (eventType === 'aws.apigateway.http') {
           trans.set('event.timestamp', (new Date(event.requestContext.requestTimeEpoch)).toISOString())
           trans.set('event.source', 'aws.apigateway')
           trans.set('event.custom.accountId', event.requestContext.accountId)

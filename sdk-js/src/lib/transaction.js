@@ -9,9 +9,10 @@ const uuidv4 = require('uuid/v4')
 const elastic = require('elastic-apm-node')
 
 /*
-* Load & Cache Schemas
+* Cache
 */
 
+// Schemas
 const schemas = {
   transactionFunction: require('./schemas/transaction-function.json')
 }
@@ -42,6 +43,7 @@ class Transaction {
     this.$ = {
       schema: null,
       eTransaction: null,
+      duration: Date.now(), // start transaction timer
     }
 
     /*
@@ -59,6 +61,9 @@ class Transaction {
     this.$.schema.functionName = data.functionName
     this.$.schema.compute.type = data.computeType
     this.$.schema.event.type = data.eventType || 'unknown'
+
+    // Track uptime of container
+    this.$.schema.compute.containerUptime = process.uptime()
 
     // Extend Schema: If "compute" is "aws.lambda"
     if (this.$.schema.compute.type === 'aws.lambda') {
@@ -88,7 +93,7 @@ class Transaction {
       elastic.start({
         serviceName: data.serviceName,
         serverUrl: 'http://apm.signalmalt.com',
-        logLevel: 'fatal', // 'trace', 'debug'
+        logLevel: 'fatal', // 'trace', 'debug', 'fatal'
         // secretToken: '',
       })
     }
@@ -130,6 +135,11 @@ class Transaction {
   */
 
   end(cb) {
+
+    // End transaction timer
+    let duration = Date.now() - this.$.duration
+    this.set('compute.duration', duration)
+
     // Flatten and camelCase schema because EAPM tags are only key/value=string
     let tags = flatten(this.$.schema)
     tags = camelCaseKeys(tags)

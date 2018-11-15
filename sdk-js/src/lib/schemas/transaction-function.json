@@ -15,6 +15,7 @@
     "region": null,
     "memorySize": null,
     "duration": null,
+    "containerUptime": null,
     "custom": {}
   },
   "event": {
