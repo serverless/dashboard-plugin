@@ -3,6 +3,7 @@ const os = require('os')
 const path = require('path')
 
 const wrap = require('./lib/wrap.js')
+const wrapClean = require('./lib/wrapClean.js')
 
 /*
 * Serverless Platform Plugin
@@ -45,10 +46,26 @@ class ServerlessPlatformPlugin {
     const self = this
     return async () => {
       switch(hook) {
+        case 'before:package:createDeploymentArtifacts':
+          await wrap(self)
+          break
+        case 'after:package:createDeploymentArtifacts':
+          await wrapClean(self)
+          break
+        case 'before:deploy:function:packageFunction':
+          await wrap(self)
+          break
         case 'before:invoke:local:invoke':
           await wrap(self)
           break
         case 'after:invoke:local:invoke':
+          await wrapClean(self)
+          break
+        case 'before:offline:start:init':
+          await wrap(self)
+          break
+        case 'before:step-functions-offline:start':
+          await wrap(self)
           break
       }
     }

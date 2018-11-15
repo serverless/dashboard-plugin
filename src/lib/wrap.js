@@ -54,17 +54,17 @@ module.exports = async (ctx) => {
   * Wrap Functions
   */
 
-  const pathAssets = path.join(ctx.sls.config.servicePath, 'serverless-sdk')
+  ctx.state.pathAssets = path.join(ctx.sls.config.servicePath, 'serverless-sdk')
 
   // Clear existing handler dir
-  if (fs.pathExistsSync(pathAssets)) fs.removeSync(pathAssets)
+  if (fs.pathExistsSync(ctx.state.pathAssets)) fs.removeSync(ctx.state.pathAssets)
 
   // Create new handler dir
-  fs.ensureDirSync(pathAssets)
+  fs.ensureDirSync(ctx.state.pathAssets)
 
   // Copy SDK
   const pathSdk = path.resolve(__dirname, '../../sdk-js/dist/index.js')
-  const pathSdkDest = path.join(pathAssets, './index.js')
+  const pathSdkDest = path.join(ctx.state.pathAssets, './index.js')
   fs.copySync(pathSdk, pathSdkDest)
 
   // Prepare & Copy Function Handlers
