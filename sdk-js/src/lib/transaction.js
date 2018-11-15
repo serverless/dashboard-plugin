@@ -134,9 +134,9 @@ class Transaction {
     let tags = flatten(this.$.schema)
     tags = camelCaseKeys(tags)
     this.$.eTransaction.addTags(tags)
-    console.log(this.$.schema)
     this.$.eTransaction.end()
     elastic.flush(cb)
+    if (cb) return cb()
   }
 }
 

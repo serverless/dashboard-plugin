@@ -20,7 +20,7 @@ class ServerlessSDK {
   constructor(obj) {
     this.$ = {}
     this.$.config = {}
-    this.$.config.debug = obj.tenantId || false
+    this.$.config.debug = obj.config ? (obj.config.debug || false) : false
 
     this.$.tenantId = obj.tenantId || null
     this.$.applicationName = obj.applicationName || null
@@ -48,6 +48,8 @@ class ServerlessSDK {
     const meta = {}
     config = config || {}
 
+    if (self.$.config.debug) console.log(`ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`)
+
     // Enforce required config
     let missing
     if (!config.functionName) missing = 'functionName'
@@ -73,8 +75,14 @@ class ServerlessSDK {
     /*
     * Wrapper: AWS Lambda
     */
-    if (config.computeType === 'aws.lambda') {
+
+    if (meta.computeType === 'aws.lambda') {
+
+      if (self.$.config.debug) console.log(`ServerlessSDK: Handler: Loading AWS Lambda handler...`)
+
       return (event, context, callback) => {
+
+        if (self.$.config.debug) console.log(`ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`)
 
         // Defaults
         const functionContext = this
@@ -86,7 +94,7 @@ class ServerlessSDK {
         */
 
         // aws.apigateway.http
-        if (!config.eventType && event.httpMethod && event.headers && event.requestContext) {
+        if ((!meta.eventType || meta.eventType === 'unknown') && event.httpMethod && event.headers && event.requestContext) {
           meta.eventType = 'aws.apigateway.http'
         }
 
@@ -140,6 +148,8 @@ class ServerlessSDK {
         */
 
         const wrappedCallback = (error, res) => {
+
+          if (self.$.config.debug) console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
 
           // Temporary Hack - Needed to comply w/ EAPM
           trans.$.eTransaction.setCustomContext({
@@ -201,6 +211,8 @@ class ServerlessSDK {
           })
         }
       }
+    } else {
+      throw new Error(`ServerlessSDK: Invalid Functions-as-a-Service compute type "${meta.computeType}"`)
     }
   }
 }
