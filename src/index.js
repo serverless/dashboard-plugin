@@ -2,7 +2,7 @@ const fs = require('fs-extra')
 const os = require('os')
 const path = require('path')
 
-const packager = require('./lib/packager.js')
+const wrap = require('./lib/wrap.js')
 
 /*
 * Serverless Platform Plugin
@@ -14,12 +14,7 @@ class ServerlessPlatformPlugin {
 
     // Defaults
     this.sls = sls
-    this.config = {
-      packager: {
-        enabled: true,
-        assetsDir: path.join(this.sls.config.servicePath, 'serverless-sdk')
-      }
-    }
+    this.state = {}
 
     // Check if Platform is configured
     let missing
@@ -30,19 +25,33 @@ class ServerlessPlatformPlugin {
       this.sls.cli.log(`Warning: The Serverless Platform Plugin requires a "${missing}" property in your "serverless.yml" and will not work without it.`)
     }
 
-    // Init Features
-    if (this.config.packager.enabled) this.packager()
-
-    // Init other features here...
-
+    // Set Plugin hooks for all Platform Plugin features here
+    this.hooks = {
+      'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this),
+      'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this),
+      'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this),
+      'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
+      'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
+      'before:offline:start:init': this.route('before:offline:start:init').bind(this),
+      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this),
+    }
   }
 
   /*
-  * Packager
+  * Route
   */
 
-  packager() {
-    packager.init()
+  route(hook) {
+    const self = this
+    return async () => {
+      switch(hook) {
+        case 'before:invoke:local:invoke':
+          await wrap(self)
+          break
+        case 'after:invoke:local:invoke':
+          break
+      }
+    }
   }
 }
 
