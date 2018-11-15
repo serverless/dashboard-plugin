@@ -2,6 +2,8 @@
 
 This is a Serverless Framework plugin which helps you use advanced monitoring, tracing and governance features via the Serverless Platform.
 
+The Plugin automatically wraps your functions and instruments them with the Serverless Platform's monitoring, alerting, logging and tracing features.
+
 ## Quick-Start
 
 This isn't published to npm yet, so first clone this repo.
