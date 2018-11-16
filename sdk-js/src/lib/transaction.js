@@ -125,8 +125,12 @@ class Transaction {
   * - Sends the error and ends the transaction
   */
 
-  error(err, cb) {
-    elastic.captureError(err)
+  error(error, cb) {
+    // Create id for this error to uniquely identify its type
+    let id = '${' + error.name + '}'
+    id = error.message ? id + '${' + error.message.toString().substring(0, 100) + '}' : id
+    this.set('error.id', id)
+    elastic.captureError(error)
     this.end(cb)
   }
 
