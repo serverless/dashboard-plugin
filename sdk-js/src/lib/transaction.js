@@ -2,6 +2,7 @@
 * Transaction
 */
 
+const os = require('os')
 const _ = require('lodash')
 const flatten = require('flat')
 const camelCaseKeys = require('camelcase-keys')
@@ -126,11 +127,18 @@ class Transaction {
   */
 
   error(error, cb) {
-    // Create id for this error to uniquely identify its type
-    let id = '${' + error.name + '}'
-    id = error.message ? id + '${' + error.message.toString().substring(0, 100) + '}' : id
+    // Create Error ID
+    // Includes error name and message separated by these characters: !$
+    // Back-end components rely on this format so don't change it without consulting others
+    let id = error.name || 'Unknown'
+    id = error.message ? id + '!$' + error.message.toString().substring(0, 200) : id
     this.set('error.id', id)
     elastic.captureError(error)
+    // Log
+    console.log('')
+    console.error(error)
+    console.log(`${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`)
+    // End transaction
     this.end(cb)
   }
 
