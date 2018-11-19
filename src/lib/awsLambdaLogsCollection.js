@@ -1,5 +1,5 @@
 /*
- * AWS API Gateway Logs Collection
+ * Lambda Logs Collection
  * - Collects `SERVERLESS PLATFORM |||` from lambda logs
  * - Optionally collects all logs (defaults to always for now)
  * - Capturing billing details (?)
@@ -17,7 +17,6 @@ module.exports = async (ctx) => {
     httpApmTransport = false
   } = config
 
-  // TODO: Make this default to false
   // optionally allow filtering to only APM / metric stuff
   if (!collectLambdaLogs) {
     ctx.sls.cli.log(
