@@ -3,6 +3,7 @@ const os = require('os')
 const path = require('path')
 
 const awsApiGatewayLogsCollection = require('./lib/awsApiGatewayLogsCollection')
+const awsLambdaLogsCollection = require('./lib/awsLambdaLogsCollection')
 const wrap = require('./lib/wrap.js')
 const wrapClean = require('./lib/wrapClean.js')
 
@@ -59,6 +60,7 @@ class ServerlessPlatformPlugin {
           break
         case 'before:deploy:deploy':
           await awsApiGatewayLogsCollection(self)
+          await awsLambdaLogsCollection(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)

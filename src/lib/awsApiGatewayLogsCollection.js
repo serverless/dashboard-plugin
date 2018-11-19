@@ -3,6 +3,8 @@
  * - Collects all API Gateway logs
  */
 
+const utils = require('./utils')
+
 module.exports = async (ctx) => {
   if (!ctx.sls.service.custom.platform && !ctx.sls.service.custom.platform.collectApiLogs) {
     ctx.sls.cli.log(
@@ -16,13 +18,7 @@ module.exports = async (ctx) => {
   const stageSettings = ctx.sls.service.custom.stageSettings || {}
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 
-  const deployments = []
-  for (key in template.Resources) {
-    const resource = template.Resources[key]
-    if (resource.Type === 'AWS::ApiGateway::Deployment') {
-      deployments.push({ deploymentKey: key, deploymentResource: resource })
-    }
-  }
+  const deployments = utils.pickResourceType(template, 'AWS::ApiGateway::Deployment')
 
   template.Resources = {
     ...template.Resources,
@@ -79,10 +75,10 @@ module.exports = async (ctx) => {
   }
 
   for (deploymentIndex in deployments) {
-    const deploymentKey = deployments[deploymentIndex].deploymentKey
-    const deployment = deployments[deploymentIndex].deploymentResource
+    const deploymentKey = deployments[deploymentIndex].key
+    const deployment = deployments[deploymentIndex].resource
 
-    template.Resources[`ApiGatewayStage${_upperFirst(deployment.Properties.StageName)}`] = {
+    template.Resources[`ApiGatewayStage${utils.upperFirst(deployment.Properties.StageName)}`] = {
       Type: 'AWS::ApiGateway::Stage',
       Properties: {
         StageName: deployment.Properties.StageName,
@@ -109,7 +105,7 @@ module.exports = async (ctx) => {
     * Finally, this will make sure every stage's API details are published to to our Kinesis Streams
     */
     template.Resources[
-      `CloudWatchLogsSubscriptionFilter${_upperFirst(deployment.Properties.StageName)}`
+      `CloudWatchLogsSubscriptionFilter${utils.upperFirst(deployment.Properties.StageName)}`
     ] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
@@ -121,7 +117,7 @@ module.exports = async (ctx) => {
             'API-Gateway-Execution-Logs_${ApiGatewayId}/${StageName}',
             {
               ApiGatewayId: { Ref: 'ApiGatewayRestApi' },
-              StageName: { Ref: `ApiGatewayStage${_upperFirst(deployment.Properties.StageName)}` }
+              StageName: { Ref: `ApiGatewayStage${utils.upperFirst(deployment.Properties.StageName)}` }
             }
           ]
         }
@@ -131,8 +127,4 @@ module.exports = async (ctx) => {
     template.Resources[deploymentKey] = deployment
     delete template.Resources[deploymentKey].Properties.StageName
   }
-}
-
-function _upperFirst(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }
