@@ -180,14 +180,17 @@ class ServerlessSDK {
           })
 
           const cb = () => {
-            callback.call(
+            return callback.call(
               functionContext,
               error || null,
               res || null)
           }
 
-          if (error) { return trans.error(error, cb) }
-          else return trans.end(cb)
+          if (error) {
+            return trans.error(error, cb)
+          } else {
+            return trans.end(cb)
+          }
         }
 
         // Patch context methods
@@ -206,20 +209,19 @@ class ServerlessSDK {
             context,
             wrappedCallback)
         } catch (error) {
-          console.error(error)
           wrappedCallback(error, null)
         }
 
         // If promise was returned, handle it
         if (result && typeof result.then == 'function') {
-          result
-          .then((data) => {
-            wrappedCallback(null, data)
+          result.then((data) => {
+            // In a AWS Lambda 'async' handler, an error can be returned directly
+            // This makes it look like a valid response, which it's not.
+            // The SDK needs to look out for this here, so it can still log/report the error like all others.
+            if (data instanceof Error) wrappedCallback(data, null)
+            else wrappedCallback(null, data)
           })
-          .catch((error) => {
-            console.error(error)
-            wrappedCallback(error, null)
-          })
+          .catch(wrappedCallback)
         }
       }
     } else {
