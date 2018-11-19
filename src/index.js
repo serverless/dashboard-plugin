@@ -2,12 +2,14 @@ const fs = require('fs-extra')
 const os = require('os')
 const path = require('path')
 
+const awsApiGatewayLogsCollection = require('./lib/awsApiGatewayLogsCollection')
+const awsLambdaLogsCollection = require('./lib/awsLambdaLogsCollection')
 const wrap = require('./lib/wrap.js')
 const wrapClean = require('./lib/wrapClean.js')
 
 /*
-* Serverless Platform Plugin
-*/
+ * Serverless Platform Plugin
+ */
 
 class ServerlessPlatformPlugin {
 
@@ -32,6 +34,7 @@ class ServerlessPlatformPlugin {
       'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this),
       'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this),
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
+      'before:deploy:deploy': this.route('before:deploy:deploy').bind(this),
       'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
       'before:offline:start:init': this.route('before:offline:start:init').bind(this),
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this),
@@ -39,13 +42,13 @@ class ServerlessPlatformPlugin {
   }
 
   /*
-  * Route
-  */
+   * Route
+   */
 
   route(hook) {
     const self = this
     return async () => {
-      switch(hook) {
+      switch (hook) {
         case 'before:package:createDeploymentArtifacts':
           await wrap(self)
           break
@@ -54,6 +57,10 @@ class ServerlessPlatformPlugin {
           break
         case 'before:deploy:function:packageFunction':
           // await wrap(self)
+          break
+        case 'before:deploy:deploy':
+          await awsApiGatewayLogsCollection(self)
+          await awsLambdaLogsCollection(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)
