@@ -94,7 +94,7 @@ class Transaction {
       elastic.start({
         serviceName: data.serviceName,
         serverUrl: 'http://apm.signalmalt.com',
-        logLevel: 'fatal', // 'trace', 'debug', 'fatal'
+        logLevel: 'trace', // 'trace', 'debug', 'fatal'
         // secretToken: '',
       })
     }
@@ -157,8 +157,7 @@ class Transaction {
     tags = camelCaseKeys(tags)
     this.$.eTransaction.addTags(tags)
     this.$.eTransaction.end()
-    elastic.flush(cb)
-    if (cb) return cb()
+    return cb ? elastic.flush(cb) : elastic.flush()
   }
 }
 
