@@ -147,7 +147,6 @@ class Transaction {
   */
 
   end(cb) {
-
     // End transaction timer
     let duration = Date.now() - this.$.duration
     this.set('compute.duration', duration)
@@ -157,7 +156,8 @@ class Transaction {
     tags = camelCaseKeys(tags)
     this.$.eTransaction.addTags(tags)
     this.$.eTransaction.end()
-    return cb ? elastic.flush(cb) : elastic.flush()
+    if (cb) return elastic.flush(cb)
+    else elastic.flush()
   }
 }
 
