@@ -27,6 +27,23 @@ plugins:
   - serverless-platform-plugin
 ```
 
+### Log Collection
+
+For collection logs to the platform, you need to set some configuration in your serverless.yml
+
+```yaml
+custom:
+  platform:
+    collectLambdaLogs: true
+    
+    # Note: Automatic configuration for collecting API logs 
+    #       is only possible on never before deployed apps for
+    #       right now. his is a limitation of API Gateway and
+    #       CloudFormation at the moment. We are looking for options.
+    collectApiLogs: true
+
+```
+
 ## Development Notes
 
 Currently, the `serverless-sdk` is within this project.  On deployment, this plugin copies a bundled and compressed version of the `serverless-sdk` into your Service package before it's uploaded.
