@@ -186,8 +186,11 @@ class ServerlessSDK {
               res || null)
           }
 
-          if (error) return trans.error(error, cb)
-          else return trans.end(cb)
+          if (error) {
+            return trans.error(error, cb)
+          } else {
+            return trans.end(cb)
+          }
         }
 
         // Patch context methods

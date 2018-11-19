@@ -94,7 +94,7 @@ class Transaction {
       elastic.start({
         serviceName: data.serviceName,
         serverUrl: 'http://apm.signalmalt.com',
-        logLevel: 'trace', // 'trace', 'debug', 'fatal'
+        logLevel: 'fatal', // 'trace', 'debug', 'fatal'
         // secretToken: '',
       })
     }
@@ -118,7 +118,7 @@ class Transaction {
   }
 
   /*
-  * Span
+  * TODO: Span
   */
 
   /*
@@ -127,6 +127,7 @@ class Transaction {
   */
 
   error(error, cb) {
+    const self = this
     // Create Error ID
     // Includes error name and message separated by these characters: !$
     // Back-end components rely on this format so don't change it without consulting others
@@ -139,7 +140,7 @@ class Transaction {
     console.error(error)
     console.log(`${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`)
     // End transaction
-    this.end(cb)
+    self.end(cb)
   }
 
   /*
@@ -156,8 +157,8 @@ class Transaction {
     tags = camelCaseKeys(tags)
     this.$.eTransaction.addTags(tags)
     this.$.eTransaction.end()
-    if (cb) return elastic.flush(cb)
-    else elastic.flush()
+    elastic.flush()
+    return cb ? setImmediate(cb) : true
   }
 }
 
