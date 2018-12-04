@@ -8,6 +8,16 @@
 const utils = require('./utils')
 
 module.exports = async (ctx) => {
+
+  if (!ctx.sls.service.custom
+    || !ctx.sls.service.custom.platform
+    || !ctx.sls.service.custom.platform.collectLambdaLogs) {
+    ctx.sls.cli.log(
+      'Info: The Serverless Platform Plugin is not configured to collect AWS Lambda Logs.'
+    )
+    return
+  }
+
   const stageSettings = ctx.sls.service.custom.stageSettings || {}
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
   const config = ctx.sls.service.custom.platform || {}
@@ -16,14 +26,6 @@ module.exports = async (ctx) => {
     cloudwatchApmTransport = true,
     httpApmTransport = false
   } = config
-
-  // optionally allow filtering to only APM / metric stuff
-  if (!collectLambdaLogs) {
-    ctx.sls.cli.log(
-      'Info: The Serverless Platform Plugin is not configured to collect AWS Lambda Logs.'
-    )
-    return
-  }
 
   // Gather possible targets
   const lambdaLogGroups = utils.pickResourceType(template, 'AWS::Logs::LogGroup')

@@ -6,7 +6,9 @@
 const utils = require('./utils')
 
 module.exports = async (ctx) => {
-  if (!ctx.sls.service.custom.platform && !ctx.sls.service.custom.platform.collectApiLogs) {
+  if (!ctx.sls.service.custom
+    || !ctx.sls.service.custom.platform
+    || !ctx.sls.service.custom.platform.collectApiLogs) {
     ctx.sls.cli.log(
       'Info: The Serverless Platform Plugin is not configured to collect API Gateway Logs.'
     )
