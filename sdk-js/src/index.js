@@ -9,6 +9,7 @@ const ServerlessTransaction = require('./lib/transaction.js')
 
 /*
 * Serverless SDK Class
+
 */
 
 class ServerlessSDK {
@@ -134,7 +135,8 @@ class ServerlessSDK {
 
         // Capture Event Data: aws.apigateway.http
         if (eventType === 'aws.apigateway.http') {
-          trans.set('event.timestamp', (new Date(event.requestContext.requestTimeEpoch)).toISOString())
+          let timestamp = event.requestContext.requestTimeEpoch || Date.now().valueOf() // local testing does not contain a requestTimeEpoc
+          trans.set('event.timestamp', (new Date(timestamp)).toISOString())
           trans.set('event.source', 'aws.apigateway')
           trans.set('event.custom.accountId', event.requestContext.accountId)
           trans.set('event.custom.apiId', event.requestContext.apiId)
@@ -162,23 +164,6 @@ class ServerlessSDK {
 
           if (self.$.config.debug) console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
 
-          // Temporary Hack - Needed to comply w/ EAPM
-          trans.$.eTransaction.setCustomContext({
-            lambda: {
-              functionName: trans.$.schema.functionName,
-              functionVersion: trans.$.schema.compute.custom.functionVersion,
-              invokedFunctionArn: trans.$.schema.compute.custom.arn,
-              memoryLimitInMB: trans.$.schema.compute.custom.memorySize,
-              awsRequestId: trans.$.schema.compute.custom.awsRequestId,
-              logGroupName: trans.$.schema.compute.custom.logGroupName,
-              logStreamName: trans.$.schema.compute.custom.logStreamName,
-              executionEnv: process.env.AWS_EXECUTION_ENV,
-              region: trans.$.schema.compute.region,
-              input: event,
-              output: res,
-            }
-          })
-
           const cb = () => {
             return callback.call(
               functionContext,
@@ -196,7 +181,9 @@ class ServerlessSDK {
         // Patch context methods
         context.done = wrappedCallback
         context.succeed = (res) => { return wrappedCallback(null, res) }
-        context.fail = (err) => { return wrappedCallback(err, null) }
+        context.fail = (err) => {
+          return wrappedCallback(err, null)
+        }
 
         /*
         * Try Running Code
@@ -221,7 +208,7 @@ class ServerlessSDK {
             if (data instanceof Error) wrappedCallback(data, null)
             else wrappedCallback(null, data)
           })
-          .catch(wrappedCallback)
+            .catch(wrappedCallback)
         }
       }
     } else {
