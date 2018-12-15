@@ -14,7 +14,8 @@
     "camelcase-keys": "^5.0.0",
     "flat": "^4.1.0",
     "lodash": "^4.17.11",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "stackman": "^3.0.2"
   },
   "devDependencies": {
     "webpack": "^4.25.1",

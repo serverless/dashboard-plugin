@@ -1,0 +1,16 @@
+{
+    "schemaType": "s-span",
+    "schemaVersion": "0.0",
+    "operationName": null,
+    "startTime": null,
+    "endTime": null,
+    "duration": null,
+    "spanContext": {
+        "traceId": null,
+        "spanId": null,
+        "xTraceId": null,
+        "baggageItems": {}
+    },
+    "tags": {},
+    "logs": {}
+}

@@ -2,8 +2,6 @@
   "schemaType": "s-transaction-function",
   "schemaVersion": "0.0",
   "timestamp": null,
-  "transactionId": null,
-  "traceId": null,
   "tenantId": null,
   "applicationName": null,
   "serviceName": null,
@@ -14,7 +12,8 @@
     "runtime": null,
     "region": null,
     "memorySize": null,
-    "duration": null,
+    "memoryUsed": null,
+    "memoryPercentageUsed": null,
     "containerUptime": null,
     "custom": {}
   },
@@ -25,6 +24,12 @@
     "custom": {}
   },
   "error": {
-    "id": null
+    "id": null,
+    "culprit": null,
+    "exception": {
+      "type": null,
+      "message": null,
+      "stacktrace": null
+    }
   }
 }

@@ -7,7 +7,10 @@ const _ = require('lodash')
 const flatten = require('flat')
 const camelCaseKeys = require('camelcase-keys')
 const uuidv4 = require('uuid/v4')
+const { parseError } = require('./parsers')
 
+const TRANSACTION = 'transaction'
+const ERROR = 'error'
 
 /*
  * Cache
@@ -41,6 +44,7 @@ class Transaction {
       )
     }
 
+    this.processed = false;
     this.$ = {
       schema: null,
       eTransaction: null,
@@ -124,9 +128,18 @@ class Transaction {
     // Log
     console.log('')
     console.error(error)
-    console.log(`${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`)
-    // End transaction
-    self.end(cb)
+
+    parseError(error, null, (a, errorStack) => {
+      console.log(`${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`)
+      this.set('error.culprit', errorStack.culprit)
+      this.set('error.exception.type', errorStack.exception.type)
+      this.set('error.exception.message', errorStack.exception.message)
+      this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace))
+
+      // End transaction
+      this.buildOutput(ERROR) // set this to transaction for now. 
+      self.end(cb)
+    })
   }
 
   /*
@@ -134,40 +147,53 @@ class Transaction {
    */
 
   end(cb) {
-    // End transaction timer
-    let duration = new Date().getTime() - this.$.duration.getTime()
-    this.set('compute.duration', duration)
-
-    // Flatten and camelCase schema because EAPM tags are only key/value=string
-    let tags = flatten(this.$.schema)
-    tags = camelCaseKeys(tags)
-    tags.traceId = tags.computeCustomAwsRequestId
-
-    // if transaction add the request id as the transaction trace
-    this.$.schema.traceId = tags.computeCustomAwsRequestId
-    let payload = {
-      origin: 'sls-agent',
-      timestamp: new Date().toISOString(),
-      requestId: tags.computeCustomAwsRequestId,
-      type: 'transaction',
-      payload: {
-        operationName: this.$.schema.schemaType,
-        startTime: this.$.schema.timestamp,
-        endTime: new Date().toISOString(),
-        duration: duration,
-        spanContext: {
-          traceId: tags.computeCustomAwsRequestId,
-          spanId: this.$.schema.transactionId,
-          xTraceId: tags.computeCustomXTraceId,
-          baggageItems: {}
-        },
-        tags,
-        logs: {}
-      }
+    if (this.$.schema.error.id === null) {
+      this.buildOutput(TRANSACTION)
     }
 
-    console.log(JSON.stringify(payload))
     return cb ? setImmediate(cb) : true
+  }
+
+  buildOutput(type) {
+    if (!this.processed) {
+      // End transaction timer
+      let duration = new Date().getTime() - this.$.duration.getTime()
+      this.set('compute.memoryUsed', JSON.stringify(process.memoryUsage()))
+      this.set('compute.memoryPercentageUsed', ((process.memoryUsage().heapUsed / Math.pow(1024, 2)).toFixed() / this.$.schema.compute.memorySize) * 100)
+
+      // Flatten and camelCase schema because EAPM tags are only key/value=string
+      // Remove flatten? 
+      let tags = flatten(this.$.schema)
+      tags = camelCaseKeys(tags)
+      tags.traceId = tags.computeCustomAwsRequestId
+
+      // if transaction add the request id as the transaction trace
+      this.$.schema.traceId = tags.computeCustomAwsRequestId
+
+      // create the envelope needed for parsing 
+      // and the span to hold the transaction and event data
+      let envelope = require('./schemas/envelope.json')
+      let span = require('./schemas/span.json')
+
+      envelope.timestamp = new Date().toISOString()
+      envelope.requestId = tags.computeCustomAwsRequestId
+      envelope.type = type
+
+      span.operationName = this.$.schema.schemaType
+      span.startTime = this.$.schema.timestamp
+      span.endTime = new Date().toISOString()
+      span.duration = duration
+      span.spanContext = {
+        traceId: tags.computeCustomAwsRequestId,
+        spanId: this.$.schema.transactionId,
+        xTraceId: tags.computeCustomXTraceId,
+      }
+      span.tags = tags
+      envelope.payload = span
+
+      console.log(JSON.stringify(envelope))
+      this.processed = true
+    }
   }
 }
 
