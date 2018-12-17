@@ -1,9 +1,6 @@
-const fs = require('fs-extra')
-const os = require('os')
-const path = require('path')
-
 const awsApiGatewayLogsCollection = require('./lib/awsApiGatewayLogsCollection')
 const awsLambdaLogsCollection = require('./lib/awsLambdaLogsCollection')
+const fetchCredentials = require('./lib/fetchCredentials.js')
 const wrap = require('./lib/wrap.js')
 const wrapClean = require('./lib/wrapClean.js')
 
@@ -18,6 +15,7 @@ class ServerlessPlatformPlugin {
     // Defaults
     this.sls = sls
     this.state = {}
+    this.provider = this.sls.getProvider('aws');
 
     // Check if Platform is configured
     let missing
@@ -35,6 +33,10 @@ class ServerlessPlatformPlugin {
       'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this),
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this),
+      'before:info:info': this.route('before:info:info').bind(this),
+      'before:logs:logs': this.route('before:logs:logs').bind(this),
+      'before:metrics:metrics': this.route('before:metrics:metrics').bind(this),
+      'before:remove:remove': this.route('before:remove:remove').bind(this),
       'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
       'before:offline:start:init': this.route('before:offline:start:init').bind(this),
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this),
@@ -61,6 +63,19 @@ class ServerlessPlatformPlugin {
         case 'before:deploy:deploy':
           await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
+          await fetchCredentials(self)
+          break
+        case 'before:info:info':
+          await fetchCredentials(self)
+          break
+        case 'before:logs:logs':
+          await fetchCredentials(self)
+          break
+        case 'before:metrics:metrics':
+          await fetchCredentials(self)
+          break
+        case 'before:remove:remove':
+          await fetchCredentials(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)

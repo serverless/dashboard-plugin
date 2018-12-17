@@ -10,7 +10,8 @@
     "webpack": "webpack"
   },
   "dependencies": {
-    "fs-extra": "^7.0.1"
+    "fs-extra": "^7.0.1",
+    "node-fetch": "^2.3.0"
   },
   "devDependencies": {
     "webpack": "4.24.0"
