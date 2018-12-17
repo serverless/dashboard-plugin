@@ -6,188 +6,179 @@ const shieldEmoji = '\uD83D\uDEE1\uFE0F'
 
 class PolicyFailureError extends Error {}
 
-class ServerlessSafeguardsPlugin {
-  constructor(ctx) {
-    this.basePath = ctx.sls.config.servicePath
+function runPolicies(ctx) {
+  const basePath = ctx.sls.config.servicePath
 
-    if (!ctx.sls.service.custom || !ctx.sls.service.custom.safeguards) {
-      this.policies = null
-      return
-    }
+  if (!ctx.sls.service.custom || !ctx.sls.service.custom.safeguards) {
+    return
+  }
 
-    const config = ctx.sls.service.custom.safeguards
+  const config = ctx.sls.service.custom.safeguards
 
-    if (!(config.policies instanceof Array)) {
-      throw new Error(
-        'Safeguards requires a list of policies under property "custom.safeguards.policies".'
-      )
-    }
-
-    ctx.sls.cli.log(
-      `(${shieldEmoji}Safeguards) Loading ${config.policies.length} polic${
-        config.policies.length > 1 ? 'ies' : 'y'
-      }.`
+  if (!(config.policies instanceof Array)) {
+    throw new Error(
+      'Safeguards requires a list of policies under property "custom.safeguards.policies".'
     )
-    const location = config.location || '.'
-    const policiesPath = path.relative(__dirname, path.resolve(this.basePath, location))
+  }
 
-    this.policies = config.policies.map((policy) => {
-      if (policy instanceof Object) {
-        const policyObjKeys = Object.keys(policy)
-        if (policyObjKeys.length !== 1) {
-          throw new Error(
-            'Safeguards requires that each item in the policies list be either a string indicating a policy name, or else an object with a single key specifying the policy name with the policy options. One or more items were objects containing multiple keys. Correct these entries and try again.'
-          )
-        }
-        const policyName = policyObjKeys[0]
-        const policyOptions = policy[policyName] || {}
-        return {
-          name: policyName,
-          function: require(path.join(policiesPath, policyName)),
-          options: policyOptions
-        }
-      } else {
-        return {
-          name: policy,
-          function: require(path.join(policiesPath, policy)),
-          options: {}
-        }
+  ctx.sls.cli.log(
+    `(${shieldEmoji}Safeguards) Loading ${config.policies.length} polic${
+      config.policies.length > 1 ? 'ies' : 'y'
+    }.`
+  )
+  const location = config.location || '.'
+  const policiesPath = path.relative(__dirname, path.resolve(basePath, location))
+
+  const policies = config.policies.map((policy) => {
+    if (policy instanceof Object) {
+      const policyObjKeys = Object.keys(policy)
+      if (policyObjKeys.length !== 1) {
+        throw new Error(
+          'Safeguards requires that each item in the policies list be either a string indicating a policy name, or else an object with a single key specifying the policy name with the policy options. One or more items were objects containing multiple keys. Correct these entries and try again.'
+        )
       }
-    })
+      const policyName = policyObjKeys[0]
+      const policyOptions = policy[policyName] || {}
+      return {
+        name: policyName,
+        function: require(path.join(policiesPath, policyName)),
+        options: policyOptions
+      }
+    } else {
+      return {
+        name: policy,
+        function: require(path.join(policiesPath, policy)),
+        options: {}
+      }
+    }
+  })
+
+  const service = {
+    compiled: {}
   }
 
-  runPolicies(ctx) {
-    if(!this.policies) {
-      return
-    }
+  const parseFiles = new Promise((resolve, reject) => {
+    const artifactsPath = path.join(basePath, '.serverless')
 
-    const service = {
-      compiled: {}
-    }
-
-    const parseFiles = new Promise((resolve, reject) => {
-      const artifactsPath = path.join(this.basePath, '.serverless')
-
-      // Add the parsed value of each JSON to the artifacts object
-      dir.readFiles(
-        artifactsPath,
-        { match: /\.(json|yml|yaml)$/i },
-        function(err, content, filename, next) {
-          try {
-            const relativeFilename = path.relative(artifactsPath, filename)
-            if (relativeFilename.match(/\.json$/i)) {
-              service.compiled[relativeFilename] = JSON.parse(content)
-            } else {
-              service.compiled[relativeFilename] = yml.parse(content)
-            }
-          } catch (err) {
-            ctx.sls.cli.log(`Failed to parse file ${filename} in the artifacts directory.`)
-            reject(err)
+    // Add the parsed value of each JSON to the artifacts object
+    dir.readFiles(
+      artifactsPath,
+      { match: /\.(json|yml|yaml)$/i },
+      function(err, content, filename, next) {
+        try {
+          const relativeFilename = path.relative(artifactsPath, filename)
+          if (relativeFilename.match(/\.json$/i)) {
+            service.compiled[relativeFilename] = JSON.parse(content)
+          } else {
+            service.compiled[relativeFilename] = yml.parse(content)
           }
-
-          next()
-        },
-        function() {
-          resolve()
+        } catch (err) {
+          ctx.sls.cli.log(`Failed to parse file ${filename} in the artifacts directory.`)
+          reject(err)
         }
-      )
+
+        next()
+      },
+      function() {
+        resolve()
+      }
+    )
+  })
+
+  return parseFiles.then(() => {
+    const runningPolicies = policies.map((policy) => {
+      ctx.sls.cli.log(`(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`)
+
+      const result = {
+        name: policy.name,
+        approved: false,
+        warned: false
+      }
+      const approve = () => {
+        result.approved = true
+      }
+      const warn = (message) => {
+        ctx.sls.cli.log(
+          `(${shieldEmoji}Safeguards) \u26A0\uFE0F Policy "${
+            policy.name
+          }" issued a warning \u2014 ${message}`
+        )
+        result.warned = true
+      }
+      const policyHandle = {
+        approve,
+        warn,
+        Failure: PolicyFailureError
+      }
+
+      return Promise.resolve()
+        .then(() => policy.function(policyHandle, service, policy.options))
+        .then(() => {
+          if (result.approved) {
+            return result
+          } else {
+            result.error = new Error(
+              `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
+                policy.name
+              }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
+            )
+            ctx.sls.cli.log(result.error.message)
+            return result
+          }
+        })
+        .catch((error) => {
+          if (error instanceof PolicyFailureError) {
+            result.failed = true
+            result.error = error
+            ctx.sls.cli.log(
+              `(${shieldEmoji}Safeguards) \u274C Policy "${
+                policy.name
+              }" prevented the deployment \u2014 ${error.message}`
+            )
+            return result
+          } else {
+            ctx.sls.cli.log(
+              `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
+                policy.name
+              }".  If this problem persists, contact the policy author.`
+            )
+            throw error
+          }
+        })
     })
 
-    return parseFiles.then(() => {
-      const runningPolicies = this.policies.map((policy) => {
-        ctx.sls.cli.log(`(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`)
+    return Promise.all(runningPolicies).then((results) => {
+      const markedPolicies = results.filter((r) => !r.approved || r.warned)
+      if (markedPolicies.length === 0) {
+        ctx.sls.cli.log(`(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`)
+        return
+      }
 
-        const result = {
-          name: policy.name,
-          approved: false,
-          warned: false
-        }
-        const approve = () => {
-          result.approved = true
-        }
-        const warn = (message) => {
-          ctx.sls.cli.log(
-            `(${shieldEmoji}Safeguards) \u26A0\uFE0F Policy "${
-              policy.name
-            }" issued a warning \u2014 ${message}`
-          )
-          result.warned = true
-        }
-        const policyHandle = {
-          approve,
-          warn,
-          Failure: PolicyFailureError
-        }
-
-        return Promise.resolve()
-          .then(() => policy.function(policyHandle, service, policy.options))
-          .then(() => {
-            if (result.approved) {
-              return result
-            } else {
-              result.error = new Error(
-                `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
-                  policy.name
-                }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
-              )
-              ctx.sls.cli.log(result.error.message)
-              return result
+      const summary =
+        `(${shieldEmoji}Safeguards) ${
+          markedPolicies.length
+        } policies reported irregular conditions. For details, see the logs above.\n      ` +
+        markedPolicies
+          .map((r) => {
+            if (r.failed) {
+              return `\u274C ${r.name}: Requirements not satisfied. Deployment halted.`
             }
-          })
-          .catch((error) => {
-            if (error instanceof PolicyFailureError) {
-              result.failed = true
-              result.error = error
-              ctx.sls.cli.log(
-                `(${shieldEmoji}Safeguards) \u274C Policy "${
-                  policy.name
-                }" prevented the deployment \u2014 ${error.message}`
-              )
-              return result
-            } else {
-              ctx.sls.cli.log(
-                `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
-                  policy.name
-                }".  If this problem persists, contact the policy author.`
-              )
-              throw error
+
+            if (r.approved && r.warned) {
+              return `\u26A0\uFE0F ${r.name}: Warned of a non-critical condition.`
             }
+
+            return `\u2049\uFE0F ${r.name}: Finished inconclusively. Deployment halted.`
           })
-      })
+          .join('\n      ')
 
-      return Promise.all(runningPolicies).then((results) => {
-        const markedPolicies = results.filter((r) => !r.approved || r.warned)
-        if (markedPolicies.length === 0) {
-          ctx.sls.cli.log(`(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`)
-          return
-        }
-
-        const summary =
-          `(${shieldEmoji}Safeguards) ${
-            markedPolicies.length
-          } policies reported irregular conditions. For details, see the logs above.\n      ` +
-          markedPolicies
-            .map((r) => {
-              if (r.failed) {
-                return `\u274C ${r.name}: Requirements not satisfied. Deployment halted.`
-              }
-
-              if (r.approved && r.warned) {
-                return `\u26A0\uFE0F ${r.name}: Warned of a non-critical condition.`
-              }
-
-              return `\u2049\uFE0F ${r.name}: Finished inconclusively. Deployment halted.`
-            })
-            .join('\n      ')
-
-        if (markedPolicies.every((r) => r.approved)) {
-          ctx.sls.cli.log(summary)
-          return
-        }
-        throw new Error(summary)
-      })
+      if (markedPolicies.every((r) => r.approved)) {
+        ctx.sls.cli.log(summary)
+        return
+      }
+      throw new Error(summary)
     })
-  }
-} // end class
+  })
+}
 
-module.exports = ServerlessSafeguardsPlugin
+module.exports = { runPolicies }

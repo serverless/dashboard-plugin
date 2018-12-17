@@ -6,7 +6,7 @@ const awsApiGatewayLogsCollection = require('./lib/awsApiGatewayLogsCollection')
 const awsLambdaLogsCollection = require('./lib/awsLambdaLogsCollection')
 const wrap = require('./lib/wrap.js')
 const wrapClean = require('./lib/wrapClean.js')
-const Safeguards = require('./lib/safeguards.js')
+const safeguards = require('./lib/safeguards.js')
 
 /*
  * Serverless Platform Plugin
@@ -19,8 +19,6 @@ class ServerlessPlatformPlugin {
     // Defaults
     this.sls = sls
     this.state = {}
-
-    this.safeguards = new Safeguards(this)
 
     // Check if Platform is configured
     let missing
@@ -62,9 +60,7 @@ class ServerlessPlatformPlugin {
           // await wrap(self)
           break
         case 'before:deploy:deploy':
-          console.log('runnin')
-          await this.safeguards.runPolicies(self)
-          console.log('rant')
+          await safeguards.runPolicies(self)
           await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
           break
