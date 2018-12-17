@@ -2,7 +2,7 @@ const dir = require('node-dir')
 const yml = require('yamljs')
 const path = require('path')
 
-const shieldEmoji = '\uD83D\uDEE1\uFE0F'
+const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 
 class PolicyFailureError extends Error {}
 
