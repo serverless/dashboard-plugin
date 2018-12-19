@@ -3,9 +3,13 @@ const fetch = require('node-fetch');
 const { getUser, getPlatformHostname } = require('./utils')
 
 module.exports = (ctx) => {
+    if (!process.env.SLS_CLOUD_ACCESS) {
+      return BbPromise.resolve()
+    }
     const user = getUser()
     if (!user) {
       ctx.serverless.cli.log('User not logged in to Platform. Skipping fetch credentials.')
+      return BbPromise.resolve()
     }
     const body = JSON.stringify({
       stageName: ctx.provider.getStage(),
