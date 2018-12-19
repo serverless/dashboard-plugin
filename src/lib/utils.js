@@ -1,8 +1,8 @@
-const p = require('path');
+const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
-const serverlessrcPath = p.join(os.homedir(), '.serverlessrc');
+const serverlessrcPath = path.join(os.homedir(), '.serverlessrc');
 
 function upperFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
