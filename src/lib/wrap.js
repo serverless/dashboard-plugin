@@ -5,8 +5,26 @@
  */
 
 const fs = require('fs-extra')
-const os = require('os')
 const path = require('path')
+
+/*
+ * Wrap Node.js Functions
+ */
+
+const wrapNodeJs = (fn, ctx) => {
+  const newHandlerCode = `var serverlessSDK = require('./serverless-sdk/index.js')
+serverlessSDK = new serverlessSDK({
+tenantId: '${ctx.sls.service.tenant}',
+applicationName: '${ctx.sls.service.app}',
+serviceName: '${ctx.sls.service.service}',
+stageName: '${ctx.sls.service.provider.stage}'})
+module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
+    fn.handlerOrig
+  }, { functionName: '${fn.name}' })`
+
+  // Create new handlers
+  fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
+}
 
 module.exports = async (ctx) => {
   // Check if we support the provider
@@ -20,35 +38,35 @@ module.exports = async (ctx) => {
    * Prepare Functions
    */
 
-  const functions = ctx.sls.service.functions
+  const { functions } = ctx.sls.service
   ctx.state.functions = {}
-  for (const f in functions) {
-    const runtime = functions[f].runtime ? functions[f].runtime : ctx.sls.service.provider.runtime
+  for (const func in functions) {
+    const runtime = functions[func].runtime
+      ? functions[func].runtime
+      : ctx.sls.service.provider.runtime
     if (!runtime.includes('nodejs')) {
       return
     }
 
     // Process name
     let name
-    if (functions[f].name) {
-      name = functions[f].name
+    if (functions[func].name) {
+      ;({ name } = functions[func])
     } else {
-      name = `${ctx.sls.service.service}-${ctx.sls.service.provider.stage}-${f}`
+      name = `${ctx.sls.service.service}-${ctx.sls.service.provider.stage}-${func}`
     }
 
     // Process handler
-    let entry
-    let handler
-    entry = functions[f].handler.split('.')[0]
-    handler = functions[f].handler.split('.')[1]
+    const entry = functions[func].handler.split('.')[0]
+    const handler = functions[func].handler.split('.')[1]
 
-    ctx.state.functions[f] = {
-      key: f,
+    ctx.state.functions[func] = {
+      key: func,
       name: name,
       runtime: runtime,
       entryOrig: entry,
       handlerOrig: handler,
-      entryNew: `s-${f}`,
+      entryNew: `s-${func}`,
       handlerNew: `handler`
     }
   }
@@ -86,23 +104,4 @@ module.exports = async (ctx) => {
     // Re-assign the handler to point to the wrapper
     ctx.sls.service.functions[fn].handler = `${func.entryNew}.${func.handlerNew}`
   }
-}
-
-/*
- * Wrap Node.js Functions
- */
-
-const wrapNodeJs = (fn, ctx) => {
-  const newHandlerCode = `var serverlessSDK = require('./serverless-sdk/index.js')
-serverlessSDK = new serverlessSDK({
-tenantId: '${ctx.sls.service.tenant}',
-applicationName: '${ctx.sls.service.app}',
-serviceName: '${ctx.sls.service.service}',
-stageName: '${ctx.sls.service.provider.stage}'})
-module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
-    fn.handlerOrig
-  }, { functionName: '${fn.name}' })`
-
-  // Create new handlers
-  fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
 }

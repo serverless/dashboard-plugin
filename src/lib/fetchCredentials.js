@@ -2,6 +2,14 @@ const BbPromise = require('bluebird')
 const fetch = require('node-fetch')
 const { getUser, getPlatformHostname } = require('./utils')
 
+function checkStatus(res) {
+  if (res.ok) {
+    // res.status >= 200 && res.status < 300
+    return res
+  }
+  throw new Error(res)
+}
+
 module.exports = (ctx) => {
   if (!process.env.SLS_CLOUD_ACCESS) {
     return BbPromise.resolve()
@@ -18,7 +26,7 @@ module.exports = (ctx) => {
     service: ctx.sls.service.getServiceName()
   })
 
-  platformHostname = getPlatformHostname()
+  const platformHostname = getPlatformHostname()
 
   return fetch(`${platformHostname}/tenants/${ctx.sls.service.tenant}/credentials/keys`, {
     method: 'POST',
@@ -36,15 +44,5 @@ module.exports = (ctx) => {
       ctx.sls.cli.log('Cloud credentials set from Serverless Platform.')
       return BbPromise.resolve()
     })
-    .catch((err) => {
-      ctx.sls.cli.log('Could not retrieve credentials from Serverless Platform.')
-    })
-}
-
-function checkStatus(res) {
-  if (res.ok) {
-    // res.status >= 200 && res.status < 300
-    return res
-  }
-  throw new Error(res)
+    .catch(() => ctx.sls.cli.log('Could not retrieve credentials from Serverless Platform.'))
 }

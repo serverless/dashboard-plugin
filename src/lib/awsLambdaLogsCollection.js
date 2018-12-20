@@ -19,22 +19,14 @@ module.exports = async (ctx) => {
     return
   }
 
-  const stageSettings = ctx.sls.service.custom.stageSettings || {}
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
-  const config = ctx.sls.service.custom.platform || {}
-  const {
-    collectLambdaLogs = false,
-    cloudwatchApmTransport = true,
-    httpApmTransport = false
-  } = config
 
   // Gather possible targets
   const lambdaLogGroups = utils.pickResourceType(template, 'AWS::Logs::LogGroup')
 
   // For each log group, set up subscription
-  for (lambdaLogGroupIndex in lambdaLogGroups) {
+  for (const lambdaLogGroupIndex in lambdaLogGroups) {
     const lambdaLogGroupKey = lambdaLogGroups[lambdaLogGroupIndex].key
-    const lambdaLogGroup = lambdaLogGroups[lambdaLogGroupIndex].resource
 
     template.Resources[`CloudWatchLogsSubscriptionFilter${utils.upperFirst(lambdaLogGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
@@ -49,6 +41,14 @@ module.exports = async (ctx) => {
     }
   }
 
+  /*
+  const config = ctx.sls.service.custom.platform || {}
+  const {
+    collectLambdaLogs = false,
+    cloudwatchApmTransport = true,
+    httpApmTransport = false
+  } = config
+  */
   // TODO if collecting all logs is disabled, but we still want APM, handle this case
   //
   //   if (cloudwatchApmTransport === false || httpApmTransport === true) {

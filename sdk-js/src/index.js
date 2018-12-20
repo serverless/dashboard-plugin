@@ -3,8 +3,6 @@
  */
 
 const os = require('os')
-const path = require('path')
-const _ = require('lodash')
 const ServerlessTransaction = require('./lib/transaction.js')
 
 /*

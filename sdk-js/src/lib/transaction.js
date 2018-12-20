@@ -138,7 +138,7 @@ class Transaction {
     console.log('')
     console.error(error)
 
-    parseError(error, null, (a, errorStack) => {
+    parseError(error, null, (res, errorStack) => {
       console.log(
         `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
       )

@@ -6,6 +6,41 @@ exports._MAX_HTTP_BODY_CHARS = 2048 // expose for testing purposes
 
 var mysqlErrorMsg = /(ER_[A-Z_]+): /
 
+// Default `culprit` to the top of the stack or the highest non `library_frame`
+// frame if such exists
+function getCulprit(frames) {
+  if (frames.length === 0) {
+    return
+  }
+
+  let { filename } = frames[0]
+  var fnName = frames[0].function
+  for (var n = 0; n < frames.length; n++) {
+    if (!frames[n].library_frame) {
+      ;({ filename } = frames[n])
+      fnName = frames[n].function
+      break
+    }
+  }
+
+  return filename ? fnName + ' (' + filename + ')' : fnName
+}
+
+function getModule(frames) {
+  if (frames.length === 0) {
+    return
+  }
+  var frame = frames[0]
+  if (!frame.library_frame) {
+    return
+  }
+  var match = frame.filename.match(/node_modules\/([^/]*)/)
+  if (!match) {
+    return
+  }
+  return match[1]
+}
+
 exports.parseMessage = function(msg) {
   var error = { log: {} }
 
@@ -94,7 +129,6 @@ exports.parseError = function(err, agent, cb) {
 }
 
 exports.parseCallsite = function(callsite, isError, agent, cb) {
-  var conf = null // agent._conf
   var filename = callsite.getFileName()
   var frame = {
     filename: callsite.getRelativeFileName() || '',
@@ -126,39 +160,4 @@ exports.parseCallsite = function(callsite, isError, agent, cb) {
 
     cb(null, frame)
   })
-}
-
-// Default `culprit` to the top of the stack or the highest non `library_frame`
-// frame if such exists
-function getCulprit(frames) {
-  if (frames.length === 0) {
-    return
-  }
-
-  var filename = frames[0].filename
-  var fnName = frames[0].function
-  for (var n = 0; n < frames.length; n++) {
-    if (!frames[n].library_frame) {
-      filename = frames[n].filename
-      fnName = frames[n].function
-      break
-    }
-  }
-
-  return filename ? fnName + ' (' + filename + ')' : fnName
-}
-
-function getModule(frames) {
-  if (frames.length === 0) {
-    return
-  }
-  var frame = frames[0]
-  if (!frame.library_frame) {
-    return
-  }
-  var match = frame.filename.match(/node_modules\/([^/]*)/)
-  if (!match) {
-    return
-  }
-  return match[1]
 }

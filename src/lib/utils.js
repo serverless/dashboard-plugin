@@ -10,7 +10,7 @@ function upperFirst(str) {
 
 function pickResourceType(template, resourcesType) {
   const resources = []
-  for (key in template.Resources) {
+  for (const key in template.Resources) {
     const resource = template.Resources[key]
     if (resource.Type === resourcesType) {
       resources.push({

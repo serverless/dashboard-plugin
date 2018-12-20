@@ -8,7 +8,7 @@
     "folder": "rm -rf dist && mkdir dist",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack",
-    "lint": "eslint src sdk-js/src --fix --cache"
+    "lint": "eslint src --fix --cache"
   },
   "dependencies": {
     "fs-extra": "^7.0.1",

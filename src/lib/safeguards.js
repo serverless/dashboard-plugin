@@ -71,9 +71,9 @@ function runPolicies(ctx) {
           } else {
             service.compiled[relativeFilename] = yml.parse(content)
           }
-        } catch (err) {
+        } catch (error) {
           ctx.sls.cli.log(`Failed to parse file ${filename} in the artifacts directory.`)
-          reject(err)
+          reject(error)
         }
 
         next()
@@ -145,7 +145,7 @@ function runPolicies(ctx) {
     })
 
     return Promise.all(runningPolicies).then((results) => {
-      const markedPolicies = results.filter((r) => !r.approved || r.warned)
+      const markedPolicies = results.filter((res) => !res.approved || res.warned)
       if (markedPolicies.length === 0) {
         ctx.sls.cli.log(`(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`)
         return
@@ -156,20 +156,20 @@ function runPolicies(ctx) {
           markedPolicies.length
         } policies reported irregular conditions. For details, see the logs above.\n      ` +
         markedPolicies
-          .map((r) => {
-            if (r.failed) {
-              return `\u274C ${r.name}: Requirements not satisfied. Deployment halted.`
+          .map((res) => {
+            if (res.failed) {
+              return `\u274C ${res.name}: Requirements not satisfied. Deployment halted.`
             }
 
-            if (r.approved && r.warned) {
-              return `\u26A0\uFE0F ${r.name}: Warned of a non-critical condition.`
+            if (res.approved && res.warned) {
+              return `\u26A0\uFE0F ${res.name}: Warned of a non-critical condition.`
             }
 
-            return `\u2049\uFE0F ${r.name}: Finished inconclusively. Deployment halted.`
+            return `\u2049\uFE0F ${res.name}: Finished inconclusively. Deployment halted.`
           })
           .join('\n      ')
 
-      if (markedPolicies.every((r) => r.approved)) {
+      if (markedPolicies.every((res) => res.approved)) {
         ctx.sls.cli.log(summary)
         return
       }

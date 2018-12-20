@@ -4,7 +4,6 @@
  */
 
 const fs = require('fs-extra')
-const os = require('os')
 const path = require('path')
 
 module.exports = async (ctx) => {
@@ -13,8 +12,8 @@ module.exports = async (ctx) => {
     fs.removeSync(ctx.state.pathAssets)
   }
 
-  for (const f in ctx.state.functions) {
-    const fn = ctx.state.functions[f]
+  for (const func in ctx.state.functions) {
+    const fn = ctx.state.functions[func]
 
     let file
     if (fn.runtime.includes('node')) {

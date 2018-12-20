@@ -19,7 +19,6 @@ module.exports = async (ctx) => {
 
   ctx.sls.cli.log('Info: The Serverless Platform is collecting API Gateway logs!')
   const logRoleLogicalName = 'IamRoleApiGatewayCloudwatchLogRole'
-  const stageSettings = ctx.sls.service.custom.stageSettings || {}
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 
   const deployments = utils.pickResourceType(template, 'AWS::ApiGateway::Deployment')
@@ -78,7 +77,7 @@ module.exports = async (ctx) => {
     }
   }
 
-  for (deploymentIndex in deployments) {
+  for (const deploymentIndex in deployments) {
     const deploymentKey = deployments[deploymentIndex].key
     const deployment = deployments[deploymentIndex].resource
 
