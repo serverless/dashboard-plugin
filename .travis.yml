@@ -1,0 +1,24 @@
+language: node_js
+sudo: false
+matrix:
+  include:
+    - node_js: 6
+    - node_js: 8
+    - node_js: 10
+install:
+  - npm install
+  - pushd sdk-js && npm install && popd
+script:
+  - npm run lint
+  - pushd sdk-js && npm run lint && popd
+  - npm run test
+  - pushd sdk-js && npm run test && popd
+
+# deploy:
+#   provider: npm
+#   email: services@serverless.com
+#   skip_cleanup: true
+#   on:
+#     branch: master
+#     tags: true
+#     repo: serverless/platform-plugin
