@@ -11,9 +11,10 @@
     "lint": "eslint src --fix --cache"
   },
   "dependencies": {
+    "@serverless/platform-sdk": "^0.3.0",
     "fs-extra": "^7.0.1",
-    "node-fetch": "^2.3.0",
     "node-dir": "^0.1.17",
+    "node-fetch": "^2.3.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
