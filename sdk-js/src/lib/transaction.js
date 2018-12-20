@@ -4,8 +4,6 @@
 
 const os = require('os')
 const _ = require('lodash')
-const flatten = require('flat')
-const camelCaseKeys = require('camelcase-keys')
 const uuidv4 = require('uuid/v4')
 const { parseError } = require('./parsers')
 
@@ -162,9 +160,8 @@ class Transaction {
       this.set('compute.memoryPercentageUsed', ((process.memoryUsage().heapUsed / Math.pow(1024, 2)).toFixed() / this.$.schema.compute.memorySize) * 100)
 
       // Flatten and camelCase schema because EAPM tags are only key/value=string
-      // Remove flatten? 
-      let tags = flatten(this.$.schema)
-      tags = camelCaseKeys(tags)
+      let tags = _.flatten(this.$.schema)
+      tags = _.mapKeys(tags, _.camelCase)
       tags.traceId = tags.computeCustomAwsRequestId
 
       // if transaction add the request id as the transaction trace
