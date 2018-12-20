@@ -44,12 +44,11 @@ function runPolicies(ctx) {
         function: require(path.join(policiesPath, policyName)),
         options: policyOptions
       }
-    } else {
-      return {
-        name: policy,
-        function: require(path.join(policiesPath, policy)),
-        options: {}
-      }
+    }
+    return {
+      name: policy,
+      function: require(path.join(policiesPath, policy)),
+      options: {}
     }
   })
 
@@ -116,15 +115,14 @@ function runPolicies(ctx) {
         .then(() => {
           if (result.approved) {
             return result
-          } else {
-            result.error = new Error(
-              `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
-                policy.name
-              }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
-            )
-            ctx.sls.cli.log(result.error.message)
-            return result
           }
+          result.error = new Error(
+            `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
+              policy.name
+            }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
+          )
+          ctx.sls.cli.log(result.error.message)
+          return result
         })
         .catch((error) => {
           if (error instanceof PolicyFailureError) {
@@ -136,14 +134,13 @@ function runPolicies(ctx) {
               }" prevented the deployment \u2014 ${error.message}`
             )
             return result
-          } else {
-            ctx.sls.cli.log(
-              `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
-                policy.name
-              }".  If this problem persists, contact the policy author.`
-            )
-            throw error
           }
+          ctx.sls.cli.log(
+            `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
+              policy.name
+            }".  If this problem persists, contact the policy author.`
+          )
+          throw error
         })
     })
 

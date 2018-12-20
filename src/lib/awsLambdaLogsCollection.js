@@ -8,10 +8,11 @@
 const utils = require('./utils')
 
 module.exports = async (ctx) => {
-
-  if (!ctx.sls.service.custom
-    || !ctx.sls.service.custom.platform
-    || !ctx.sls.service.custom.platform.collectLambdaLogs) {
+  if (
+    !ctx.sls.service.custom ||
+    !ctx.sls.service.custom.platform ||
+    !ctx.sls.service.custom.platform.collectLambdaLogs
+  ) {
     ctx.sls.cli.log(
       'Info: The Serverless Platform Plugin is not configured to collect AWS Lambda Logs.'
     )
@@ -38,7 +39,8 @@ module.exports = async (ctx) => {
     template.Resources[`CloudWatchLogsSubscriptionFilter${utils.upperFirst(lambdaLogGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
-        DestinationArn: 'arn:aws:logs:us-east-1:377024778620:destination:ServerlessPlatformDemoLambdaLogs',
+        DestinationArn:
+          'arn:aws:logs:us-east-1:377024778620:destination:ServerlessPlatformDemoLambdaLogs',
         FilterPattern: '', // TODO: Make this only get what we want!
         LogGroupName: {
           Ref: lambdaLogGroupKey

@@ -31,18 +31,28 @@ class Transaction {
   constructor(data) {
     // Enforce required properties
     let missing
-    if (!data.tenantId) missing = 'tenantId'
-    if (!data.applicationName) missing = 'applicationName'
-    if (!data.serviceName) missing = 'serviceName'
-    if (!data.stageName) missing = 'stageName'
-    if (!data.computeType) missing = 'computeType'
+    if (!data.tenantId) {
+      missing = 'tenantId'
+    }
+    if (!data.applicationName) {
+      missing = 'applicationName'
+    }
+    if (!data.serviceName) {
+      missing = 'serviceName'
+    }
+    if (!data.stageName) {
+      missing = 'stageName'
+    }
+    if (!data.computeType) {
+      missing = 'computeType'
+    }
     if (missing) {
       throw new Error(
         `ServerlessSDK: Missing Configuration - To use MALT features, "${missing}" is required in your configuration`
       )
     }
 
-    this.processed = false;
+    this.processed = false
     this.$ = {
       schema: null,
       eTransaction: null,
@@ -90,7 +100,6 @@ class Transaction {
     if (data.computeType === 'aws.lambda') {
       this.$.eTransaction = {}
     }
-
   }
 
   /*
@@ -103,7 +112,9 @@ class Transaction {
     if (!_.has(this.$.schema, key)) {
       throw new Error(`ServerlessSDK: Invalid transaction property: "${key}"`)
     }
-    if (key && val) _.set(this.$.schema, key, val)
+    if (key && val) {
+      _.set(this.$.schema, key, val)
+    }
   }
 
   /*
@@ -128,14 +139,16 @@ class Transaction {
     console.error(error)
 
     parseError(error, null, (a, errorStack) => {
-      console.log(`${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`)
+      console.log(
+        `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
+      )
       this.set('error.culprit', errorStack.culprit)
       this.set('error.exception.type', errorStack.exception.type)
       this.set('error.exception.message', errorStack.exception.message)
       this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace))
 
       // End transaction
-      this.buildOutput(ERROR) // set this to transaction for now. 
+      this.buildOutput(ERROR) // set this to transaction for now.
       self.end(cb)
     })
   }
@@ -155,9 +168,14 @@ class Transaction {
   buildOutput(type) {
     if (!this.processed) {
       // End transaction timer
-      let duration = new Date().getTime() - this.$.duration.getTime()
+      const duration = new Date().getTime() - this.$.duration.getTime()
       this.set('compute.memoryUsed', JSON.stringify(process.memoryUsage()))
-      this.set('compute.memoryPercentageUsed', ((process.memoryUsage().heapUsed / Math.pow(1024, 2)).toFixed() / this.$.schema.compute.memorySize) * 100)
+      this.set(
+        'compute.memoryPercentageUsed',
+        ((process.memoryUsage().heapUsed / Math.pow(1024, 2)).toFixed() /
+          this.$.schema.compute.memorySize) *
+          100
+      )
 
       // Flatten and camelCase schema because EAPM tags are only key/value=string
       let tags = _.flatten(this.$.schema)
@@ -167,10 +185,10 @@ class Transaction {
       // if transaction add the request id as the transaction trace
       this.$.schema.traceId = tags.computeCustomAwsRequestId
 
-      // create the envelope needed for parsing 
+      // create the envelope needed for parsing
       // and the span to hold the transaction and event data
-      let envelope = require('./schemas/envelope.json')
-      let span = require('./schemas/span.json')
+      const envelope = require('./schemas/envelope.json')
+      const span = require('./schemas/span.json')
 
       envelope.timestamp = new Date().toISOString()
       envelope.requestId = tags.computeCustomAwsRequestId
@@ -183,7 +201,7 @@ class Transaction {
       span.spanContext = {
         traceId: tags.computeCustomAwsRequestId,
         spanId: this.$.schema.transactionId,
-        xTraceId: tags.computeCustomXTraceId,
+        xTraceId: tags.computeCustomXTraceId
       }
       span.tags = tags
       envelope.payload = span

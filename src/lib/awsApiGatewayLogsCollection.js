@@ -6,9 +6,11 @@
 const utils = require('./utils')
 
 module.exports = async (ctx) => {
-  if (!ctx.sls.service.custom
-    || !ctx.sls.service.custom.platform
-    || !ctx.sls.service.custom.platform.collectApiLogs) {
+  if (
+    !ctx.sls.service.custom ||
+    !ctx.sls.service.custom.platform ||
+    !ctx.sls.service.custom.platform.collectApiLogs
+  ) {
     ctx.sls.cli.log(
       'Info: The Serverless Platform Plugin is not configured to collect API Gateway Logs.'
     )
@@ -104,8 +106,8 @@ module.exports = async (ctx) => {
     }
 
     /*
-    * Finally, this will make sure every stage's API details are published to to our Kinesis Streams
-    */
+     * Finally, this will make sure every stage's API details are published to to our Kinesis Streams
+     */
     template.Resources[
       `CloudWatchLogsSubscriptionFilter${utils.upperFirst(deployment.Properties.StageName)}`
     ] = {
@@ -119,7 +121,9 @@ module.exports = async (ctx) => {
             'API-Gateway-Execution-Logs_${ApiGatewayId}/${StageName}',
             {
               ApiGatewayId: { Ref: 'ApiGatewayRestApi' },
-              StageName: { Ref: `ApiGatewayStage${utils.upperFirst(deployment.Properties.StageName)}` }
+              StageName: {
+                Ref: `ApiGatewayStage${utils.upperFirst(deployment.Properties.StageName)}`
+              }
             }
           ]
         }

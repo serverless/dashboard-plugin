@@ -10,28 +10,40 @@ const safeguards = require('./lib/safeguards.js')
  */
 
 class ServerlessPlatformPlugin {
-
   constructor(sls) {
-
     // Defaults
     this.sls = sls
     this.state = {}
-    this.provider = this.sls.getProvider('aws');
+    this.provider = this.sls.getProvider('aws')
 
     // Check if Platform is configured
     let missing
-    if (!this.sls.service.tenant) missing = 'tenant'
-    if (!this.sls.service.app) missing = 'app'
-    if (!this.sls.service.service) missing = 'service'
+    if (!this.sls.service.tenant) {
+      missing = 'tenant'
+    }
+    if (!this.sls.service.app) {
+      missing = 'app'
+    }
+    if (!this.sls.service.service) {
+      missing = 'service'
+    }
     if (missing) {
-      this.sls.cli.log(`Warning: The Serverless Platform Plugin requires a "${missing}" property in your "serverless.yml" and will not work without it.`)
+      this.sls.cli.log(
+        `Warning: The Serverless Platform Plugin requires a "${missing}" property in your "serverless.yml" and will not work without it.`
+      )
     }
 
     // Set Plugin hooks for all Platform Plugin features here
     this.hooks = {
-      'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this),
-      'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this),
-      'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this),
+      'before:package:createDeploymentArtifacts': this.route(
+        'before:package:createDeploymentArtifacts'
+      ).bind(this),
+      'after:package:createDeploymentArtifacts': this.route(
+        'after:package:createDeploymentArtifacts'
+      ).bind(this),
+      'before:deploy:function:packageFunction': this.route(
+        'before:deploy:function:packageFunction'
+      ).bind(this),
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this),
       'before:info:info': this.route('before:info:info').bind(this),
@@ -40,7 +52,9 @@ class ServerlessPlatformPlugin {
       'before:remove:remove': this.route('before:remove:remove').bind(this),
       'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
       'before:offline:start:init': this.route('before:offline:start:init').bind(this),
-      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this),
+      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(
+        this
+      )
     }
   }
 
