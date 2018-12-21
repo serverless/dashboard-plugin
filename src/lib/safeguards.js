@@ -1,6 +1,6 @@
-const dir = require('node-dir')
-const yml = require('yamljs')
-const path = require('path')
+import dir from 'node-dir'
+import yml from 'yamljs'
+import path from 'path'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 
@@ -178,4 +178,4 @@ function runPolicies(ctx) {
   })
 }
 
-module.exports = { runPolicies }
+export { runPolicies }

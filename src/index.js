@@ -1,9 +1,9 @@
-const awsApiGatewayLogsCollection = require('./lib/awsApiGatewayLogsCollection')
-const awsLambdaLogsCollection = require('./lib/awsLambdaLogsCollection')
-const fetchCredentials = require('./lib/fetchCredentials.js')
-const wrap = require('./lib/wrap.js')
-const wrapClean = require('./lib/wrapClean.js')
-const safeguards = require('./lib/safeguards.js')
+import awsApiGatewayLogsCollection from './lib/awsApiGatewayLogsCollection'
+import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
+import fetchCredentials from './lib/fetchCredentials.js'
+import wrap from './lib/wrap.js'
+import wrapClean from './lib/wrapClean.js'
+import safeguards from './lib/safeguards.js'
 
 /*
  * Serverless Platform Plugin
@@ -110,4 +110,4 @@ class ServerlessPlatformPlugin {
   }
 }
 
-module.exports = ServerlessPlatformPlugin
+export default ServerlessPlatformPlugin

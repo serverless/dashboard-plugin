@@ -3,10 +3,10 @@
  * - Cleans up files create during wrapping
  */
 
-const fs = require('fs-extra')
-const path = require('path')
+import fs from 'fs-extra'
+import path from 'path'
 
-module.exports = async (ctx) => {
+export default async (ctx) => {
   // Clear assets (serverless-sdk)
   if (fs.pathExistsSync(ctx.state.pathAssets)) {
     fs.removeSync(ctx.state.pathAssets)

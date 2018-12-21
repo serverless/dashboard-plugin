@@ -1,6 +1,6 @@
-const path = require('path')
-const os = require('os')
-const fs = require('fs')
+import path from 'path'
+import os from 'os'
+import fs from 'fs'
 
 const serverlessrcPath = path.join(os.homedir(), '.serverlessrc')
 
@@ -54,9 +54,4 @@ function getUser() {
   return { idToken: user.idToken, username: user.username }
 }
 
-module.exports = {
-  upperFirst,
-  pickResourceType,
-  getPlatformHostname,
-  getUser
-}
+export { upperFirst, pickResourceType, getPlatformHostname, getUser }

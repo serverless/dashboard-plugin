@@ -13,3 +13,4 @@ testProjects/*/yarn.lock
 node_modules
 .vscode/
 .eslintcache
+dist

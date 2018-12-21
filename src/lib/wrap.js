@@ -4,8 +4,8 @@
  * - Wraps your function handlers with the ServerlessSDK
  */
 
-const fs = require('fs-extra')
-const path = require('path')
+import fs from 'fs-extra'
+import path from 'path'
 
 /*
  * Wrap Node.js Functions
@@ -26,7 +26,7 @@ module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').$
   fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
 }
 
-module.exports = async (ctx) => {
+export default async (ctx) => {
   // Check if we support the provider
   if (ctx.sls.service.provider.name !== 'aws') {
     ctx.sls.cli.log(

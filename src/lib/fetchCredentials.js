@@ -1,6 +1,6 @@
-const BbPromise = require('bluebird')
-const fetch = require('node-fetch')
-const { getUser, getPlatformHostname } = require('./utils')
+import BbPromise from 'bluebird'
+import fetch from 'node-fetch'
+import { getUser, getPlatformHostname } from './utils'
 
 function checkStatus(res) {
   if (res.ok) {
@@ -10,7 +10,7 @@ function checkStatus(res) {
   throw new Error(res)
 }
 
-module.exports = (ctx) => {
+export default (ctx) => {
   if (!process.env.SLS_CLOUD_ACCESS) {
     return BbPromise.resolve()
   }

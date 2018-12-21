@@ -3,9 +3,9 @@
  * - Collects all API Gateway logs
  */
 
-const utils = require('./utils')
+import utils from './utils'
 
-module.exports = async (ctx) => {
+export default async (ctx) => {
   if (
     !ctx.sls.service.custom ||
     !ctx.sls.service.custom.platform ||
