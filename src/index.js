@@ -1,6 +1,6 @@
+import { getCredentials } from '@serverless/platform-sdk'
 import awsApiGatewayLogsCollection from './lib/awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
-import fetchCredentials from './lib/fetchCredentials.js'
 import wrap from './lib/wrap.js'
 import wrapClean from './lib/wrapClean.js'
 import safeguards from './lib/safeguards.js'
@@ -79,19 +79,19 @@ class ServerlessPlatformPlugin {
           await safeguards.runPolicies(self)
           await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
-          await fetchCredentials(self)
+          await getCredentials(self)
           break
         case 'before:info:info':
-          await fetchCredentials(self)
+          await getCredentials(self)
           break
         case 'before:logs:logs':
-          await fetchCredentials(self)
+          await getCredentials(self)
           break
         case 'before:metrics:metrics':
-          await fetchCredentials(self)
+          await getCredentials(self)
           break
         case 'before:remove:remove':
-          await fetchCredentials(self)
+          await getCredentials(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)
