@@ -28,9 +28,10 @@ class ServerlessPlatformPlugin {
       missing.push('service')
     }
     if (missing.length > 0) {
-      this.sls.cli.log(`Warning: The Serverless Platform Plugin requires a ${
-        missing.map(opt => `"${opt}"`).join(', ')
-      } property in your "serverless.yml" and will not work without it.`
+      this.sls.cli.log(
+        `Warning: The Serverless Platform Plugin requires a ${missing
+          .map((opt) => `"${opt}"`)
+          .join(', ')} property in your "serverless.yml" and will not work without it.`
       )
     }
 
