@@ -26,4 +26,32 @@ describe('index', () => {
     expect(getProviderMock).toBeCalledWith('aws')
     expect(logMock).toHaveBeenCalledTimes(0)
   })
+
+  it('construct requires tennant', () => {
+    const getProviderMock = jest.fn()
+    const logMock = jest.fn()
+    const instance = new ServerlessPlatformPlugin({
+      getProvider: getProviderMock,
+      service: {},
+      cli: { log: logMock }
+    })
+    expect(Object.keys(instance.hooks)).toEqual([
+      'before:package:createDeploymentArtifacts',
+      'after:package:createDeploymentArtifacts',
+      'before:deploy:function:packageFunction',
+      'before:invoke:local:invoke',
+      'before:deploy:deploy',
+      'before:info:info',
+      'before:logs:logs',
+      'before:metrics:metrics',
+      'before:remove:remove',
+      'after:invoke:local:invoke',
+      'before:offline:start:init',
+      'before:step-functions-offline:start'
+    ])
+    expect(getProviderMock).toBeCalledWith('aws')
+    expect(logMock).toBeCalledWith('Warning: The Serverless Platform Plugin requires a "tenant"' + 
+                                  ', "app", "service" property in your "serverless.yml" and ' +
+                                  'will not work without it.')
+  })
 })

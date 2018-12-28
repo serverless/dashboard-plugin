@@ -17,19 +17,20 @@ class ServerlessPlatformPlugin {
     this.provider = this.sls.getProvider('aws')
 
     // Check if Platform is configured
-    let missing
+    const missing = []
     if (!this.sls.service.tenant) {
-      missing = 'tenant'
+      missing.push('tenant')
     }
     if (!this.sls.service.app) {
-      missing = 'app'
+      missing.push('app')
     }
     if (!this.sls.service.service) {
-      missing = 'service'
+      missing.push('service')
     }
-    if (missing) {
-      this.sls.cli.log(
-        `Warning: The Serverless Platform Plugin requires a "${missing}" property in your "serverless.yml" and will not work without it.`
+    if (missing.length > 0) {
+      this.sls.cli.log(`Warning: The Serverless Platform Plugin requires a ${
+        missing.map(opt => `"${opt}"`).join(', ')
+      } property in your "serverless.yml" and will not work without it.`
       )
     }
 
