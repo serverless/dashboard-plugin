@@ -1,6 +1,3 @@
-import path from 'path'
-import os from 'os'
-
 function upperFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
