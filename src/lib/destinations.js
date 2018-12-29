@@ -11,6 +11,7 @@ const getDestination = async (ctx) => {
       appName: ctx.sls.service.app,
       serviceName: ctx.sls.service.getServiceName(),
       stageName: ctx.provider.getStage(),
+      regionName: ctx.provider.getRegion(),
       accountId: Account
     })
 
@@ -35,7 +36,8 @@ const removeDestination = async (ctx) => {
       tenantName: ctx.sls.service.tenant,
       appName: ctx.sls.service.app,
       serviceName: ctx.sls.service.getServiceName(),
-      stageName: ctx.provider.getStage()
+      stageName: ctx.provider.getStage(),
+      regionName: ctx.provider.getRegion(),
     })
 
     return fetch(`${hostname}/destinations/delete`, {
