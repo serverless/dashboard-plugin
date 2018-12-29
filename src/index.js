@@ -4,6 +4,7 @@ const fetchCredentials = require('./lib/fetchCredentials.js')
 const wrap = require('./lib/wrap.js')
 const wrapClean = require('./lib/wrapClean.js')
 const safeguards = require('./lib/safeguards.js')
+const { removeDestination } = require('./lib/destinations')
 
 /*
  * Serverless Platform Plugin
@@ -33,11 +34,13 @@ class ServerlessPlatformPlugin {
       'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this),
       'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this),
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
+      'before:aws:package:finalize:saveServiceState': this.route('before:aws:package:finalize:saveServiceState').bind(this),
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this),
       'before:info:info': this.route('before:info:info').bind(this),
       'before:logs:logs': this.route('before:logs:logs').bind(this),
       'before:metrics:metrics': this.route('before:metrics:metrics').bind(this),
       'before:remove:remove': this.route('before:remove:remove').bind(this),
+      'after:remove:remove': this.route('after:remove:remove').bind(this),
       'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
       'before:offline:start:init': this.route('before:offline:start:init').bind(this),
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this),
@@ -61,11 +64,13 @@ class ServerlessPlatformPlugin {
         case 'before:deploy:function:packageFunction':
           // await wrap(self)
           break
-        case 'before:deploy:deploy':
-          await safeguards.runPolicies(self)
+        case 'before:aws:package:finalize:saveServiceState':
+          await fetchCredentials(self)
           await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
-          await fetchCredentials(self)
+          break
+        case 'before:deploy:deploy':
+          await safeguards.runPolicies(self)
           break
         case 'before:info:info':
           await fetchCredentials(self)
@@ -78,6 +83,9 @@ class ServerlessPlatformPlugin {
           break
         case 'before:remove:remove':
           await fetchCredentials(self)
+          break
+        case 'after:remove:remove':
+          await removeDestination(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)
