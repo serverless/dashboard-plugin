@@ -7,7 +7,7 @@
 
 import utils from './utils'
 
-import { getDestination } from './destinations'
+import { getLogDestination } from '@serverless/platform-sdk'
 
 export default async (ctx) => {
   if (
@@ -29,7 +29,7 @@ export default async (ctx) => {
     return
   }
 
-  const { destinationArn } = await getDestination(ctx)
+  const { destinationArn } = await getLogDestination(ctx)
 
   // For each log group, set up subscription
   for (const lambdaLogGroupIndex in lambdaLogGroups) {
