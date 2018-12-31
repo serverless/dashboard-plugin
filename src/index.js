@@ -4,6 +4,7 @@ import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
 import wrap from './lib/wrap.js'
 import wrapClean from './lib/wrapClean.js'
 import safeguards from './lib/safeguards.js'
+import { removeDestination } from './lib/destinations'
 
 /*
  * Serverless Platform Plugin
@@ -47,11 +48,15 @@ class ServerlessPlatformPlugin {
         'before:deploy:function:packageFunction'
       ).bind(this),
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
+      'before:aws:package:finalize:saveServiceState': this.route(
+        'before:aws:package:finalize:saveServiceState'
+      ).bind(this),
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this),
       'before:info:info': this.route('before:info:info').bind(this),
       'before:logs:logs': this.route('before:logs:logs').bind(this),
       'before:metrics:metrics': this.route('before:metrics:metrics').bind(this),
       'before:remove:remove': this.route('before:remove:remove').bind(this),
+      'after:remove:remove': this.route('after:remove:remove').bind(this),
       'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
       'before:offline:start:init': this.route('before:offline:start:init').bind(this),
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(
@@ -77,11 +82,13 @@ class ServerlessPlatformPlugin {
         case 'before:deploy:function:packageFunction':
           // await wrap(self)
           break
-        case 'before:deploy:deploy':
-          await safeguards.runPolicies(self)
+        case 'before:aws:package:finalize:saveServiceState':
+          await getCredentials(self)
           await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
-          await getCredentials(self)
+          break
+        case 'before:deploy:deploy':
+          await safeguards.runPolicies(self)
           break
         case 'before:info:info':
           await getCredentials(self)
@@ -94,6 +101,9 @@ class ServerlessPlatformPlugin {
           break
         case 'before:remove:remove':
           await getCredentials(self)
+          break
+        case 'after:remove:remove':
+          await removeDestination(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)

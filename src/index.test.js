@@ -4,13 +4,13 @@ import awsApiGatewayLogsCollection from './lib/awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
 import wrap from './lib/wrap.js'
 import wrapClean from './lib/wrapClean.js'
-import {runPolicies} from './lib/safeguards.js'
+import { runPolicies } from './lib/safeguards.js'
 
 afterAll(() => jest.restoreAllMocks())
-jest.mock('@serverless/platform-sdk', () => ({getCredentials: jest.fn()}))
+jest.mock('@serverless/platform-sdk', () => ({ getCredentials: jest.fn() }))
 jest.mock('./lib/wrap', () => jest.fn())
 jest.mock('./lib/wrapClean', () => jest.fn())
-jest.mock('./lib/safeguards', () => ({runPolicies: jest.fn()}))
+jest.mock('./lib/safeguards', () => ({ runPolicies: jest.fn() }))
 jest.mock('./lib/awsApiGatewayLogsCollection', () => jest.fn())
 jest.mock('./lib/awsLambdaLogsCollection', () => jest.fn())
 
@@ -28,11 +28,13 @@ describe('index', () => {
       'after:package:createDeploymentArtifacts',
       'before:deploy:function:packageFunction',
       'before:invoke:local:invoke',
+      'before:aws:package:finalize:saveServiceState',
       'before:deploy:deploy',
       'before:info:info',
       'before:logs:logs',
       'before:metrics:metrics',
       'before:remove:remove',
+      'after:remove:remove',
       'after:invoke:local:invoke',
       'before:offline:start:init',
       'before:step-functions-offline:start'
@@ -54,11 +56,13 @@ describe('index', () => {
       'after:package:createDeploymentArtifacts',
       'before:deploy:function:packageFunction',
       'before:invoke:local:invoke',
+      'before:aws:package:finalize:saveServiceState',
       'before:deploy:deploy',
       'before:info:info',
       'before:logs:logs',
       'before:metrics:metrics',
       'before:remove:remove',
+      'after:remove:remove',
       'after:invoke:local:invoke',
       'before:offline:start:init',
       'before:step-functions-offline:start'
@@ -167,6 +171,20 @@ describe('index', () => {
     expect(getCredentials).toBeCalledWith(instance)
   })
 
+  it('routes before:aws:package:finalize:saveServiceState', async () => {
+    const getProviderMock = jest.fn()
+    const logMock = jest.fn()
+    const instance = new ServerlessPlatformPlugin({
+      getProvider: getProviderMock,
+      service: { service: 'service', app: 'app', tenant: 'tenant' },
+      cli: { log: logMock }
+    })
+    await instance.route('before:aws:package:finalize:saveServiceState')()
+    expect(getCredentials).toBeCalledWith(instance)
+    expect(awsApiGatewayLogsCollection).toBeCalledWith(instance)
+    expect(awsLambdaLogsCollection).toBeCalledWith(instance)
+  })
+
   it('routes before:deploy:deploy', async () => {
     const getProviderMock = jest.fn()
     const logMock = jest.fn()
@@ -177,8 +195,5 @@ describe('index', () => {
     })
     await instance.route('before:deploy:deploy')()
     expect(runPolicies).toBeCalledWith(instance)
-    expect(awsApiGatewayLogsCollection).toBeCalledWith(instance)
-    expect(awsLambdaLogsCollection).toBeCalledWith(instance)
-    expect(getCredentials).toBeCalledWith(instance)
   })
 })

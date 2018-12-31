@@ -7,6 +7,8 @@
 
 import utils from './utils'
 
+import { getDestination } from './destinations'
+
 export default async (ctx) => {
   if (
     !ctx.sls.service.custom ||
@@ -23,6 +25,11 @@ export default async (ctx) => {
 
   // Gather possible targets
   const lambdaLogGroups = utils.pickResourceType(template, 'AWS::Logs::LogGroup')
+  if (lambdaLogGroups.length == 0) {
+    return
+  }
+
+  const { destinationArn } = await getDestination(ctx)
 
   // For each log group, set up subscription
   for (const lambdaLogGroupIndex in lambdaLogGroups) {
@@ -31,31 +38,12 @@ export default async (ctx) => {
     template.Resources[`CloudWatchLogsSubscriptionFilter${utils.upperFirst(lambdaLogGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
-        DestinationArn:
-          'arn:aws:logs:us-east-1:377024778620:destination:ServerlessPlatformDemoLambdaLogs',
-        FilterPattern: '', // TODO: Make this only get what we want!
+        DestinationArn: destinationArn,
+        FilterPattern: '{ $.origin = "sls-agent" }',
         LogGroupName: {
           Ref: lambdaLogGroupKey
         }
       }
     }
   }
-
-  /*
-  const config = ctx.sls.service.custom.platform || {}
-  const {
-    collectLambdaLogs = false,
-    cloudwatchApmTransport = true,
-    httpApmTransport = false
-  } = config
-  */
-  // TODO if collecting all logs is disabled, but we still want APM, handle this case
-  //
-  //   if (cloudwatchApmTransport === false || httpApmTransport === true) {
-  //     ctx.sls.cli.log(
-  //       'Info: The Serverless Platform Plugin is configured to use the HTTP transport for APM instead (less optimal).'
-  //     )
-  //   } else {
-
-  //   }
 }

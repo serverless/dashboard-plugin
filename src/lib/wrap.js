@@ -11,7 +11,7 @@ import path from 'path'
  * Wrap Node.js Functions
  */
 
-const wrapNodeJs = (fn, ctx) => {
+export const wrapNodeJs = (fn, ctx) => {
   const newHandlerCode = `var serverlessSDK = require('./serverless-sdk/index.js')
 serverlessSDK = new serverlessSDK({
 tenantId: '${ctx.sls.service.tenant}',
