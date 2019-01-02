@@ -1,9 +1,9 @@
-import { getCredentials } from '@serverless/platform-sdk'
 import awsApiGatewayLogsCollection from './lib/awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
 import wrap from './lib/wrap.js'
 import wrapClean from './lib/wrapClean.js'
 import safeguards from './lib/safeguards.js'
+import getCredentials from './lib/credentials.js'
 import { removeLogDestination } from '@serverless/platform-sdk'
 
 /*

@@ -1,5 +1,5 @@
 import ServerlessPlatformPlugin from '.'
-import { getCredentials } from '@serverless/platform-sdk'
+import getCredentials from './lib/credentials'
 import awsApiGatewayLogsCollection from './lib/awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
 import wrap from './lib/wrap.js'
@@ -7,7 +7,7 @@ import wrapClean from './lib/wrapClean.js'
 import { runPolicies } from './lib/safeguards.js'
 
 afterAll(() => jest.restoreAllMocks())
-jest.mock('@serverless/platform-sdk', () => ({ getCredentials: jest.fn() }))
+jest.mock('./lib/credentials', () => jest.fn())
 jest.mock('./lib/wrap', () => jest.fn())
 jest.mock('./lib/wrapClean', () => jest.fn())
 jest.mock('./lib/safeguards', () => ({ runPolicies: jest.fn() }))
