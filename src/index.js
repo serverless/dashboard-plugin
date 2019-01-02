@@ -4,7 +4,7 @@ import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
 import wrap from './lib/wrap.js'
 import wrapClean from './lib/wrapClean.js'
 import safeguards from './lib/safeguards.js'
-import { removeLogDestination } from '@serverless/platform-sdk'
+import removeDestination from './lib/removeDestination.js'
 
 /*
  * Serverless Platform Plugin
@@ -103,7 +103,7 @@ class ServerlessPlatformPlugin {
           await getCredentials(self)
           break
         case 'after:remove:remove':
-          await removeLogDestination(self)
+          await removeDestination(self)
           break
         case 'before:invoke:local:invoke':
           await wrap(self)
