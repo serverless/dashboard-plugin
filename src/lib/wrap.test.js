@@ -1,42 +1,61 @@
 import fs from 'fs-extra'
-import { wrapNodeJs } from './wrap'
+import wrap from './wrap'
 
 afterAll(() => jest.restoreAllMocks())
 jest.mock('fs-extra', () => ({
-  writeFileSync: jest.fn()
+  writeFileSync: jest.fn(),
+  pathExistsSync: jest.fn().mockReturnValue(true),
+  removeSync: jest.fn(),
+  ensureDirSync: jest.fn(),
+  copySync: jest.fn()
 }))
 
-describe('wrap - wrapNodeJs', () => {
-  it('wraps nodejs handlers', () => {
-    wrapNodeJs(
-      {
-        name: 'name',
-        entryOrig: 'file',
-        handlerOrig: 'func',
-        entryNew: 's-fn'
-      },
-      {
-        sls: {
-          config: { servicePath: 'path' },
-          service: {
-            service: 'service',
-            tenant: 'tenant',
-            app: 'app',
-            provider: { stage: 'dev' }
-          }
-        }
-      }
-    )
+describe('wrap - wrap', () => {
+  it('wraps copies js sdk & calls wrapper', async () => {
+    const log = jest.fn()
 
+    const ctx = {
+      state: {},
+      sls: {
+        config: { servicePath: 'path' },
+        service: {
+          service: 'service',
+          tenant: 'tenant',
+          app: 'app',
+          provider: { stage: 'dev' },
+          functions: {
+            func: {
+              runtime: 'nodejs8.10',
+              handler: 'handlerFile.handlerFunc'
+            }
+          }
+        },
+        cli: { log }
+      }
+    }
+    await wrap(ctx)
+
+    expect(fs.pathExistsSync).toBeCalledWith('path/serverless-sdk')
+    expect(ctx.state.functions).toEqual({
+      func: {
+        entryNew: 's-func',
+        entryOrig: 'handlerFile',
+        handlerNew: 'handler',
+        handlerOrig: 'handlerFunc',
+        key: 'func',
+        name: 'service-dev-func',
+        runtime: 'nodejs8.10'
+      }
+    })
     expect(fs.writeFileSync).toBeCalledWith(
-      'path/s-fn.js',
+      'path/s-func.js',
       `var serverlessSDK = require('./serverless-sdk/index.js')
 serverlessSDK = new serverlessSDK({
 tenantId: 'tenant',
 applicationName: 'app',
 serviceName: 'service',
 stageName: 'dev'})
-module.exports.handler = serverlessSDK.handler(require('./file.js').func, { functionName: 'name' })`
+module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
     )
   })
 })
