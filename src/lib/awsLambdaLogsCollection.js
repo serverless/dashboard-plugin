@@ -5,7 +5,7 @@
  * - Capturing billing details (?)
  */
 
-import utils from './utils'
+import { pickResourceType, upperFirst } from './utils'
 
 import { getLogDestination } from '@serverless/platform-sdk'
 
@@ -24,7 +24,7 @@ export default async (ctx) => {
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 
   // Gather possible targets
-  const lambdaLogGroups = utils.pickResourceType(template, 'AWS::Logs::LogGroup')
+  const lambdaLogGroups = pickResourceType(template, 'AWS::Logs::LogGroup')
   if (lambdaLogGroups.length == 0) {
     return
   }
@@ -44,14 +44,14 @@ export default async (ctx) => {
   try {
     ;({ destinationArn } = await getLogDestination(destinationOpts))
   } catch (e) {
-    throw new this.serverless.classes.Error(e.message)
+    throw new Error(e.message)
   }
 
   // For each log group, set up subscription
   for (const lambdaLogGroupIndex in lambdaLogGroups) {
     const lambdaLogGroupKey = lambdaLogGroups[lambdaLogGroupIndex].key
 
-    template.Resources[`CloudWatchLogsSubscriptionFilter${utils.upperFirst(lambdaLogGroupKey)}`] = {
+    template.Resources[`CloudWatchLogsSubscriptionFilter${upperFirst(lambdaLogGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
         DestinationArn: destinationArn,
