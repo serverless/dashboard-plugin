@@ -14,11 +14,14 @@ script:
   - npm run test
   - pushd sdk-js && npm run test && popd
 
-# deploy:
-#   provider: npm
-#   email: services@serverless.com
-#   skip_cleanup: true
-#   on:
-#     branch: master
-#     tags: true
-#     repo: serverless/platform-plugin
+deploy:
+  provider: npm
+  email: services@serverless.com
+  skip_cleanup: true
+  tag: next # remove when no longer a beta release
+  on:
+    branch: master
+    tags: true
+    repo: serverless/platform-plugin
+  api_key:
+    #secure: TODO

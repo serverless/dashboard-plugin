@@ -1,6 +1,6 @@
 {
-  "name": "serverless-platform-plugin",
-  "version": "0.0.1",
+  "name": "@serverless/platform-plugin",
+  "version": "1.0.0-beta",
   "description": "The Serverless Platform plugin",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "test": "jest src"
   },
   "dependencies": {
-    "@serverless/platform-sdk": "^0.3.0",
+    "@serverless/platform-sdk": "^1.0.0-beta",
     "fs-extra": "^7.0.1",
     "node-dir": "^0.1.17",
     "node-fetch": "^2.3.0",
