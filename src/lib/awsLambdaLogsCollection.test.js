@@ -31,12 +31,12 @@ describe('awsLambdaLogsCollection', () => {
               }
             }
           }
-        },
-        provider: {
-          request,
-          getStage,
-          getRegion
         }
+      },
+      provider: {
+        request,
+        getStage,
+        getRegion
       }
     }
     const that = { serverless: { classes: { Error } } }
