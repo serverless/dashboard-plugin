@@ -8,6 +8,7 @@ import { runPolicies } from './lib/safeguards.js'
 
 afterAll(() => jest.restoreAllMocks())
 jest.mock('./lib/credentials', () => jest.fn())
+jest.mock('./lib/appUid', () => jest.fn(() => '000000000000000000'))
 jest.mock('./lib/wrap', () => jest.fn())
 jest.mock('./lib/wrapClean', () => jest.fn())
 jest.mock('./lib/safeguards', () => ({ runPolicies: jest.fn() }))

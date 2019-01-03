@@ -21,6 +21,7 @@ class ServerlessSDK {
     this.$.config.debug = obj.config ? obj.config.debug || false : false
 
     this.$.tenantId = obj.tenantId || null
+    this.$.appUid = obj.appUid || null
     this.$.applicationName = obj.applicationName || null
     this.$.serviceName = obj.serviceName || null
     this.$.stageName = obj.stageName || null
@@ -67,6 +68,7 @@ class ServerlessSDK {
     // WARNING: This will result in data from prevous requests affecting the current request
     meta.tenantId = meta.tenantId || (this.$.tenantId || null)
     meta.applicationName = meta.applicationName || (this.$.applicationName || null)
+    meta.appUid = meta.appUid || (this.$.appUid || null)
     meta.serviceName = meta.serviceName || (this.$.serviceName || null)
     meta.stageName = meta.stageName || (this.$.stageName || null)
     meta.functionName = config.functionName
@@ -118,6 +120,7 @@ class ServerlessSDK {
         const trans = self.transaction({
           tenantId: meta.tenantId,
           applicationName: meta.applicationName,
+          appUid: meta.appUid,
           serviceName: meta.serviceName,
           stageName: meta.stageName,
           functionName: meta.functionName,

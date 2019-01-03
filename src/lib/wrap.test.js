@@ -22,6 +22,7 @@ describe('wrap - wrap', () => {
           service: 'service',
           tenant: 'tenant',
           app: 'app',
+          appUid: 'appUid',
           provider: { stage: 'dev' },
           functions: {
             func: {
@@ -53,6 +54,7 @@ describe('wrap - wrap', () => {
 serverlessSDK = new serverlessSDK({
 tenantId: 'tenant',
 applicationName: 'app',
+appUid: 'appUid',
 serviceName: 'service',
 stageName: 'dev'})
 module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
