@@ -1,6 +1,6 @@
-const dir = require('node-dir')
-const yml = require('yamljs')
-const path = require('path')
+import dir from 'node-dir'
+import yml from 'yamljs'
+import path from 'path'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 
@@ -44,12 +44,11 @@ function runPolicies(ctx) {
         function: require(path.join(policiesPath, policyName)),
         options: policyOptions
       }
-    } else {
-      return {
-        name: policy,
-        function: require(path.join(policiesPath, policy)),
-        options: {}
-      }
+    }
+    return {
+      name: policy,
+      function: require(path.join(policiesPath, policy)),
+      options: {}
     }
   })
 
@@ -72,9 +71,9 @@ function runPolicies(ctx) {
           } else {
             service.compiled[relativeFilename] = yml.parse(content)
           }
-        } catch (err) {
+        } catch (error) {
           ctx.sls.cli.log(`Failed to parse file ${filename} in the artifacts directory.`)
-          reject(err)
+          reject(error)
         }
 
         next()
@@ -116,15 +115,14 @@ function runPolicies(ctx) {
         .then(() => {
           if (result.approved) {
             return result
-          } else {
-            result.error = new Error(
-              `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
-                policy.name
-              }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
-            )
-            ctx.sls.cli.log(result.error.message)
-            return result
           }
+          result.error = new Error(
+            `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
+              policy.name
+            }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
+          )
+          ctx.sls.cli.log(result.error.message)
+          return result
         })
         .catch((error) => {
           if (error instanceof PolicyFailureError) {
@@ -136,19 +134,18 @@ function runPolicies(ctx) {
               }" prevented the deployment \u2014 ${error.message}`
             )
             return result
-          } else {
-            ctx.sls.cli.log(
-              `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
-                policy.name
-              }".  If this problem persists, contact the policy author.`
-            )
-            throw error
           }
+          ctx.sls.cli.log(
+            `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
+              policy.name
+            }".  If this problem persists, contact the policy author.`
+          )
+          throw error
         })
     })
 
     return Promise.all(runningPolicies).then((results) => {
-      const markedPolicies = results.filter((r) => !r.approved || r.warned)
+      const markedPolicies = results.filter((res) => !res.approved || res.warned)
       if (markedPolicies.length === 0) {
         ctx.sls.cli.log(`(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`)
         return
@@ -159,20 +156,20 @@ function runPolicies(ctx) {
           markedPolicies.length
         } policies reported irregular conditions. For details, see the logs above.\n      ` +
         markedPolicies
-          .map((r) => {
-            if (r.failed) {
-              return `\u274C ${r.name}: Requirements not satisfied. Deployment halted.`
+          .map((res) => {
+            if (res.failed) {
+              return `\u274C ${res.name}: Requirements not satisfied. Deployment halted.`
             }
 
-            if (r.approved && r.warned) {
-              return `\u26A0\uFE0F ${r.name}: Warned of a non-critical condition.`
+            if (res.approved && res.warned) {
+              return `\u26A0\uFE0F ${res.name}: Warned of a non-critical condition.`
             }
 
-            return `\u2049\uFE0F ${r.name}: Finished inconclusively. Deployment halted.`
+            return `\u2049\uFE0F ${res.name}: Finished inconclusively. Deployment halted.`
           })
           .join('\n      ')
 
-      if (markedPolicies.every((r) => r.approved)) {
+      if (markedPolicies.every((res) => res.approved)) {
         ctx.sls.cli.log(summary)
         return
       }
@@ -181,4 +178,4 @@ function runPolicies(ctx) {
   })
 }
 
-module.exports = { runPolicies }
+export default runPolicies

@@ -6,19 +6,24 @@
   "scripts": {
     "build": "NODE_ENV=production npm run folder && npm run webpack",
     "folder": "rm -rf dist && mkdir dist",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "lint": "eslint src --fix --cache"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "camelcase-keys": "^5.0.0",
-    "flat": "^4.1.0",
     "lodash": "^4.17.11",
     "uuid": "^3.3.2",
     "stackman": "^3.0.2"
   },
   "devDependencies": {
     "webpack": "^4.25.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "prettier": "^1.14.3"
   }
 }

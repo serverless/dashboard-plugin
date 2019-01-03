@@ -1,10 +1,8 @@
 /*
-* Serverless SDK
-*/
+ * Serverless SDK
+ */
 
 const os = require('os')
-const path = require('path')
-const _ = require('lodash')
 const ServerlessTransaction = require('./lib/transaction.js')
 
 /*
@@ -13,79 +11,97 @@ const ServerlessTransaction = require('./lib/transaction.js')
 */
 
 class ServerlessSDK {
-
   /*
-  * Constructor
-  */
+   * Constructor
+   */
 
   constructor(obj) {
     this.$ = {}
     this.$.config = {}
-    this.$.config.debug = obj.config ? (obj.config.debug || false) : false
+    this.$.config.debug = obj.config ? obj.config.debug || false : false
 
     this.$.tenantId = obj.tenantId || null
+    this.$.appUid = obj.appUid || null
+    this.$.tenantUid = obj.tenantUid || null
     this.$.applicationName = obj.applicationName || null
     this.$.serviceName = obj.serviceName || null
     this.$.stageName = obj.stageName || null
   }
 
   /*
-  * Transaction
-  * - Creates a new transaction
-  */
+   * Transaction
+   * - Creates a new transaction
+   */
 
   transaction(data) {
     return new ServerlessTransaction(data)
   }
 
   /*
-  * Handler
-  * - TODO: Perhaps accept config OR function (config is better because it captures load errors)
-  */
+   * Handler
+   * - TODO: Perhaps accept config OR function (config is better because it captures load errors)
+   */
 
   handler(fn, config) {
-
     const self = this
     const meta = {}
     config = config || {}
 
-    if (self.$.config.debug) console.log(`ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`)
+    if (self.$.config.debug) {
+      console.log(
+        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${
+          os.EOL
+        }${config}...`
+      )
+    }
 
     // Enforce required config
     let missing
-    if (!config.functionName) missing = 'functionName'
-    if (missing) throw new Error(`ServerlessSDK: Handler requires a ${missing} property in a config object`)
+    if (!config.functionName) {
+      missing = 'functionName'
+    }
+    if (missing) {
+      throw new Error(`ServerlessSDK: Handler requires a ${missing} property in a config object`)
+    }
 
     // Add global defaults
     // WARNING: This data is accessed in function handlers.  Therefore, DON'T add values that are request-specific.
     // WARNING: This will result in data from prevous requests affecting the current request
     meta.tenantId = meta.tenantId || (this.$.tenantId || null)
     meta.applicationName = meta.applicationName || (this.$.applicationName || null)
+    meta.appUid = meta.appUid || (this.$.appUid || null)
+    meta.tenantUid = meta.tenantUid || (this.$.tenantUid || null)
     meta.serviceName = meta.serviceName || (this.$.serviceName || null)
     meta.stageName = meta.stageName || (this.$.stageName || null)
     meta.functionName = config.functionName
     meta.computeType = config.computeType || null
 
     /*
-    * Auto-Detect: Compute Type
-    */
+     * Auto-Detect: Compute Type
+     */
 
     if (!meta.computeType) {
       // AWS Lambda
-      if (process.env.AWS_LAMBDA_FUNCTION_NAME) meta.computeType = 'aws.lambda'
+      if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+        meta.computeType = 'aws.lambda'
+      }
     }
 
     /*
-    * Wrapper: AWS Lambda
-    */
+     * Wrapper: AWS Lambda
+     */
 
     if (meta.computeType === 'aws.lambda') {
-
-      if (self.$.config.debug) console.log(`ServerlessSDK: Handler: Loading AWS Lambda handler...`)
+      if (self.$.config.debug) {
+        console.log(`ServerlessSDK: Handler: Loading AWS Lambda handler...`)
+      }
 
       return (event, context, callback) => {
-
-        if (self.$.config.debug) console.log(`ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`)
+        if (self.$.config.debug) {
+          console.log(
+            `ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`
+          )
+        }
 
         // Defaults
         event = event || {}
@@ -94,8 +110,8 @@ class ServerlessSDK {
         let eventType
 
         /*
-        * Auto-Detect: Event Type
-        */
+         * Auto-Detect: Event Type
+         */
 
         // aws.apigateway.http
         if (event.httpMethod && event.headers && event.requestContext) {
@@ -106,11 +122,13 @@ class ServerlessSDK {
         const trans = self.transaction({
           tenantId: meta.tenantId,
           applicationName: meta.applicationName,
+          appUid: meta.appUid,
+          tenantUid: meta.tenantUid,
           serviceName: meta.serviceName,
           stageName: meta.stageName,
           functionName: meta.functionName,
           computeType: meta.computeType,
-          eventType: eventType,
+          eventType: eventType
         })
 
         // Capture Compute Data: aws.lambda
@@ -135,8 +153,8 @@ class ServerlessSDK {
 
         // Capture Event Data: aws.apigateway.http
         if (eventType === 'aws.apigateway.http') {
-          let timestamp = event.requestContext.requestTimeEpoch || Date.now().valueOf() // local testing does not contain a requestTimeEpoc
-          trans.set('event.timestamp', (new Date(timestamp)).toISOString())
+          const timestamp = event.requestContext.requestTimeEpoch || Date.now().valueOf() // local testing does not contain a requestTimeEpoc
+          trans.set('event.timestamp', new Date(timestamp).toISOString())
           trans.set('event.source', 'aws.apigateway')
           trans.set('event.custom.accountId', event.requestContext.accountId)
           trans.set('event.custom.apiId', event.requestContext.apiId)
@@ -156,69 +174,70 @@ class ServerlessSDK {
         }
 
         /*
-        * Callback Wrapper
-        * - TODO: Inspect outgoing HTTP status codes
-        */
+         * Callback Wrapper
+         * - TODO: Inspect outgoing HTTP status codes
+         */
 
         const wrappedCallback = (error, res) => {
-
-          if (self.$.config.debug) console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
+          if (self.$.config.debug) {
+            console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
+          }
 
           const cb = () => {
-            return callback.call(
-              functionContext,
-              error || null,
-              res || null)
+            return callback.call(functionContext, error || null, res || null)
           }
 
           if (error) {
             return trans.error(error, cb)
-          } else {
-            return trans.end(cb)
           }
+          return trans.end(cb)
         }
 
         // Patch context methods
         context.done = wrappedCallback
-        context.succeed = (res) => { return wrappedCallback(null, res) }
+        context.succeed = (res) => {
+          return wrappedCallback(null, res)
+        }
         context.fail = (err) => {
           return wrappedCallback(err, null)
         }
 
         /*
-        * Try Running Code
-        */
+         * Try Running Code
+         */
 
         let result
         try {
-          result = fn(
-            event,
-            context,
-            wrappedCallback)
+          result = fn(event, context, wrappedCallback)
         } catch (error) {
           wrappedCallback(error, null)
         }
 
         // If promise was returned, handle it
         if (result && typeof result.then == 'function') {
-          result.then((data) => {
-            // In a AWS Lambda 'async' handler, an error can be returned directly
-            // This makes it look like a valid response, which it's not.
-            // The SDK needs to look out for this here, so it can still log/report the error like all others.
-            if (data instanceof Error) wrappedCallback(data, null)
-            else wrappedCallback(null, data)
-          })
+          result
+            .then((data) => {
+              // In a AWS Lambda 'async' handler, an error can be returned directly
+              // This makes it look like a valid response, which it's not.
+              // The SDK needs to look out for this here, so it can still log/report the error like all others.
+              if (data instanceof Error) {
+                wrappedCallback(data, null)
+              } else {
+                wrappedCallback(null, data)
+              }
+            })
             .catch(wrappedCallback)
         }
       }
-    } else {
-      throw new Error(`ServerlessSDK: Invalid Functions-as-a-Service compute type "${meta.computeType}"`)
     }
+    throw new Error(
+      `ServerlessSDK: Invalid Functions-as-a-Service compute type "${meta.computeType}"`
+    )
   }
 }
 
 /*
-* Exports
-*/
+ * Exports
+ */
 
 module.exports = ServerlessSDK

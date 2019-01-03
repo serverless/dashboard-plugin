@@ -4,10 +4,9 @@
 
 const os = require('os')
 const _ = require('lodash')
-const flatten = require('flat')
-const camelCaseKeys = require('camelcase-keys')
 const uuidv4 = require('uuid/v4')
 const { parseError } = require('./parsers')
+const flatten = require('flat')
 
 const TRANSACTION = 'transaction'
 const ERROR = 'error'
@@ -33,18 +32,34 @@ class Transaction {
   constructor(data) {
     // Enforce required properties
     let missing
-    if (!data.tenantId) missing = 'tenantId'
-    if (!data.applicationName) missing = 'applicationName'
-    if (!data.serviceName) missing = 'serviceName'
-    if (!data.stageName) missing = 'stageName'
-    if (!data.computeType) missing = 'computeType'
+    if (!data.tenantId) {
+      missing = 'tenantId'
+    }
+    if (!data.applicationName) {
+      missing = 'applicationName'
+    }
+    if(!data.appUid) {
+      missing = 'appUid'
+    }
+    if(!data.tenantUid) {
+      missing = 'tenantUid'
+    }
+    if (!data.serviceName) {
+      missing = 'serviceName'
+    }
+    if (!data.stageName) {
+      missing = 'stageName'
+    }
+    if (!data.computeType) {
+      missing = 'computeType'
+    }
     if (missing) {
       throw new Error(
         `ServerlessSDK: Missing Configuration - To use MALT features, "${missing}" is required in your configuration`
       )
     }
 
-    this.processed = false;
+    this.processed = false
     this.$ = {
       schema: null,
       eTransaction: null,
@@ -60,6 +75,8 @@ class Transaction {
     this.$.schema.transactionId = uuidv4()
     // this.$.schema.traceId = uuidv4();
     this.$.schema.tenantId = data.tenantId
+    this.$.schema.appUid = data.appUid
+    this.$.schema.tenantUid = data.tenantUid
     this.$.schema.applicationName = data.applicationName
     this.$.schema.serviceName = data.serviceName
     this.$.schema.stageName = data.stageName
@@ -92,7 +109,6 @@ class Transaction {
     if (data.computeType === 'aws.lambda') {
       this.$.eTransaction = {}
     }
-
   }
 
   /*
@@ -105,7 +121,9 @@ class Transaction {
     if (!_.has(this.$.schema, key)) {
       throw new Error(`ServerlessSDK: Invalid transaction property: "${key}"`)
     }
-    if (key && val) _.set(this.$.schema, key, val)
+    if (key && val) {
+      _.set(this.$.schema, key, val)
+    }
   }
 
   /*
@@ -129,15 +147,17 @@ class Transaction {
     console.log('')
     console.error(error)
 
-    parseError(error, null, (a, errorStack) => {
-      console.log(`${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`)
+    parseError(error, null, (res, errorStack) => {
+      console.log(
+        `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
+      )
       this.set('error.culprit', errorStack.culprit)
       this.set('error.exception.type', errorStack.exception.type)
       this.set('error.exception.message', errorStack.exception.message)
       this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace))
 
       // End transaction
-      this.buildOutput(ERROR) // set this to transaction for now. 
+      this.buildOutput(ERROR) // set this to transaction for now.
       self.end(cb)
     })
   }
@@ -157,23 +177,28 @@ class Transaction {
   buildOutput(type) {
     if (!this.processed) {
       // End transaction timer
-      let duration = new Date().getTime() - this.$.duration.getTime()
+      const duration = new Date().getTime() - this.$.duration.getTime()
       this.set('compute.memoryUsed', JSON.stringify(process.memoryUsage()))
-      this.set('compute.memoryPercentageUsed', ((process.memoryUsage().heapUsed / Math.pow(1024, 2)).toFixed() / this.$.schema.compute.memorySize) * 100)
+      this.set(
+        'compute.memoryPercentageUsed',
+        ((process.memoryUsage().heapUsed / Math.pow(1024, 2)).toFixed() /
+          this.$.schema.compute.memorySize) *
+          100
+      )
 
       // Flatten and camelCase schema because EAPM tags are only key/value=string
-      // Remove flatten? 
+      // not using lodash's flatten bc its for Arrays and schema is an Object
       let tags = flatten(this.$.schema)
-      tags = camelCaseKeys(tags)
+      tags = _.mapKeys(tags, (value, key) => _.camelCase(key))
       tags.traceId = tags.computeCustomAwsRequestId
 
       // if transaction add the request id as the transaction trace
       this.$.schema.traceId = tags.computeCustomAwsRequestId
 
-      // create the envelope needed for parsing 
+      // create the envelope needed for parsing
       // and the span to hold the transaction and event data
-      let envelope = require('./schemas/envelope.json')
-      let span = require('./schemas/span.json')
+      const envelope = require('./schemas/envelope.json')
+      const span = require('./schemas/span.json')
 
       envelope.timestamp = new Date().toISOString()
       envelope.requestId = tags.computeCustomAwsRequestId
@@ -186,7 +211,7 @@ class Transaction {
       span.spanContext = {
         traceId: tags.computeCustomAwsRequestId,
         spanId: this.$.schema.transactionId,
-        xTraceId: tags.computeCustomXTraceId,
+        xTraceId: tags.computeCustomXTraceId
       }
       span.tags = tags
       envelope.payload = span

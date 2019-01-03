@@ -1,22 +1,42 @@
 {
-  "name": "serverless-platform-plugin",
-  "version": "0.0.1",
+  "name": "@serverless/platform-plugin",
+  "version": "1.0.0-beta",
   "description": "The Serverless Platform plugin",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "NODE_ENV=production npm run folder && npm run webpack && npm run uglify",
-    "folder": "rm -rf dist && mkdir dist",
+    "build": "./scripts/build.sh",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "lint": "eslint src --fix --cache",
+    "test": "jest src"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "@serverless/platform-sdk": "github:serverless/platform-sdk#refactor",
+    "flat": "^4.1.0",
     "fs-extra": "^7.0.1",
-    "node-fetch": "^2.3.0",
+    "lodash": "^4.17.11",
     "node-dir": "^0.1.17",
+    "node-fetch": "^2.3.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "webpack": "4.24.0"
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0",
+    "@babel/cli": "^7.1.0",
+    "@babel/core": "^7.1.0",
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "webpack": "4.24.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "prettier": "^1.14.3"
   },
   "author": "",
   "license": "ISC"

@@ -5,55 +5,61 @@
  * - Capturing billing details (?)
  */
 
-const utils = require('./utils')
+import { pickResourceType, upperFirst } from './utils'
 
-module.exports = async (ctx) => {
+import { getLogDestination } from '@serverless/platform-sdk'
 
-  if (!ctx.sls.service.custom
-    || !ctx.sls.service.custom.platform
-    || !ctx.sls.service.custom.platform.collectLambdaLogs) {
+export default async (ctx) => {
+  if (
+    !ctx.sls.service.custom ||
+    !ctx.sls.service.custom.platform ||
+    !ctx.sls.service.custom.platform.collectLambdaLogs
+  ) {
     ctx.sls.cli.log(
       'Info: The Serverless Platform Plugin is not configured to collect AWS Lambda Logs.'
     )
     return
   }
 
-  const stageSettings = ctx.sls.service.custom.stageSettings || {}
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
-  const config = ctx.sls.service.custom.platform || {}
-  const {
-    collectLambdaLogs = false,
-    cloudwatchApmTransport = true,
-    httpApmTransport = false
-  } = config
 
   // Gather possible targets
-  const lambdaLogGroups = utils.pickResourceType(template, 'AWS::Logs::LogGroup')
+  const lambdaLogGroups = pickResourceType(template, 'AWS::Logs::LogGroup')
+  if (lambdaLogGroups.length == 0) {
+    return
+  }
+
+  const { Account } = await ctx.provider.request('STS', 'getCallerIdentity', {})
+  const destinationOpts = {
+    appUid: ctx.sls.service.appUid,
+    tenantUid: ctx.sls.service.tenantUid,
+    serviceName: ctx.sls.service.getServiceName(),
+    stageName: ctx.provider.getStage(),
+    regionName: ctx.provider.getRegion(),
+    accountId: Account
+  }
+
+  let destinationArn
+
+  try {
+    ;({ destinationArn } = await getLogDestination(destinationOpts))
+  } catch (e) {
+    throw new Error(e.message)
+  }
 
   // For each log group, set up subscription
-  for (lambdaLogGroupIndex in lambdaLogGroups) {
+  for (const lambdaLogGroupIndex in lambdaLogGroups) {
     const lambdaLogGroupKey = lambdaLogGroups[lambdaLogGroupIndex].key
-    const lambdaLogGroup = lambdaLogGroups[lambdaLogGroupIndex].resource
 
-    template.Resources[`CloudWatchLogsSubscriptionFilter${utils.upperFirst(lambdaLogGroupKey)}`] = {
+    template.Resources[`CloudWatchLogsSubscriptionFilter${upperFirst(lambdaLogGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
-        DestinationArn: 'arn:aws:logs:us-east-1:377024778620:destination:ServerlessPlatformDemoLambdaLogs',
-        FilterPattern: '', // TODO: Make this only get what we want!
+        DestinationArn: destinationArn,
+        FilterPattern: '{ $.origin = "sls-agent" }',
         LogGroupName: {
           Ref: lambdaLogGroupKey
         }
       }
     }
   }
-
-  // TODO if collecting all logs is disabled, but we still want APM, handle this case
-  //
-  //   if (cloudwatchApmTransport === false || httpApmTransport === true) {
-  //     ctx.sls.cli.log(
-  //       'Info: The Serverless Platform Plugin is configured to use the HTTP transport for APM instead (less optimal).'
-  //     )
-  //   } else {
-
-  //   }
 }
