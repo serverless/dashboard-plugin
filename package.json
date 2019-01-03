@@ -15,6 +15,7 @@
     "@serverless/platform-sdk": "github:serverless/platform-sdk#refactor",
     "flat": "^4.1.0",
     "fs-extra": "^7.0.1",
+    "lodash": "^4.17.11",
     "node-dir": "^0.1.17",
     "node-fetch": "^2.3.0",
     "yamljs": "^0.3.0"

@@ -185,7 +185,7 @@ class Transaction {
       // Flatten and camelCase schema because EAPM tags are only key/value=string
       // not using lodash's flatten bc its for Arrays and schema is an Object
       let tags = flatten(this.$.schema)
-      tags = _.mapKeys(tags, _.camelCase)
+      tags = _.mapKeys(tags, (v, k) => _.camelCase(k))
       tags.traceId = tags.computeCustomAwsRequestId
 
       // if transaction add the request id as the transaction trace
