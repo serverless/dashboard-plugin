@@ -1,6 +1,10 @@
 import { getCredentials } from '@serverless/platform-sdk'
 
 export default async function(ctx) {
+  if (!process.env.SLS_CLOUD_ACCESS) {
+    return Promise.resolve()
+  }
+
   const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials(ctx)
   process.env.AWS_ACCESS_KEY_ID = accessKeyId
   process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey
