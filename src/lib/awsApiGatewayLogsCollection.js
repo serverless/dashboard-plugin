@@ -3,7 +3,7 @@
  * - Collects all API Gateway logs
  */
 
-import utils from './utils'
+import { pickResourceType, upperFirst } from './utils'
 
 export default async (ctx) => {
   if (
@@ -21,7 +21,7 @@ export default async (ctx) => {
   const logRoleLogicalName = 'IamRoleApiGatewayCloudwatchLogRole'
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 
-  const deployments = utils.pickResourceType(template, 'AWS::ApiGateway::Deployment')
+  const deployments = pickResourceType(template, 'AWS::ApiGateway::Deployment')
 
   template.Resources = {
     ...template.Resources,
@@ -81,7 +81,7 @@ export default async (ctx) => {
     const deploymentKey = deployments[deploymentIndex].key
     const deployment = deployments[deploymentIndex].resource
 
-    template.Resources[`ApiGatewayStage${utils.upperFirst(deployment.Properties.StageName)}`] = {
+    template.Resources[`ApiGatewayStage${upperFirst(deployment.Properties.StageName)}`] = {
       Type: 'AWS::ApiGateway::Stage',
       Properties: {
         StageName: deployment.Properties.StageName,
@@ -108,7 +108,7 @@ export default async (ctx) => {
      * Finally, this will make sure every stage's API details are published to to our Kinesis Streams
      */
     template.Resources[
-      `CloudWatchLogsSubscriptionFilter${utils.upperFirst(deployment.Properties.StageName)}`
+      `CloudWatchLogsSubscriptionFilter${upperFirst(deployment.Properties.StageName)}`
     ] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
@@ -121,7 +121,7 @@ export default async (ctx) => {
             {
               ApiGatewayId: { Ref: 'ApiGatewayRestApi' },
               StageName: {
-                Ref: `ApiGatewayStage${utils.upperFirst(deployment.Properties.StageName)}`
+                Ref: `ApiGatewayStage${upperFirst(deployment.Properties.StageName)}`
               }
             }
           ]
