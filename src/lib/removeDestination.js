@@ -10,6 +10,7 @@ export default async (ctx) => {
   }
   const destinationOpts = {
     appUid: ctx.sls.service.appUid,
+    tenantUid: ctx.sls.service.tenantUid,
     serviceName: ctx.sls.service.getServiceName(),
     stageName: ctx.provider.getStage(),
     regionName: ctx.provider.getRegion()

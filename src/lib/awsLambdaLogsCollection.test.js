@@ -21,6 +21,7 @@ describe('awsLambdaLogsCollection', () => {
           tenant: 'tenant',
           app: 'app',
           appUid: 'app123',
+          tenantUid: 'tenant123',
           custom: { platform: { collectLambdaLogs: true } },
           getServiceName,
           provider: {
@@ -48,6 +49,7 @@ describe('awsLambdaLogsCollection', () => {
     expect(getRegion).toHaveBeenCalledTimes(1)
     expect(getLogDestination).toBeCalledWith({
       appUid: 'app123',
+      tenantUid: 'tenant123',
       stageName: 'dev',
       serviceName: 'serviceName',
       regionName: 'us-east-1',

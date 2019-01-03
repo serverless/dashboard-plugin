@@ -6,5 +6,8 @@ export default async function(tenantName, appName) {
     app: appName
   })
 
-  return app.appUid
+  return {
+    appUid: app.appUid,
+    tenantUid: app.tenantUid
+  }
 }

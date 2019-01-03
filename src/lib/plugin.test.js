@@ -9,7 +9,7 @@ import removeDestination from './removeDestination.js'
 
 afterAll(() => jest.restoreAllMocks())
 jest.mock('./credentials', () => jest.fn())
-jest.mock('./appUid', () => jest.fn(() => '000000000000000000'))
+jest.mock('./appUids', () => jest.fn(() => ({ appUid: '000000000000000000', tenantUid: '000000000000000000' })))
 jest.mock('./wrap', () => jest.fn())
 jest.mock('./wrapClean', () => jest.fn())
 jest.mock('./safeguards', () => jest.fn())
