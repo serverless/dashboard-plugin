@@ -22,6 +22,7 @@ class ServerlessSDK {
 
     this.$.tenantId = obj.tenantId || null
     this.$.appUid = obj.appUid || null
+    this.$.tenantUid = obj.tenantUid || null
     this.$.applicationName = obj.applicationName || null
     this.$.serviceName = obj.serviceName || null
     this.$.stageName = obj.stageName || null
@@ -69,6 +70,7 @@ class ServerlessSDK {
     meta.tenantId = meta.tenantId || (this.$.tenantId || null)
     meta.applicationName = meta.applicationName || (this.$.applicationName || null)
     meta.appUid = meta.appUid || (this.$.appUid || null)
+    meta.tenantUid = meta.tenantUid || (this.$.tenantUid || null)
     meta.serviceName = meta.serviceName || (this.$.serviceName || null)
     meta.stageName = meta.stageName || (this.$.stageName || null)
     meta.functionName = config.functionName
@@ -121,6 +123,7 @@ class ServerlessSDK {
           tenantId: meta.tenantId,
           applicationName: meta.applicationName,
           appUid: meta.appUid,
+          tenantUid: meta.tenantUid,
           serviceName: meta.serviceName,
           stageName: meta.stageName,
           functionName: meta.functionName,

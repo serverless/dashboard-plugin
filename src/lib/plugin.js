@@ -4,7 +4,7 @@ import wrap from './wrap.js'
 import wrapClean from './wrapClean.js'
 import runPolicies from './safeguards.js'
 import getCredentials from './credentials.js'
-import getAppUid from './appUid.js'
+import getAppUids from './appUids.js'
 import removeDestination from './removeDestination.js'
 
 /*
@@ -75,7 +75,10 @@ class ServerlessPlatformPlugin {
     return async () => {
       switch (hook) {
         case 'before:package:createDeploymentArtifacts':
-          self.sls.service.appUid = await getAppUid(self.sls.service.tenant, self.sls.service.app)
+          Object.assign(
+            self.sls.service,
+            await getAppUids(self.sls.service.tenant, self.sls.service.app)
+          )
           await wrap(self)
           break
         case 'after:package:createDeploymentArtifacts':
@@ -105,11 +108,17 @@ class ServerlessPlatformPlugin {
           await getCredentials(self)
           break
         case 'after:remove:remove':
-          self.sls.service.appUid = await getAppUid(self.sls.service.tenant, self.sls.service.app)
+          Object.assign(
+            self.sls.service,
+            await getAppUids(self.sls.service.tenant, self.sls.service.app)
+          )
           await removeDestination(self)
           break
         case 'before:invoke:local:invoke':
-          self.sls.service.appUid = '000000000000000000'
+          Object.assign(self.sls.service, {
+            appUid: '000000000000000000',
+            tenantUid: '000000000000000000'
+          })
           await wrap(self)
           break
         case 'after:invoke:local:invoke':

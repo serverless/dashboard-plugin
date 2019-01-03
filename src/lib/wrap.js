@@ -17,6 +17,7 @@ serverlessSDK = new serverlessSDK({
 tenantId: '${ctx.sls.service.tenant}',
 applicationName: '${ctx.sls.service.app}',
 appUid: '${ctx.sls.service.appUid}',
+tenantUid: '${ctx.sls.service.tenantUid}',
 serviceName: '${ctx.sls.service.service}',
 stageName: '${ctx.sls.service.provider.stage}'})
 module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
