@@ -21,7 +21,6 @@ deploy:
   skip_cleanup: true
   tag: next # remove when no longer a beta release
   on:
-    branch: master
     tags: true
     repo: serverless/platform-plugin
   api_key:
