@@ -5,7 +5,7 @@ import wrapClean from './wrapClean.js'
 import runPolicies from './safeguards.js'
 import getCredentials from './credentials.js'
 import getAppUid from './appUid.js'
-import { removeLogDestination } from '@serverless/platform-sdk'
+import { removeDestination } from './removeDestination.js'
 
 /*
  * Serverless Platform Plugin
@@ -105,7 +105,8 @@ class ServerlessPlatformPlugin {
           await getCredentials(self)
           break
         case 'after:remove:remove':
-          await removeLogDestination(self)
+          self.sls.service.appUid = await getAppUid(self.sls.service.tenant, self.sls.service.app)
+          await removeDestination(self)
           break
         case 'before:invoke:local:invoke':
           self.sls.service.appUid = '000000000000000000'
