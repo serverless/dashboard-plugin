@@ -1,4 +1,4 @@
-if (!global._babelPolyfil) {
+if (!global._babelPolyfill) {
   require('@babel/polyfill')
 }
 
