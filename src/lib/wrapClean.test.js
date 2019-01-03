@@ -1,7 +1,6 @@
 import wrapClean from './wrapClean'
 import fs from 'fs-extra'
 
-
 jest.mock('fs-extra', () => ({
   pathExistsSync: jest.fn().mockReturnValue(true),
   removeSync: jest.fn()
@@ -9,11 +8,10 @@ jest.mock('fs-extra', () => ({
 
 afterAll(() => jest.restoreAllMocks())
 
-
 describe('wrapClean', () => {
   it('deletes wrapper files', async () => {
     wrapClean({
-      sls: {config: {servicePath: '/service'}},
+      sls: { config: { servicePath: '/service' } },
       state: {
         pathAssets: '/assets',
         functions: {
