@@ -11,8 +11,8 @@ export default async (ctx) => {
   const destinationOpts = {
     appUid: ctx.sls.service.appUid,
     serviceName: ctx.sls.service.getServiceName(),
-    stageName: ctx.sls.provider.getStage(),
-    regionName: ctx.sls.provider.getRegion()
+    stageName: ctx.provider.getStage(),
+    regionName: ctx.provider.getRegion()
   }
 
   await removeLogDestination(destinationOpts)
