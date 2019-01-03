@@ -31,8 +31,7 @@ export default async (ctx) => {
 
   const { Account } = await ctx.provider.request('STS', 'getCallerIdentity', {})
   const destinationOpts = {
-    tenantName: ctx.sls.service.tenant,
-    appName: ctx.sls.service.app,
+    appUid: ctx.sls.service.appUid,
     serviceName: ctx.sls.service.getServiceName(),
     stageName: ctx.provider.getStage(),
     regionName: ctx.provider.getRegion(),
