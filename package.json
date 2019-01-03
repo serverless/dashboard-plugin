@@ -11,6 +11,7 @@
     "test": "jest src"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "@serverless/platform-sdk": "github:serverless/platform-sdk#refactor",
     "fs-extra": "^7.0.1",
     "node-dir": "^0.1.17",
