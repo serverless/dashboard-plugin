@@ -6,6 +6,7 @@ const os = require('os')
 const _ = require('lodash')
 const uuidv4 = require('uuid/v4')
 const { parseError } = require('./parsers')
+const flatten = require('flat')
 
 const TRANSACTION = 'transaction'
 const ERROR = 'error'
@@ -182,7 +183,8 @@ class Transaction {
       )
 
       // Flatten and camelCase schema because EAPM tags are only key/value=string
-      let tags = _.flatten(this.$.schema)
+      // not using lodash's flatten bc its for Arrays and schema is an Object
+      let tags = flatten(this.$.schema)
       tags = _.mapKeys(tags, _.camelCase)
       tags.traceId = tags.computeCustomAwsRequestId
 
