@@ -2,7 +2,7 @@ import getCredentialsLocal from './credentials'
 import { getCredentials, getUser } from '@serverless/platform-sdk'
 
 jest.mock('@serverless/platform-sdk', () => ({
-  getUser: jest.fn().mockReturnValue({ userId: 'ID' }),
+  getUser: jest.fn().mockReturnValue({ idToken: 'ID' }),
   getCredentials: jest.fn().mockReturnValue({
     accessKeyId: 'accessKeyId',
     secretAccessKey: 'secretAccessKey',
@@ -38,7 +38,7 @@ describe('credentials', () => {
       app: 'app',
       tenant: 'tenant',
       service: 'service',
-      user: { userId: 'ID' }
+      idToken: 'ID'
     })
     expect(log).toBeCalledWith('Cloud credentials set from Serverless Platform.')
     expect(process.env.AWS_ACCESS_KEY_ID).toEqual('accessKeyId')

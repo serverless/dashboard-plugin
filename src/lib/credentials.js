@@ -12,7 +12,7 @@ export default async function(ctx) {
   }
 
   const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials({
-    user,
+    idToken: user.idToken,
     stageName: ctx.provider.getStage(),
     command: ctx.sls.processedInput.commands[0],
     app: ctx.sls.service.app,
