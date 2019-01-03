@@ -1,11 +1,24 @@
-import { getCredentials } from '@serverless/platform-sdk'
+import { getCredentials, getUser } from '@serverless/platform-sdk'
 
 export default async function(ctx) {
   if (!process.env.SLS_CLOUD_ACCESS) {
     return Promise.resolve()
   }
 
-  const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials(ctx)
+  const user = getUser()
+  if (!user) {
+    ctx.serverless.cli.log('User not logged in to Platform. Skipping fetch credentials.')
+    return Promise.resolve()
+  }
+
+  const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials({
+    user,
+    stageName: ctx.provider.getStage(),
+    command: ctx.sls.processedInput.commands[0],
+    app: ctx.sls.service.app,
+    tenant: ctx.sls.service.tenant,
+    service: ctx.sls.service.getServiceName()
+  })
   process.env.AWS_ACCESS_KEY_ID = accessKeyId
   process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey
   process.env.AWS_SESSION_TOKEN = sessionToken
