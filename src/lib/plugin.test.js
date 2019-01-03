@@ -5,6 +5,7 @@ import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import wrap from './wrap.js'
 import wrapClean from './wrapClean.js'
 import runPolicies from './safeguards.js'
+import removeDestination from './removeDestination.js'
 
 afterAll(() => jest.restoreAllMocks())
 jest.mock('./credentials', () => jest.fn())
@@ -14,6 +15,7 @@ jest.mock('./wrapClean', () => jest.fn())
 jest.mock('./safeguards', () => jest.fn())
 jest.mock('./awsApiGatewayLogsCollection', () => jest.fn())
 jest.mock('./awsLambdaLogsCollection', () => jest.fn())
+jest.mock('./removeDestination', () => jest.fn())
 
 describe('plugin', () => {
   it('constructs and sets hooks', () => {
@@ -170,6 +172,18 @@ describe('plugin', () => {
     })
     await instance.route('before:remove:remove')()
     expect(getCredentials).toBeCalledWith(instance)
+  })
+
+  it('routes after:remove:remove hook correctly', async () => {
+    const getProviderMock = jest.fn()
+    const logMock = jest.fn()
+    const instance = new ServerlessPlatformPlugin({
+      getProvider: getProviderMock,
+      service: { service: 'service', app: 'app', tenant: 'tenant' },
+      cli: { log: logMock }
+    })
+    await instance.route('after:remove:remove')()
+    expect(removeDestination).toBeCalledWith(instance)
   })
 
   it('routes before:aws:package:finalize:saveServiceState', async () => {

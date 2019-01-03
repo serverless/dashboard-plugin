@@ -5,7 +5,7 @@ import wrapClean from './wrapClean.js'
 import runPolicies from './safeguards.js'
 import getCredentials from './credentials.js'
 import getAppUid from './appUid.js'
-import { removeDestination } from './removeDestination.js'
+import removeDestination from './removeDestination.js'
 
 /*
  * Serverless Platform Plugin
