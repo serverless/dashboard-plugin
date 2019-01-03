@@ -178,4 +178,4 @@ function runPolicies(ctx) {
   })
 }
 
-export { runPolicies }
+export default runPolicies

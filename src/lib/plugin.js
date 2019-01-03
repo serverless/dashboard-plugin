@@ -2,7 +2,7 @@ import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import wrap from './wrap.js'
 import wrapClean from './wrapClean.js'
-import safeguards from './safeguards.js'
+import runPolicies from './safeguards.js'
 import getCredentials from './credentials.js'
 import { removeLogDestination } from '@serverless/platform-sdk'
 
@@ -88,7 +88,7 @@ class ServerlessPlatformPlugin {
           await awsLambdaLogsCollection(self)
           break
         case 'before:deploy:deploy':
-          await safeguards.runPolicies(self)
+          await runPolicies(self)
           break
         case 'before:info:info':
           await getCredentials(self)

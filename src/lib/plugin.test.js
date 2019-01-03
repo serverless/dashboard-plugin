@@ -4,17 +4,17 @@ import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import wrap from './wrap.js'
 import wrapClean from './wrapClean.js'
-import { runPolicies } from './safeguards.js'
+import runPolicies from './safeguards.js'
 
 afterAll(() => jest.restoreAllMocks())
 jest.mock('./credentials', () => jest.fn())
 jest.mock('./wrap', () => jest.fn())
 jest.mock('./wrapClean', () => jest.fn())
-jest.mock('./safeguards', () => ({ runPolicies: jest.fn() }))
+jest.mock('./safeguards', () => jest.fn())
 jest.mock('./awsApiGatewayLogsCollection', () => jest.fn())
 jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 
-describe('index', () => {
+describe('plugin', () => {
   it('constructs and sets hooks', () => {
     const getProviderMock = jest.fn()
     const logMock = jest.fn()
