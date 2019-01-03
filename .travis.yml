@@ -6,6 +6,7 @@ matrix:
     - node_js: 8
     - node_js: 10
 install:
+  - npm install -g npm
   - npm install
   - pushd sdk-js && npm install && popd
 script:
