@@ -1,21 +1,21 @@
-import ServerlessPlatformPlugin from '.'
-import getCredentials from './lib/credentials'
-import awsApiGatewayLogsCollection from './lib/awsApiGatewayLogsCollection'
-import awsLambdaLogsCollection from './lib/awsLambdaLogsCollection'
-import wrap from './lib/wrap.js'
-import wrapClean from './lib/wrapClean.js'
-import { runPolicies } from './lib/safeguards.js'
+import ServerlessPlatformPlugin from './plugin'
+import getCredentials from './credentials'
+import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
+import awsLambdaLogsCollection from './awsLambdaLogsCollection'
+import wrap from './wrap.js'
+import wrapClean from './wrapClean.js'
+import runPolicies from './safeguards.js'
 
 afterAll(() => jest.restoreAllMocks())
-jest.mock('./lib/credentials', () => jest.fn())
-jest.mock('./lib/appUid', () => jest.fn(() => '000000000000000000'))
-jest.mock('./lib/wrap', () => jest.fn())
-jest.mock('./lib/wrapClean', () => jest.fn())
-jest.mock('./lib/safeguards', () => ({ runPolicies: jest.fn() }))
-jest.mock('./lib/awsApiGatewayLogsCollection', () => jest.fn())
-jest.mock('./lib/awsLambdaLogsCollection', () => jest.fn())
+jest.mock('./credentials', () => jest.fn())
+jest.mock('./appUid', () => jest.fn(() => '000000000000000000'))
+jest.mock('./wrap', () => jest.fn())
+jest.mock('./wrapClean', () => jest.fn())
+jest.mock('./safeguards', () => jest.fn())
+jest.mock('./awsApiGatewayLogsCollection', () => jest.fn())
+jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 
-describe('index', () => {
+describe('plugin', () => {
   it('constructs and sets hooks', () => {
     const getProviderMock = jest.fn()
     const logMock = jest.fn()

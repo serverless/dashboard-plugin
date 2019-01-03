@@ -1,7 +1,7 @@
 service: safeguards-example-service
 
 plugins:
-  - serverless-platform-plugin
+  - '@serverless/platform-plugin'
 
 custom:
   safeguards:

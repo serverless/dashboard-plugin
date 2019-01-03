@@ -13,6 +13,7 @@ afterAll(() => jest.restoreAllMocks())
 
 describe('credentials', () => {
   it('calls API func and sets env vars', async () => {
+    process.env.SLS_CLOUD_ACCESS = 'true'
     const log = jest.fn()
     const ctx = { sls: { cli: { log } } }
     await getCredentialsLocal(ctx)
