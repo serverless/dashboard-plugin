@@ -12,3 +12,5 @@ testProjects/*/yarn.lock
 .serverlessUnzipped
 node_modules
 .vscode/
+.eslintcache
+dist

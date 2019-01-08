@@ -1,0 +1,45 @@
+service: safeguards-example-service
+
+plugins:
+  - '@serverless/platform-plugin'
+
+custom:
+  safeguards:
+    location: ./policies
+    policies:
+      - stage-in-table-name
+      - no-wild-cors
+      - limit-ddb-capacity:
+          readCapacityMax: 2
+          writeCapacityMax: 1
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+          cors:
+            origin: example.com
+
+resources:
+  Resources:
+    ExampleDynamoTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 1
+        TableName: example-${opt:stage, 'dev'}

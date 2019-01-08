@@ -1,0 +1,27 @@
+language: node_js
+sudo: false
+matrix:
+  include:
+    - node_js: 6
+    - node_js: 8
+    - node_js: 10
+install:
+  - npm install -g npm
+  - npm install
+  - pushd sdk-js && npm install && popd
+script:
+  - npm run lint
+  - pushd sdk-js && npm run lint && popd
+  - npm run test
+  - pushd sdk-js && npm run test && popd
+
+deploy:
+  provider: npm
+  email: services@serverless.com
+  skip_cleanup: true
+  tag: next # remove when no longer a beta release
+  on:
+    tags: true
+    repo: serverless/platform-plugin
+  api_key:
+    secure: yJpF/tiiirgm0WEuoO4M1MrqYyJ63IwTHnBvv32ZyJCaOg3hUT2thVCtPtecMfPM2xPC679iZj5278KfHDc7xLMcGfH+LMN9M42KsExBKODq/Xj/h9k0l5jmxQYcQzncRVr7x1pf/GYzZYv2pk0noxsK3tmueuCJNA2M5t0mHQBuWltm7kX4vOjIbIHhiPrlKjfQG2ShKpZ4CeWbdfIjtBgT4U+PQggRPfZ+cmOHlst38M/7F2HBf65GTkpQUN+IXuJ0NELgqBDUpLT3hA8il+znFCRWES1M81WtknC9AVhD4JNV+udeIFD7caAhBzMDAcUdukHyMCTT3XScwgRwutB50J7xEmRm/mqD7dSVbBAz/FUO28W+/chdSWIg1FgRVTzCxSD0SUx3+VnsVH5hElDtTgcfh7Se6smZno7UrWzw/DPSlXOmd12Ucn0MKlqBbAXIdZuGFOMsTxsR5Rvz4WX8qTdbGTN02dqfjI/xRi/wO9ho13pabVIHRBBTSNh8Y2iWu+hO1vn5AoAsZYIboaJDc0iq/8qOe+l474qVCF+gHnAboa9xBBIqv2zCJjzzDlKZcp6MMdwCe3M6QW2IsvOsBNxtThABiNLCBro812mfaaigUwEiQYfhGU9U2T85djS2J2+UosjnODqLUivHy1qN2Ku+U66e6MECXEZrwxA=

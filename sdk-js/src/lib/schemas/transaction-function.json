@@ -1,0 +1,35 @@
+{
+  "schemaType": "s-transaction-function",
+  "schemaVersion": "0.0",
+  "timestamp": null,
+  "tenantId": null,
+  "applicationName": null,
+  "serviceName": null,
+  "stageName": null,
+  "functionName": null,
+  "compute": {
+    "type": "unknown",
+    "runtime": null,
+    "region": null,
+    "memorySize": null,
+    "memoryUsed": null,
+    "memoryPercentageUsed": null,
+    "containerUptime": null,
+    "custom": {}
+  },
+  "event": {
+    "type": "unknown",
+    "timestamp": null,
+    "source": null,
+    "custom": {}
+  },
+  "error": {
+    "id": null,
+    "culprit": null,
+    "exception": {
+      "type": null,
+      "message": null,
+      "stacktrace": null
+    }
+  }
+}
