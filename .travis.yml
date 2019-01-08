@@ -2,19 +2,18 @@ language: node_js
 sudo: false
 matrix:
   include:
-    - node_js: 6
-    - node_js: 8
-    - node_js: 10
+  - node_js: 6
+  - node_js: 8
+  - node_js: 10
 install:
-  - npm install -g npm
-  - npm install
-  - pushd sdk-js && npm install && popd
+- npm install -g npm
+- npm install
+- pushd sdk-js && npm install && popd
 script:
-  - npm run lint
-  - pushd sdk-js && npm run lint && popd
-  - npm run test
-  - pushd sdk-js && npm run test && popd
-
+- npm run lint
+- pushd sdk-js && npm run lint && popd
+- npm run test
+- pushd sdk-js && npm run test && popd
 deploy:
   provider: npm
   email: services@serverless.com
@@ -24,4 +23,4 @@ deploy:
     tags: true
     repo: serverless/platform-plugin
   api_key:
-    secure: yJpF/tiiirgm0WEuoO4M1MrqYyJ63IwTHnBvv32ZyJCaOg3hUT2thVCtPtecMfPM2xPC679iZj5278KfHDc7xLMcGfH+LMN9M42KsExBKODq/Xj/h9k0l5jmxQYcQzncRVr7x1pf/GYzZYv2pk0noxsK3tmueuCJNA2M5t0mHQBuWltm7kX4vOjIbIHhiPrlKjfQG2ShKpZ4CeWbdfIjtBgT4U+PQggRPfZ+cmOHlst38M/7F2HBf65GTkpQUN+IXuJ0NELgqBDUpLT3hA8il+znFCRWES1M81WtknC9AVhD4JNV+udeIFD7caAhBzMDAcUdukHyMCTT3XScwgRwutB50J7xEmRm/mqD7dSVbBAz/FUO28W+/chdSWIg1FgRVTzCxSD0SUx3+VnsVH5hElDtTgcfh7Se6smZno7UrWzw/DPSlXOmd12Ucn0MKlqBbAXIdZuGFOMsTxsR5Rvz4WX8qTdbGTN02dqfjI/xRi/wO9ho13pabVIHRBBTSNh8Y2iWu+hO1vn5AoAsZYIboaJDc0iq/8qOe+l474qVCF+gHnAboa9xBBIqv2zCJjzzDlKZcp6MMdwCe3M6QW2IsvOsBNxtThABiNLCBro812mfaaigUwEiQYfhGU9U2T85djS2J2+UosjnODqLUivHy1qN2Ku+U66e6MECXEZrwxA=
+    secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
