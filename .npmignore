@@ -6,3 +6,5 @@ __snapshots__
 jest
 coverage
 testProject
+src/*
+sdk-js/src/*
