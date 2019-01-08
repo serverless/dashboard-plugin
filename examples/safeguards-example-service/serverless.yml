@@ -7,8 +7,11 @@ custom:
   safeguards:
     location: ./policies
     policies:
+      - require-dlq
       - stage-in-table-name
       - no-wild-cors
+      - no-secret-env-vars
+      - no-wild-iam-role-statements
       - limit-ddb-capacity:
           readCapacityMax: 2
           writeCapacityMax: 1
