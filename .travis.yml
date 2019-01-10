@@ -14,6 +14,7 @@ script:
 - pushd sdk-js && npm run lint && popd
 - npm run test
 - pushd sdk-js && npm run test && popd
+before_deploy:
 - node ./scripts/updatePreReleaseVersion.js
 deploy:
   # production releases
