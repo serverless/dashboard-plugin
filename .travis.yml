@@ -4,7 +4,7 @@ matrix:
   include:
   - node_js: 6
   - node_js: 8
-  - node_js: 10
+  - node_js: '10.15'
 install:
 - npm install -g npm
 - npm install
@@ -22,6 +22,7 @@ deploy:
     skip_cleanup: true
     tag: latest
     on:
+      node: 10.15
       tags: true
       condition: '! "$TRAVIS_TAG" =~ beta'
       repo: serverless/platform-plugin
@@ -33,6 +34,7 @@ deploy:
     skip_cleanup: true
     tag: next
     on:
+      node: 10.15
       tags: true
       condition: '"$TRAVIS_TAG" =~ beta'
       repo: serverless/platform-plugin
@@ -44,6 +46,7 @@ deploy:
     skip_cleanup: true
     tag: next
     on:
+      node: 10.15
       tags: false
       repo: serverless/platform-plugin
     api_key:
