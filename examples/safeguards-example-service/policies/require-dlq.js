@@ -5,15 +5,15 @@ module.exports = function dlqPolicy(policy, service) {
     return policy.approve()
   }
 
-  for (const [name, { events }] of Object.entries(functions)) {
-    if (!events) {
+  for (const [name, { events /*, onError*/ }] of Object.entries(functions)) {
+    /*
+    if (events && 'http' in events) {
       continue
     }
+    */
 
-    for (const { onError } of events) {
-      if (!onError) {
-        throw new policy.Failure(`Function "${name}" doesn't have a Dead Letter Queue configured.`)
-      }
+    if (!onError) {
+      throw new policy.Failure(`Function "${name}" doesn't have a Dead Letter Queue configured.`)
     }
   }
 
