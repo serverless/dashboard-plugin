@@ -10,7 +10,7 @@ const packageJson = JSON.parse(readFileSync('package.json').toString())
 const version = semver.valid(
   spawnSync('git', ['describe', '--tags'])
     .stdout.toString()
-    .trimEnd()
+    .slice(0, -1)
 )
 
 if (!semver.gt(packageJson.version, version)) {
