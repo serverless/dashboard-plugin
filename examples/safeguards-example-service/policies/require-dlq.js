@@ -1,3 +1,16 @@
+const asyncEvents = new Set([
+  'steam',
+  's3',
+  'schedule',
+  'sns',
+  'sqs',
+  'alexaSkill',
+  'iot',
+  'cloudwatchEvent',
+  'cloudwatchLog',
+  'cognitoUserPool',
+  'alexaSmartHome'
+])
 module.exports = function dlqPolicy(policy, service) {
   const { functions } = service.declaration
 
@@ -5,13 +18,13 @@ module.exports = function dlqPolicy(policy, service) {
     return policy.approve()
   }
 
-  for (const [name, { events , onError }] of Object.entries(functions)) {
-    if (events && Object.keys(events).length === 1 && 'http' in events) {
-      continue
-    }
-
-    if (!onError) {
-      throw new policy.Failure(`Function "${name}" doesn't have a Dead Letter Queue configured.`)
+  for (const [name, { events, onError }] of Object.entries(functions)) {
+    const eventTypes = new Set(events.map((ev) => Object.keys(ev)[0]))
+    const eventIntersection = new Set([...asyncEvents].filter((x) => eventTypes.has(x)))
+    if (events.length === 0 || eventIntersection.size > 0) {
+      if (!onError) {
+        throw new policy.Failure(`Function "${name}" doesn't have a Dead Letter Queue configured.`)
+      }
     }
   }
 
