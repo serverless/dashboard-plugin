@@ -12,7 +12,7 @@ module.exports = function dlqPolicy(policy, service) {
 
     for (const { onError } of events) {
       if (!onError) {
-        throw new policy.Failure(`Function "${name}" doesn't have a Dead Letter Queue configurd.`)
+        throw new policy.Failure(`Function "${name}" doesn't have a Dead Letter Queue configured.`)
       }
     }
   }
