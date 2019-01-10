@@ -13,6 +13,10 @@ module.exports = function noWildIamPolicy(policy, service) {
         throw new policy.Failure(
           `iamRoleStatement granting Action='*'. Wildcard actions in iamRoleStatements are not permitted.`
         )
+      if (action.split(':')[1] === '*')
+        throw new policy.Failure(
+          `iamRoleStatement granting Action='${action}'. Wildcard actions in iamRoleStatements are not permitted.`
+        )
     }
     for (const rawResource of resources) {
       let resourceStr = rawResource
