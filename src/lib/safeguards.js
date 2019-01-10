@@ -1,6 +1,7 @@
 import dir from 'node-dir'
 import yml from 'yamljs'
 import path from 'path'
+import { cloneDeep, omit } from 'lodash'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 
@@ -53,7 +54,8 @@ function runPolicies(ctx) {
   })
 
   const service = {
-    compiled: {}
+    compiled: {},
+    declaration: cloneDeep(omit(ctx.sls.service, ['serverless']))
   }
 
   const parseFiles = new Promise((resolve, reject) => {

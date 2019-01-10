@@ -1,5 +1,5 @@
 module.exports = function noWildIamPolicy(policy, service) {
-  const { iamRoleStatements } = service.compiled['serverless-state.json'].service.provider
+  const { iamRoleStatements } = service.declaration
 
   if (!iamRoleStatements) {
     return policy.approve()

@@ -33,10 +33,7 @@ function isSecret(string) {
 }
 
 module.exports = function noSecretEnvVarsPolicy(policy, service) {
-  const {
-    functions,
-    provider: { environment }
-  } = service.compiled['serverless-state.json'].service
+  const { functions, provider: { environment } } = service.declaration
 
   for (const [name, value] of Object.entries(environment || {})) {
     if (isSecret(value)) {
