@@ -1,9 +1,6 @@
 const asyncEvents = new Set([
-  'steam',
   's3',
-  'schedule',
   'sns',
-  'sqs',
   'alexaSkill',
   'iot',
   'cloudwatchEvent',
