@@ -1,11 +1,11 @@
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
-import wrap from './wrap.js'
-import wrapClean from './wrapClean.js'
-import runPolicies from './safeguards.js'
-import getCredentials from './credentials.js'
-import getAppUids from './appUids.js'
-import removeDestination from './removeDestination.js'
+import wrap from './wrap'
+import wrapClean from './wrapClean'
+import runPolicies from './safeguards'
+import getCredentials from './credentials'
+import getAppUids from './appUids'
+import removeDestination from './removeDestination'
 
 /*
  * Serverless Platform Plugin

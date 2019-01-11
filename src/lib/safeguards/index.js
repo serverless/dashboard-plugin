@@ -7,6 +7,15 @@ const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 
 class PolicyFailureError extends Error {}
 
+const loadPolicy = (policiesPath, policyName) => {
+  try {
+    // NOTE: not using path.join because it strips off the leading ./
+    return require(`.${path.sep}policies${path.sep}${policyName}`)
+  } catch (e) {
+    return require(path.join(policiesPath, policyName))
+  }
+}
+
 function runPolicies(ctx) {
   const basePath = ctx.sls.config.servicePath
 
@@ -14,7 +23,17 @@ function runPolicies(ctx) {
     return
   }
 
-  const config = ctx.sls.service.custom.safeguards
+  let config = ctx.sls.service.custom.safeguards
+
+  if (config === true) {
+    config = {
+      policies: [
+        'require-dlq',
+        'no-secret-env-vars',
+        'no-wild-iam-role-statements'
+      ]
+    }
+  }
 
   if (!(config.policies instanceof Array)) {
     throw new Error(
@@ -42,13 +61,13 @@ function runPolicies(ctx) {
       const policyOptions = policy[policyName] || {}
       return {
         name: policyName,
-        function: require(path.join(policiesPath, policyName)),
+        function: loadPolicy(policiesPath, policyName),
         options: policyOptions
       }
     }
     return {
       name: policy,
-      function: require(path.join(policiesPath, policy)),
+      function: loadPolicy(policiesPath, policy),
       options: {}
     }
   })
