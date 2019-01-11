@@ -1,3 +1,5 @@
+const { fromPairs } = require('lodash')
+
 // from https://github.com/dxa4481/truffleHogRegexes/blob/master/truffleHogRegexes/regexes.json
 const truffleHogRegexes = {
   'Slack Token': new RegExp('(xox[p|b|o|a]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-z0-9]{32})'),
@@ -40,23 +42,32 @@ function isSecret(string) {
 
 module.exports = function noSecretEnvVarsPolicy(policy, service) {
   const {
-    functions,
-    provider: { environment }
-  } = service.declaration
+    declaration: {
+      functions,
+      provider: { environment }
+    },
+    provider: { naming },
+    compiled: {
+      'cloudformation-template-update-stack.json': { Resources }
+    }
+  } = service
+  const logicalFuncNamesToConfigFuncName = fromPairs(
+    Object.keys(functions).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
+  )
 
-  for (const [name, value] of Object.entries(environment || {})) {
-    if (isSecret(value)) {
-      policy.warn(`Global environment variable ${name} looks like it contains a secret value`)
-    }
-  }
-  for (const [funcName, funcObj] of Object.entries(functions || {})) {
-    if (!funcObj.environment) {
+  for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
+    if (
+      Type !== 'AWS::Lambda::Function' ||
+      !Properties.Environment ||
+      !Properties.Environment.Variables
+    )
       continue
-    }
-    for (const [name, value] of Object.entries(funcObj.environment || {})) {
+
+    for (const [name, value] of Object.entries(Properties.Environment.Variables)) {
       if (isSecret(value)) {
+        const configFuncName = logicalFuncNamesToConfigFuncName[funcName] || funcName
         policy.warn(
-          `Environment variable ${name} on function '${funcName}' looks like it contains a secret value`
+          `Environment variable ${name} on function '${configFuncName}' looks like it contains a secret value`
         )
       }
     }

@@ -55,7 +55,8 @@ function runPolicies(ctx) {
 
   const service = {
     compiled: {},
-    declaration: cloneDeep(omit(ctx.sls.service, ['serverless']))
+    declaration: cloneDeep(omit(ctx.sls.service, ['serverless'])),
+    provider: ctx.provider
   }
 
   const parseFiles = new Promise((resolve, reject) => {
