@@ -16,7 +16,7 @@ script:
 - pushd sdk-js && npm run test && popd
 before_deploy:
 - node ./scripts/updatePreReleaseVersion.js
-- [[ "$TRAVIS_TAG" =~ beta ]] || [[ -z "$TRAVIS_TAG" ]] node ./scripts/updatePreReleaseDependency.js
+- '[[ "$TRAVIS_TAG" =~ beta ]] || [[ -z "$TRAVIS_TAG" ]] node ./scripts/updatePreReleaseDependency.js'
 deploy:
   # production releases
   - provider: npm
