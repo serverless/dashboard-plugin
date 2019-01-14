@@ -80,13 +80,12 @@ async function runPolicies(ctx) {
     artifacts
       .filter((filename) => filename.match(/\.(json|yml|yaml)$/i))
       .map(async (filename) => {
-        const content = await readFile(filename)
-        const relativeFilename = path.relative(artifactsPath, filename)
+        const content = await readFile(path.join(artifactsPath, filename))
         try {
-          if (relativeFilename.match(/\.json$/i)) {
-            return [relativeFilename, JSON.parse(content)]
+          if (filename.match(/\.json$/i)) {
+            return [filename, JSON.parse(content)]
           }
-          return [relativeFilename, yml.parse(content)]
+          return [filename, yml.parse(content)]
         } catch (error) {
           ctx.sls.cli.log(`Failed to parse file ${filename} in the artifacts directory.`)
           throw error
