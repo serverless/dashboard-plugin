@@ -1,13 +1,13 @@
-import dir from 'node-dir'
+import { readdir, readFile } from 'fs-extra'
 import yml from 'yamljs'
 import path from 'path'
-import { cloneDeep, omit } from 'lodash'
+import { fromPairs, cloneDeep, omit } from 'lodash'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 
 class PolicyFailureError extends Error {}
 
-const loadPolicy = (policiesPath, policyName) => {
+export const loadPolicy = (policiesPath, policyName) => {
   try {
     // NOTE: not using path.join because it strips off the leading ./
     return require(`.${path.sep}policies${path.sep}${policyName}`)
@@ -74,31 +74,26 @@ async function runPolicies(ctx) {
     provider: ctx.provider
   }
 
-  await new Promise((resolve, reject) => {
-    const artifactsPath = path.join(basePath, '.serverless')
-
-    // Add the parsed value of each JSON to the artifacts object
-    dir.readFiles(
-      artifactsPath,
-      { match: /\.(json|yml|yaml)$/i },
-      function(err, content, filename, next) {
+  const artifactsPath = path.join(basePath, '.serverless')
+  const artifacts = await readdir(artifactsPath)
+  const jsonYamlArtifacts = await Promise.all(
+    artifacts
+      .filter((filename) => filename.match(/\.(json|yml|yaml)$/i))
+      .map(async (filename) => {
+        const content = await readFile(filename)
+        const relativeFilename = path.relative(artifactsPath, filename)
         try {
-          const relativeFilename = path.relative(artifactsPath, filename)
           if (relativeFilename.match(/\.json$/i)) {
-            service.compiled[relativeFilename] = JSON.parse(content)
-          } else {
-            service.compiled[relativeFilename] = yml.parse(content)
+            return [relativeFilename, JSON.parse(content)]
           }
+          return [relativeFilename, yml.parse(content)]
         } catch (error) {
           ctx.sls.cli.log(`Failed to parse file ${filename} in the artifacts directory.`)
-          reject(error)
+          throw error
         }
-
-        next()
-      },
-      resolve
-    )
-  })
+      })
+  )
+  service.compiled = fromPairs(jsonYamlArtifacts)
 
   const runningPolicies = policies.map(async (policy) => {
     ctx.sls.cli.log(`(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`)

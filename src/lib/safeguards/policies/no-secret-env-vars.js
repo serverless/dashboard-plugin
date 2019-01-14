@@ -42,17 +42,14 @@ function isSecret(string) {
 
 module.exports = function noSecretEnvVarsPolicy(policy, service) {
   const {
-    declaration: {
-      functions,
-      provider: { environment }
-    },
+    declaration: { functions },
     provider: { naming },
     compiled: {
       'cloudformation-template-update-stack.json': { Resources }
     }
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
-    Object.keys(functions).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
+    Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
   for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
@@ -60,8 +57,9 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
       Type !== 'AWS::Lambda::Function' ||
       !Properties.Environment ||
       !Properties.Environment.Variables
-    )
+    ) {
       continue
+    }
 
     for (const [name, value] of Object.entries(Properties.Environment.Variables)) {
       if (isSecret(value)) {
