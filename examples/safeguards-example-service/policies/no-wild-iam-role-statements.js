@@ -53,7 +53,7 @@ module.exports = function noWildIamPolicy(policy, service) {
             throw new policy.Failure(
               `iamRoleStatement granting Resource=${JSON.stringify(
                 rawResource
-              )}. Wildcard resources/resourcetypes/qualifiers in iamRoleStatements are not permitted.`
+              )}. Wildcard resources or resourcetypes in iamRoleStatements are not permitted.`
             )
         }
       }
