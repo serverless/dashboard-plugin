@@ -27,7 +27,7 @@ deploy:
       node: 10.15
       tags: true
       condition: '! "$TRAVIS_TAG" =~ beta'
-      repo: serverless/platform-plugin
+      repo: serverless/enterprise-plugin
     api_key:
       secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
   # tagged prereleases
@@ -39,7 +39,7 @@ deploy:
       node: 10.15
       tags: true
       condition: '"$TRAVIS_TAG" =~ beta'
-      repo: serverless/platform-plugin
+      repo: serverless/enterprise-plugin
     api_key:
       secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
   # automatic prereleases
@@ -51,6 +51,6 @@ deploy:
       node: 10.15
       tags: false
       branch: master
-      repo: serverless/platform-plugin
+      repo: serverless/enterprise-plugin
     api_key:
       secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
