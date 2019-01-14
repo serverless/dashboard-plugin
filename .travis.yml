@@ -14,6 +14,7 @@ script:
 - pushd sdk-js && npm run lint && popd
 - npm run test
 - pushd sdk-js && npm run test && popd
+- npm run build
 before_deploy:
 - node ./scripts/updatePreReleaseVersion.js
 - '[[ "$TRAVIS_TAG" =~ beta ]] || [[ -z "$TRAVIS_TAG" ]] && node ./scripts/updatePreReleaseDependency.js'
