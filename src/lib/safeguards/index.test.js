@@ -65,12 +65,6 @@ describe('safeguards', () => {
   }
   afterAll(() => log.resetMock())
 
-  it('does nothing when safeguards not enabled', async () => {
-    const ctx = cloneDeep(defualtCtx)
-    await runPolicies(ctx)
-    expect(log).toHaveBeenCalledTimes(0)
-  })
-
   it('does nothing when safeguards explicity disabled', async () => {
     const ctx = cloneDeep(defualtCtx)
     ctx.sls.service.custom.safeguards = false
