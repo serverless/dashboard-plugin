@@ -3,10 +3,10 @@ import sdk from '@serverless/platform-sdk'
 import getCredentials from './credentials'
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
-import wrap from './wrap.js'
-import wrapClean from './wrapClean.js'
-import runPolicies from './safeguards.js'
-import removeDestination from './removeDestination.js'
+import wrap from './wrap'
+import wrapClean from './wrapClean'
+import runPolicies from './safeguards'
+import removeDestination from './removeDestination'
 
 afterAll(() => jest.restoreAllMocks())
 
