@@ -1,5 +1,7 @@
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
+import login from './login.js'
+import logout from './logout.js'
 import wrap from './wrap.js'
 import wrapClean from './wrapClean.js'
 import runPolicies from './safeguards.js'
@@ -37,6 +39,20 @@ class ServerlessPlatformPlugin {
       )
     }
 
+    // Add commands
+    this.commands = {
+      login: {
+        usage: 'Login or sign up for the Serverless Platform',
+        lifecycleEvents: ['login'],
+        platform: true,
+      },
+      logout: {
+        usage: 'Logout from the Serverless Platform',
+        lifecycleEvents: ['logout'],
+        platform: true,
+      },
+    };
+
     // Set Plugin hooks for all Platform Plugin features here
     this.hooks = {
       'before:package:createDeploymentArtifacts': this.route(
@@ -62,7 +78,9 @@ class ServerlessPlatformPlugin {
       'before:offline:start:init': this.route('before:offline:start:init').bind(this),
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(
         this
-      )
+      ),
+      'login:login': this.route('login:login').bind(this),
+      'logout:logout': this.route('logout:logout').bind(this)
     }
   }
 
@@ -129,6 +147,12 @@ class ServerlessPlatformPlugin {
           break
         case 'before:step-functions-offline:start':
           // await wrap(self)
+          break
+        case 'login:login':
+          await login(self)
+          break
+        case 'logout:logout':
+          await logout(self)
           break
       }
     }
