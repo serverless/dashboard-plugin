@@ -14,10 +14,10 @@ import updateDeployment from './updateDeployment.js'
 import archiveService from './archiveService.js'
 
 /*
- * Serverless Platform Plugin
+ * Serverless Enterprise Plugin
  */
 
-class ServerlessPlatformPlugin {
+class ServerlessEnterprisePlugin {
   constructor(sls) {
 
     const user = getLoggedInUser()
@@ -182,4 +182,4 @@ class ServerlessPlatformPlugin {
   }
 }
 
-export default ServerlessPlatformPlugin
+export default ServerlessEnterprisePlugin
