@@ -1,6 +1,6 @@
 {
-  "name": "@serverless/platform-plugin",
-  "version": "1.0.0-beta",
+  "name": "@serverless/enterprise-plugin",
+  "version": "0.1.0-beta",
   "description": "The Serverless Platform plugin",
   "main": "dist/index.js",
   "scripts": {
