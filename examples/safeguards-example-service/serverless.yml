@@ -3,7 +3,7 @@ app: plugin-test
 tenant: dschep
 
 plugins:
-  - '@serverless/platform-plugin'
+  - '@serverless/enterprise-plugin'
 
 custom:
   safeguards: true
