@@ -12,26 +12,24 @@ const asyncEvents = new Set([
 ])
 module.exports = function dlqPolicy(policy, service) {
   const {
-    declaration: {
-      functions,
-      provider: { environment }
-    },
+    declaration: { functions },
     provider: { naming },
     compiled: {
       'cloudformation-template-update-stack.json': { Resources }
     }
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
-    Object.keys(functions).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
+    Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
-  //for (const [name, { events, onError }] of Object.entries(functions)) {
+  // for (const [name, { events, onError }] of Object.entries(functions)) {
   for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
     if (
       Type !== 'AWS::Lambda::Function' ||
       (Properties.DeadLetterConfig && Properties.DeadLetterConfig.TargetArn)
-    )
+    ) {
       continue
+    }
     const events = functions[logicalFuncNamesToConfigFuncName[funcName]].events || []
     const eventTypes = new Set(events.map((ev) => Object.keys(ev)[0]))
     const eventIntersection = new Set([...asyncEvents].filter((x) => eventTypes.has(x)))
