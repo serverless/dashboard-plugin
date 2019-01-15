@@ -1,19 +1,19 @@
-# Serverless Platform Plugin
+# Serverless Enterprise Plugin
 
-This is a Serverless Framework plugin which helps you use advanced monitoring, tracing and governance features via the Serverless Platform.
+This is a Serverless Framework plugin which helps you use advanced monitoring, tracing and governance features via Serverless Enterprise.
 
-The Plugin automatically wraps your functions and instruments them with the Serverless Platform's monitoring, alerting, logging and tracing features.
+The Plugin automatically wraps your functions and instruments them with Serverless Enterprise's monitoring, alerting, logging and tracing features.
 
 ## Quick-Start
 Install the plugin via NPM
 ```
-npm install @serverless/platform-plugin
+npm install @serverless/enterprise-plugin
 ```
 
 Then add the plugin to your `serverless.yml`, like this:
 ```yaml
 plugins:
-  - '@serverless/platform-plugin'
+  - '@serverless/enterprise-plugin'
 ```
 
 ### Safeguards
@@ -25,7 +25,7 @@ custom:
 
 ### Log Collection
 
-For collection logs to the platform, you need to set some configuration in your serverless.yml
+For collection logs via Serverless Enterprise, you need to set some configuration in your serverless.yml
 
 ```yaml
 custom:
@@ -44,7 +44,7 @@ custom:
 
 You can install the latest versions from the master branch by installing the `next` tag:
 ```
-npm install @serverless/platform-plugin@next
+npm install @serverless/enterprise-plugin@next
 ```
 
 The project is transpiled with babel, so run `npm run build` before installing it
