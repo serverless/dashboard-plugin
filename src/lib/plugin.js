@@ -67,12 +67,12 @@ class ServerlessEnterprisePlugin {
       login: {
         usage: 'Login or sign up for the Serverless Platform',
         lifecycleEvents: ['login'],
-        platform: true,
+        enterprise: true,
       },
       logout: {
         usage: 'Logout from the Serverless Platform',
         lifecycleEvents: ['logout'],
-        platform: true,
+        enterprise: true,
       },
     };
 

@@ -8,8 +8,8 @@ import { pickResourceType, upperFirst } from './utils'
 export default async (ctx) => {
   if (
     !ctx.sls.service.custom ||
-    !ctx.sls.service.custom.platform ||
-    !ctx.sls.service.custom.platform.collectApiLogs
+    !ctx.sls.service.custom.enterprise ||
+    !ctx.sls.service.custom.enterprise.collectApiLogs
   ) {
     return
   }

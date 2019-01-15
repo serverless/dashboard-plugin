@@ -9,7 +9,7 @@ describe('awsApiGatewayLogsCollection', () => {
         service: {
           tenant: 'tenant',
           app: 'app',
-          custom: { platform: { collectApiLogs: true } },
+          custom: { enterprise: { collectApiLogs: true } },
           provider: {
             compiledCloudFormationTemplate: {
               Resources: {

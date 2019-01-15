@@ -3,8 +3,8 @@ import { removeLogDestination } from '@serverless/platform-sdk'
 export default async (ctx) => {
   if (
     !ctx.sls.service.custom ||
-    !ctx.sls.service.custom.platform ||
-    !ctx.sls.service.custom.platform.collectLambdaLogs
+    !ctx.sls.service.custom.enterprise ||
+    !ctx.sls.service.custom.enterprise.collectLambdaLogs
   ) {
     return
   }
