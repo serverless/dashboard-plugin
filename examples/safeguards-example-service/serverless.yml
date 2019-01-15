@@ -5,9 +5,6 @@ tenant: dschep
 plugins:
   - '@serverless/enterprise-plugin'
 
-custom:
-  safeguards: true
-
 provider:
   name: aws
   runtime: nodejs8.10
@@ -15,12 +12,6 @@ provider:
 functions:
   hello:
     handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
-          cors:
-            origin: example.com
 
 resources:
   Resources:

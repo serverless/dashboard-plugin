@@ -19,11 +19,11 @@ export const loadPolicy = (policiesPath, policyName) => {
 async function runPolicies(ctx) {
   const basePath = ctx.sls.config.servicePath
 
-  if (!ctx.sls.service.custom || !ctx.sls.service.custom.safeguards) {
+  if (ctx.sls.service.custom && !ctx.sls.service.custom.safeguards === false) {
     return
   }
 
-  let config = ctx.sls.service.custom.safeguards
+  let config = ctx.sls.service.custom && ctx.sls.service.custom.safeguards || true
 
   if (config === true) {
     config = {

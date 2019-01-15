@@ -11,6 +11,9 @@ export default async (ctx) => {
     !ctx.sls.service.custom.enterprise ||
     !ctx.sls.service.custom.enterprise.collectApiLogs
   ) {
+    ctx.sls.cli.log(
+      'Info: The Serverless Platform Plugin is not configured to collect API Gateway Logs.'
+    )
     return
   }
 
