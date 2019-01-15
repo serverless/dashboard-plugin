@@ -14,8 +14,7 @@ export default async (ctx) => {
     return
   }
 
-  ctx.sls.cli.log('Info: This plugin is collecting API Gateway logs.',
-    'Serverless Enterprise')
+  ctx.sls.cli.log('Info: This plugin is collecting API Gateway logs.', 'Serverless Enterprise')
   const logRoleLogicalName = 'IamRoleApiGatewayCloudwatchLogRole'
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 

@@ -1,5 +1,4 @@
 import ServerlessEnterprisePlugin from './plugin'
-import sdk from '@serverless/platform-sdk'
 import getCredentials from './credentials'
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -10,9 +9,7 @@ import removeDestination from './removeDestination'
 
 afterAll(() => jest.restoreAllMocks())
 
-
 // REMOVING GETPROVIDREMOCK() AND LOGMOCK() AND USING THESLS INSTANCE BELOW
-
 
 // Mock Serverless Instance
 const sls = {
@@ -37,7 +34,7 @@ jest.mock('@serverless/platform-sdk', () => ({
     accessKeys: {
       tenant: '12345'
     },
-    idToken: 'ID',
+    idToken: 'ID'
   }),
   getAccessKeyForTenant: jest.fn().mockReturnValue('123456'),
   archiveService: jest.fn().mockImplementation(() => Promise.resolve())
@@ -76,20 +73,20 @@ describe('plugin', () => {
       'before:offline:start:init',
       'before:step-functions-offline:start',
       'login:login',
-      'logout:logout',
+      'logout:logout'
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
   })
 
   it('construct requires tenant', () => {
-    let slsClone = Object.assign({}, sls)
+    const slsClone = Object.assign({}, sls)
     delete slsClone.service.tenant
-    const instance = new ServerlessEnterprisePlugin(slsClone)
-    expect(sls.getProvider).toBeCalledWith('aws')
-    expect(sls.cli.log).toBeCalledWith(
-      "Warning: The Enterprise Plugin requires a \"tenant\" property in your \"serverless.yml\" and will not work without it.",
-      "Serverless Enterprise"
+    const instance = new ServerlessEnterprisePlugin(slsClone) // eslint-disable-line
+    expect(slsClone.getProvider).toBeCalledWith('aws')
+    expect(slsClone.cli.log).toBeCalledWith(
+      'Warning: The Enterprise Plugin requires a "tenant" property in your "serverless.yml" and will not work without it.',
+      'Serverless Enterprise'
     )
   })
 

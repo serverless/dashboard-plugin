@@ -19,15 +19,14 @@ import archiveService from './archiveService'
 
 class ServerlessEnterprisePlugin {
   constructor(sls) {
-
     const user = getLoggedInUser()
     const currentCommand = sls.processedInput.commands[0]
 
     // Skip everything if user is not logged in and not trying to log in or out...
     if (!user && (currentCommand !== 'login' && currentCommand !== 'logout')) {
-      console.log('')
+      console.log('') // eslint-disable-line
       sls.cli.log(`Warning: You are not currently logged in.  All enterprise features will be disabled.  To log in, use: $ serverless login`, 'Serverless Enterprise') // eslint-disable-line
-      console.log('')
+      console.log('') // eslint-disable-line
       return
     }
 
@@ -67,14 +66,14 @@ class ServerlessEnterprisePlugin {
       login: {
         usage: 'Login or sign up for the Serverless Platform',
         lifecycleEvents: ['login'],
-        enterprise: true,
+        enterprise: true
       },
       logout: {
         usage: 'Logout from the Serverless Platform',
         lifecycleEvents: ['logout'],
-        enterprise: true,
-      },
-    };
+        enterprise: true
+      }
+    }
 
     // Set Plugin hooks for all Platform Plugin features here
     this.hooks = {
