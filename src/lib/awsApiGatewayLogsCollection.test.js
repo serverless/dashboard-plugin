@@ -9,7 +9,7 @@ describe('awsApiGatewayLogsCollection', () => {
         service: {
           tenant: 'tenant',
           app: 'app',
-          custom: { platform: { collectApiLogs: true } },
+          custom: { enterprise: { collectApiLogs: true } },
           provider: {
             compiledCloudFormationTemplate: {
               Resources: {
@@ -26,7 +26,10 @@ describe('awsApiGatewayLogsCollection', () => {
     }
     const that = { serverless: { classes: { Error } } }
     await awsApiGatewayLogsCollection.bind(that)(ctx)
-    expect(log).toBeCalledWith('Info: The Serverless Platform is collecting API Gateway logs!')
+    expect(log).toBeCalledWith(
+      'Info: This plugin is collecting API Gateway logs.',
+      'Serverless Enterprise'
+    )
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Resources: {
         ApiGatewayAccount: {

@@ -15,7 +15,7 @@ describe('removeDestination', () => {
         service: {
           appUid: 'UID',
           getServiceName,
-          custom: { platform: { collectLambdaLogs: true } }
+          custom: { enterprise: { collectLambdaLogs: true } }
         }
       },
       provider: { getStage, getRegion }

@@ -1,24 +1,45 @@
+import { getLoggedInUser } from '@serverless/platform-sdk'
+import errorHandler from './errorHandler'
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
+import login from './login'
+import logout from './logout'
 import wrap from './wrap'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
+import createDeployment from './createDeployment'
+import updateDeployment from './updateDeployment'
+import archiveService from './archiveService'
 
 /*
- * Serverless Platform Plugin
+ * Serverless Enterprise Plugin
  */
 
-class ServerlessPlatformPlugin {
+class ServerlessEnterprisePlugin {
   constructor(sls) {
+    const user = getLoggedInUser()
+    const currentCommand = sls.processedInput.commands[0]
+
+    // Skip everything if user is not logged in and not trying to log in or out...
+    if (!user && (currentCommand !== 'login' && currentCommand !== 'logout')) {
+      console.log('') // eslint-disable-line
+      sls.cli.log(`Warning: You are not currently logged in.  All enterprise features will be disabled.  To log in, use: $ serverless login`, 'Serverless Enterprise') // eslint-disable-line
+      console.log('') // eslint-disable-line
+      return
+    }
+
     // Defaults
     this.sls = sls
-    this.state = {}
+    this.state = {} // Useful for storing data across hooks
     this.provider = this.sls.getProvider('aws')
+    this.enterprise = {
+      errorHandler: errorHandler(this) // V.1 calls this when it crashes
+    }
 
-    // Check if Platform is configured
+    // Check if Enterprise is configured
     const missing = []
     if (!this.sls.service.tenant) {
       missing.push('tenant')
@@ -31,38 +52,55 @@ class ServerlessPlatformPlugin {
     }
     if (missing.length > 0) {
       this.sls.cli.log(
-        `Warning: The Serverless Platform Plugin requires a ${missing
+        `Warning: The Enterprise Plugin requires a ${missing
           .map((opt) => `"${opt}"`)
-          .join(', ')} property in your "serverless.yml" and will not work without it.`
+          .join(', ')} property in your "serverless.yml" and will not work without it.`,
+        'Serverless Enterprise'
       )
+      return
     }
 
-    // Set Plugin hooks for all Platform Plugin features here
+    // Add data to plugin state, for convenience
+    this.state.tenant = this.sls.service.tenant
+    this.state.app = this.sls.service.app
+    this.state.service = this.sls.service.service
+
+    // Add commands
+    this.commands = {
+      login: {
+        usage: 'Login or sign up for Serverless Enterprise',
+        lifecycleEvents: ['login'],
+        enterprise: true
+      },
+      logout: {
+        usage: 'Logout from Serverless Enterprise',
+        lifecycleEvents: ['logout'],
+        enterprise: true
+      }
+    }
+
+    // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
-      'before:package:createDeploymentArtifacts': this.route(
-        'before:package:createDeploymentArtifacts'
-      ).bind(this),
-      'after:package:createDeploymentArtifacts': this.route(
-        'after:package:createDeploymentArtifacts'
-      ).bind(this),
-      'before:deploy:function:packageFunction': this.route(
-        'before:deploy:function:packageFunction'
-      ).bind(this),
-      'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this),
-      'before:aws:package:finalize:saveServiceState': this.route(
-        'before:aws:package:finalize:saveServiceState'
-      ).bind(this),
-      'before:deploy:deploy': this.route('before:deploy:deploy').bind(this),
-      'before:info:info': this.route('before:info:info').bind(this),
-      'before:logs:logs': this.route('before:logs:logs').bind(this),
-      'before:metrics:metrics': this.route('before:metrics:metrics').bind(this),
-      'before:remove:remove': this.route('before:remove:remove').bind(this),
-      'after:remove:remove': this.route('after:remove:remove').bind(this),
-      'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this),
-      'before:offline:start:init': this.route('before:offline:start:init').bind(this),
-      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(
-        this
-      )
+      'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
+      'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
+      'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this), // eslint-disable-line
+      'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this), // eslint-disable-line
+      'before:aws:package:finalize:saveServiceState': this.route('before:aws:package:finalize:saveServiceState').bind(this), // eslint-disable-line
+      'before:deploy:deploy': this.route('before:deploy:deploy').bind(this), // eslint-disable-line
+      'before:aws:deploy:deploy:createStack': this.route('before:aws:deploy:deploy:createStack').bind(this), // eslint-disable-line
+      'after:aws:deploy:finalize:cleanup': this.route('after:aws:deploy:finalize:cleanup').bind(this), // eslint-disable-line
+      'after:deploy:finalize': this.route('after:deploy:finalize').bind(this), // eslint-disable-line
+      'after:deploy:deploy': this.route('after:deploy:deploy').bind(this), // eslint-disable-line
+      'before:info:info': this.route('before:info:info').bind(this), // eslint-disable-line
+      'before:logs:logs': this.route('before:logs:logs').bind(this), // eslint-disable-line
+      'before:metrics:metrics': this.route('before:metrics:metrics').bind(this), // eslint-disable-line
+      'before:remove:remove': this.route('before:remove:remove').bind(this), // eslint-disable-line
+      'after:remove:remove': this.route('after:remove:remove').bind(this), // eslint-disable-line
+      'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this), // eslint-disable-line
+      'before:offline:start:init': this.route('before:offline:start:init').bind(this), // eslint-disable-line
+      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this), // eslint-disable-line
+      'login:login': this.route('login:login').bind(this), // eslint-disable-line
+      'logout:logout': this.route('logout:logout').bind(this), // eslint-disable-line
     }
   }
 
@@ -95,6 +133,12 @@ class ServerlessPlatformPlugin {
         case 'before:deploy:deploy':
           await runPolicies(self)
           break
+        case 'before:aws:deploy:deploy:createStack':
+          await createDeployment(self)
+          break
+        case 'after:aws:deploy:finalize:cleanup':
+          await updateDeployment(self)
+          break
         case 'before:info:info':
           await getCredentials(self)
           break
@@ -113,6 +157,7 @@ class ServerlessPlatformPlugin {
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
           )
           await removeDestination(self)
+          await archiveService(self)
           break
         case 'before:invoke:local:invoke':
           Object.assign(self.sls.service, {
@@ -130,9 +175,15 @@ class ServerlessPlatformPlugin {
         case 'before:step-functions-offline:start':
           // await wrap(self)
           break
+        case 'login:login':
+          await login(self)
+          break
+        case 'logout:logout':
+          await logout(self)
+          break
       }
     }
   }
 }
 
-export default ServerlessPlatformPlugin
+export default ServerlessEnterprisePlugin

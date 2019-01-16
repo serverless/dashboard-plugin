@@ -8,16 +8,13 @@ import { pickResourceType, upperFirst } from './utils'
 export default async (ctx) => {
   if (
     !ctx.sls.service.custom ||
-    !ctx.sls.service.custom.platform ||
-    !ctx.sls.service.custom.platform.collectApiLogs
+    !ctx.sls.service.custom.enterprise ||
+    !ctx.sls.service.custom.enterprise.collectApiLogs
   ) {
-    ctx.sls.cli.log(
-      'Info: The Serverless Platform Plugin is not configured to collect API Gateway Logs.'
-    )
     return
   }
 
-  ctx.sls.cli.log('Info: The Serverless Platform is collecting API Gateway logs!')
+  ctx.sls.cli.log('Info: This plugin is collecting API Gateway logs.', 'Serverless Enterprise')
   const logRoleLogicalName = 'IamRoleApiGatewayCloudwatchLogRole'
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 

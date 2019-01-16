@@ -22,7 +22,7 @@ describe('awsLambdaLogsCollection', () => {
           app: 'app',
           appUid: 'app123',
           tenantUid: 'tenant123',
-          custom: { platform: { collectLambdaLogs: true } },
+          custom: { enterprise: { collectLambdaLogs: true } },
           getServiceName,
           provider: {
             compiledCloudFormationTemplate: {

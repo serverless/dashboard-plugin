@@ -12,11 +12,12 @@ import { getLogDestination } from '@serverless/platform-sdk'
 export default async (ctx) => {
   if (
     !ctx.sls.service.custom ||
-    !ctx.sls.service.custom.platform ||
-    !ctx.sls.service.custom.platform.collectLambdaLogs
+    !ctx.sls.service.custom.enterprise ||
+    !ctx.sls.service.custom.enterprise.collectLambdaLogs
   ) {
     ctx.sls.cli.log(
-      'Info: The Serverless Platform Plugin is not configured to collect AWS Lambda Logs.'
+      'Info: This plugin is not configured to collect AWS Lambda Logs.',
+      'Serverless Enterprise'
     )
     return
   }
