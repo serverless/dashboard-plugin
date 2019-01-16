@@ -13,13 +13,6 @@ const version = semver.valid(
     .slice(0, -1)
 )
 
-if (!semver.gt(packageJson.version, version)) {
-  console.log(packageJson.version, version)
-  packageJson.version = version
-  writeFileSync('package.json', JSON.stringify(packageJson, null, 2) + '\n')
-} else {
-  console.error(`Error: ${packageJson.version} greater than ${version}
-You need to make a tagged release or pre-release to continue 
-making automatic prereleases after updating the version number`)
-  process.exit(1)
-}
+console.log(packageJson.version, version)
+packageJson.version = version
+writeFileSync('package.json', JSON.stringify(packageJson, null, 2) + '\n')
