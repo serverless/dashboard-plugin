@@ -29,7 +29,7 @@ For collection logs via Serverless Enterprise, you need to set some configuratio
 
 ```yaml
 custom:
-  platform:
+  enterprise:
     collectLambdaLogs: true
     
     # Note: Automatic configuration for collecting API logs 
