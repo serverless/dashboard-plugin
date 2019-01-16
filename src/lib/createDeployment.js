@@ -1,10 +1,9 @@
-import { createDeployment, getLoggedInUser, getAccessKeyForTenant } from '@serverless/platform-sdk'
+import { createDeployment, getAccessKeyForTenant } from '@serverless/platform-sdk'
 const fs = require('fs')
 const path = require('path')
 
 export default async function(ctx) {
   // Defaults
-  const user = getLoggedInUser()
   const accessKey = getAccessKeyForTenant(ctx.state.tenant)
 
   // Fetch "serverless-state.json", which is only available during certain hooks.
@@ -39,7 +38,7 @@ export default async function(ctx) {
       // The deployment "update" will specifically look for this.
       ctx.state.deployment = {
         deploymentId: data.id,
-        accessKey: user.accessKey,
+        accessKey: accessKey,
         tenant: ctx.sls.service.tenant,
         app: ctx.sls.service.app,
         serviceName: ctx.sls.service.service

@@ -1,4 +1,5 @@
 import { getLoggedInUser } from '@serverless/platform-sdk'
+import errorHandler from './errorHandler'
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import login from './login'
@@ -34,8 +35,11 @@ class ServerlessEnterprisePlugin {
     this.sls = sls
     this.state = {} // Useful for storing data across hooks
     this.provider = this.sls.getProvider('aws')
+    this.enterprise = {
+      errorHandler: errorHandler(this) // V.1 calls this when it crashes
+    }
 
-    // Check if Platform is configured
+    // Check if Enterprise is configured
     const missing = []
     if (!this.sls.service.tenant) {
       missing.push('tenant')
@@ -64,18 +68,18 @@ class ServerlessEnterprisePlugin {
     // Add commands
     this.commands = {
       login: {
-        usage: 'Login or sign up for the Serverless Platform',
+        usage: 'Login or sign up for Serverless Enterprise',
         lifecycleEvents: ['login'],
         enterprise: true
       },
       logout: {
-        usage: 'Logout from the Serverless Platform',
+        usage: 'Logout from Serverless Enterprise',
         lifecycleEvents: ['logout'],
         enterprise: true
       }
     }
 
-    // Set Plugin hooks for all Platform Plugin features here
+    // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
       'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
       'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
@@ -83,7 +87,8 @@ class ServerlessEnterprisePlugin {
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this), // eslint-disable-line
       'before:aws:package:finalize:saveServiceState': this.route('before:aws:package:finalize:saveServiceState').bind(this), // eslint-disable-line
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this), // eslint-disable-line
-      'before:aws:deploy:finalize:cleanup': this.route('before:aws:deploy:finalize:cleanup').bind(this), // eslint-disable-line
+      'before:aws:deploy:deploy:createStack': this.route('before:aws:deploy:deploy:createStack').bind(this), // eslint-disable-line
+      'after:aws:deploy:finalize:cleanup': this.route('after:aws:deploy:finalize:cleanup').bind(this), // eslint-disable-line
       'after:deploy:finalize': this.route('after:deploy:finalize').bind(this), // eslint-disable-line
       'after:deploy:deploy': this.route('after:deploy:deploy').bind(this), // eslint-disable-line
       'before:info:info': this.route('before:info:info').bind(this), // eslint-disable-line
@@ -128,10 +133,10 @@ class ServerlessEnterprisePlugin {
         case 'before:deploy:deploy':
           await runPolicies(self)
           break
-        case 'before:aws:deploy:finalize:cleanup':
+        case 'before:aws:deploy:deploy:createStack':
           await createDeployment(self)
           break
-        case 'after:deploy:finalize':
+        case 'after:aws:deploy:finalize:cleanup':
           await updateDeployment(self)
           break
         case 'before:info:info':

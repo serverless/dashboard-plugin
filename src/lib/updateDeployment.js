@@ -53,6 +53,9 @@ export default async function(ctx) {
         `Successfully published your service to the Enterprise Dashboard: ${serviceUrl}`, // eslint-disable-line
           'Serverless Enterprise'
         )
+
+        // Mark deployment as complete
+        ctx.state.deployment.complete = true
       })
     })
 }
