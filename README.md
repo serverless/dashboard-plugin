@@ -17,27 +17,25 @@ plugins:
 ```
 
 ### Safeguards
-To enable Serverless Safeguards, add this to your configuration:
+Serverless Enterprise ships with the following safeguards by default:
+* no wildcard IAM role statments
+* All functions with async events must be configured with a Dead Letter Queue
+* Environment variables can not contain secrets
+
+To disable Serverless Safeguards, add this to your configuration:
 ```yaml
 custom:
-  safeguards: true
+  safeguards: false
 ```
 
 ### Log Collection
 
-For collection logs via Serverless Enterprise, you need to set some configuration in your serverless.yml
+Serverless Enterprise automatically aggregates logs. To disable them, set the following options:
 
 ```yaml
 custom:
   enterprise:
-    collectLambdaLogs: true
-    
-    # Note: Automatic configuration for collecting API logs 
-    #       is only possible on never before deployed apps for
-    #       right now. his is a limitation of API Gateway and
-    #       CloudFormation at the moment. We are looking for options.
-    collectApiLogs: true
-
+    collectLambdaLogs: false
 ```
 
 ## Development Notes

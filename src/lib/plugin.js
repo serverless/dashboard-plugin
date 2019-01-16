@@ -1,6 +1,6 @@
 import { getLoggedInUser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
-import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
+// import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import login from './login'
 import logout from './logout'
@@ -127,7 +127,7 @@ class ServerlessEnterprisePlugin {
           break
         case 'before:aws:package:finalize:saveServiceState':
           await getCredentials(self)
-          await awsApiGatewayLogsCollection(self)
+          // await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
           break
         case 'before:deploy:deploy':

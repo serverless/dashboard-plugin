@@ -11,9 +11,9 @@ import { getLogDestination } from '@serverless/platform-sdk'
 
 export default async (ctx) => {
   if (
-    !ctx.sls.service.custom ||
-    !ctx.sls.service.custom.enterprise ||
-    !ctx.sls.service.custom.enterprise.collectLambdaLogs
+    ctx.sls.service.custom &&
+    ctx.sls.service.custom.enterprise &&
+    ctx.sls.service.custom.enterprise.collectLambdaLogs === false
   ) {
     ctx.sls.cli.log(
       'Info: This plugin is not configured to collect AWS Lambda Logs.',
@@ -45,6 +45,12 @@ export default async (ctx) => {
   try {
     ;({ destinationArn } = await getLogDestination(destinationOpts))
   } catch (e) {
+    if (e.message.includes('not supported in region')) {
+      ctx.sls.cli.log(
+        `Warning: Lambda log collection is not supported in ${ctx.provider.getRegion()}`
+      )
+      return
+    }
     throw new Error(e.message)
   }
 

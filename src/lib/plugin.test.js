@@ -149,7 +149,8 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:aws:package:finalize:saveServiceState')()
     expect(getCredentials).toBeCalledWith(instance)
-    expect(awsApiGatewayLogsCollection).toBeCalledWith(instance)
+    // expect(awsApiGatewayLogsCollection).toBeCalledWith(instance)
+    expect(awsApiGatewayLogsCollection).toHaveBeenCalledTimes(0)
     expect(awsLambdaLogsCollection).toBeCalledWith(instance)
   })
 
