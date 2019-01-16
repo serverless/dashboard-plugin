@@ -7,7 +7,7 @@
     "build": "./scripts/build.sh",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack",
-    "lint": "eslint src --fix --cache",
+    "lint": "if [ -z \"$CI\" ]; then eslint src --fix --cache; else eslint src; fi",
     "test": "jest src"
   },
   "dependencies": {
