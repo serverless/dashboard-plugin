@@ -30,7 +30,7 @@ custom:
 
 ### Log Collection
 
-Serverless Enterprise automatically agregates logs. To disable them, set the following options:
+Serverless Enterprise automatically aggregates logs. To disable them, set the following options:
 
 ```yaml
 custom:
