@@ -7,7 +7,7 @@ The Plugin automatically wraps your functions and instruments them with Serverle
 ## Quick-Start
 Install the plugin & log into the Serverless Enterprise
 ```
-sls install -n @serverless/enterprise-plugin
+sls plugin install -n @serverless/enterprise-plugin
 sls login
 ```
 
