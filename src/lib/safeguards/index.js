@@ -38,7 +38,9 @@ async function runPolicies(ctx) {
   }
 
   ctx.sls.cli.log(
-    `(${shieldEmoji}Safeguards) Loading ${config.policies.length} polic${config.policies.length > 1 ? 'ies' : 'y'}.`,
+    `(${shieldEmoji}Safeguards) Loading ${config.policies.length} polic${
+      config.policies.length > 1 ? 'ies' : 'y'
+    }.`,
     `Serverless Enterprise`
   )
   const location = config.location || '.'
@@ -97,7 +99,10 @@ async function runPolicies(ctx) {
   service.compiled = fromPairs(jsonYamlArtifacts)
 
   const runningPolicies = policies.map(async (policy) => {
-    ctx.sls.cli.log(`(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`, `Serverless Enterprise`)
+    ctx.sls.cli.log(
+      `(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`,
+      `Serverless Enterprise`
+    )
 
     const result = {
       name: policy.name,
@@ -109,7 +114,9 @@ async function runPolicies(ctx) {
     }
     const warn = (message) => {
       ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) \u26A0\uFE0F Policy "${policy.name}" issued a warning \u2014 ${message}`,
+        `(${shieldEmoji}Safeguards) \u26A0\uFE0F Policy "${
+          policy.name
+        }" issued a warning \u2014 ${message}`,
         `Serverless Enterprise`
       )
       result.warned = true
@@ -137,7 +144,9 @@ async function runPolicies(ctx) {
         result.failed = true
         result.error = error
         ctx.sls.cli.log(
-          `(${shieldEmoji}Safeguards) \u274C Policy "${policy.name}" prevented the deployment \u2014 ${error.message}`,
+          `(${shieldEmoji}Safeguards) \u274C Policy "${
+            policy.name
+          }" prevented the deployment \u2014 ${error.message}`,
           `Serverless Enterprise`
         )
         return result
@@ -155,7 +164,10 @@ async function runPolicies(ctx) {
   const results = await Promise.all(runningPolicies)
   const markedPolicies = results.filter((res) => !res.approved || res.warned)
   if (markedPolicies.length === 0) {
-    ctx.sls.cli.log(`(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`, `Serverless Enterprise`)
+    ctx.sls.cli.log(
+      `(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`,
+      `Serverless Enterprise`
+    )
     return
   }
 
