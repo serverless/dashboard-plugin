@@ -5,15 +5,10 @@ This is a Serverless Framework plugin which helps you use advanced monitoring, t
 The Plugin automatically wraps your functions and instruments them with Serverless Enterprise's monitoring, alerting, logging and tracing features.
 
 ## Quick-Start
-Install the plugin via NPM
+Install the plugin & log into the Serverless Enterprise
 ```
-npm install @serverless/enterprise-plugin
-```
-
-Then add the plugin to your `serverless.yml`, like this:
-```yaml
-plugins:
-  - '@serverless/enterprise-plugin'
+sls install -n @serverless/enterprise-plugin
+sls login
 ```
 
 ### Safeguards
