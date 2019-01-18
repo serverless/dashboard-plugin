@@ -38,8 +38,8 @@ async function runPolicies(ctx) {
   }
 
   ctx.sls.cli.log(
-    `Loading ${config.policies.length} polic${config.policies.length > 1 ? 'ies' : 'y'}.`,
-    `Serverless Enterprise ${shieldEmoji}`
+    `(${shieldEmoji}Safeguards) Loading ${config.policies.length} polic${config.policies.length > 1 ? 'ies' : 'y'}.`,
+    `Serverless Enterprise`
   )
   const location = config.location || '.'
   const policiesPath = path.relative(__dirname, path.resolve(basePath, location))
@@ -87,8 +87,8 @@ async function runPolicies(ctx) {
           return [filename, yml.parse(content)]
         } catch (error) {
           ctx.sls.cli.log(
-            `Failed to parse file ${filename} in the artifacts directory.`,
-            `Serverless Enterprise ${shieldEmoji}`
+            `(${shieldEmoji}Safeguards) Failed to parse file ${filename} in the artifacts directory.`,
+            `Serverless Enterprise`
           )
           throw error
         }
@@ -97,7 +97,7 @@ async function runPolicies(ctx) {
   service.compiled = fromPairs(jsonYamlArtifacts)
 
   const runningPolicies = policies.map(async (policy) => {
-    ctx.sls.cli.log(`Running policy "${policy.name}"...`, `Serverless Enterprise ${shieldEmoji}`)
+    ctx.sls.cli.log(`(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`, `Serverless Enterprise`)
 
     const result = {
       name: policy.name,
@@ -109,8 +109,8 @@ async function runPolicies(ctx) {
     }
     const warn = (message) => {
       ctx.sls.cli.log(
-        `\u26A0\uFE0F Policy "${policy.name}" issued a warning \u2014 ${message}`,
-        `Serverless Enterprise ${shieldEmoji}`
+        `(${shieldEmoji}Safeguards) \u26A0\uFE0F Policy "${policy.name}" issued a warning \u2014 ${message}`,
+        `Serverless Enterprise`
       )
       result.warned = true
     }
@@ -126,27 +126,27 @@ async function runPolicies(ctx) {
         return result
       }
       result.error = new Error(
-        `\u2049\uFE0F Policy "${
+        `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
           policy.name
         }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
       )
-      ctx.sls.cli.log(result.error.message, `Serverless Enterprise ${shieldEmoji}`)
+      ctx.sls.cli.log(result.error.message, `Serverless Enterprise`)
       return result
     } catch (error) {
       if (error instanceof PolicyFailureError) {
         result.failed = true
         result.error = error
         ctx.sls.cli.log(
-          `\u274C Policy "${policy.name}" prevented the deployment \u2014 ${error.message}`,
-          `Serverless Enterprise ${shieldEmoji}`
+          `(${shieldEmoji}Safeguards) \u274C Policy "${policy.name}" prevented the deployment \u2014 ${error.message}`,
+          `Serverless Enterprise`
         )
         return result
       }
       ctx.sls.cli.log(
-        `\u2049\uFE0F There was a problem while processing a configured policy: "${
+        `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
           policy.name
         }".  If this problem persists, contact the policy author.`,
-        `Serverless Enterprise ${shieldEmoji}`
+        `Serverless Enterprise`
       )
       throw error
     }
@@ -155,12 +155,12 @@ async function runPolicies(ctx) {
   const results = await Promise.all(runningPolicies)
   const markedPolicies = results.filter((res) => !res.approved || res.warned)
   if (markedPolicies.length === 0) {
-    ctx.sls.cli.log(`\uD83D\uDD12 All policies satisfied.`, `Serverless Enterprise ${shieldEmoji}`)
+    ctx.sls.cli.log(`(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`, `Serverless Enterprise`)
     return
   }
 
   const summary =
-    `${
+    `(${shieldEmoji}Safeguards) ${
       markedPolicies.length
     } policies reported irregular conditions. For details, see the logs above.\n      ` +
     markedPolicies
@@ -178,7 +178,7 @@ async function runPolicies(ctx) {
       .join('\n      ')
 
   if (markedPolicies.every((res) => res.approved)) {
-    ctx.sls.cli.log(summary, `Serverless Enterprise ${shieldEmoji}`)
+    ctx.sls.cli.log(summary, `Serverless Enterprise`)
     return
   }
   throw new Error(summary)
