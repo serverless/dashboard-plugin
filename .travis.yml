@@ -17,7 +17,7 @@ script:
 - npm run build
 before_deploy:
 - node ./scripts/updatePreReleaseVersion.js
-- '[[ "$TRAVIS_TAG" =~ beta ]] || [[ -z "$TRAVIS_TAG" ]] && node ./scripts/updatePreReleaseDependency.js' || true
+- '[[ "$TRAVIS_TAG" =~ beta ]] || [[ -z "$TRAVIS_TAG" ]] && node ./scripts/updatePreReleaseDependency.js || true'
 deploy:
   # production releases
   - provider: npm
