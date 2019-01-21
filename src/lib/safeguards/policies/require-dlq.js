@@ -34,11 +34,12 @@ module.exports = function dlqPolicy(policy, service) {
     const eventTypes = new Set(events.map((ev) => Object.keys(ev)[0]))
     const eventIntersection = new Set([...asyncEvents].filter((x) => eventTypes.has(x)))
     if (events.length === 0 || eventIntersection.size > 0) {
-      throw new policy.Failure(
+      policy.warn(
         `Function "${
           logicalFuncNamesToConfigFuncName[funcName]
         }" doesn't have a Dead Letter Queue configured.`
       )
+      return
     }
   }
 
