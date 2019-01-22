@@ -1,5 +1,6 @@
 import ServerlessEnterprisePlugin from './plugin'
 import getCredentials from './credentials'
+import { refreshToken } from '@serverless/platform-sdk'
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import wrap from './wrap'
@@ -37,7 +38,8 @@ jest.mock('@serverless/platform-sdk', () => ({
     idToken: 'ID'
   }),
   getAccessKeyForTenant: jest.fn().mockReturnValue('123456'),
-  archiveService: jest.fn().mockImplementation(() => Promise.resolve())
+  archiveService: jest.fn().mockImplementation(() => Promise.resolve()),
+  refreshToken: jest.fn().mockReturnValue(Promise.resolve())
 }))
 
 jest.mock('./credentials', () => jest.fn())
@@ -119,24 +121,28 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:info:info')()
     expect(getCredentials).toBeCalledWith(instance)
+    expect(refreshToken).toBeCalledWith()
   })
 
   it('routes before:logs:logs hook correctly', async () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:logs:logs')()
     expect(getCredentials).toBeCalledWith(instance)
+    expect(refreshToken).toBeCalledWith()
   })
 
   it('routes before:metrics:metrics hook correctly', async () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:metrics:metrics')()
     expect(getCredentials).toBeCalledWith(instance)
+    expect(refreshToken).toBeCalledWith()
   })
 
   it('routes before:remove:remove hook correctly', async () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:remove:remove')()
     expect(getCredentials).toBeCalledWith(instance)
+    expect(refreshToken).toBeCalledWith()
   })
 
   it('routes after:remove:remove hook correctly', async () => {
@@ -149,6 +155,7 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:aws:package:finalize:saveServiceState')()
     expect(getCredentials).toBeCalledWith(instance)
+    expect(refreshToken).toBeCalledWith()
     // expect(awsApiGatewayLogsCollection).toBeCalledWith(instance)
     expect(awsApiGatewayLogsCollection).toHaveBeenCalledTimes(0)
     expect(awsLambdaLogsCollection).toBeCalledWith(instance)

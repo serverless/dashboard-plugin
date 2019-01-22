@@ -5,7 +5,7 @@ export default async function(ctx) {
     return Promise.resolve()
   }
 
-  const user = getUser()
+  const user = getUser() // FIX ME - doesn't actually exist in platform :|
   if (!user) {
     ctx.serverless.cli.log('User not logged in to Platform. Skipping fetch credentials.')
     return Promise.resolve()
