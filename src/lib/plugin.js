@@ -1,4 +1,4 @@
-import { getLoggedInUser, refreshToken } from '@serverless/platform-sdk'
+import { getLoggedInUser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -126,7 +126,6 @@ class ServerlessEnterprisePlugin {
           // await wrap(self)
           break
         case 'before:aws:package:finalize:saveServiceState':
-          await refreshToken()
           await getCredentials(self)
           // await awsApiGatewayLogsCollection(self)
           await awsLambdaLogsCollection(self)
@@ -141,19 +140,15 @@ class ServerlessEnterprisePlugin {
           await updateDeployment(self)
           break
         case 'before:info:info':
-          await refreshToken()
           await getCredentials(self)
           break
         case 'before:logs:logs':
-          await refreshToken()
           await getCredentials(self)
           break
         case 'before:metrics:metrics':
-          await refreshToken()
           await getCredentials(self)
           break
         case 'before:remove:remove':
-          await refreshToken()
           await getCredentials(self)
           break
         case 'after:remove:remove':
