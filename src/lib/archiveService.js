@@ -6,14 +6,14 @@ import { archiveService, getAccessKeyForTenant } from '@serverless/platform-sdk'
 
 export default async function(ctx) {
   // Defaults
-  const accessKey = getAccessKeyForTenant(ctx.state.tenant)
+  const accessKey = getAccessKeyForTenant(ctx.sls.service.tenant)
 
   ctx.sls.cli.log('Archving this service in the Enterprise Dashboard...', 'Serverless Enterprise')
 
   const data = {
-    name: ctx.state.service,
-    tenant: ctx.state.tenant,
-    app: ctx.state.app,
+    name: ctx.sls.service.service,
+    tenant: ctx.sls.service.tenant,
+    app: ctx.sls.service.app,
     provider: ctx.sls.service.provider.name,
     region: ctx.sls.service.provider.region,
     accessKey

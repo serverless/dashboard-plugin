@@ -11,7 +11,7 @@ export default async function(ctx) {
   }
 
   // Defaults
-  const accessKey = getAccessKeyForTenant(ctx.state.tenant)
+  const accessKey = getAccessKeyForTenant(ctx.sls.service.tenant)
   let cfResources
 
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
@@ -24,9 +24,9 @@ export default async function(ctx) {
     .then(() => ctx.provider.getAccountId())
     .then((accountId) => {
       const deploymentData = {
-        tenant: ctx.state.tenant,
-        app: ctx.state.app,
-        serviceName: ctx.state.service,
+        tenant: ctx.sls.service.tenant,
+        app: ctx.sls.service.app,
+        serviceName: ctx.sls.service.service,
         accessKey: accessKey,
         deploymentId: ctx.state.deployment.deploymentId,
         status: 'success',
