@@ -39,7 +39,7 @@ describe('credentials', () => {
       app: 'app',
       tenant: 'tenant',
       service: 'service',
-      idToken: 'ACCESS_KEY'
+      accessKey: 'ACCESS_KEY'
     })
     expect(log).toBeCalledWith('Cloud credentials set from Serverless Platform.')
     expect(process.env.AWS_ACCESS_KEY_ID).toEqual('accessKeyId')

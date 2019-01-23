@@ -5,10 +5,10 @@ export default async function(ctx) {
     return Promise.resolve()
   }
 
-  const idToken = await getAccessKeyForTenant(ctx.state.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.state.tenant)
 
   const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials({
-    idToken,
+    accessKey,
     stageName: ctx.provider.getStage(),
     command: ctx.sls.processedInput.commands[0],
     app: ctx.sls.service.app,
