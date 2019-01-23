@@ -1,18 +1,14 @@
-import { getCredentials, getUser } from '@serverless/platform-sdk'
+import { getCredentials, getAccessKeyForTenant } from '@serverless/platform-sdk'
 
 export default async function(ctx) {
   if (!process.env.SLS_CLOUD_ACCESS) {
     return Promise.resolve()
   }
 
-  const user = getUser() // FIX ME - doesn't actually exist in platform :|
-  if (!user) {
-    ctx.serverless.cli.log('User not logged in to Platform. Skipping fetch credentials.')
-    return Promise.resolve()
-  }
+  const idToken = await getAccessKeyForTenant(ctx.state.tenant)
 
   const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials({
-    idToken: user.idToken,
+    idToken,
     stageName: ctx.provider.getStage(),
     command: ctx.sls.processedInput.commands[0],
     app: ctx.sls.service.app,
