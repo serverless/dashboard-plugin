@@ -21,7 +21,7 @@ export default function(ctx) {
     }
 
     // Defaults
-    const accessKey = getAccessKeyForTenant(ctx.state.tenant)
+    const accessKey = await getAccessKeyForTenant(ctx.state.tenant)
 
     ctx.sls.cli.log(
       'Deployment failed.  Saving status to the Enterprise Dashboard...',

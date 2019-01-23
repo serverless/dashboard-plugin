@@ -11,7 +11,7 @@ export default async function(ctx) {
   }
 
   // Defaults
-  const accessKey = getAccessKeyForTenant(ctx.state.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.state.tenant)
   let cfResources
 
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
