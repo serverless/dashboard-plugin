@@ -5,7 +5,7 @@ export default async function(ctx) {
     return Promise.resolve()
   }
 
-  const accessKey = await getAccessKeyForTenant(ctx.state.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
   const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials({
     accessKey,

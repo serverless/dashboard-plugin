@@ -28,7 +28,6 @@ describe('credentials', () => {
         },
         cli: { log }
       },
-      state: { tenant: 'tenant' },
       provider: { getStage }
     }
     await getCredentialsLocal(ctx)
