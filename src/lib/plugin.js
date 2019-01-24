@@ -60,11 +60,6 @@ class ServerlessEnterprisePlugin {
       return
     }
 
-    // Add data to plugin state, for convenience
-    this.state.tenant = this.sls.service.tenant
-    this.state.app = this.sls.service.app
-    this.state.service = this.sls.service.service
-
     // Add commands
     this.commands = {
       login: {
