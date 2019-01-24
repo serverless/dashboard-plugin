@@ -21,7 +21,7 @@ export default function(ctx) {
     }
 
     // Defaults
-    const accessKey = await getAccessKeyForTenant(ctx.state.tenant)
+    const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
     ctx.sls.cli.log(
       'Deployment failed.  Saving status to the Enterprise Dashboard...',
@@ -29,9 +29,9 @@ export default function(ctx) {
     )
 
     const deploymentData = {
-      tenant: ctx.state.tenant,
-      app: ctx.state.app,
-      serviceName: ctx.state.service,
+      tenant: ctx.sls.service.tenant,
+      app: ctx.sls.service.app,
+      serviceName: ctx.sls.service.service,
       deploymentId: ctx.state.deployment.deploymentId,
       accessKey: accessKey,
       status: 'Failed'

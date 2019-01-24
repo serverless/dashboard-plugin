@@ -11,51 +11,43 @@ export default async function(ctx) {
   }
 
   // Defaults
-  const accessKey = await getAccessKeyForTenant(ctx.state.tenant)
-  let cfResources
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
-  return ctx.provider
-    .getStackResources()
-    .then((resources) => {
-      cfResources = resources
-    })
-    .then(() => ctx.provider.getAccountId())
-    .then((accountId) => {
-      const deploymentData = {
-        tenant: ctx.state.tenant,
-        app: ctx.state.app,
-        serviceName: ctx.state.service,
-        accessKey: accessKey,
-        deploymentId: ctx.state.deployment.deploymentId,
-        status: 'success',
-        computedData: {
-          accountId,
-          apiId: ctx.state.deployment.apiId,
-          physicalIds: cfResources.map((cfR) => ({
-            logicalId: cfR.LogicalResourceId,
-            physicalId: cfR.PhysicalResourceId
-          }))
-        }
-      }
+  const cfResources = await ctx.provider.getStackResources()
+  const accountId = await ctx.provider.getAccountId()
+  const deploymentData = {
+    tenant: ctx.sls.service.tenant,
+    app: ctx.sls.service.app,
+    serviceName: ctx.sls.service.service,
+    accessKey: accessKey,
+    deploymentId: ctx.state.deployment.deploymentId,
+    status: 'success',
+    computedData: {
+      accountId,
+      apiId: ctx.state.deployment.apiId,
+      physicalIds: cfResources.map((cfR) => ({
+        logicalId: cfR.LogicalResourceId,
+        physicalId: cfR.PhysicalResourceId
+      }))
+    }
+  }
 
-      return updateDeployment(deploymentData).then(() => {
-        // TODO: Track Stat
+  await updateDeployment(deploymentData)
+  // TODO: Track Stat
 
-        const serviceUrlData = {
-          tenant: deploymentData.tenant,
-          app: deploymentData.app,
-          name: deploymentData.serviceName
-        }
-        const serviceUrl = getServiceUrl(serviceUrlData)
-        ctx.sls.cli.log(
+  const serviceUrlData = {
+    tenant: deploymentData.tenant,
+    app: deploymentData.app,
+    name: deploymentData.serviceName
+  }
+  const serviceUrl = getServiceUrl(serviceUrlData)
+  ctx.sls.cli.log(
         `Successfully published your service to the Enterprise Dashboard: ${serviceUrl}`, // eslint-disable-line
-          'Serverless Enterprise'
-        )
+    'Serverless Enterprise'
+  )
 
-        // Mark deployment as complete
-        ctx.state.deployment.complete = true
-      })
-    })
+  // Mark deployment as complete
+  ctx.state.deployment.complete = true
 }
