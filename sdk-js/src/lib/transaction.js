@@ -215,7 +215,7 @@ class Transaction {
       span.operationName = this.$.schema.schemaType
       span.startTime = this.$.schema.timestamp
       span.endTime = new Date().toISOString()
-      span.duration = duration * 1000000000
+      span.duration = duration / 1000000
       span.spanContext = {
         traceId: tags.computeCustomAwsRequestId,
         spanId: this.$.schema.transactionId,
