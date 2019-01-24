@@ -4,7 +4,7 @@ const path = require('path')
 
 export default async function(ctx) {
   // Defaults
-  const accessKey = getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
   // Fetch "serverless-state.json", which is only available during certain hooks.
   const serverlessStateFilePath = path.join(

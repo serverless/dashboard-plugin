@@ -2,7 +2,7 @@ import getCredentialsLocal from './credentials'
 import { getCredentials, getAccessKeyForTenant } from '@serverless/platform-sdk'
 
 jest.mock('@serverless/platform-sdk', () => ({
-  getAccessKeyForTenant: jest.fn().mockReturnValue('ACCESS_KEY'),
+  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('ACCESS_KEY')),
   getCredentials: jest.fn().mockReturnValue({
     accessKeyId: 'accessKeyId',
     secretAccessKey: 'secretAccessKey',
