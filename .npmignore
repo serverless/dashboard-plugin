@@ -8,3 +8,4 @@ coverage
 testProject
 src/*
 sdk-js/src/*
+sdk-js/node_modules/*

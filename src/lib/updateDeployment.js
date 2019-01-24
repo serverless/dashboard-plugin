@@ -11,7 +11,7 @@ export default async function(ctx) {
   }
 
   // Defaults
-  const accessKey = getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
