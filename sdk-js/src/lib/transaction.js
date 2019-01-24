@@ -12,6 +12,14 @@ const TRANSACTION = 'transaction'
 const ERROR = 'error'
 
 /*
+ * nanosecond time
+ */
+const nanosecondnow = () => {
+  const [seconds, nanoseconds] = process.hrtime()
+  return seconds * 1000000000 + nanoseconds ;
+}
+
+/*
  * Cache
  */
 
@@ -63,7 +71,7 @@ class Transaction {
     this.$ = {
       schema: null,
       eTransaction: null,
-      duration: new Date() // start transaction timer
+      duration: nanosecondnow() // start transaction timer
     }
 
     /*
@@ -177,7 +185,7 @@ class Transaction {
   buildOutput(type) {
     if (!this.processed) {
       // End transaction timer
-      const duration = new Date().getTime() - this.$.duration.getTime()
+      const duration = nanosecondnow() - this.$.duration
       this.set('compute.memoryUsed', JSON.stringify(process.memoryUsage()))
       this.set(
         'compute.memoryPercentageUsed',
@@ -207,7 +215,7 @@ class Transaction {
       span.operationName = this.$.schema.schemaType
       span.startTime = this.$.schema.timestamp
       span.endTime = new Date().toISOString()
-      span.duration = duration
+      span.duration = duration * 1000000000
       span.spanContext = {
         traceId: tags.computeCustomAwsRequestId,
         spanId: this.$.schema.transactionId,
