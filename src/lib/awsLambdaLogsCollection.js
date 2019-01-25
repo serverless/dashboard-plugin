@@ -45,7 +45,7 @@ export default async (ctx) => {
   try {
     ;({ destinationArn } = await getLogDestination(destinationOpts))
   } catch (e) {
-    if (e.message.includes('not supported in region')) {
+    if (e.message && e.message.includes('not supported in region')) {
       ctx.sls.cli.log(
         `Warning: Lambda log collection is not supported in ${ctx.provider.getRegion()}`
       )
