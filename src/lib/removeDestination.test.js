@@ -1,7 +1,10 @@
-import { removeLogDestination } from '@serverless/platform-sdk'
+import { getAccessKeyForTenant, removeLogDestination } from '@serverless/platform-sdk'
 import removeDestination from './removeDestination'
 
-jest.mock('@serverless/platform-sdk', () => ({ removeLogDestination: jest.fn() }))
+jest.mock('@serverless/platform-sdk', () => ({
+  removeLogDestination: jest.fn(),
+  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey'))
+}))
 afterAll(() => jest.restoreAllMocks())
 
 describe('removeDestination', () => {
@@ -14,6 +17,7 @@ describe('removeDestination', () => {
       sls: {
         service: {
           appUid: 'UID',
+          tenant: 'tenant',
           getServiceName,
           custom: { enterprise: { collectLambdaLogs: true } }
         }
@@ -21,11 +25,13 @@ describe('removeDestination', () => {
       provider: { getStage, getRegion }
     })
 
+    expect(getAccessKeyForTenant).toBeCalledWith('tenant')
     expect(removeLogDestination).toBeCalledWith({
       appUid: 'UID',
       serviceName: 'service',
       stageName: 'stage',
-      regionName: 'region'
+      regionName: 'region',
+      accessKey: 'accessKey'
     })
   })
 })
