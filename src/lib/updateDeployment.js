@@ -18,10 +18,10 @@ export default async function(ctx) {
   const cfResources = await ctx.provider.getStackResources()
   const accountId = await ctx.provider.getAccountId()
   const deploymentData = {
+    accessKey,
     tenant: ctx.sls.service.tenant,
     app: ctx.sls.service.app,
     serviceName: ctx.sls.service.service,
-    accessKey: accessKey,
     deploymentId: ctx.state.deployment.deploymentId,
     status: 'success',
     computedData: {

@@ -1,4 +1,4 @@
-import { removeLogDestination } from '@serverless/platform-sdk'
+import { getAccessKeyForTenant, removeLogDestination } from '@serverless/platform-sdk'
 
 export default async (ctx) => {
   if (
@@ -8,7 +8,9 @@ export default async (ctx) => {
   ) {
     return
   }
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
   const destinationOpts = {
+    accessKey,
     appUid: ctx.sls.service.appUid,
     tenantUid: ctx.sls.service.tenantUid,
     serviceName: ctx.sls.service.getServiceName(),
