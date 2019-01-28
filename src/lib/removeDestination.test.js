@@ -17,6 +17,7 @@ describe('removeDestination', () => {
       sls: {
         service: {
           appUid: 'UID',
+          tenant: 'tenant',
           getServiceName,
           custom: { enterprise: { collectLambdaLogs: true } }
         }
@@ -24,6 +25,7 @@ describe('removeDestination', () => {
       provider: { getStage, getRegion }
     })
 
+    expect(getAccessKeyForTenant).toBeCalledWith('tenant')
     expect(removeLogDestination).toBeCalledWith({
       appUid: 'UID',
       serviceName: 'service',
