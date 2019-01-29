@@ -13,6 +13,7 @@ describe('updateDeployment', () => {
     const getStackResources = jest.fn().mockReturnValue(Promise.resolve([]))
     const getAccountId = jest.fn().mockReturnValue(Promise.resolve('accountId'))
     const getStackName = jest.fn().mockReturnValue('stackName')
+    const getServiceEndpointRegex = jest.fn().mockReturnValue('ServiceEndpoint')
     const request = jest.fn().mockReturnValue(
       Promise.resolve({
         Stacks: [
@@ -40,7 +41,7 @@ describe('updateDeployment', () => {
         getStackResources,
         getAccountId,
         request,
-        naming: { getStackName }
+        naming: { getStackName, getServiceEndpointRegex }
       },
       state: {
         deployment: {
