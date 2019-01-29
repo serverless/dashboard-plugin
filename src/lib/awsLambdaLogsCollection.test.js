@@ -2,7 +2,8 @@ import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import { getLogDestination } from '@serverless/platform-sdk'
 
 jest.mock('@serverless/platform-sdk', () => ({
-  getLogDestination: jest.fn().mockReturnValue(Promise.resolve({ destinationArn: 'arn:logdest' }))
+  getLogDestination: jest.fn().mockReturnValue(Promise.resolve({ destinationArn: 'arn:logdest' })),
+  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey'))
 }))
 
 afterAll(() => jest.restoreAllMocks())
@@ -48,6 +49,7 @@ describe('awsLambdaLogsCollection', () => {
     expect(getStage).toHaveBeenCalledTimes(1)
     expect(getRegion).toHaveBeenCalledTimes(1)
     expect(getLogDestination).toBeCalledWith({
+      accessKey: 'accessKey',
       appUid: 'app123',
       tenantUid: 'tenant123',
       stageName: 'dev',
