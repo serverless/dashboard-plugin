@@ -2,6 +2,7 @@
  * Update Deployment
  */
 
+import _ from 'lodash'
 import { updateDeployment, getAccessKeyForTenant, getServiceUrl } from '@serverless/platform-sdk'
 
 export default async function(ctx) {
@@ -17,6 +18,14 @@ export default async function(ctx) {
 
   const cfResources = await ctx.provider.getStackResources()
   const accountId = await ctx.provider.getAccountId()
+  const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
+    StackName: ctx.provider.naming.getStackName()
+  })
+  const apiId = _.find(cfnStack.Stacks[0].Outputs, ({ OutputKey }) =>
+    OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
+  )
+    .OutputValue.split('https://')[1]
+    .split('.')[0]
   const deploymentData = {
     accessKey,
     tenant: ctx.sls.service.tenant,
@@ -26,7 +35,7 @@ export default async function(ctx) {
     status: 'success',
     computedData: {
       accountId,
-      apiId: ctx.state.deployment.apiId,
+      apiId,
       physicalIds: cfResources.map((cfR) => ({
         logicalId: cfR.LogicalResourceId,
         physicalId: cfR.PhysicalResourceId

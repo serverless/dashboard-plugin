@@ -12,6 +12,22 @@ describe('updateDeployment', () => {
     const log = jest.fn()
     const getStackResources = jest.fn().mockReturnValue(Promise.resolve([]))
     const getAccountId = jest.fn().mockReturnValue(Promise.resolve('accountId'))
+    const getStackName = jest.fn().mockReturnValue('stackName')
+    const getServiceEndpointRegex = jest.fn().mockReturnValue('ServiceEndpoint')
+    const request = jest.fn().mockReturnValue(
+      Promise.resolve({
+        Stacks: [
+          {
+            Outputs: [
+              {
+                OutputKey: 'ServiceEndpoint',
+                OutputValue: 'https://API_ID.execute-api.sadfdsafafsaf'
+              }
+            ]
+          }
+        ]
+      })
+    )
     const ctx = {
       sls: {
         service: {
@@ -23,7 +39,9 @@ describe('updateDeployment', () => {
       },
       provider: {
         getStackResources,
-        getAccountId
+        getAccountId,
+        request,
+        naming: { getStackName, getServiceEndpointRegex }
       },
       state: {
         deployment: {
@@ -43,7 +61,7 @@ describe('updateDeployment', () => {
       app: 'appname',
       computedData: {
         accountId: 'accountId',
-        apiId: undefined,
+        apiId: 'API_ID',
         physicalIds: []
       },
       deploymentId: 'deploymentId',
