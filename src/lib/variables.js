@@ -1,8 +1,9 @@
 import { getSecret, getAccessKeyForTenant } from '@serverless/platform-sdk'
+import _ from 'lodash'
 
-export const getSecretFromEnterprise = async ({ secretName, tenant }) => {
+export const getSecretFromEnterprise = async ({ secretName, tenant, app, service }) => {
   const accessKey = await getAccessKeyForTenant(tenant)
-  return getSecret({ secretName, accessKey })
+  return getSecret({ secretName, tenant, app, service, accessKey })
 }
 
 export const hookIntoVariableGetter = (serverless) => {
@@ -12,7 +13,7 @@ export const hookIntoVariableGetter = (serverless) => {
     if (variableString.startsWith(`secrets:`)) {
       return getSecretFromEnterprise({
         secretName: variableString.split(`secrets:`)[1],
-        tenant: serverless.service.tenant
+        ..._.pick(serverless.service, ['tenant', 'app', 'service'])
       })
     }
 
