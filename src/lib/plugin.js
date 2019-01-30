@@ -13,6 +13,7 @@ import removeDestination from './removeDestination'
 import createDeployment from './createDeployment'
 import updateDeployment from './updateDeployment'
 import archiveService from './archiveService'
+import { hookIntoVariableGetter } from './variables'
 
 /*
  * Serverless Enterprise Plugin
@@ -78,6 +79,8 @@ class ServerlessEnterprisePlugin {
         enterprise: true
       }
     }
+
+    hookIntoVariableGetter(sls)
 
     // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
