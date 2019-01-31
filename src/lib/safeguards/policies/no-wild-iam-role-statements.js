@@ -21,13 +21,11 @@ module.exports = function noWildIamPolicy(policy, service) {
             policy.warn(
               `iamRoleStatement granting Action='*'. Wildcard actions in iamRoleStatements are not permitted.`
             )
-            return
           }
           if (action.split(':')[1] === '*') {
             policy.warn(
               `iamRoleStatement granting Action='${action}'. Wildcard actions in iamRoleStatements are not permitted.`
             )
-            return
           }
         }
         for (const rawResource of Resource) {
@@ -47,7 +45,6 @@ module.exports = function noWildIamPolicy(policy, service) {
             policy.warn(
               `iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
             )
-            return
           }
           const [, , arnService, , , resourceType, resource] = resourceStr.split(':')
           if (arnService === '*' || resourceType === '*' || resource === '*') {
@@ -56,7 +53,6 @@ module.exports = function noWildIamPolicy(policy, service) {
                 rawResource
               )}. Wildcard resources or resourcetypes in iamRoleStatements are not permitted.`
             )
-            return
           }
         }
       }

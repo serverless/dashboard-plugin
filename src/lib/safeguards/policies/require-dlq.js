@@ -39,7 +39,6 @@ module.exports = function dlqPolicy(policy, service) {
           logicalFuncNamesToConfigFuncName[funcName]
         }" doesn't have a Dead Letter Queue configured.`
       )
-      return
     }
   }
 
