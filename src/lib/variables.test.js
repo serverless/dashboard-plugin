@@ -2,7 +2,7 @@ import { getSecret, getAccessKeyForTenant } from '@serverless/platform-sdk'
 import { getSecretFromEnterprise, hookIntoVariableGetter } from './variables'
 
 jest.mock('@serverless/platform-sdk', () => ({
-  getSecret: jest.fn().mockReturnValue(Promise.resolve('SECRET!')),
+  getSecret: jest.fn().mockReturnValue(Promise.resolve({ secretValue: 'SECRET!' })),
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey'))
 }))
 

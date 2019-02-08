@@ -3,7 +3,8 @@ import _ from 'lodash'
 
 export const getSecretFromEnterprise = async ({ secretName, tenant, app, service }) => {
   const accessKey = await getAccessKeyForTenant(tenant)
-  return getSecret({ secretName, tenant, app, service, accessKey })
+  const { secretValue } = await getSecret({ secretName, tenant, app, service, accessKey })
+  return secretValue
 }
 
 export const hookIntoVariableGetter = (serverless) => {
