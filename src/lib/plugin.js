@@ -10,8 +10,7 @@ import runPolicies from './safeguards'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
-import createDeployment from './createDeployment'
-import updateDeployment from './updateDeployment'
+import saveDeployment from './saveDeployment'
 import archiveService from './archiveService'
 import { hookIntoVariableGetter } from './variables'
 
@@ -137,10 +136,9 @@ class ServerlessEnterprisePlugin {
           await runPolicies(self)
           break
         case 'before:aws:deploy:deploy:createStack':
-          await createDeployment(self)
           break
         case 'after:aws:deploy:finalize:cleanup':
-          await updateDeployment(self)
+          await saveDeployment(self)
           break
         case 'before:info:info':
           await getCredentials(self)
