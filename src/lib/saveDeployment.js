@@ -22,16 +22,8 @@ export default async function(ctx) {
 
   const result = await deployment.save()
 
-  let serviceUrl = platformConfig.frontendUrl
-  serviceUrl = += `tenants/${data.tenantName}/`
-  serviceUrl = += `applications/${data.appName}/`
-  serviceUrl = += `services/${data.serviceName}/`
-  serviceUrl = += `stages/${data.stageName}/`
-  serviceUrl = += `regions/${data.regionName}/`
-  serviceUrl = += `deployments`
-
   ctx.sls.cli.log(
-        `Successfully published your service to the Enterprise Dashboard: ${serviceUrl}`, // eslint-disable-line
+        `Successfully published your service to the Enterprise Dashboard: ${result.dashboardUrl}`, // eslint-disable-line
     'Serverless Enterprise'
   )
 }
