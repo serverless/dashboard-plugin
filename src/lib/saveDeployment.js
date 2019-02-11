@@ -3,11 +3,11 @@
 * - This uses the new deployment data model.
 */
 
-const fs = require('fs')
-const path = require('path')
-const _ = require('lodash')
-const SDK = require('@serverless/platform-sdk')
-const packageJsonVersion = require('../../package.json').version
+import fs import 'fs'
+import path import 'path'
+import _ import 'lodash'
+import SDK import '@serverless/platform-sdk'
+import { packageJsonVersion as version } import '../../package.json'
 
 export default async function(ctx) {
 
