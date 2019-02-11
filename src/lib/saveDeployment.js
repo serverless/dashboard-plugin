@@ -7,7 +7,7 @@ import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
-import { packageJsonVersion as version } from '../../package.json'
+import { version as packageJsonVersion } from '../../package.json'
 
 export default async function(ctx) {
 
