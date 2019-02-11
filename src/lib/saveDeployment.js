@@ -86,7 +86,7 @@ const parseDeploymentData = async (ctx) => {
      * Add this functions's subscriptions...
      */
 
-    for (let sub of fn.events) {
+    for (const sub of fn.events) {
       const type = Object.keys(sub)[0]
       let subDetails = {}
       if (type === 'http') {
