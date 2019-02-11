@@ -30,29 +30,27 @@ const parseDeploymentData = async (ctx) => {
    * Add deployment data...
    */
 
-  const dInstance = {}
-
-  dInstance.versionFramework = ctx.sls.version
-  dInstance.versionEnterprisePlugin = packageJsonVersion
-  dInstance.tenantUid = service.tenantUid
-  dInstance.appUid = service.appUid
-  dInstance.tenantName = service.tenant
-  dInstance.appName = service.app
-  dInstance.serviceName = service.service
-  dInstance.stageName = service.provider.stage
-  dInstance.regionName = service.provider.region
-  dInstance.archived = false
-  ;(dInstance.provider = {
-    type: 'aws',
-    aws: {
-      accountId: accountId
-    }
-  }),
-    (dInstance.layers = service.layers || {})
-  dInstance.plugins = service.plugins || []
-  dInstance.custom = service.custom || {}
-
-  deployment.set(dInstance)
+  deployment.set({
+    versionFramework: ctx.sls.version,
+    versionEnterprisePlugin: packageJsonVersion,
+    tenantUid: service.tenantUid,
+    appUid: service.appUid,
+    tenantName: service.tenant,
+    appName: service.app,
+    serviceName: service.service,
+    stageName: service.provider.stage,
+    regionName: service.provider.region,
+    archived: false,
+    provider: {
+      type: 'aws',
+      aws: {
+        accountId: accountId
+      }
+    },
+    layers: service.layers || {},
+    plugins: service.plugins || [],
+    custom: service.custom || {}
+  })
 
   /*
    * Add this deployment's functions...
@@ -63,7 +61,7 @@ const parseDeploymentData = async (ctx) => {
     fn.events = fn.events || []
 
     // Function
-    const fInstance = {
+    deployment.setFunction({
       name: fnName,
       description: fn.description || null,
       type: 'awsLambda',
@@ -82,32 +80,26 @@ const parseDeploymentData = async (ctx) => {
         },
         layers: []
       }
-    }
-
-    deployment.setFunction(fInstance)
+    })
 
     /*
      * Add this functions's subscriptions...
      */
 
     for (let sub of fn.events) {
-      const sInstance = {}
       const type = Object.keys(sub)[0]
-      sub = sub[type]
-
-      // Required properties
-      sInstance.type = type
-      sInstance.function = fInstance.name
-
+      let subDetails = {}
       if (type === 'http') {
-        sInstance.path = sub.path
-        sInstance.method = sub.method
-        sInstance.cors = sub.cors
-        sInstance.integration = sub.integration
-        sInstance.restApiId = apiId
+        subDetails = {
+          path: sub.http.path,
+          method: sub.http.method,
+          cors: sub.http.cors,
+          integration: sub.http.integration,
+          restApiId: apiId
+        }
       }
 
-      deployment.setSubscription(sInstance)
+      deployment.setSubscription({ type: type, function: fnName, ...subDetails })
     }
   }
 
