@@ -3,11 +3,11 @@
 * - This uses the new deployment data model.
 */
 
-import fs import 'fs'
-import path import 'path'
-import _ import 'lodash'
-import SDK import '@serverless/platform-sdk'
-import { packageJsonVersion as version } import '../../package.json'
+import fs from 'fs'
+import path from 'path'
+import _ from 'lodash'
+import SDK from '@serverless/platform-sdk'
+import { packageJsonVersion as version } from '../../package.json'
 
 export default async function(ctx) {
 
