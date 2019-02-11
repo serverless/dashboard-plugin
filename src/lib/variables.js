@@ -12,6 +12,9 @@ export const hookIntoVariableGetter = (serverless) => {
 
   serverless.variables.getValueFromSource = (variableString) => {
     if (variableString.startsWith(`secrets:`)) {
+      if (serverless.processedInput.commands[0] === 'login') {
+        return {}
+      }
       return getSecretFromEnterprise({
         secretName: variableString.split(`secrets:`)[1],
         ..._.pick(serverless.service, ['tenant', 'app', 'service'])
