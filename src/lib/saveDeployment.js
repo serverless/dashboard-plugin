@@ -44,7 +44,8 @@ export const parseDeploymentData = async (ctx, status = 'success') => {
     status,
     provider: {
       type: 'aws',
-      aws: { accountId }
+      aws: { accountId },
+      environment: Object.keys(service.provider.environment || {})
     },
     layers: service.layers || {},
     plugins: service.plugins || [],
@@ -69,6 +70,7 @@ export const parseDeploymentData = async (ctx, status = 'success') => {
         memorySize: fn.memory,
         runtime: fn.runtime,
         timeout: fn.timeout,
+        environment: Object.keys(fn.environment || {})
         role: null,
         onError: null,
         awsKmsKeyArn: null,
