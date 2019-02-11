@@ -192,7 +192,7 @@ async function runPolicies(ctx) {
 
   if (markedPolicies.every((res) => res.approved)) {
     ctx.sls.cli.log(summary, `Serverless Enterprise`)
-    return
+    return results
   }
   throw new Error(summary)
 }

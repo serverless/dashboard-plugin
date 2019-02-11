@@ -12,7 +12,7 @@ import { version as packageJsonVersion } from '../../package.json'
  * - Takes data from the Framework and formats it into our data model
  */
 
-const parseDeploymentData = async (ctx) => {
+export const parseDeploymentData = async (ctx, status = 'success') => {
   const { service } = ctx.sls
   const deployment = new SDK.Deployment()
 
@@ -41,11 +41,10 @@ const parseDeploymentData = async (ctx) => {
     stageName: service.provider.stage,
     regionName: service.provider.region,
     archived: false,
+    status,
     provider: {
       type: 'aws',
-      aws: {
-        accountId: accountId
-      }
+      aws: { accountId }
     },
     layers: service.layers || {},
     plugins: service.plugins || [],
