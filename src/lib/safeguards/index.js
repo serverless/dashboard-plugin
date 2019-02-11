@@ -162,8 +162,8 @@ async function runPolicies(ctx) {
     }
   })
 
-  const results = await Promise.all(runningPolicies)
-  const markedPolicies = results.filter((res) => !res.approved || res.warned)
+  this.state.safeguardsResults = await Promise.all(runningPolicies)
+  const markedPolicies = this.state.safeguardsResults.filter((res) => !res.approved || res.warned)
   if (markedPolicies.length === 0) {
     ctx.sls.cli.log(
       `(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`,
@@ -192,7 +192,7 @@ async function runPolicies(ctx) {
 
   if (markedPolicies.every((res) => res.approved)) {
     ctx.sls.cli.log(summary, `Serverless Enterprise`)
-    return results
+    return
   }
   throw new Error(summary)
 }

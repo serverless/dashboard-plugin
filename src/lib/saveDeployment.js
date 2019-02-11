@@ -49,7 +49,8 @@ export const parseDeploymentData = async (ctx, status = 'success') => {
     },
     layers: service.layers || {},
     plugins: service.plugins || [],
-    custom: service.custom || {}
+    custom: service.custom || {},
+    safeguards: ctx.state.safeguardsResults
   })
 
   /*
