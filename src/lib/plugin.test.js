@@ -6,6 +6,7 @@ import wrap from './wrap'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
+import { hookIntoVariableGetter } from './variables'
 
 afterAll(() => jest.restoreAllMocks())
 
@@ -50,6 +51,7 @@ jest.mock('./safeguards', () => jest.fn())
 jest.mock('./awsApiGatewayLogsCollection', () => jest.fn())
 jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
+jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 
 describe('plugin', () => {
   it('constructs and sets hooks', () => {
@@ -78,6 +80,7 @@ describe('plugin', () => {
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
+    expect(hookIntoVariableGetter).toBeCalledWith(sls)
   })
 
   it('construct requires tenant', () => {
