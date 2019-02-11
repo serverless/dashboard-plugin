@@ -1,42 +1,21 @@
 /*
-* Save Deployment
-* - This uses the new deployment data model.
-*/
+ * Save Deployment
+ * - This uses the new deployment data model.
+ */
 
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
 import { version as packageJsonVersion } from '../../package.json'
 
-export default async function(ctx) {
-
-  ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
-
-  let deployment
-  try {
-    deployment = await parseDeploymentData(ctx)
-  } catch(error) {
-    throw new Error(error)
-  }
-
-  const result = await deployment.save()
-
-  ctx.sls.cli.log(
-        `Successfully published your service to the Enterprise Dashboard: ${result.dashboardUrl}`, // eslint-disable-line
-    'Serverless Enterprise'
-  )
-}
-
 /*
-* Parse Deployment Data
-* - Takes data from the Framework and formats it into our data model
-*/
+ * Parse Deployment Data
+ * - Takes data from the Framework and formats it into our data model
+ */
 
 const parseDeploymentData = async (ctx) => {
-
-  const service = ctx.sls.service
+  const { service } = ctx.sls
   const deployment = new SDK.Deployment()
 
-  const cfResources = await ctx.provider.getStackResources()
   const accountId = await ctx.provider.getAccountId()
   const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
     StackName: ctx.provider.naming.getStackName()
@@ -48,8 +27,8 @@ const parseDeploymentData = async (ctx) => {
     .split('.')[0]
 
   /*
-  * Add deployment data...
-  */
+   * Add deployment data...
+   */
 
   const dInstance = {}
 
@@ -57,30 +36,29 @@ const parseDeploymentData = async (ctx) => {
   dInstance.versionEnterprisePlugin = packageJsonVersion
   dInstance.tenantUid = service.tenantUid
   dInstance.appUid = service.appUid
-  dInstance.tenantName  = service.tenant
-  dInstance.appName  = service.app
-  dInstance.serviceName  = service.service
+  dInstance.tenantName = service.tenant
+  dInstance.appName = service.app
+  dInstance.serviceName = service.service
   dInstance.stageName = service.provider.stage
   dInstance.regionName = service.provider.region
   dInstance.archived = false
-  dInstance.provider = {
+  ;(dInstance.provider = {
     type: 'aws',
     aws: {
-      accountId: accountId,
+      accountId: accountId
     }
-  },
-  dInstance.layers = service.layers || {}
+  }),
+    (dInstance.layers = service.layers || {})
   dInstance.plugins = service.plugins || []
   dInstance.custom = service.custom || {}
 
   deployment.set(dInstance)
 
   /*
-  * Add this deployment's functions...
-  */
+   * Add this deployment's functions...
+   */
 
   for (const fnName in service.functions) {
-
     const fn = service.functions[fnName]
     fn.events = fn.events || []
 
@@ -97,7 +75,7 @@ const parseDeploymentData = async (ctx) => {
         role: null,
         onError: null,
         awsKmsKeyArn: null,
-        tags: Object.assign({}, fn.tags = {}),
+        tags: Object.assign({}, (fn.tags = {})),
         vpc: {
           securityGroupIds: [],
           subnetIds: []
@@ -109,11 +87,10 @@ const parseDeploymentData = async (ctx) => {
     deployment.setFunction(fInstance)
 
     /*
-    * Add this functions's subscriptions...
-    */
+     * Add this functions's subscriptions...
+     */
 
     for (let sub of fn.events) {
-
       const sInstance = {}
       const type = Object.keys(sub)[0]
       sub = sub[type]
@@ -135,4 +112,22 @@ const parseDeploymentData = async (ctx) => {
   }
 
   return deployment
+}
+
+export default async function(ctx) {
+  ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
+
+  let deployment
+  try {
+    deployment = await parseDeploymentData(ctx)
+  } catch (error) {
+    throw new Error(error)
+  }
+
+  const result = await deployment.save()
+
+  ctx.sls.cli.log(
+        `Successfully published your service to the Enterprise Dashboard: ${result.dashboardUrl}`, // eslint-disable-line
+    'Serverless Enterprise'
+  )
 }
