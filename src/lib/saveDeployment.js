@@ -3,8 +3,6 @@
 * - This uses the new deployment data model.
 */
 
-import fs from 'fs'
-import path from 'path'
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
 import { version as packageJsonVersion } from '../../package.json'
