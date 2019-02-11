@@ -71,15 +71,12 @@ export const parseDeploymentData = async (ctx, status = 'success') => {
         runtime: fn.runtime,
         timeout: fn.timeout,
         environment: Object.keys(fn.environment || {})
-        role: null,
-        onError: null,
-        awsKmsKeyArn: null,
-        tags: Object.assign({}, (fn.tags = {})),
-        vpc: {
-          securityGroupIds: [],
-          subnetIds: []
-        },
-        layers: []
+        role: fn.role,
+        onError: fn.onError,
+        awsKmsKeyArn: fn.awsKmsKeyArn,
+        tags: fn.tags || {},
+        vpc: fn.vpc || {},
+        layers: fn.layers || []
       }
     })
 
