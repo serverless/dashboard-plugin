@@ -39,6 +39,7 @@ class ServerlessEnterprisePlugin {
     // Defaults
     this.sls = sls
     this.state = {} // Useful for storing data across hooks
+    this.state.secretsUsed = new Set()
     this.provider = this.sls.getProvider('aws')
     this.enterprise = {
       errorHandler: errorHandler(this) // V.1 calls this when it crashes
@@ -79,7 +80,7 @@ class ServerlessEnterprisePlugin {
       }
     }
 
-    hookIntoVariableGetter(sls)
+    hookIntoVariableGetter(this)
 
     // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {

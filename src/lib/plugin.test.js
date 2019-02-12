@@ -80,7 +80,7 @@ describe('plugin', () => {
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
-    expect(hookIntoVariableGetter).toBeCalledWith(sls)
+    expect(hookIntoVariableGetter).toBeCalledWith(instance)
   })
 
   it('construct requires tenant', () => {
