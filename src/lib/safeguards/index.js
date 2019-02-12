@@ -162,8 +162,8 @@ async function runPolicies(ctx) {
     }
   })
 
-  this.state.safeguardsResults = await Promise.all(runningPolicies)
-  const markedPolicies = this.state.safeguardsResults.filter((res) => !res.approved || res.warned)
+  ctx.state.safeguardsResults = await Promise.all(runningPolicies)
+  const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved || res.warned)
   if (markedPolicies.length === 0) {
     ctx.sls.cli.log(
       `(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`,

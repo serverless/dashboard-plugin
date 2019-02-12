@@ -61,7 +61,8 @@ describe('safeguards', () => {
     },
     provider: {
       naming: {}
-    }
+    },
+    state: {}
   }
   afterAll(() => log.resetMock())
 
