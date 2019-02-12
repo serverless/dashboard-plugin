@@ -71,7 +71,7 @@ export const parseDeploymentData = async (ctx, status = 'success') => {
         memorySize: fn.memory,
         runtime: fn.runtime,
         timeout: fn.timeout,
-        environment: Object.keys(fn.environment || {})
+        environment: Object.keys(fn.environment || {}),
         role: fn.role,
         onError: fn.onError,
         awsKmsKeyArn: fn.awsKmsKeyArn,
