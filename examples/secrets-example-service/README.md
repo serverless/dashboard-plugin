@@ -30,8 +30,10 @@ If you are logged into the AWS console with a shared company account, sign out: 
 2. Once logged in, click "**secure**" near the top of the page.
 3. Click the "**+ add**" button on the right, and choose "**aws**".
 4. In the modal that appears, click "**Click here to add a role**".
-5. If prompted to login, login to
-6. Click "**Next**" three times to proceed through the **Permissions**, **Tags**, and **Review** pages.
+5. Login to **your personal AWS account** if prompted. Otherwise, verify that you are already logged into a personal account, and not a Serverless infrastructure account.
+6. Click "**Next: Permissions**" to proceed to the permissions page.
+7. Tick the box next to the **AdministratorAccess** policy.
+8. Click "**Next**" two more times to proceed to the Review page.
 7. On the review page, enter any distinctive name (e.g. "ServerlessEnterprise") in the "**Role name**" field.
 8. Click the "**Create role**" button and you will be brought back to the list of IAM roles.
 9. Locate the role you just created in the list, and click its name.
