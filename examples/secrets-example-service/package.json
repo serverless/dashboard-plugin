@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@serverless/enterprise-plugin": "^0.1.4-8-g6a0b237"
+    "@serverless/enterprise-plugin": "next"
   }
 }
