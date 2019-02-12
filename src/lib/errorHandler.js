@@ -23,7 +23,7 @@ export default function(ctx) {
 
     let deployment
     try {
-      deployment = await parseDeploymentData(ctx, 'error')
+      deployment = await parseDeploymentData(ctx, 'error', error)
     } catch (err) {
       throw new Error(err)
     }

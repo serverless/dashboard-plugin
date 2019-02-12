@@ -12,7 +12,7 @@ import { version as packageJsonVersion } from '../../package.json'
  * - Takes data from the Framework and formats it into our data model
  */
 
-export const parseDeploymentData = async (ctx, status = 'success') => {
+export const parseDeploymentData = async (ctx, status = 'success', error = null) => {
   const { service } = ctx.sls
   const deployment = new SDK.Deployment()
 
@@ -51,7 +51,8 @@ export const parseDeploymentData = async (ctx, status = 'success') => {
     plugins: service.plugins || [],
     custom: service.custom || {},
     safeguards: ctx.state.safeguardsResults,
-    secrets: ctx.state.secretsUsed
+    secrets: ctx.state.secretsUsed,
+    error
   })
 
   /*
