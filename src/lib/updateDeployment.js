@@ -21,11 +21,10 @@ export default async function(ctx) {
   const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
     StackName: ctx.provider.naming.getStackName()
   })
-  const apiId = _.find(cfnStack.Stacks[0].Outputs, ({ OutputKey }) =>
+  const serviceEndpoint = _.find(cfnStack.Stacks[0].Outputs, ({ OutputKey }) =>
     OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
   )
-    .OutputValue.split('https://')[1]
-    .split('.')[0]
+  const apiId = serviceEndpoint && serviceEndpoint.OutputValue.split('https://')[1].split('.')[0]
   const deploymentData = {
     accessKey,
     tenant: ctx.sls.service.tenant,
