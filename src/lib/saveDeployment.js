@@ -44,7 +44,7 @@ export const parseDeploymentData = async (ctx, status = 'success', error = null)
     status,
     provider: {
       type: 'aws',
-      aws: { accountId },
+      custom: { accountId },
       environment: Object.keys(service.provider.environment || {})
     },
     layers: service.layers || {},
