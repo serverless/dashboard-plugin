@@ -1,51 +1,8 @@
-# Serverless Enterprise Plugin
+# Serverless Framework Enterprise Plugin
 
-This is a Serverless Framework plugin which helps you use advanced monitoring, tracing and governance features via Serverless Enterprise.
+To enable the various features of the [Serverless Framework Enterprise](https://github.com/serverless/enterprise) for a particular Service you must deploy or redeploy that Service, using Serverless Framework open-source CLI version 1.36.3 or later, with this Enterprise Plugin installed.
 
-The Plugin automatically wraps your functions and instruments them with Serverless Enterprise's monitoring, alerting, logging and tracing features.
+- If you are an existing Serverless Framework Enterprise dashboard user and have a previously deployed Service that you now want to configure to use Serverless Insights, Safeguards, Secrets or other Enteprise features, follow these steps to [update an existing Service](./update.md)
+- If you are new to the Serverless Framework open source CLI or Serverless Framework Enterprise simply follow the steps in this [new user getting started guide](./getting-started.md#install-the-enterprise-plugin) to get up and running
 
-## Quick-Start
-Install the plugin & log into the Serverless Enterprise
-```
-sls plugin install -n @serverless/enterprise-plugin
-sls login
-```
-
-### Safeguards
-Serverless Enterprise ships with the following safeguards by default:
-* no wildcard IAM role statments
-* All functions with async events must be configured with a Dead Letter Queue
-* Environment variables can not contain secrets
-
-To disable Serverless Safeguards, add this to your configuration:
-```yaml
-custom:
-  safeguards: false
-```
-
-### Log Collection
-
-Serverless Enterprise automatically aggregates logs. To disable them, set the following options:
-
-```yaml
-custom:
-  enterprise:
-    collectLambdaLogs: false
-```
-
-## Development Notes
-
-You can install the latest versions from the master branch by installing the `next` tag:
-```
-npm install @serverless/enterprise-plugin@next
-```
-
-The project is transpiled with babel, so run `npm run build` before installing it
-
-Currently, the `serverless-sdk` is within this project.  On deployment, this plugin copies a
-bundled and compressed version of the `serverless-sdk` into your Service package before it's
-uploaded.  
-
-If you are updating the `serverless-sdk`, ensure you run `npm run build` to rebuild it too
-
-On the next deployment, the new `sdk` will be included.
+Upon deployment, the Serverless Framwork Enteprise Plugin will automatically wrap and instrument your functions to work with the Serverless Framework Enterprise dashboard.
