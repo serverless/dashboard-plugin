@@ -10,7 +10,7 @@ import runPolicies from './safeguards'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
-import saveDeployment from './saveDeployment'
+import saveDeployment from './deployment'
 import archiveService from './archiveService'
 import { hookIntoVariableGetter } from './variables'
 

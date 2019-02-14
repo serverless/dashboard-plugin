@@ -5,14 +5,14 @@
 
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
-import { version as packageJsonVersion } from '../../package.json'
+import { version as packageJsonVersion } from '../../../package.json'
 
 /*
  * Parse Deployment Data
  * - Takes data from the Framework and formats it into our data model
  */
 
-export const parseDeploymentData = async (ctx, status = 'success', error = null) => {
+const parseDeploymentData = async (ctx, status = 'success', error = null) => {
   const { service } = ctx.sls
   const deployment = new SDK.Deployment()
 
@@ -20,11 +20,10 @@ export const parseDeploymentData = async (ctx, status = 'success', error = null)
   const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
     StackName: ctx.provider.naming.getStackName()
   })
-  const apiId = _.find(cfnStack.Stacks[0].Outputs, ({ OutputKey }) =>
+  const apigResource = _.find(cfnStack.Stacks[0].Outputs, ({ OutputKey }) =>
     OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
   )
-    .OutputValue.split('https://')[1]
-    .split('.')[0]
+  const apiId = apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
 
   /*
    * Add deployment data...
@@ -107,20 +106,4 @@ export const parseDeploymentData = async (ctx, status = 'success', error = null)
   return deployment
 }
 
-export default async function(ctx) {
-  ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
-
-  let deployment
-  try {
-    deployment = await parseDeploymentData(ctx)
-  } catch (error) {
-    throw new Error(error)
-  }
-
-  const result = await deployment.save()
-
-  ctx.sls.cli.log(
-        `Successfully published your service to the Enterprise Dashboard: ${result.dashboardUrl}`, // eslint-disable-line
-    'Serverless Enterprise'
-  )
-}
+export default parseDeploymentData

@@ -2,7 +2,7 @@
  * Error Handler
  */
 
-import { parseDeploymentData } from './saveDeployment'
+import { parseDeploymentData } from './deployment'
 
 export default function(ctx) {
   return async function(error, id) { // eslint-disable-line
