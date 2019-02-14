@@ -1,6 +1,6 @@
 import allowedStagePolicy from './allowed-stages'
 
-describe('safeguard - allowed-stages', () => {
+describe('allowedStagePolicy', () => {
   let policy
 
   beforeEach(() => {
