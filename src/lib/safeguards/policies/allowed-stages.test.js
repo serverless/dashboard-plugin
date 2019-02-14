@@ -41,7 +41,7 @@ describe('safeguard - allowed-stages', () => {
   it('forbids dev with options "(prod|stg)"', () => {
     const getStage = jest.fn().mockReturnValue('dev')
 
-    expect(() => allowedStagePolicy(policy, { provider: { getStage } },  "(prod|stg)")).toThrow(
+    expect(() => allowedStagePolicy(policy, { provider: { getStage } }, '(prod|stg)')).toThrow(
       'Stage name "dev" not permitted by RegExp: "(prod|stg)"'
     )
     expect(policy.approve).toHaveBeenCalledTimes(0)
