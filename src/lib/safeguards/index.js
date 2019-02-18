@@ -1,52 +1,29 @@
 import { readdir, readFile } from 'fs-extra'
 import yml from 'yamljs'
 import path from 'path'
-import { fromPairs, cloneDeep, omit } from 'lodash'
+import { get, fromPairs, cloneDeep, omit } from 'lodash'
+import { getAccessKeyForTenant, getSafeguardsConfig, urls } from '@serverless/platform-sdk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
+const lockEmoji = '\uD83D\uDD12'
+const warningEmoji = '\u26A0\uFE0F'
+const emDash = '\u2014'
 
 class PolicyFailureError extends Error {}
 
-export const loadPolicy = (policiesPath, policyName) => {
-  try {
-    // NOTE: not using path.join because it strips off the leading ./
-    return require(`.${path.sep}policies${path.sep}${policyName}`)
-  } catch (e) {
-    return require(path.join(policiesPath, policyName))
-  }
-}
+// NOTE: not using path.join because it strips off the leading
+export const loadPolicy = (policyPath, policyName) =>
+  require(`${policyPath || `.${path.sep}policies`}${path.sep}${policyName}`)
 
 async function runPolicies(ctx) {
   const basePath = ctx.sls.config.servicePath
 
-  if (ctx.sls.service.custom && ctx.sls.service.custom.safeguards === false) {
-    return
-  }
-
-  let config = (ctx.sls.service.custom && ctx.sls.service.custom.safeguards) || true
-
-  if (config === true) {
-    config = {
-      policies: ['require-dlq', 'no-secret-env-vars', 'no-wild-iam-role-statements']
-    }
-  }
-
-  if (!(config.policies instanceof Array)) {
-    throw new Error(
-      'Safeguards requires a list of policies under property "custom.safeguards.policies".'
-    )
-  }
-
-  ctx.sls.cli.log(
-    `(${shieldEmoji}Safeguards) Loading ${config.policies.length} polic${
-      config.policies.length > 1 ? 'ies' : 'y'
-    }.`,
-    `Serverless Enterprise`
-  )
-  const location = config.location || '.'
-  const policiesPath = path.relative(__dirname, path.resolve(basePath, location))
-
-  const policies = config.policies.map((policy) => {
+  const location = get(ctx.sls.service, 'custom.safeguards.location', '.')
+  const localPoliciesPath = path.relative(__dirname, path.resolve(basePath, location))
+  // using || [] instead of _.get's default bc if it's falsey we want it to be []
+  const localPolicies = (get(ctx.sls.service, 'custom.safeguards.policies') || []).map((policy) => {
+    let policyName = policy
+    let policyConfig = {}
     if (policy instanceof Object) {
       const policyObjKeys = Object.keys(policy)
       if (policyObjKeys.length !== 1) {
@@ -54,20 +31,41 @@ async function runPolicies(ctx) {
           'Safeguards requires that each item in the policies list be either a string indicating a policy name, or else an object with a single key specifying the policy name with the policy options. One or more items were objects containing multiple keys. Correct these entries and try again.'
         )
       }
-      const policyName = policyObjKeys[0]
-      const policyOptions = policy[policyName] || {}
-      return {
-        name: policyName,
-        function: loadPolicy(policiesPath, policyName),
-        options: policyOptions
-      }
+      policyName = policyObjKeys[0]
+      policyConfig = policy[policyName] || {}
     }
     return {
-      name: policy,
-      function: loadPolicy(policiesPath, policy),
-      options: {}
+      policyName,
+      policyConfig,
+      policyPath: localPoliciesPath,
+      ruleName: `Local policy: ${policyName}`
     }
   })
+
+  // const builtinPoliciesPath = `.${path.sep}policies`
+  const remotePolicies = await getSafeguardsConfig({
+    appName: ctx.sls.service.app,
+    tenantName: ctx.sls.service.tenant,
+    serviceName: ctx.sls.service.service,
+    accessKey: await getAccessKeyForTenant(ctx.sls.service.tenant)
+  })
+  const policyConfigs = [...localPolicies, ...remotePolicies]
+
+  if (policyConfigs.length === 0) {
+    return
+  }
+
+  ctx.sls.cli.log(
+    `(${shieldEmoji}Safeguards) Loading ${policyConfigs.length} polic${
+      policyConfigs.length > 1 ? 'ies' : 'y'
+    }.`,
+    `Serverless Enterprise`
+  )
+
+  const policies = policyConfigs.map((policy) => ({
+    ...policy,
+    function: loadPolicy(policy.policyPath, policy.policyName)
+  }))
 
   const service = {
     compiled: {},
@@ -101,12 +99,12 @@ async function runPolicies(ctx) {
 
   const runningPolicies = policies.map(async (policy) => {
     ctx.sls.cli.log(
-      `(${shieldEmoji}Safeguards) Running policy "${policy.name}"...`,
+      `(${shieldEmoji}Safeguards) Running policy "${policy.ruleName}"...`,
       `Serverless Enterprise`
     )
 
     const result = {
-      name: policy.name,
+      name: policy.policyName,
       approved: false,
       warned: false
     }
@@ -115,9 +113,11 @@ async function runPolicies(ctx) {
     }
     const warn = (message) => {
       ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) \u26A0\uFE0F Policy "${
-          policy.name
-        }" issued a warning \u2014 ${message}`,
+        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "${
+          policy.ruleName
+        }" issued a warning ${emDash} ${message}
+For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${policy.policyName}
+Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${policy.policyUid}`,
         `Serverless Enterprise`
       )
       result.warned = true
@@ -129,13 +129,13 @@ async function runPolicies(ctx) {
     }
 
     try {
-      await policy.function(policyHandle, service, policy.options)
+      await policy.function(policyHandle, service, policy.policyConfig)
       if (result.approved) {
         return result
       }
       result.error = new Error(
-        `(${shieldEmoji}Safeguards) \u2049\uFE0F Policy "${
-          policy.name
+        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "${
+          policy.ruleName
         }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
       )
       ctx.sls.cli.log(result.error.message, `Serverless Enterprise`)
@@ -146,15 +146,16 @@ async function runPolicies(ctx) {
         result.error = error
         ctx.sls.cli.log(
           `(${shieldEmoji}Safeguards) \u274C Policy "${
-            policy.name
-          }" prevented the deployment \u2014 ${error.message}`,
+            policy.ruleName
+          }" prevented the deployment ${emDash} ${error.message}
+For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${policy.policyName}`,
           `Serverless Enterprise`
         )
         return result
       }
       ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) \u2049\uFE0F There was a problem while processing a configured policy: "${
-          policy.name
+        `(${shieldEmoji}Safeguards) ${warningEmoji} There was a problem while processing a configured policy: "${
+          policy.ruleName
         }".  If this problem persists, contact the policy author.`,
         `Serverless Enterprise`
       )
@@ -166,16 +167,16 @@ async function runPolicies(ctx) {
   const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved || res.warned)
   if (markedPolicies.length === 0) {
     ctx.sls.cli.log(
-      `(${shieldEmoji}Safeguards) \uD83D\uDD12 All policies satisfied.`,
+      `(${shieldEmoji}Safeguards) ${lockEmoji} All policies satisfied.`,
       `Serverless Enterprise`
     )
     return
   }
 
   const summary =
-    `(${shieldEmoji}Safeguards) ${
-      markedPolicies.length
-    } policies reported irregular conditions. For details, see the logs above.\n      ` +
+    `(${shieldEmoji}Safeguards) ${markedPolicies.length} polic${
+      markedPolicies.length > 1 ? 'ies' : 'y'
+    } reported irregular conditions. For details, see the logs above.\n      ` +
     markedPolicies
       .map((res) => {
         if (res.failed) {
@@ -183,7 +184,7 @@ async function runPolicies(ctx) {
         }
 
         if (res.approved && res.warned) {
-          return `\u26A0\uFE0F ${res.name}: Warned of a non-critical condition.`
+          return `${warningEmoji} ${res.name}: Warned of a non-critical condition.`
         }
 
         return `\u2049\uFE0F ${res.name}: Finished inconclusively. Deployment halted.`
