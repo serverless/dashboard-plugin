@@ -6,7 +6,7 @@ matrix:
   - node_js: 8
   - node_js: '10.15'
 install:
-- npm install -g npm
+- npm install -g npm codecov
 # allows for bumping sdk version before matching sdk version is released
 - node ./scripts/updatePreReleaseDependency.js
 - npm install
@@ -16,6 +16,7 @@ script:
 - pushd sdk-js && npm run lint && popd
 - npm run test
 - pushd sdk-js && npm run test && popd
+- codecov
 - npm run build
 before_deploy:
 - git checkout package.json
