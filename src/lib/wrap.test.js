@@ -63,7 +63,7 @@ describe('wrap - wrap', () => {
         handler: 's-func.handler'
       }
     })
-    expect(ctx.sls.service.package).toEqual({ include: ['s-*.js', 'serverless-sdk'] })
+    expect(ctx.sls.service.package).toEqual({ include: ['s-*.js', 'serverless-sdk/**'] })
     expect(fs.writeFileSync).toHaveBeenCalledTimes(1)
     expect(fs.writeFileSync).toBeCalledWith(
       'path/s-func.js',
@@ -131,7 +131,7 @@ module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handl
         runtime: 'nodejs8.10',
         handler: 's-func.handler',
         package: {
-          include: ['s-func.js', 'serverless-sdk']
+          include: ['s-func.js', 'serverless-sdk/**']
         }
       }
     })
