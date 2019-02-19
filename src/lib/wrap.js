@@ -6,6 +6,7 @@
 
 import fs from 'fs-extra'
 import path from 'path'
+import _ from 'lodash'
 
 /*
  * Wrap Node.js Functions
@@ -39,7 +40,6 @@ export default async (ctx) => {
   /*
    * Prepare Functions
    */
-
   const { functions } = ctx.sls.service
   ctx.state.functions = {}
   for (const func in functions) {
@@ -47,7 +47,7 @@ export default async (ctx) => {
       ? functions[func].runtime
       : ctx.sls.service.provider.runtime
     if (!runtime.includes('nodejs')) {
-      return
+      continue
     }
 
     // Process name
@@ -105,5 +105,25 @@ export default async (ctx) => {
 
     // Re-assign the handler to point to the wrapper
     ctx.sls.service.functions[fn].handler = `${func.entryNew}.${func.handlerNew}`
+
+    if (
+      _.get(
+        ctx.sls.service.functions[fn],
+        'package.individually',
+        _.get(ctx.sls.service, 'package.individually', false)
+      )
+    ) {
+      // add include directives for handler file & sdk lib
+      _.set(ctx.sls.service.functions[fn], 'package.include', [])
+      ctx.sls.service.functions[fn].package.include.push(`${func.entryNew}.js`)
+      ctx.sls.service.functions[fn].package.include.push('serverless-sdk')
+    }
+  }
+
+  // add include directives for handler file & sdk lib
+  if (!_.get(ctx.sls.service, 'package.individually', false)) {
+    _.set(ctx.sls.service, 'package.include', [])
+    ctx.sls.service.package.include.push('s-*.js')
+    ctx.sls.service.package.include.push('serverless-sdk')
   }
 }
