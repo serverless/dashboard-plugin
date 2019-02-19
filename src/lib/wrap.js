@@ -121,7 +121,7 @@ export default async (ctx) => {
         ctx.sls.service.functions[fn].package.include = []
       }
       ctx.sls.service.functions[fn].package.include.push(`${func.entryNew}.js`)
-      ctx.sls.service.functions[fn].package.include.push('serverless-sdk')
+      ctx.sls.service.functions[fn].package.include.push('serverless-sdk/**')
     }
   }
 
@@ -134,6 +134,6 @@ export default async (ctx) => {
       ctx.sls.service.package.include = []
     }
     ctx.sls.service.package.include.push('s-*.js')
-    ctx.sls.service.package.include.push('serverless-sdk')
+    ctx.sls.service.package.include.push('serverless-sdk/**')
   }
 }
