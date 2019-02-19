@@ -114,7 +114,12 @@ export default async (ctx) => {
       )
     ) {
       // add include directives for handler file & sdk lib
-      _.set(ctx.sls.service.functions[fn], 'package.include', [])
+      if (ctx.sls.service.functions[fn].package === undefined) {
+        ctx.sls.service.functions[fn].package = {}
+      }
+      if (ctx.sls.service.functions[fn].package.include === undefined) {
+        ctx.sls.service.functions[fn].package.include = []
+      }
       ctx.sls.service.functions[fn].package.include.push(`${func.entryNew}.js`)
       ctx.sls.service.functions[fn].package.include.push('serverless-sdk')
     }
@@ -122,7 +127,12 @@ export default async (ctx) => {
 
   // add include directives for handler file & sdk lib
   if (!_.get(ctx.sls.service, 'package.individually', false)) {
-    _.set(ctx.sls.service, 'package.include', [])
+    if (ctx.sls.service.package === undefined) {
+      ctx.sls.service.package = {}
+    }
+    if (ctx.sls.service.package.include === undefined) {
+      ctx.sls.service.package.include = []
+    }
     ctx.sls.service.package.include.push('s-*.js')
     ctx.sls.service.package.include.push('serverless-sdk')
   }
