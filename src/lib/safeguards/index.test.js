@@ -116,7 +116,13 @@ describe('safeguards', () => {
 
   it('loads & runs 1 warning safeguards when specified by remote config', async () => {
     getSafeguardsConfig.mockReturnValue(
-      Promise.resolve([{ ruleName: 'no secrets', policyName: 'no-secret-env-vars', policyUid: 'nos-secrest-policy-id' }])
+      Promise.resolve([
+        {
+          ruleName: 'no secrets',
+          policyName: 'no-secret-env-vars',
+          policyUid: 'nos-secrest-policy-id'
+        }
+      ])
     )
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)

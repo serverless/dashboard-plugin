@@ -116,7 +116,9 @@ async function runPolicies(ctx) {
         `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "${
           policy.ruleName
         }" issued a warning ${emDash} ${message}
-For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${policy.policyName}
+For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${
+          policy.policyName
+        }
 Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${policy.policyUid}`,
         `Serverless Enterprise`
       )
@@ -148,7 +150,9 @@ Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/$
           `(${shieldEmoji}Safeguards) \u274C Policy "${
             policy.ruleName
           }" prevented the deployment ${emDash} ${error.message}
-For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${policy.policyName}`,
+For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${
+            policy.policyName
+          }`,
           `Serverless Enterprise`
         )
         return result
