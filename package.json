@@ -18,6 +18,7 @@
     "lodash": "^4.17.11",
     "node-dir": "^0.1.17",
     "node-fetch": "^2.3.0",
+    "semver": "^5.6.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
