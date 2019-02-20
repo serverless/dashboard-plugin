@@ -73,7 +73,7 @@ async function runPolicies(ctx) {
     compiled: {},
     declaration: cloneDeep(omit(ctx.sls.service, ['serverless'])),
     provider: ctx.provider,
-    frameworkVerison: ctx.sls.version
+    frameworkVersion: ctx.sls.version
   }
 
   const artifactsPath = path.join(basePath, '.serverless')
