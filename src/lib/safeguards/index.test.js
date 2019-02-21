@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 import runPolicies, { loadPolicy } from './'
-import { getAccessKeyForTenant, getSafeguardsConfig } from '@serverless/platform-sdk'
+import { getSafeguardsConfig } from '@serverless/platform-sdk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 const lockEmoji = '\uD83D\uDD12'
@@ -51,6 +51,15 @@ jest.mock('./policies/no-secret-env-vars', () =>
     policy.approve()
   })
 )
+
+beforeEach(() => {
+  secretsPolicy.docs =
+    'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  requireDlq.docs =
+    'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  iamPolicy.docs =
+    'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+})
 
 describe('safeguards - loadPolicy', () => {
   it('loads a safeguard from inside the plugin', async () => {

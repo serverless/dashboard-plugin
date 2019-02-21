@@ -44,3 +44,6 @@ module.exports = function dlqPolicy(policy, service) {
 
   policy.approve()
 }
+
+module.exports.docs =
+  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#ensure-dead-letter-queues-are-attached-to-functions'

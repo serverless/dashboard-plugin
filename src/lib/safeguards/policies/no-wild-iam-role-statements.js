@@ -69,3 +69,6 @@ module.exports = function noWildIamPolicy(policy, service) {
 
   policy.approve()
 }
+
+module.exports.docs =
+  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no--in-iam-role-statements'

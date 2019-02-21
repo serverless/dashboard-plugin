@@ -14,3 +14,5 @@ module.exports = function requiredStackTagsPolicy(policy, service, requiredStack
   }
   policy.approve()
 }
+
+module.exports.docs = 'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#tbd'
