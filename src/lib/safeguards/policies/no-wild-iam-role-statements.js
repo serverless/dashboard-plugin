@@ -39,15 +39,9 @@ module.exports = function noWildIamPolicy(policy, service) {
               } else {
                 resourceStr = rawResource['Fn::Sub'][0].replace(/\$\{[^$]*\}/g, 'variable')
               }
-            } else {
-              /*
-               * if resourceStr isn't a string, it's probably an object
-               * containing a `Ref` or CFN function like `Fn::GetAtt` which are difficult to resolve
-               * cases like `Ref` are most likely safe. Explicitly bad cases using `Fn::Join` with
-               * all literals, are handled above.
-               */
             }
-          } else if (resourceStr === '*') {
+          }
+          if (resourceStr === '*') {
             policy.warn(
               `iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
             )
@@ -60,6 +54,13 @@ module.exports = function noWildIamPolicy(policy, service) {
                 )}. Wildcard resources or resourcetypes in iamRoleStatements are not permitted.`
               )
             }
+          } else {
+            /*
+             * if resourceStr isn't a string, it's probably an object
+             * containing a `Ref` or CFN function like `Fn::GetAtt` which are difficult to resolve
+             * cases like `Ref` are most likely safe. Explicitly bad cases using `Fn::Join` with
+             * all literals, are handled above.
+             */
           }
         }
       }
