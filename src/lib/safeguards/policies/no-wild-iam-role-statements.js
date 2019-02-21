@@ -39,20 +39,27 @@ module.exports = function noWildIamPolicy(policy, service) {
               } else {
                 resourceStr = rawResource['Fn::Sub'][0].replace(/\$\{[^$]*\}/g, 'variable')
               }
+            } else {
+              /*
+               * if resourceStr isn't a string, it's probably an object
+               * containing a `Ref` or CFN function like `Fn::GetAtt` which are difficult to resolve
+               * cases like `Ref` are most likely safe. Explicitly bad cases using `Fn::Join` with
+               * all literals, are handled above.
+               */
             }
-          }
-          if (resourceStr === '*') {
+          } else if (resourceStr === '*') {
             policy.warn(
               `iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
             )
-          }
-          const [, , arnService, , , resourceType, resource] = resourceStr.split(':')
-          if (arnService === '*' || resourceType === '*' || resource === '*') {
-            policy.warn(
-              `iamRoleStatement granting Resource=${JSON.stringify(
-                rawResource
-              )}. Wildcard resources or resourcetypes in iamRoleStatements are not permitted.`
-            )
+          } else if (typeof resourceStr === 'string') {
+            const [, , arnService, , , resourceType, resource] = resourceStr.split(':')
+            if (arnService === '*' || resourceType === '*' || resource === '*') {
+              policy.warn(
+                `iamRoleStatement granting Resource=${JSON.stringify(
+                  rawResource
+                )}. Wildcard resources or resourcetypes in iamRoleStatements are not permitted.`
+              )
+            }
           }
         }
       }
