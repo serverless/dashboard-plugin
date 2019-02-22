@@ -28,7 +28,7 @@ module.exports = function noWildIamPolicy(policy, service) {
             )
           }
         }
-        for (const rawResource of Resource) {
+        for (const rawResource of Array.isArray(Resource) ? Resource : [Resource]) {
           let resourceStr = rawResource
           if (typeof rawResource === 'object') {
             if ('Fn::Join' in rawResource) {
