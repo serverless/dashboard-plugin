@@ -21,7 +21,7 @@ async function runPolicies(ctx) {
   const location = get(ctx.sls.service, 'custom.safeguards.location', '.')
   const localPoliciesPath = path.relative(__dirname, path.resolve(basePath, location))
   // using || [] instead of _.get's default bc if it's falsey we want it to be []
-  const localPolicies = (get(ctx.sls.service, 'custom.safeguards.policies') || []).map((policy) => {
+  const localPolicies = get(ctx.sls.service, 'custom.safeguards.policies', []).map((policy) => {
     let safeguardName = policy
     let safeguardConfig = {}
     if (policy instanceof Object) {
@@ -42,12 +42,12 @@ async function runPolicies(ctx) {
     }
   })
 
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
   // const builtinPoliciesPath = `.${path.sep}policies`
   const remotePolicies = await getSafeguards({
-    appName: ctx.sls.service.app,
-    tenantName: ctx.sls.service.tenant,
-    serviceName: ctx.sls.service.service,
-    accessKey: await getAccessKeyForTenant(ctx.sls.service.tenant)
+    app: ctx.sls.service.app,
+    tenant: ctx.sls.service.tenant,
+    accessKey
   })
   const policyConfigs = [...localPolicies, ...remotePolicies]
 
