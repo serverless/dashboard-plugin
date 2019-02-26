@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 import runPolicies, { loadPolicy } from './'
-import { getSafeguardsConfig } from '@serverless/platform-sdk'
+import { getSafeguards } from '@serverless/platform-sdk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 const lockEmoji = '\uD83D\uDD12'
@@ -9,7 +9,7 @@ const emDash = '\u2014'
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('access-key')),
-  getSafeguardsConfig: jest.fn(),
+  getSafeguards: jest.fn(),
   urls: { frontendUrl: 'https://dashboard.serverless.com/' }
 }))
 
@@ -94,7 +94,7 @@ describe('safeguards', () => {
   })
 
   it('does nothing when safeguards explicity disabled', async () => {
-    getSafeguardsConfig.mockReturnValue(Promise.resolve([]))
+    getSafeguards.mockReturnValue(Promise.resolve([]))
     const ctx = cloneDeep(defualtCtx)
     ctx.sls.service.custom.safeguards = false
     await runPolicies(ctx)
@@ -102,10 +102,22 @@ describe('safeguards', () => {
   })
 
   it('loads & runs 2 safeguards when specified by remote config', async () => {
-    getSafeguardsConfig.mockReturnValue(
+    getSafeguards.mockReturnValue(
       Promise.resolve([
-        { ruleName: 'Require Dead Letter Queues', policyName: 'require-dlq' },
-        { ruleName: 'no wild iam', policyName: 'no-wild-iam-role-statements' }
+        {
+          title: 'Require Dead Letter Queues',
+          safeguardName: 'require-dlq',
+          policyUid: 'asdfasfdasf',
+          enforcementLevel: 'error',
+          safeguardConfig: null
+        },
+        {
+          title: 'no wild iam',
+          safeguardName: 'no-wild-iam-role-statements',
+          policyUid: 'asdfasfdasabdaslfhsaf',
+          enforcementLevel: 'error',
+          safeguardConfig: null
+        }
       ])
     )
     const ctx = cloneDeep(defualtCtx)
@@ -124,12 +136,14 @@ describe('safeguards', () => {
   })
 
   it('loads & runs 1 warning safeguards when specified by remote config', async () => {
-    getSafeguardsConfig.mockReturnValue(
+    getSafeguards.mockReturnValue(
       Promise.resolve([
         {
-          ruleName: 'no secrets',
-          policyName: 'no-secret-env-vars',
-          policyUid: 'nos-secrest-policy-id'
+          title: 'no secrets',
+          safeguardName: 'no-secret-env-vars',
+          policyUid: 'nos-secrest-policy-id',
+          enforcementLevel: 'error',
+          safeguardConfig: null
         }
       ])
     )
