@@ -15,4 +15,5 @@ module.exports = function allowedRuntimesPolicy(policy, service, allowedRuntimes
   policy.approve()
 }
 
-module.exports.docs = 'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#allowed-runtimes'
+module.exports.docs =
+  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#allowed-runtimes'

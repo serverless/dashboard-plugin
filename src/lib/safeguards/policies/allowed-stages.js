@@ -19,4 +19,5 @@ module.exports = function allowedStagePolicy(policy, service, options) {
   }
 }
 
-module.exports.docs = 'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#allowed-stages'
+module.exports.docs =
+  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#allowed-stages'
