@@ -96,12 +96,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    noWildIamPolicy(policy, { compiled })
-    expect(policy.warn).toBeCalledWith(
+    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
       "iamRoleStatement granting Action='s3:*'. Wildcard actions in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(1)
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string literal * actions', () => {
@@ -122,12 +121,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    noWildIamPolicy(policy, { compiled })
-    expect(policy.warn).toBeCalledWith(
+    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
       "iamRoleStatement granting Action='*'. Wildcard actions in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(1)
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string literal * resources', () => {
@@ -148,12 +146,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    noWildIamPolicy(policy, { compiled })
-    expect(policy.warn).toBeCalledWith(
+    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(1)
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string Fn::Join created * resources', () => {
@@ -174,12 +171,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    noWildIamPolicy(policy, { compiled })
-    expect(policy.warn).toBeCalledWith(
+    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(1)
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string Fn::Sub created * resources', () => {
@@ -200,11 +196,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    noWildIamPolicy(policy, { compiled })
-    expect(policy.warn).toBeCalledWith(
+    
+    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(1)
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 })
