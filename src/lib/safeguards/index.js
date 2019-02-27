@@ -38,6 +38,7 @@ async function runPolicies(ctx) {
       safeguardName,
       safeguardConfig,
       policyPath: localPoliciesPath,
+      enforcementLevel: 'error',
       title: `Local policy: ${safeguardName}`
     }
   })
@@ -104,9 +105,9 @@ async function runPolicies(ctx) {
     )
 
     const result = {
-      name: policy.safeguardName,
       approved: false,
-      warned: false
+      warned: false,
+      policy
     }
     const approve = () => {
       result.approved = true
@@ -182,14 +183,22 @@ For info on how to resolve this, see: https://github.com/serverless/enterprise/b
     markedPolicies
       .map((res) => {
         if (res.failed) {
-          return `\u274C ${res.name}: Requirements not satisfied. Deployment halted.`
+          if (res.policy.enforcementLevel === 'error') {
+            return `\u274C ${res.policy.safeguardName}: Requirements not satisfied. Deployment halted.`
+          }
+          return `\u274C ${res.policy.safeguardName}: Requirements not satisfied, but not enforcing.`
         }
 
         if (res.approved && res.warned) {
-          return `${warningEmoji} ${res.name}: Warned of a non-critical condition.`
+          if (res.policy.enforcementLevel === 'error') {
+            return `${warningEmoji} ${
+              res.policy.safeguardName
+            }: Warned of a non-critical condition, but enforcing. Deployment Halted.`
+          }
+          return `${warningEmoji} ${res.policy.safeguardName}: Warned of a non-critical condition.`
         }
 
-        return `\u2049\uFE0F ${res.name}: Finished inconclusively. Deployment halted.`
+        return `\u2049\uFE0F ${res.policy.safeguardName}: Finished inconclusively. Deployment halted.`
       })
       .join('\n      ')
 

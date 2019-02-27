@@ -1,0 +1,14 @@
+{
+  "name": "safeguards-example-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@serverless/enterprise-plugin": "file:serverless-enterprise-plugin-0.1.4.tgz"
+  }
+}
