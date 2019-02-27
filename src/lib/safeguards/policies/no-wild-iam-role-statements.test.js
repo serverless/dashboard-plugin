@@ -196,7 +196,7 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    
+
     expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )

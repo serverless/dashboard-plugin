@@ -53,10 +53,13 @@ jest.mock('./policies/no-secret-env-vars', () =>
 )
 
 beforeEach(() => {
+  secretsPolicy.mockClear()
   secretsPolicy.docs =
     'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  requireDlq.mockClear()
   requireDlq.docs =
     'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  iamPolicy.mockClear()
   iamPolicy.docs =
     'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
 })
@@ -93,7 +96,7 @@ describe('safeguards', () => {
     defualtCtx.sls.cli.log = log
   })
 
-  it('does nothing when safeguards explicity disabled', async () => {
+  it('does nothing when there are no safeguards', async () => {
     getSafeguards.mockReturnValue(Promise.resolve([]))
     const ctx = cloneDeep(defualtCtx)
     ctx.sls.service.custom.safeguards = false
@@ -108,14 +111,14 @@ describe('safeguards', () => {
           title: 'Require Dead Letter Queues',
           safeguardName: 'require-dlq',
           policyUid: 'asdfasfdasf',
-          enforcementLevel: 'error',
+          enforcementLevel: 'strict',
           safeguardConfig: null
         },
         {
           title: 'no wild iam',
           safeguardName: 'no-wild-iam-role-statements',
           policyUid: 'asdfasfdasabdaslfhsaf',
-          enforcementLevel: 'error',
+          enforcementLevel: 'strict',
           safeguardConfig: null
         }
       ])
@@ -135,14 +138,14 @@ describe('safeguards', () => {
     expect(iamPolicy).toHaveBeenCalledTimes(1)
   })
 
-  it('loads & runs 1 warning safeguards when specified by remote config', async () => {
+  it('loads & runs 1 warning safeguards at normal enformcent level when specified by remote config', async () => {
     getSafeguards.mockReturnValue(
       Promise.resolve([
         {
           title: 'no secrets',
           safeguardName: 'no-secret-env-vars',
           policyUid: 'nos-secrest-policy-id',
-          enforcementLevel: 'warn',
+          enforcementLevel: 'normal',
           safeguardConfig: null
         }
       ])
@@ -161,6 +164,70 @@ Or view this policy on the Serverless Dashboard: https://dashboard.serverless.co
       [
         `(${shieldEmoji}Safeguards) 1 policy reported irregular conditions. For details, see the logs above.
       ${warningEmoji} no-secret-env-vars: Warned of a non-critical condition.`,
+        `Serverless Enterprise`
+      ]
+    ])
+    expect(secretsPolicy).toHaveBeenCalledTimes(1)
+  })
+
+  it('loads & runs 1 warning safeguards at enforcementLevel=none when specified by remote config', async () => {
+    getSafeguards.mockReturnValue(
+      Promise.resolve([
+        {
+          title: 'no secrets',
+          safeguardName: 'no-secret-env-vars',
+          policyUid: 'nos-secrest-policy-id',
+          enforcementLevel: 'none',
+          safeguardConfig: null
+        }
+      ])
+    )
+    const ctx = cloneDeep(defualtCtx)
+    await runPolicies(ctx)
+    expect(log.mock.calls).toEqual([
+      [`(${shieldEmoji}Safeguards) Loading 1 policy.`, `Serverless Enterprise`],
+      [`(${shieldEmoji}Safeguards) Running policy "no secrets"...`, `Serverless Enterprise`],
+      [
+        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "no secrets" issued a warning ${emDash} !!!!
+For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
+Or view this policy on the Serverless Dashboard: https://dashboard.serverless.com/safeguards/nos-secrest-policy-id`,
+        `Serverless Enterprise`
+      ],
+      [
+        `(${shieldEmoji}Safeguards) 1 policy reported irregular conditions. For details, see the logs above.
+      ${warningEmoji} no-secret-env-vars: Warned of a non-critical condition.`,
+        `Serverless Enterprise`
+      ]
+    ])
+    expect(secretsPolicy).toHaveBeenCalledTimes(1)
+  })
+
+  it('loads & runs 1 warning safeguards at enforcementLevel=strict when specified by remote config', async () => {
+    getSafeguards.mockReturnValue(
+      Promise.resolve([
+        {
+          title: 'no secrets',
+          safeguardName: 'no-secret-env-vars',
+          policyUid: 'nos-secrest-policy-id',
+          enforcementLevel: 'strict',
+          safeguardConfig: null
+        }
+      ])
+    )
+    const ctx = cloneDeep(defualtCtx)
+    await runPolicies(ctx)
+    expect(log.mock.calls).toEqual([
+      [`(${shieldEmoji}Safeguards) Loading 1 policy.`, `Serverless Enterprise`],
+      [`(${shieldEmoji}Safeguards) Running policy "no secrets"...`, `Serverless Enterprise`],
+      [
+        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "no secrets" issued a warning ${emDash} !!!!
+For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
+Or view this policy on the Serverless Dashboard: https://dashboard.serverless.com/safeguards/nos-secrest-policy-id`,
+        `Serverless Enterprise`
+      ],
+      [
+        `(${shieldEmoji}Safeguards) 1 policy reported irregular conditions. For details, see the logs above.
+      ${warningEmoji} no-secret-env-vars: Warned of a non-critical condition, with enforcementLevel=strict. Deployment Halted.`,
         `Serverless Enterprise`
       ]
     ])

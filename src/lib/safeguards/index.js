@@ -183,21 +183,19 @@ For info on how to resolve this, see: https://github.com/serverless/enterprise/b
     markedPolicies
       .map((res) => {
         if (res.failed) {
-          if (res.policy.enforcementLevel === 'error') {
+          if (['strict', 'normal'].includes(res.policy.enforcementLevel)) {
             return `\u274C ${
               res.policy.safeguardName
             }: Requirements not satisfied. Deployment halted.`
           }
-          return `\u274C ${
-            res.policy.safeguardName
-          }: Requirements not satisfied, but not enforcing.`
+          return `\u274C ${res.policy.safeguardName}: Requirements not satisfied.`
         }
 
         if (res.approved && res.warned) {
-          if (res.policy.enforcementLevel === 'error') {
+          if (res.policy.enforcementLevel === 'strict') {
             return `${warningEmoji} ${
               res.policy.safeguardName
-            }: Warned of a non-critical condition, but enforcing. Deployment Halted.`
+            }: Warned of a non-critical condition, with enforcementLevel=strict. Deployment Halted.`
           }
           return `${warningEmoji} ${res.policy.safeguardName}: Warned of a non-critical condition.`
         }
