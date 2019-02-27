@@ -146,12 +146,11 @@ Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/$
         result.failed = true
         result.error = error
         ctx.sls.cli.log(
-          `(${shieldEmoji}Safeguards) \u274C Policy "${
-            policy.title
-          }" prevented the deployment ${emDash} ${error.message}
-For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#${
-            policy.safeguardName
-          }`,
+          `(${shieldEmoji}Safeguards) \u274C Policy "${policy.title}" raised an error ${emDash} ${
+            error.message
+          }
+For info on how to resolve this, see: ${policy.function.docs}
+Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${policy.policyUid}`,
           `Serverless Enterprise`
         )
         return result
@@ -206,7 +205,7 @@ For info on how to resolve this, see: https://github.com/serverless/enterprise/b
       })
       .join('\n      ')
 
-  if (markedPolicies.every((res) => res.approved)) {
+  if (markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'none')) {
     ctx.sls.cli.log(summary, `Serverless Enterprise`)
     return
   }
