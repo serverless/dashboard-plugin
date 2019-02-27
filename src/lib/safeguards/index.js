@@ -184,9 +184,13 @@ For info on how to resolve this, see: https://github.com/serverless/enterprise/b
       .map((res) => {
         if (res.failed) {
           if (res.policy.enforcementLevel === 'error') {
-            return `\u274C ${res.policy.safeguardName}: Requirements not satisfied. Deployment halted.`
+            return `\u274C ${
+              res.policy.safeguardName
+            }: Requirements not satisfied. Deployment halted.`
           }
-          return `\u274C ${res.policy.safeguardName}: Requirements not satisfied, but not enforcing.`
+          return `\u274C ${
+            res.policy.safeguardName
+          }: Requirements not satisfied, but not enforcing.`
         }
 
         if (res.approved && res.warned) {
@@ -198,7 +202,9 @@ For info on how to resolve this, see: https://github.com/serverless/enterprise/b
           return `${warningEmoji} ${res.policy.safeguardName}: Warned of a non-critical condition.`
         }
 
-        return `\u2049\uFE0F ${res.policy.safeguardName}: Finished inconclusively. Deployment halted.`
+        return `\u2049\uFE0F ${
+          res.policy.safeguardName
+        }: Finished inconclusively. Deployment halted.`
       })
       .join('\n      ')
 
