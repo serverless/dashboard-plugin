@@ -5,7 +5,7 @@ describe('noWildIamPolicy', () => {
   let compiled
 
   beforeEach(() => {
-    policy = { approve: jest.fn(), warn: jest.fn(), Failure: Error }
+    policy = { approve: jest.fn(), fail: jest.fn() }
     compiled = { 'cloudformation-template-update-stack.json': { Resources: {} } }
   })
 
@@ -29,7 +29,7 @@ describe('noWildIamPolicy', () => {
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('allows allows policies with Ref', () => {
@@ -52,7 +52,7 @@ describe('noWildIamPolicy', () => {
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('allows allows policies with resources that isnt array', () => {
@@ -75,7 +75,7 @@ describe('noWildIamPolicy', () => {
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string literal service:* actions', () => {
@@ -96,11 +96,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
+    noWildIamPolicy(policy, { compiled })
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       "iamRoleStatement granting Action='s3:*'. Wildcard actions in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string literal * actions', () => {
@@ -121,11 +121,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
+    noWildIamPolicy(policy, { compiled })
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       "iamRoleStatement granting Action='*'. Wildcard actions in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string literal * resources', () => {
@@ -146,11 +146,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
+    noWildIamPolicy(policy, { compiled })
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string Fn::Join created * resources', () => {
@@ -171,11 +171,11 @@ describe('noWildIamPolicy', () => {
         ]
       }
     }
-    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
+    noWildIamPolicy(policy, { compiled })
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 
   it('blocks string Fn::Sub created * resources', () => {
@@ -197,10 +197,10 @@ describe('noWildIamPolicy', () => {
       }
     }
 
-    expect(() => noWildIamPolicy(policy, { compiled })).toThrow(
+    noWildIamPolicy(policy, { compiled })
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       "iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted."
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 })

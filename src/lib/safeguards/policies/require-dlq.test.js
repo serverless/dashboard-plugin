@@ -5,7 +5,7 @@ describe('requireDlq', () => {
   let service
 
   beforeEach(() => {
-    policy = { approve: jest.fn(), warn: jest.fn(), Failure: Error }
+    policy = { approve: jest.fn(), fail: jest.fn() }
     service = {
       compiled: { 'cloudformation-template-update-stack.json': { Resources: {} } },
       declaration: {
@@ -26,7 +26,7 @@ describe('requireDlq', () => {
     }
     requireDlq(policy, service)
     expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('blocks functions with out a DLQ', () => {
@@ -34,10 +34,11 @@ describe('requireDlq', () => {
       Type: 'AWS::Lambda::Function',
       Properties: {}
     }
-    expect(() => requireDlq(policy, service)).toThrow(
+    requireDlq(policy, service)
+
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       `Function "func" doesn't have a Dead Letter Queue configured.`
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 })

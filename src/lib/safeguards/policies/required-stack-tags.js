@@ -1,18 +1,22 @@
 module.exports = function requiredStackTagsPolicy(policy, service, requiredStackTags) {
+  let failed = false
   const stackTags = service.declaration.provider.stackTags || {}
   for (const key in requiredStackTags) {
     if (!(key in stackTags)) {
-      throw new policy.Failure(`Required stack tag ${key} not set`)
-    }
-    if (!stackTags[key].match(requiredStackTags[key])) {
-      throw new policy.Failure(
+      failed = true
+      policy.fail(`Required stack tag ${key} not set`)
+    } else if (!stackTags[key].match(requiredStackTags[key])) {
+      failed = true
+      policy.fail(
         `Required stack tag ${key} value ${stackTags[key]} does not match RegExp: ${
           requiredStackTags[key]
         }`
       )
     }
   }
-  policy.approve()
+  if (!failed) {
+    policy.approve()
+  }
 }
 
 module.exports.docs =

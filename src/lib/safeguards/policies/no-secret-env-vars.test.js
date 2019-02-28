@@ -5,7 +5,7 @@ describe('noSecretEnvVarsPolicy', () => {
   let service
 
   beforeEach(() => {
-    policy = { approve: jest.fn(), warn: jest.fn(), Failure: Error }
+    policy = { approve: jest.fn(), fail: jest.fn() }
     service = {
       compiled: { 'cloudformation-template-update-stack.json': { Resources: {} } },
       declaration: {
@@ -24,7 +24,7 @@ describe('noSecretEnvVarsPolicy', () => {
     }
     noSecretEnvVarsPolicy(policy, service)
     expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('blocks functions with out a DLQ', () => {
@@ -32,10 +32,10 @@ describe('noSecretEnvVarsPolicy', () => {
       Type: 'AWS::Lambda::Function',
       Properties: { Environment: { Variables: { FOOBAR: '-----BEGIN RSA PRIVATE KEY-----' } } }
     }
-    expect(() => noSecretEnvVarsPolicy(policy, service)).toThrow(
+    noSecretEnvVarsPolicy(policy, service)
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       `Environment variable FOOBAR on function 'func' looks like it contains a secret value`
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 })

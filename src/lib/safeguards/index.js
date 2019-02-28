@@ -7,9 +7,8 @@ import { getAccessKeyForTenant, getSafeguards, urls } from '@serverless/platform
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 const lockEmoji = '\uD83D\uDD12'
 const warningEmoji = '\u26A0\uFE0F'
+const xEmoji = '\u274C'
 const emDash = '\u2014'
-
-class PolicyFailureError extends Error {}
 
 // NOTE: not using path.join because it strips off the leading
 export const loadPolicy = (policyPath, safeguardName) =>
@@ -106,67 +105,41 @@ async function runPolicies(ctx) {
 
     const result = {
       approved: false,
-      warned: false,
+      failed: false,
       policy
     }
     const approve = () => {
       result.approved = true
     }
-    const warn = (message) => {
+    const fail = (message) => {
       ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "${
-          policy.title
-        }" issued a warning ${emDash} ${message}
+        `(${shieldEmoji}Safeguards) ${
+          policy.enforcementLevel === 'error' ? xEmoji : warningEmoji
+        } Policy "${policy.title}" ${
+          policy.enforcementLevel === 'error' ? 'raised an error' : 'issued a warning'
+        } ${emDash} ${message}
 For info on how to resolve this, see: ${policy.function.docs}
 Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${policy.policyUid}`,
         `Serverless Enterprise`
       )
-      result.warned = true
+      result.failed = true
     }
-    const policyHandle = {
-      approve,
-      warn,
-      Failure: PolicyFailureError
-    }
+    const policyHandle = { approve, fail }
 
-    try {
-      await policy.function(policyHandle, service, policy.safeguardConfig)
-      if (result.approved) {
-        return result
-      }
-      result.error = new Error(
+    await policy.function(policyHandle, service, policy.safeguardConfig)
+    if (!result.approved && !result.failed) {
+      ctx.sls.cli.log(
         `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "${
           policy.title
-        }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`
-      )
-      ctx.sls.cli.log(result.error.message, `Serverless Enterprise`)
-      return result
-    } catch (error) {
-      if (error instanceof PolicyFailureError) {
-        result.failed = true
-        result.error = error
-        ctx.sls.cli.log(
-          `(${shieldEmoji}Safeguards) \u274C Policy "${policy.title}" raised an error ${emDash} ${
-            error.message
-          }
-For info on how to resolve this, see: ${policy.function.docs}
-Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${policy.policyUid}`,
-          `Serverless Enterprise`
-        )
-        return result
-      }
-      ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) ${warningEmoji} There was a problem while processing a configured policy: "${
-          policy.title
-        }".  If this problem persists, contact the policy author.`,
+        }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`,
         `Serverless Enterprise`
       )
-      throw error
     }
+    return result
   })
 
   ctx.state.safeguardsResults = await Promise.all(runningPolicies)
-  const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved || res.warned)
+  const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved && res.failed)
   if (markedPolicies.length === 0) {
     ctx.sls.cli.log(
       `(${shieldEmoji}Safeguards) ${lockEmoji} All policies satisfied.`,
@@ -182,19 +155,10 @@ Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/$
     markedPolicies
       .map((res) => {
         if (res.failed) {
-          if (['strict', 'normal'].includes(res.policy.enforcementLevel)) {
-            return `\u274C ${
+          if (res.policy.enforcementLevel == 'error') {
+            return `${xEmoji} ${
               res.policy.safeguardName
             }: Requirements not satisfied. Deployment halted.`
-          }
-          return `\u274C ${res.policy.safeguardName}: Requirements not satisfied.`
-        }
-
-        if (res.approved && res.warned) {
-          if (res.policy.enforcementLevel === 'strict') {
-            return `${warningEmoji} ${
-              res.policy.safeguardName
-            }: Warned of a non-critical condition, with enforcementLevel=strict. Deployment Halted.`
           }
           return `${warningEmoji} ${res.policy.safeguardName}: Warned of a non-critical condition.`
         }
@@ -205,7 +169,7 @@ Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/$
       })
       .join('\n      ')
 
-  if (markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'none')) {
+  if (markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
     ctx.sls.cli.log(summary, `Serverless Enterprise`)
     return
   }
