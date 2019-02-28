@@ -13,7 +13,7 @@ describe('requireDlq', () => {
           func: {}
         }
       },
-      provider: { naming: { getLambdaLogicalId: fnName => `${fnName}Lambda` } }
+      provider: { naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` } }
     }
   })
 
