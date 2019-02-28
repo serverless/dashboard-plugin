@@ -64,7 +64,7 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
     for (const [name, value] of Object.entries(Properties.Environment.Variables)) {
       if (isSecret(value)) {
         const configFuncName = logicalFuncNamesToConfigFuncName[funcName] || funcName
-        policy.warn(
+        throw new policy.Failure(
           `Environment variable ${name} on function '${configFuncName}' looks like it contains a secret value`
         )
       }
