@@ -126,7 +126,7 @@ class ServerlessEnterprisePlugin {
           await wrapClean(self)
           break
         case 'before:deploy:function:packageFunction':
-          // await wrap(self)
+          await wrap(self)
           break
         case 'before:aws:package:finalize:saveServiceState':
           await getCredentials(self)
