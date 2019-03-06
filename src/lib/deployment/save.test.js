@@ -19,7 +19,7 @@ describe('saveDeployment', () => {
     const serverless = { cli: { log } }
     const ctx = { sls: serverless, serverless }
     await saveDeployment(ctx)
-    expect(parseDeploymentData).toBeCalledWith(ctx)
+    expect(parseDeploymentData).toBeCalledWith(ctx, undefined, undefined, false)
     expect((await parseDeploymentData()).save).toHaveBeenCalledTimes(1)
     expect(log).toBeCalledWith(
       `Successfully published your service to the Enterprise Dashboard: https://dashboard.serverless.com/foo`,

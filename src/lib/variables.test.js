@@ -44,7 +44,7 @@ describe('variables - hookIntoVariableGetter', () => {
   })
 
   it('overrides the default variable getter', async () => {
-    const restore = hookIntoVariableGetter({ serverless, state })
+    const restore = hookIntoVariableGetter({ sls: serverless, state })
     expect(serverless.variables.getValueFromSource).not.toEqual(getValueFromSource)
     serverless.variables.getValueFromSource('name')
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')

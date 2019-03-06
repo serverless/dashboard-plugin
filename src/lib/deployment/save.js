@@ -5,12 +5,12 @@
 
 import parseDeploymentData from './parse'
 
-export default async function(ctx) {
+export default async function(ctx, archived = false) {
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
   let deployment
   try {
-    deployment = await parseDeploymentData(ctx)
+    deployment = await parseDeploymentData(ctx, undefined, undefined, archived)
   } catch (error) {
     throw new Error(error)
   }

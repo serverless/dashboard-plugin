@@ -1,4 +1,8 @@
+import { version as pluginVersion } from '../../../package.json'
+import { version as sdkVersion } from '@serverless/platform-sdk/package.json'
 import parseDeploymentData from './parse'
+
+const frameworkVersion = '1.38.0'
 
 describe('parseDeploymentData', () => {
   let getAccountId
@@ -28,7 +32,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly', async () => {
     const serverless = {
-      version: '1.37.1',
+      version: frameworkVersion,
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -92,10 +96,7 @@ describe('parseDeploymentData', () => {
       layers: {},
       plugins: [],
       provider: {
-        custom: {
-          accountId: undefined
-        },
-        environment: [],
+        aws: { accountId: undefined },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -119,15 +120,15 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      versionEnterprisePlugin: '0.1.4',
-      versionFramework: '1.37.1',
-      versionSDK: '0.5.0'
+      versionEnterprisePlugin: pluginVersion,
+      versionFramework: frameworkVersion,
+      versionSDK: sdkVersion
     })
   })
 
   it('creates a deployment object correctly without http events', async () => {
     const serverless = {
-      version: '1.37.1',
+      version: frameworkVersion,
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -186,10 +187,7 @@ describe('parseDeploymentData', () => {
       layers: {},
       plugins: [],
       provider: {
-        custom: {
-          accountId: undefined
-        },
-        environment: [],
+        aws: { accountId: undefined },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -202,9 +200,9 @@ describe('parseDeploymentData', () => {
       subscriptions: [],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      versionEnterprisePlugin: '0.1.4',
-      versionFramework: '1.37.1',
-      versionSDK: '0.5.0'
+      versionEnterprisePlugin: pluginVersion,
+      versionFramework: frameworkVersion,
+      versionSDK: sdkVersion
     })
   })
 })

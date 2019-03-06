@@ -8,26 +8,26 @@ export const getSecretFromEnterprise = async ({ secretName, tenant, app, service
 }
 
 export const hookIntoVariableGetter = (ctx) => {
-  const { getValueFromSource } = ctx.serverless.variables
+  const { getValueFromSource } = ctx.sls.variables
 
-  ctx.serverless.variables.getValueFromSource = (variableString) => {
+  ctx.sls.variables.getValueFromSource = (variableString) => {
     if (variableString.startsWith(`secrets:`)) {
-      if (serverless.processedInput.commands[0] === 'login') {
+      if (ctx.sls.processedInput.commands[0] === 'login') {
         return {}
       }
       return getSecretFromEnterprise({
         secretName: variableString.split(`secrets:`)[1],
-        ..._.pick(ctx.serverless.service, ['tenant', 'app', 'service'])
+        ..._.pick(ctx.sls.service, ['tenant', 'app', 'service'])
       })
     }
 
-    const value = getValueFromSource.bind(ctx.serverless.variables)(variableString)
+    const value = getValueFromSource.bind(ctx.sls.variables)(variableString)
     ctx.state.secretsUsed.add(variableString)
     return value
   }
 
   // return a restore function (mostly for testing)
   return () => {
-    ctx.serverless.variables.getValueFromSource = getValueFromSource
+    ctx.sls.variables.getValueFromSource = getValueFromSource
   }
 }

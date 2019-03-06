@@ -10,8 +10,7 @@ import runPolicies from './safeguards'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
-import saveDeployment from './deployment'
-import archiveService from './archiveService'
+import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
 
 /*
@@ -159,7 +158,7 @@ class ServerlessEnterprisePlugin {
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
           )
           await removeDestination(self)
-          await archiveService(self)
+          await saveDeployment(self, true)
           break
         case 'before:invoke:local:invoke':
           Object.assign(self.sls.service, {
