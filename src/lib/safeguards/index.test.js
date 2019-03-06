@@ -126,7 +126,7 @@ describe('safeguards', () => {
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
     expect(log.mock.calls).toEqual([
-      [`(${shieldEmoji}Safeguards) Loading 2 policies.`, `Serverless Enterprise`],
+      [`(${shieldEmoji}Safeguards) Loading 2 policies...`, `Serverless Enterprise`],
       [
         `(${shieldEmoji}Safeguards) Running policy "Require Dead Letter Queues"...`,
         `Serverless Enterprise`
@@ -153,7 +153,7 @@ describe('safeguards', () => {
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
     expect(log.mock.calls).toEqual([
-      [`(${shieldEmoji}Safeguards) Loading 1 policy.`, `Serverless Enterprise`],
+      [`(${shieldEmoji}Safeguards) Loading 1 policy...`, `Serverless Enterprise`],
       [`(${shieldEmoji}Safeguards) Running policy "no secrets"...`, `Serverless Enterprise`],
       [
         `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "no secrets" issued a warning ${emDash} !!!!
@@ -187,7 +187,7 @@ Or view this policy on the Serverless Dashboard: https://dashboard.serverless.co
       `(${shieldEmoji}Safeguards) 1 policy reported irregular conditions. For details, see the logs above.\n      ${xEmoji} no-secret-env-vars: Requirements not satisfied. Deployment halted.`
     )
     expect(log.mock.calls).toEqual([
-      [`(${shieldEmoji}Safeguards) Loading 1 policy.`, `Serverless Enterprise`],
+      [`(${shieldEmoji}Safeguards) Loading 1 policy...`, `Serverless Enterprise`],
       [`(${shieldEmoji}Safeguards) Running policy "no secrets"...`, `Serverless Enterprise`],
       [
         `(${shieldEmoji}Safeguards) ${xEmoji} Policy "no secrets" raised an error ${emDash} !!!!

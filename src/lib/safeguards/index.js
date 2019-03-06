@@ -58,7 +58,7 @@ async function runPolicies(ctx) {
   ctx.sls.cli.log(
     `(${shieldEmoji}Safeguards) Loading ${policyConfigs.length} polic${
       policyConfigs.length > 1 ? 'ies' : 'y'
-    }.`,
+    }...`,
     `Serverless Enterprise`
   )
 
