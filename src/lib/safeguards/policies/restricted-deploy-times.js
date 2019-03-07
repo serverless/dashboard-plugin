@@ -1,18 +1,30 @@
-const week = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa']
+const moment = require('moment')
+const { parse } = require('iso8601-duration')
 
-module.exports = function restrictedDeployTimesPolicy(policy, service, options = {}) {
-  const { blockedWeekdays = [], blockedDates = [] } = options
-  const now = new Date()
+module.exports = function restrictedDeployTimesPolicy(policy, service, options = []) {
+  const now = moment()
 
-  const blockedDays = blockedWeekdays.map((day) => week.indexOf(day.toLowerCase().slice(0, 2)))
+  for (let { time, duration, interval } of Array.isArray(options) ? options : [options]) {
+    time = moment(time)
+    duration = moment.duration(parse(duration))
+    interval = interval && moment.duration(parse(interval))
 
-  if (blockedDays.includes(now.getDay())) {
-    policy.fail(`Deploying on ${week[now.getDay()]} is not allowed`)
-  } else if (blockedDates.includes(`${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`)) {
-    policy.fail(
-      `Deploying on ${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} is not allowed`
-    )
-  } else {
-    policy.approve()
+    while (time.isBefore(now)) {
+      const end = time.clone()
+      end.add(duration)
+      if (end.isAfter(now)) {
+        policy.fail(`Deploying on ${now.format('YYYY-MM-DD')} is not allowed`)
+        return
+      }
+      if (interval) {
+        time.add(interval)
+      } else {
+        break
+      }
+    }
   }
+  policy.approve()
 }
+
+module.exports.docs =
+  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#restricted-deploy-times'
