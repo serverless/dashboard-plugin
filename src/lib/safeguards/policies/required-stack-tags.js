@@ -20,4 +20,4 @@ module.exports = function requiredStackTagsPolicy(policy, service, requiredStack
 }
 
 module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#required-stack-tags'
+  'https://git.io/fhpFc'

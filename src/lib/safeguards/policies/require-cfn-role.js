@@ -7,4 +7,4 @@ module.exports = function requireCfnRolePolicy(policy, service) {
 }
 
 module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#require-cloudformation-deployment-role'
+  'https://git.io/fhpFZ'

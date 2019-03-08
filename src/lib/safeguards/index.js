@@ -3,11 +3,14 @@ import yml from 'yamljs'
 import path from 'path'
 import { get, fromPairs, cloneDeep, omit } from 'lodash'
 import { getAccessKeyForTenant, getSafeguards, urls } from '@serverless/platform-sdk'
+import chalk from 'chalk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 const lockEmoji = '\uD83D\uDD12'
 const warningEmoji = '\u26A0\uFE0F'
+const gearEmoji = '\u2699\uFE0F'
 const xEmoji = '\u274C'
+const checkEmoji = '\u2705'
 const emDash = '\u2014'
 
 // NOTE: not using path.join because it strips off the leading
@@ -55,12 +58,15 @@ async function runPolicies(ctx) {
     return
   }
 
+  ctx.sls.cli.log(`${shieldEmoji} Safeguards`, `Serverless Enterprise`)
+  /*
   ctx.sls.cli.log(
     `(${shieldEmoji}Safeguards) Loading ${policyConfigs.length} polic${
       policyConfigs.length > 1 ? 'ies' : 'y'
     }...`,
     `Serverless Enterprise`
   )
+  */
 
   const policies = policyConfigs.map((policy) => ({
     ...policy,
@@ -98,10 +104,7 @@ async function runPolicies(ctx) {
   service.compiled = fromPairs(jsonYamlArtifacts)
 
   const runningPolicies = policies.map(async (policy) => {
-    ctx.sls.cli.log(
-      `(${shieldEmoji}Safeguards) Running policy "${policy.title}"...`,
-      `Serverless Enterprise`
-    )
+    process.stdout.write(`    ${policy.title}: ${gearEmoji} running...`)
 
     const result = {
       approved: false,
@@ -110,18 +113,21 @@ async function runPolicies(ctx) {
     }
     const approve = () => {
       result.approved = true
+      process.stdout.write(`\r    ${policy.title}: ${checkEmoji} `)
+      process.stdout.write(chalk.green(`passed     \n`))
     }
     const fail = (message) => {
-      ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) ${
-          policy.enforcementLevel === 'error' ? xEmoji : warningEmoji
-        } Policy "${policy.title}" ${
-          policy.enforcementLevel === 'error' ? 'raised an error' : 'issued a warning'
-        } ${emDash} ${message}
-For info on how to resolve this, see: ${policy.function.docs}
-Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${policy.policyUid}`,
-        `Serverless Enterprise`
-      )
+      const emoji = policy.enforcementLevel === 'error' ? xEmoji : warningEmoji
+      const errorWord = policy.enforcementLevel === 'error' ? 'failed' : 'warned'
+      const color = policy.enforcementLevel === 'error' ? chalk.red : chalk.keyword('orange')
+      process.stdout.write(`\r    ${policy.title}: ${emoji} `)
+      process.stdout.write(color(`${errorWord}       
+      ${message}
+      For info on how to resolve this, see: ${policy.function.docs}
+`))/*
+      Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${
+        policy.policyUid
+      }\n`))*/
       result.failed = true
     }
     const policyHandle = { approve, fail }
@@ -141,10 +147,12 @@ Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/$
   ctx.state.safeguardsResults = await Promise.all(runningPolicies)
   const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved && res.failed)
   if (markedPolicies.length === 0) {
+    /*
     ctx.sls.cli.log(
       `(${shieldEmoji}Safeguards) ${lockEmoji} All policies satisfied.`,
       `Serverless Enterprise`
     )
+    */
     return
   }
 
@@ -170,7 +178,7 @@ Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/$
       .join('\n      ')
 
   if (markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
-    ctx.sls.cli.log(summary, `Serverless Enterprise`)
+    //ctx.sls.cli.log(summary, `Serverless Enterprise`)
     return
   }
   throw new Error(summary)
