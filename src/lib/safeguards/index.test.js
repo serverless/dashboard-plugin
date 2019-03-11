@@ -1,11 +1,14 @@
 import { cloneDeep } from 'lodash'
+import chalk from 'chalk'
 import runPolicies, { loadPolicy } from './'
 import { getSafeguards } from '@serverless/platform-sdk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
 const lockEmoji = '\uD83D\uDD12'
 const warningEmoji = '\u26A0\uFE0F'
+const gearEmoji = '\u2699\uFE0F'
 const xEmoji = '\u274C'
+const checkEmoji = '\u2705'
 const emDash = '\u2014'
 
 jest.mock('@serverless/platform-sdk', () => ({
@@ -31,8 +34,6 @@ jest.mock('fs-extra', () => ({
   )
 }))
 
-afterEach(() => jest.restoreAllMocks())
-
 const requireDlq = require('./policies/require-dlq')
 jest.mock('./policies/require-dlq', () =>
   jest.fn().mockImplementation((policy) => {
@@ -48,11 +49,19 @@ jest.mock('./policies/no-wild-iam-role-statements', () =>
 const secretsPolicy = require('./policies/no-secret-env-vars')
 jest.mock('./policies/no-secret-env-vars', () =>
   jest.fn().mockImplementation((policy) => {
-    policy.fail('!!!!')
+    policy.fail('Error Message')
   })
 )
 
+const realStdoutWrite = process.stdout.write;
+
+afterEach(() => {
+  process.stdout.write = realStdoutWrite
+  jest.restoreAllMocks()
+})
+
 beforeEach(() => {
+  process.stdout.write = jest.fn()
   secretsPolicy.mockClear()
   secretsPolicy.docs =
     'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
@@ -102,6 +111,7 @@ describe('safeguards', () => {
     ctx.sls.service.custom.safeguards = false
     await runPolicies(ctx)
     expect(log).toHaveBeenCalledTimes(0)
+    expect(process.stdout.write).toHaveBeenCalledTimes(0)
   })
 
   it('loads & runs 2 safeguards when specified by remote config', async () => {
@@ -126,13 +136,15 @@ describe('safeguards', () => {
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
     expect(log.mock.calls).toEqual([
-      [`(${shieldEmoji}Safeguards) Loading 2 policies...`, `Serverless Enterprise`],
-      [
-        `(${shieldEmoji}Safeguards) Running policy "Require Dead Letter Queues"...`,
-        `Serverless Enterprise`
-      ],
-      [`(${shieldEmoji}Safeguards) Running policy "no wild iam"...`, `Serverless Enterprise`],
-      [`(${shieldEmoji}Safeguards) ${lockEmoji} All policies satisfied.`, `Serverless Enterprise`]
+      [`${shieldEmoji} Safeguards`, `Serverless Enterprise`],
+    ])
+    expect(process.stdout.write.mock.calls).toEqual([
+      [`    Require Dead Letter Queues: ${gearEmoji} running...`],
+      [`\r    Require Dead Letter Queues: ${checkEmoji} `],
+      [chalk.green(`passed     \n`)],
+      [`    no wild iam: ${gearEmoji} running...`],
+      [`\r    no wild iam: ${checkEmoji} `],
+      [chalk.green(`passed     \n`)],
     ])
     expect(requireDlq).toHaveBeenCalledTimes(1)
     expect(iamPolicy).toHaveBeenCalledTimes(1)
@@ -153,19 +165,15 @@ describe('safeguards', () => {
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
     expect(log.mock.calls).toEqual([
-      [`(${shieldEmoji}Safeguards) Loading 1 policy...`, `Serverless Enterprise`],
-      [`(${shieldEmoji}Safeguards) Running policy "no secrets"...`, `Serverless Enterprise`],
-      [
-        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "no secrets" issued a warning ${emDash} !!!!
-For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
-Or view this policy on the Serverless Dashboard: https://dashboard.serverless.com/safeguards/nos-secrest-policy-id`,
-        `Serverless Enterprise`
-      ],
-      [
-        `(${shieldEmoji}Safeguards) 1 policy reported irregular conditions. For details, see the logs above.
-      ${warningEmoji} no-secret-env-vars: Warned of a non-critical condition.`,
-        `Serverless Enterprise`
-      ]
+      [`${shieldEmoji} Safeguards`, `Serverless Enterprise`],
+    ])
+    expect(process.stdout.write.mock.calls).toEqual([
+      [`    no secrets: ${gearEmoji} running...`],
+      [`\r    no secrets: ${warningEmoji} `],
+      [chalk.keyword('orange')(`warned       
+      Error Message
+      For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
+`)],
     ])
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })
@@ -184,17 +192,18 @@ Or view this policy on the Serverless Dashboard: https://dashboard.serverless.co
     )
     const ctx = cloneDeep(defualtCtx)
     await expect(runPolicies(ctx)).rejects.toThrow(
-      `(${shieldEmoji}Safeguards) 1 policy reported irregular conditions. For details, see the logs above.\n      ${xEmoji} no-secret-env-vars: Requirements not satisfied. Deployment halted.`
+      `(${shieldEmoji} Safeguards) 1 policy reported irregular conditions. For details, see the logs above.\n      ${xEmoji} no-secret-env-vars: Requirements not satisfied. Deployment halted.`
     )
     expect(log.mock.calls).toEqual([
-      [`(${shieldEmoji}Safeguards) Loading 1 policy...`, `Serverless Enterprise`],
-      [`(${shieldEmoji}Safeguards) Running policy "no secrets"...`, `Serverless Enterprise`],
-      [
-        `(${shieldEmoji}Safeguards) ${xEmoji} Policy "no secrets" raised an error ${emDash} !!!!
-For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
-Or view this policy on the Serverless Dashboard: https://dashboard.serverless.com/safeguards/nos-secrest-policy-id`,
-        `Serverless Enterprise`
-      ]
+      [`${shieldEmoji} Safeguards`, `Serverless Enterprise`],
+    ])
+    expect(process.stdout.write.mock.calls).toEqual([
+      [`    no secrets: ${gearEmoji} running...`],
+      [`\r    no secrets: ${xEmoji} `],
+      [chalk.red(`failed       
+      Error Message
+      For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
+`)],
     ])
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })

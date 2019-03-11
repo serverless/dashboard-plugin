@@ -157,7 +157,7 @@ async function runPolicies(ctx) {
   }
 
   const summary =
-    `(${shieldEmoji}Safeguards) ${markedPolicies.length} polic${
+    `(${shieldEmoji} Safeguards) ${markedPolicies.length} polic${
       markedPolicies.length > 1 ? 'ies' : 'y'
     } reported irregular conditions. For details, see the logs above.\n      ` +
     markedPolicies
