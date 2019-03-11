@@ -4,12 +4,10 @@ import runPolicies, { loadPolicy } from './'
 import { getSafeguards } from '@serverless/platform-sdk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
-const lockEmoji = '\uD83D\uDD12'
 const warningEmoji = '\u26A0\uFE0F'
 const gearEmoji = '\u2699\uFE0F'
 const xEmoji = '\u274C'
 const checkEmoji = '\u2705'
-const emDash = '\u2014'
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('access-key')),
@@ -53,7 +51,7 @@ jest.mock('./policies/no-secret-env-vars', () =>
   })
 )
 
-const realStdoutWrite = process.stdout.write;
+const realStdoutWrite = process.stdout.write
 
 afterEach(() => {
   process.stdout.write = realStdoutWrite
@@ -135,16 +133,14 @@ describe('safeguards', () => {
     )
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
-    expect(log.mock.calls).toEqual([
-      [`${shieldEmoji} Safeguards`, `Serverless Enterprise`],
-    ])
+    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
     expect(process.stdout.write.mock.calls).toEqual([
       [`    Require Dead Letter Queues: ${gearEmoji} running...`],
       [`\r    Require Dead Letter Queues: ${checkEmoji} `],
       [chalk.green(`passed     \n`)],
       [`    no wild iam: ${gearEmoji} running...`],
       [`\r    no wild iam: ${checkEmoji} `],
-      [chalk.green(`passed     \n`)],
+      [chalk.green(`passed     \n`)]
     ])
     expect(requireDlq).toHaveBeenCalledTimes(1)
     expect(iamPolicy).toHaveBeenCalledTimes(1)
@@ -164,16 +160,16 @@ describe('safeguards', () => {
     )
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
-    expect(log.mock.calls).toEqual([
-      [`${shieldEmoji} Safeguards`, `Serverless Enterprise`],
-    ])
+    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
     expect(process.stdout.write.mock.calls).toEqual([
       [`    no secrets: ${gearEmoji} running...`],
       [`\r    no secrets: ${warningEmoji} `],
-      [chalk.keyword('orange')(`warned       
+      [
+        chalk.keyword('orange')(`warned       
       Error Message
       For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
-`)],
+`)
+      ]
     ])
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })
@@ -194,16 +190,16 @@ describe('safeguards', () => {
     await expect(runPolicies(ctx)).rejects.toThrow(
       `(${shieldEmoji} Safeguards) 1 policy reported irregular conditions. For details, see the logs above.\n      ${xEmoji} no-secret-env-vars: Requirements not satisfied. Deployment halted.`
     )
-    expect(log.mock.calls).toEqual([
-      [`${shieldEmoji} Safeguards`, `Serverless Enterprise`],
-    ])
+    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
     expect(process.stdout.write.mock.calls).toEqual([
       [`    no secrets: ${gearEmoji} running...`],
       [`\r    no secrets: ${xEmoji} `],
-      [chalk.red(`failed       
+      [
+        chalk.red(`failed       
       Error Message
       For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
-`)],
+`)
+      ]
     ])
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })

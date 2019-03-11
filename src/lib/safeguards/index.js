@@ -2,16 +2,14 @@ import { readdir, readFile } from 'fs-extra'
 import yml from 'yamljs'
 import path from 'path'
 import { get, fromPairs, cloneDeep, omit } from 'lodash'
-import { getAccessKeyForTenant, getSafeguards, urls } from '@serverless/platform-sdk'
+import { getAccessKeyForTenant, getSafeguards } from '@serverless/platform-sdk'
 import chalk from 'chalk'
 
 const shieldEmoji = '\uD83D\uDEE1\uFE0F '
-const lockEmoji = '\uD83D\uDD12'
 const warningEmoji = '\u26A0\uFE0F'
 const gearEmoji = '\u2699\uFE0F'
 const xEmoji = '\u274C'
 const checkEmoji = '\u2705'
-const emDash = '\u2014'
 
 // NOTE: not using path.join because it strips off the leading
 export const loadPolicy = (policyPath, safeguardName) =>
@@ -121,13 +119,12 @@ async function runPolicies(ctx) {
       const errorWord = policy.enforcementLevel === 'error' ? 'failed' : 'warned'
       const color = policy.enforcementLevel === 'error' ? chalk.red : chalk.keyword('orange')
       process.stdout.write(`\r    ${policy.title}: ${emoji} `)
-      process.stdout.write(color(`${errorWord}       
+      process.stdout.write(
+        color(`${errorWord}       
       ${message}
       For info on how to resolve this, see: ${policy.function.docs}
-`))/*
-      Or view this policy on the Serverless Dashboard: ${urls.frontendUrl}safeguards/${
-        policy.policyUid
-      }\n`))*/
+`)
+      )
       result.failed = true
     }
     const policyHandle = { approve, fail }
@@ -147,12 +144,6 @@ async function runPolicies(ctx) {
   ctx.state.safeguardsResults = await Promise.all(runningPolicies)
   const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved && res.failed)
   if (markedPolicies.length === 0) {
-    /*
-    ctx.sls.cli.log(
-      `(${shieldEmoji}Safeguards) ${lockEmoji} All policies satisfied.`,
-      `Serverless Enterprise`
-    )
-    */
     return
   }
 
@@ -178,7 +169,7 @@ async function runPolicies(ctx) {
       .join('\n      ')
 
   if (markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
-    //ctx.sls.cli.log(summary, `Serverless Enterprise`)
+    // ctx.sls.cli.log(summary, `Serverless Enterprise`)
     return
   }
   throw new Error(summary)

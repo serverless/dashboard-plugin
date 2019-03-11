@@ -6,5 +6,4 @@ module.exports = function requireCfnRolePolicy(policy, service) {
   }
 }
 
-module.exports.docs =
-  'https://git.io/fhpFZ'
+module.exports.docs = 'https://git.io/fhpFZ'

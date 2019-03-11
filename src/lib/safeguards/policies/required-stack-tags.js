@@ -19,5 +19,4 @@ module.exports = function requiredStackTagsPolicy(policy, service, requiredStack
   }
 }
 
-module.exports.docs =
-  'https://git.io/fhpFc'
+module.exports.docs = 'https://git.io/fhpFc'
