@@ -8,7 +8,7 @@ matrix:
 install:
 - npm install -g npm codecov
 # allows for bumping sdk version before matching sdk version is released
-#- node ./scripts/updatePreReleaseDependency.js
+- node ./scripts/updatePreReleaseDependency.js
 - npm install
 - pushd sdk-js && npm install && popd
 script:
