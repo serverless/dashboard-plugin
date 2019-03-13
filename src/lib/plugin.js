@@ -10,9 +10,7 @@ import runPolicies from './safeguards'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
-import createDeployment from './createDeployment'
-import updateDeployment from './updateDeployment'
-import archiveService from './archiveService'
+import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
 
 /*
@@ -40,6 +38,7 @@ class ServerlessEnterprisePlugin {
     // Defaults
     this.sls = sls
     this.state = {} // Useful for storing data across hooks
+    this.state.secretsUsed = new Set()
     this.provider = this.sls.getProvider('aws')
     this.enterprise = {
       errorHandler: errorHandler(this) // V.1 calls this when it crashes
@@ -80,7 +79,7 @@ class ServerlessEnterprisePlugin {
       }
     }
 
-    hookIntoVariableGetter(sls)
+    hookIntoVariableGetter(this)
 
     // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
@@ -137,10 +136,9 @@ class ServerlessEnterprisePlugin {
           await runPolicies(self)
           break
         case 'before:aws:deploy:deploy:createStack':
-          await createDeployment(self)
           break
         case 'after:aws:deploy:finalize:cleanup':
-          await updateDeployment(self)
+          await saveDeployment(self)
           break
         case 'before:info:info':
           await getCredentials(self)
@@ -160,7 +158,7 @@ class ServerlessEnterprisePlugin {
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
           )
           await removeDestination(self)
-          await archiveService(self)
+          await saveDeployment(self, true)
           break
         case 'before:invoke:local:invoke':
           Object.assign(self.sls.service, {
