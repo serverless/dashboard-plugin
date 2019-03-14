@@ -98,6 +98,10 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
             integration: sub.http.integration,
             restApiId: apiId
           }
+        } else if (sub[type] instanceof Object) {
+          Object.assign(subDetails, sub[type])
+        } else {
+          Object.assign(subDetails, { [type]: sub[type] })
         }
 
         deployment.setSubscription({ type: type, function: fnName, ...subDetails })

@@ -44,7 +44,7 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: [{ http: { path: '/', method: 'get' } }]
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
           }
         }
       }
@@ -116,6 +116,12 @@ describe('parseDeploymentData', () => {
           path: '/',
           restApiId: 'api-id',
           type: 'http'
+        },
+        {
+          custom: {},
+          function: 'func',
+          schedule: 'rate(10 minutes)',
+          type: 'schedule'
         }
       ],
       tenantName: 'tenant',
