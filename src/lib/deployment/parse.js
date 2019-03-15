@@ -79,7 +79,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
           awsKmsKeyArn: fn.awsKmsKeyArn,
           tags: fn.tags || {},
           vpc: fn.vpc || {},
-          layers: fn.layers || []
+          layers: fn.layers || [],
+          name: fn.name || fnName
         }
       })
 

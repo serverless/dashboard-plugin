@@ -78,6 +78,7 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             layers: [],
             memorySize: undefined,
+            name: 'func',
             onError: undefined,
             role: undefined,
             runtime: undefined,
@@ -143,7 +144,7 @@ describe('parseDeploymentData', () => {
         service: 'service',
         provider: { stage: 'dev', region: 'us-est-1' },
         layers: {},
-        functions: { func: { handler: 'func.handler' } }
+        functions: { func: { handler: 'func.handler', name: 'func-custom' } }
       }
     }
     const provider = {
@@ -175,6 +176,7 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             layers: [],
             memorySize: undefined,
+            name: 'func-custom',
             onError: undefined,
             role: undefined,
             runtime: undefined,
