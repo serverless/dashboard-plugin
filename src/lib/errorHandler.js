@@ -11,14 +11,6 @@ export default function(ctx) {
      * - Handle failed deployments
      */
 
-    // Check for an in-progress deployment
-    if (
-      !ctx.state.deployment ||
-      !ctx.state.deployment.deploymentId ||
-      ctx.state.deployment.complete
-    ) {
-      return Promise.resolve(error)
-    }
     ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
     let deployment
@@ -34,6 +26,9 @@ export default function(ctx) {
       `Successfully published your service to the Enterprise Dashboard: ${result.dashboardUrl}`, // eslint-disable-line
       'Serverless Enterprise'
     )
+    if (!ctx.state.deployment) {
+      ctx.state.deployment = {}
+    }
     ctx.state.deployment.complete = true
   }
 }
