@@ -44,7 +44,7 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: [{ http: { path: '/', method: 'get' } }]
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
           }
         }
       }
@@ -78,6 +78,7 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             layers: [],
             memorySize: undefined,
+            name: 'func',
             onError: undefined,
             role: undefined,
             runtime: undefined,
@@ -116,6 +117,12 @@ describe('parseDeploymentData', () => {
           path: '/',
           restApiId: 'api-id',
           type: 'http'
+        },
+        {
+          custom: {},
+          function: 'func',
+          schedule: 'rate(10 minutes)',
+          type: 'schedule'
         }
       ],
       tenantName: 'tenant',
@@ -137,7 +144,7 @@ describe('parseDeploymentData', () => {
         service: 'service',
         provider: { stage: 'dev', region: 'us-est-1' },
         layers: {},
-        functions: { func: { handler: 'func.handler' } }
+        functions: { func: { handler: 'func.handler', name: 'func-custom' } }
       }
     }
     const provider = {
@@ -169,6 +176,7 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             layers: [],
             memorySize: undefined,
+            name: 'func-custom',
             onError: undefined,
             role: undefined,
             runtime: undefined,
