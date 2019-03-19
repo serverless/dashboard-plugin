@@ -58,5 +58,4 @@ module.exports = function forbidS3HttpAccessPolicy(policy, service) {
   }
 }
 
-module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#forbid-s3-http-access'
+module.exports.docs = 'https://git.io/fjfIT'
