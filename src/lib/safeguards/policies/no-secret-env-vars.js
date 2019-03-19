@@ -78,5 +78,4 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
   }
 }
 
-module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-clear-text-credentials-in-environment-variables'
+module.exports.docs = 'https://git.io/fjfkF'

@@ -12,5 +12,4 @@ module.exports = function frameworkVersionPolicy(policy, service, versionRange) 
   }
 }
 
-module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#framework-version'
+module.exports.docs = 'https://git.io/fjfkh'
