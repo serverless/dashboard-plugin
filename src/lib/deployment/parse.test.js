@@ -39,7 +39,7 @@ describe('parseDeploymentData', () => {
         appUid: 'axxx',
         app: 'app',
         service: 'service',
-        provider: { stage: 'dev', region: 'us-est-1' },
+        provider: { stage: 'prod', region: 'us-est-2' },
         layers: {},
         functions: {
           func: {
@@ -55,7 +55,9 @@ describe('parseDeploymentData', () => {
       naming: {
         getStackName,
         getServiceEndpointRegex
-      }
+      },
+      getStage: jest.fn().mockReturnValue('dev'),
+      getRegion: jest.fn().mockReturnValue('us-est-1')
     }
     const state = {
       safeguardsResults: [],
@@ -142,7 +144,7 @@ describe('parseDeploymentData', () => {
         appUid: 'axxx',
         app: 'app',
         service: 'service',
-        provider: { stage: 'dev', region: 'us-est-1' },
+        provider: { stage: 'prod', region: 'us-est-2' },
         layers: {},
         functions: { func: { handler: 'func.handler', name: 'func-custom' } }
       }
@@ -153,7 +155,9 @@ describe('parseDeploymentData', () => {
       naming: {
         getStackName,
         getServiceEndpointRegex
-      }
+      },
+      getStage: jest.fn().mockReturnValue('dev'),
+      getRegion: jest.fn().mockReturnValue('us-est-1')
     }
     const state = {
       safeguardsResults: [],
