@@ -42,6 +42,23 @@ async function runPolicies(ctx) {
       title: `Local policy: ${safeguardName}`
     }
   })
+  if (get(ctx.sls.service, 'custom.safeguards') === true) {
+    localPolicies.push({
+      safeguardName: 'require-dlq',
+      enforcementLevel: 'warning',
+      title: `Default policy: require-dlq`
+    })
+    localPolicies.push({
+      safeguardName: 'no-wild-iam-role-statements',
+      enforcementLevel: 'warning',
+      title: `Default policy: no-wild-iam-role-statments`
+    })
+    localPolicies.push({
+      safeguardName: 'no-secret-env-vars',
+      enforcementLevel: 'warning',
+      title: `Default policy: no-secret-env-vars`
+    })
+  }
 
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
   // const builtinPoliciesPath = `.${path.sep}policies`

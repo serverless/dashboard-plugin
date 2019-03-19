@@ -61,14 +61,11 @@ afterEach(() => {
 beforeEach(() => {
   process.stdout.write = jest.fn()
   secretsPolicy.mockClear()
-  secretsPolicy.docs =
-    'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  secretsPolicy.docs = 'https://git.io/secretDocs'
   requireDlq.mockClear()
-  requireDlq.docs =
-    'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  requireDlq.docs = 'https://git.io/dlqDocs'
   iamPolicy.mockClear()
-  iamPolicy.docs =
-    'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars'
+  iamPolicy.docs = 'https://git.io/iamDocs'
 })
 
 describe('safeguards - loadPolicy', () => {
@@ -167,7 +164,7 @@ describe('safeguards', () => {
       [
         chalk.keyword('orange')(`warned       
       Error Message
-      For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
+      For info on how to resolve this, see: https://git.io/secretDocs
 `)
       ]
     ])
@@ -197,10 +194,35 @@ describe('safeguards', () => {
       [
         chalk.red(`failed       
       Error Message
-      For info on how to resolve this, see: https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#no-secret-env-vars
+      For info on how to resolve this, see: https://git.io/secretDocs
 `)
       ]
     ])
+    expect(secretsPolicy).toHaveBeenCalledTimes(1)
+  })
+
+  it('loads & runs default safeguards when specified by local config = true', async () => {
+    getSafeguards.mockReturnValue(Promise.resolve([]))
+    const ctx = cloneDeep(defualtCtx)
+    ctx.sls.service.custom.safeguards = true
+    await runPolicies(ctx)
+    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
+    expect(process.stdout.write.mock.calls).toEqual([
+      [`    Default policy: require-dlq: ${gearEmoji} running...`],
+      [`\r    Default policy: require-dlq: ${checkEmoji} `],
+      [chalk.green(`passed     \n`)],
+      [`    Default policy: no-wild-iam-role-statments: ${gearEmoji} running...`],
+      [`\r    Default policy: no-wild-iam-role-statments: ${checkEmoji} `],
+      [chalk.green(`passed     \n`)],
+      [`    Default policy: no-secret-env-vars: ${gearEmoji} running...`],
+      [`\r    Default policy: no-secret-env-vars: ${warningEmoji} `],
+      [chalk.keyword('orange')(`warned       
+      Error Message
+      For info on how to resolve this, see: https://git.io/secretDocs
+`)]
+    ])
+    expect(requireDlq).toHaveBeenCalledTimes(1)
+    expect(iamPolicy).toHaveBeenCalledTimes(1)
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })
 })
