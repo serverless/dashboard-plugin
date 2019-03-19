@@ -62,6 +62,7 @@ describe('plugin', () => {
       'before:package:createDeploymentArtifacts',
       'after:package:createDeploymentArtifacts',
       'before:deploy:function:packageFunction',
+      'after:deploy:function:packageFunction',
       'before:invoke:local:invoke',
       'before:aws:package:finalize:saveServiceState',
       'before:deploy:deploy',
