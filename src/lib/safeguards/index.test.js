@@ -216,10 +216,12 @@ describe('safeguards', () => {
       [chalk.green(`passed     \n`)],
       [`    Default policy: no-secret-env-vars: ${gearEmoji} running...`],
       [`\r    Default policy: no-secret-env-vars: ${warningEmoji} `],
-      [chalk.keyword('orange')(`warned       
+      [
+        chalk.keyword('orange')(`warned       
       Error Message
       For info on how to resolve this, see: https://git.io/secretDocs
-`)]
+`)
+      ]
     ])
     expect(requireDlq).toHaveBeenCalledTimes(1)
     expect(iamPolicy).toHaveBeenCalledTimes(1)
