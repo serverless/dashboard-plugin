@@ -86,6 +86,7 @@ class ServerlessEnterprisePlugin {
       'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
       'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
       'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this), // eslint-disable-line
+      'after:deploy:function:packageFunction': this.route('after:deploy:function:packageFunction').bind(this), // eslint-disable-line
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this), // eslint-disable-line
       'before:aws:package:finalize:saveServiceState': this.route('before:aws:package:finalize:saveServiceState').bind(this), // eslint-disable-line
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this), // eslint-disable-line
