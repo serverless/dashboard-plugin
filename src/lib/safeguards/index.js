@@ -42,7 +42,16 @@ async function runPolicies(ctx) {
       title: `Local policy: ${safeguardName}`
     }
   })
-  if (get(ctx.sls.service, 'custom.safeguards') === true) {
+
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+  // const builtinPoliciesPath = `.${path.sep}policies`
+  const remotePolicies = await getSafeguards({
+    app: ctx.sls.service.app,
+    tenant: ctx.sls.service.tenant,
+    accessKey
+  })
+
+  if (remotePolicies.length === 0 && get(ctx.sls.service, 'custom.safeguards') === true) {
     localPolicies.push({
       safeguardName: 'require-dlq',
       enforcementLevel: 'warning',
@@ -60,13 +69,6 @@ async function runPolicies(ctx) {
     })
   }
 
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
-  // const builtinPoliciesPath = `.${path.sep}policies`
-  const remotePolicies = await getSafeguards({
-    app: ctx.sls.service.app,
-    tenant: ctx.sls.service.tenant,
-    accessKey
-  })
   const policyConfigs = [...localPolicies, ...remotePolicies]
 
   if (policyConfigs.length === 0) {
