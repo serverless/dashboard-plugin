@@ -49,5 +49,4 @@ module.exports = function requireGlobalVpcPolicy(
   }
 }
 
-module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#require-global-vpc'
+module.exports.docs = 'https://git.io/fjfIt'
