@@ -26,5 +26,4 @@ module.exports = function restrictedDeployTimesPolicy(policy, service, options =
   policy.approve()
 }
 
-module.exports.docs =
-  'https://github.com/serverless/enterprise/blob/master/docs/safeguards.md#restricted-deploy-times'
+module.exports.docs = 'https://git.io/fjfIk'
