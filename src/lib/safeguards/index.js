@@ -19,7 +19,10 @@ async function runPolicies(ctx) {
   const basePath = ctx.sls.config.servicePath
 
   const location = get(ctx.sls.service, 'custom.safeguards.location', '.')
-  const localPoliciesPath = path.relative(__dirname, path.resolve(basePath, location))
+  let localPoliciesPath = path.relative(__dirname, path.resolve(basePath, location))
+  if (!localPoliciesPath.startsWith('.')) {
+    localPoliciesPath = `.${path.sep}${localPoliciesPath}`
+  }
   // using || [] instead of _.get's default bc if it's falsey we want it to be []
   const localPolicies = get(ctx.sls.service, 'custom.safeguards.policies', []).map((policy) => {
     let safeguardName = policy
