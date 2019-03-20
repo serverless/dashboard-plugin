@@ -57,7 +57,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
 
     for (const fnName in service.functions) {
       const fn = service.functions[fnName]
-      const deployedFunctionName = fn.name || `${service.service}-${ctx.provider.getStage()}-${fnName}`
+      const deployedFunctionName =
+        fn.name || `${service.service}-${ctx.provider.getStage()}-${fnName}`
       fn.events = fn.events || []
 
       // Function
