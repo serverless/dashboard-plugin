@@ -47,7 +47,6 @@ async function runPolicies(ctx) {
   })
 
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
-  // const builtinPoliciesPath = `.${path.sep}policies`
   const remotePolicies = await getSafeguards({
     app: ctx.sls.service.app,
     tenant: ctx.sls.service.tenant,
@@ -79,14 +78,6 @@ async function runPolicies(ctx) {
   }
 
   ctx.sls.cli.log(`${shieldEmoji} Safeguards`, `Serverless Enterprise`)
-  /*
-  ctx.sls.cli.log(
-    `(${shieldEmoji}Safeguards) Loading ${policyConfigs.length} polic${
-      policyConfigs.length > 1 ? 'ies' : 'y'
-    }...`,
-    `Serverless Enterprise`
-  )
-  */
 
   const policies = policyConfigs.map((policy) => ({
     ...policy,
