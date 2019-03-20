@@ -57,11 +57,12 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
 
     for (const fnName in service.functions) {
       const fn = service.functions[fnName]
+      const deployedFunctionName = fn.name || `${'service'}-${'stage'}-${fnName}`
       fn.events = fn.events || []
 
       // Function
       deployment.setFunction({
-        name: fnName,
+        name: deployedFunctionName,
         description: fn.description || null,
         type: 'awsLambda',
         custom: {
@@ -85,6 +86,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
        */
 
       for (const sub of fn.events) {
+        const type = Object.keys(sub)[0]
         let subDetails = {}
         let type
         if (typeof sub === 'string') {
@@ -124,7 +126,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
           }
         }
 
-        deployment.setSubscription({ type, function: fnName, ...subDetails })
+        deployment.setSubscription({ type, function: deployedFunctionName, ...subDetails })
       }
     }
   } else {

@@ -77,7 +77,7 @@ describe('parseDeploymentData', () => {
       custom: {},
       error: null,
       functions: {
-        func: {
+        'service-stage-func': {
           custom: {
             awsKmsKeyArn: undefined,
             environment: [],
@@ -96,7 +96,7 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
-          name: 'func',
+          name: 'service-stage-func',
           type: 'awsLambda'
         }
       },
@@ -117,7 +117,7 @@ describe('parseDeploymentData', () => {
         {
           cors: undefined,
           custom: {},
-          function: 'func',
+          function: 'service-stage-func',
           integration: undefined,
           method: 'get',
           path: '/',
@@ -126,7 +126,7 @@ describe('parseDeploymentData', () => {
         },
         {
           custom: {},
-          function: 'func',
+          function: 'service-stage-func',
           schedule: 'rate(10 minutes)',
           type: 'schedule'
         }
@@ -276,7 +276,7 @@ describe('parseDeploymentData', () => {
       custom: {},
       error: null,
       functions: {
-        func: {
+        'service-stage-func': {
           custom: {
             awsKmsKeyArn: undefined,
             environment: [],
@@ -295,7 +295,7 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
-          name: 'func',
+          name: 'service-stage-func',
           type: 'awsLambda'
         }
       },
@@ -315,14 +315,14 @@ describe('parseDeploymentData', () => {
       subscriptions: [
         {
           custom: {},
-          function: 'func',
+          function: 'service-stage-func',
           type: 'websocket',
           websocketApiId: 'api-id',
           route: '$connect'
         },
         {
           custom: {},
-          function: 'func',
+          function: 'service-stage-func',
           schedule: 'rate(10 minutes)',
           type: 'schedule'
         }
@@ -373,7 +373,7 @@ describe('parseDeploymentData', () => {
       custom: {},
       error: null,
       functions: {
-        func: {
+        'func-custom': {
           custom: {
             awsKmsKeyArn: undefined,
             environment: [],
@@ -392,7 +392,7 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
-          name: 'func',
+          name: 'func-custom',
           type: 'awsLambda'
         }
       },
