@@ -18,6 +18,7 @@ describe('wrap - wrap', () => {
       state: {},
       sls: {
         config: { servicePath: 'path' },
+        provider: { getStage: jest.fn().mockReturnValue('dev') },
         service: {
           service: 'service',
           tenant: 'tenant',
@@ -86,6 +87,7 @@ module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handl
       state: {},
       sls: {
         config: { servicePath: 'path' },
+        provider: { getStage: jest.fn().mockReturnValue('dev') },
         service: {
           package: { individually: true },
           service: 'service',
