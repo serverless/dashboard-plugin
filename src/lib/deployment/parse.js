@@ -25,10 +25,6 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
     const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
       StackName: ctx.provider.naming.getStackName()
     })
-    const apigResource = _.find(cfnStack.Stacks[0].Outputs, ({ OutputKey }) =>
-      OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
-    )
-    const apiId = apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
 
     deployment.set({
       versionFramework: ctx.sls.version,
@@ -38,8 +34,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       tenantName: service.tenant,
       appName: service.app,
       serviceName: service.service,
-      stageName: service.provider.stage,
-      regionName: service.provider.region,
+      stageName: ctx.provider.getStage(),
+      regionName: ctx.provider.getRegion(),
       archived,
       status,
       provider: {
@@ -92,6 +88,13 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
         const type = Object.keys(sub)[0]
         let subDetails = {}
         if (type === 'http') {
+          const apigResource = _.find(
+            cfnStack.Stacks[0].Outputs,
+            ({ OutputKey }) =>
+              !OutputKey.endsWith('Websocket') &&
+              OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
+          )
+          const apiId = apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
           subDetails = {
             path: sub.http.path,
             method: sub.http.method,
@@ -103,6 +106,16 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
           Object.assign(subDetails, sub[type])
         } else {
           Object.assign(subDetails, { [type]: sub[type] })
+        }
+        if (type === 'websocket') {
+          const apigResource = _.find(
+            cfnStack.Stacks[0].Outputs,
+            ({ OutputKey }) =>
+              OutputKey.endsWith('Websocket') &&
+              OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
+          )
+          const apiId = apigResource && apigResource.OutputValue.split('wss://')[1].split('.')[0]
+          subDetails.websocketApiId = apiId
         }
 
         deployment.setSubscription({ type: type, function: fnName, ...subDetails })
@@ -117,8 +130,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       tenantName: service.tenant,
       appName: service.app,
       serviceName: service.service,
-      stageName: service.provider.stage,
-      regionName: service.provider.region,
+      stageName: ctx.provider.getStage(),
+      regionName: ctx.provider.getRegion(),
       archived,
       status,
       secrets: ctx.state.secretsUsed,
