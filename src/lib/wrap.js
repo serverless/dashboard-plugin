@@ -20,7 +20,7 @@ applicationName: '${ctx.sls.service.app}',
 appUid: '${ctx.sls.service.appUid}',
 tenantUid: '${ctx.sls.service.tenantUid}',
 serviceName: '${ctx.sls.service.service}',
-stageName: '${ctx.sls.provider.getStage()}'})
+stageName: '${ctx.provider.getStage()}'})
 module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
     fn.handlerOrig
   }, { functionName: '${fn.name}' })`
