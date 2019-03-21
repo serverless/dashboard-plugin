@@ -66,6 +66,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
         name: deployedFunctionName,
         description: fn.description || null,
         type: 'awsLambda',
+        arn: `arn:aws:lambda:${ctx.provider.getRegion()}:${accountId}:function:${deployedFunctionName}`,
         custom: {
           handler: fn.handler,
           memorySize: fn.memory,

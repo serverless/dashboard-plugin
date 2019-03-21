@@ -11,7 +11,7 @@ describe('parseDeploymentData', () => {
   let getServiceEndpointRegex
 
   beforeEach(() => {
-    getAccountId = jest.fn()
+    getAccountId = jest.fn().mockReturnValue('account-id')
     request = jest.fn().mockReturnValue(
       Promise.resolve({
         Stacks: [
@@ -96,6 +96,7 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
           type: 'awsLambda'
         }
@@ -103,7 +104,7 @@ describe('parseDeploymentData', () => {
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -202,13 +203,14 @@ describe('parseDeploymentData', () => {
           },
           description: null,
           name: 'service-dev-func',
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           type: 'awsLambda'
         }
       },
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -295,6 +297,7 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
           type: 'awsLambda'
         }
@@ -302,7 +305,7 @@ describe('parseDeploymentData', () => {
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -392,6 +395,7 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:func-custom',
           name: 'func-custom',
           type: 'awsLambda'
         }
@@ -399,7 +403,7 @@ describe('parseDeploymentData', () => {
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',
