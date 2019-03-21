@@ -40,9 +40,6 @@ class ServerlessEnterprisePlugin {
     this.state = {} // Useful for storing data across hooks
     this.state.secretsUsed = new Set()
     this.provider = this.sls.getProvider('aws')
-    this.enterprise = {
-      errorHandler: errorHandler(this) // V.1 calls this when it crashes
-    }
 
     // Check if Enterprise is configured
     const missing = []
@@ -133,6 +130,9 @@ class ServerlessEnterprisePlugin {
           await awsLambdaLogsCollection(self)
           break
         case 'before:deploy:deploy':
+          this.enterprise = {
+            errorHandler: errorHandler(this) // V.1 calls this when it crashes
+          }
           await runPolicies(self)
           break
         case 'before:aws:deploy:deploy:createStack':
