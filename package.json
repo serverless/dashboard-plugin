@@ -8,6 +8,7 @@
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack",
     "lint": "if [ -z \"$CI\" ]; then eslint src --fix --cache; else eslint src; fi",
+    "lint:staged": "lint-staged",
     "test": "jest src"
   },
   "dependencies": {
@@ -22,23 +23,35 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "babel-jest": "^23.6.0",
-    "jest": "^23.6.0",
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
     "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
-    "webpack": "4.24.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "prettier": "^1.14.3"
+    "jest": "^23.6.0",
+    "lint-staged": "^8.1.5",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.14.3",
+    "webpack": "4.24.0"
   },
   "author": "",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix src",
+      "eslint --fix sdk-js/src",
+      "git add -A"
+    ]
+  },
+  "pre-commit": [
+    "lint:staged"
+  ]
 }
