@@ -13,7 +13,6 @@ module.exports = function requireDescriptionPolicy(policy, service, options) {
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
-  // for (const [name, { events, onError }] of Object.entries(functions)) {
   for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
     if (Type !== 'AWS::Lambda::Function') {
       continue
