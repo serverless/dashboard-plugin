@@ -2,7 +2,7 @@
  * Error Handler
  */
 
-import { updateDeployment, getAccessKeyForTenant } from '@serverless/platform-sdk'
+import { parseDeploymentData } from './deployment'
 
 export default function(ctx) {
   return async function(error, id) { // eslint-disable-line
@@ -11,33 +11,24 @@ export default function(ctx) {
      * - Handle failed deployments
      */
 
-    // Check for an in-progress deployment
-    if (
-      !ctx.state.deployment ||
-      !ctx.state.deployment.deploymentId ||
-      ctx.state.deployment.complete
-    ) {
-      return Promise.resolve(error)
+    ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
+
+    let deployment
+    try {
+      deployment = await parseDeploymentData(ctx, 'error', error)
+    } catch (err) {
+      throw new Error(err)
     }
 
-    // Defaults
-    const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+    const result = await deployment.save()
 
     ctx.sls.cli.log(
-      'Deployment failed.  Saving status to the Enterprise Dashboard...',
+      `Successfully published your service to the Enterprise Dashboard: ${result.dashboardUrl}`, // eslint-disable-line
       'Serverless Enterprise'
     )
-
-    const deploymentData = {
-      tenant: ctx.sls.service.tenant,
-      app: ctx.sls.service.app,
-      serviceName: ctx.sls.service.service,
-      deploymentId: ctx.state.deployment.deploymentId,
-      accessKey: accessKey,
-      status: 'Failed'
+    if (!ctx.state.deployment) {
+      ctx.state.deployment = {}
     }
-    return updateDeployment(deploymentData).then(() => {
-      ctx.state.deployment.complete = true
-    })
+    ctx.state.deployment.complete = true
   }
 }

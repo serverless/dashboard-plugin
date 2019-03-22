@@ -29,7 +29,7 @@ describe('variables - getSecretFromEnterprise', () => {
 
 describe('variables - hookIntoVariableGetter', () => {
   const getValueFromSource = jest.fn().mockReturnValue('frameworkVariableValue')
-  const sls = {
+  const serverless = {
     service: {
       app: 'app',
       service: 'service',
@@ -37,15 +37,16 @@ describe('variables - hookIntoVariableGetter', () => {
     },
     variables: { getValueFromSource }
   }
+  const state = { secretsUsed: new Set() }
 
   afterAll(() => {
     getValueFromSource.resetMock()
   })
 
   it('overrides the default variable getter', async () => {
-    const restore = hookIntoVariableGetter(sls)
-    expect(sls.variables.getValueFromSource).not.toEqual(getValueFromSource)
-    sls.variables.getValueFromSource('name')
+    const restore = hookIntoVariableGetter({ sls: serverless, state })
+    expect(serverless.variables.getValueFromSource).not.toEqual(getValueFromSource)
+    serverless.variables.getValueFromSource('name')
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')
     expect(getSecret).toBeCalledWith({
       secretName: 'name',
@@ -54,7 +55,8 @@ describe('variables - hookIntoVariableGetter', () => {
       service: 'service',
       tenant: 'tenant'
     })
+    expect(state.secretsUsed).toEqual(new Set(['name']))
     restore()
-    expect(sls.variables.getValueFromSource).toEqual(getValueFromSource)
+    expect(serverless.variables.getValueFromSource).toEqual(getValueFromSource)
   })
 })

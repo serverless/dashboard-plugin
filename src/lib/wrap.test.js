@@ -16,6 +16,7 @@ describe('wrap - wrap', () => {
 
     const ctx = {
       state: {},
+      provider: { getStage: jest.fn().mockReturnValue('dev') },
       sls: {
         config: { servicePath: 'path' },
         service: {
@@ -84,6 +85,7 @@ module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handl
 
     const ctx = {
       state: {},
+      provider: { getStage: jest.fn().mockReturnValue('dev') },
       sls: {
         config: { servicePath: 'path' },
         service: {
