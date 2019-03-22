@@ -16,7 +16,7 @@ const ERROR = 'error'
  */
 const nanosecondnow = () => {
   const [seconds, nanoseconds] = process.hrtime()
-  return seconds * 1000000000 + nanoseconds ;
+  return seconds * 1000000000 + nanoseconds
 }
 
 /*
@@ -46,10 +46,10 @@ class Transaction {
     if (!data.applicationName) {
       missing = 'applicationName'
     }
-    if(!data.appUid) {
+    if (!data.appUid) {
       missing = 'appUid'
     }
-    if(!data.tenantUid) {
+    if (!data.tenantUid) {
       missing = 'tenantUid'
     }
     if (!data.serviceName) {

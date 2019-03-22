@@ -11,7 +11,7 @@ describe('parseDeploymentData', () => {
   let getServiceEndpointRegex
 
   beforeEach(() => {
-    getAccountId = jest.fn()
+    getAccountId = jest.fn().mockReturnValue('account-id')
     request = jest.fn().mockReturnValue(
       Promise.resolve({
         Stacks: [
@@ -77,7 +77,7 @@ describe('parseDeploymentData', () => {
       custom: {},
       error: null,
       functions: {
-        func: {
+        'service-dev-func': {
           custom: {
             awsKmsKeyArn: undefined,
             environment: [],
@@ -96,14 +96,15 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
-          name: 'func',
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
+          name: 'service-dev-func',
           type: 'awsLambda'
         }
       },
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -117,7 +118,7 @@ describe('parseDeploymentData', () => {
         {
           cors: undefined,
           custom: {},
-          function: 'func',
+          function: 'service-dev-func',
           integration: undefined,
           method: 'get',
           path: '/',
@@ -126,9 +127,104 @@ describe('parseDeploymentData', () => {
         },
         {
           custom: {},
-          function: 'func',
+          function: 'service-dev-func',
           schedule: 'rate(10 minutes)',
           type: 'schedule'
+        }
+      ],
+      tenantName: 'tenant',
+      tenantUid: 'txxx',
+      versionEnterprisePlugin: pluginVersion,
+      versionFramework: frameworkVersion,
+      versionSDK: sdkVersion
+    })
+  })
+
+  it('creates a deployment object correctly with zeroconf alexaSkill', async () => {
+    const serverless = {
+      version: frameworkVersion,
+      service: {
+        tenantUid: 'txxx',
+        tenant: 'tenant',
+        appUid: 'axxx',
+        app: 'app',
+        service: 'service',
+        provider: { stage: 'prod', region: 'us-est-2' },
+        layers: {},
+        functions: {
+          func: {
+            handler: 'func.handler',
+            events: ['alexaSkill']
+          }
+        }
+      }
+    }
+    const provider = {
+      getAccountId,
+      request,
+      naming: {
+        getStackName,
+        getServiceEndpointRegex
+      },
+      getStage: jest.fn().mockReturnValue('dev'),
+      getRegion: jest.fn().mockReturnValue('us-est-1')
+    }
+    const state = {
+      safeguardsResults: [],
+      secretsUsed: ['secret']
+    }
+
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+
+    expect(deployment.get()).toEqual({
+      appName: 'app',
+      appUid: 'axxx',
+      archived: false,
+      custom: {},
+      error: null,
+      functions: {
+        'service-dev-func': {
+          custom: {
+            awsKmsKeyArn: undefined,
+            environment: [],
+            handler: 'func.handler',
+            layers: [],
+            memorySize: undefined,
+            name: 'func',
+            onError: undefined,
+            role: undefined,
+            runtime: undefined,
+            tags: {},
+            timeout: undefined,
+            vpc: {
+              securityGroupIds: [],
+              subnetIds: []
+            }
+          },
+          description: null,
+          name: 'service-dev-func',
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
+          type: 'awsLambda'
+        }
+      },
+      layers: {},
+      plugins: [],
+      provider: {
+        aws: { accountId: 'account-id' },
+        type: 'aws'
+      },
+      regionName: 'us-est-1',
+      resources: {},
+      safeguards: [],
+      secrets: ['secret'],
+      serviceName: 'service',
+      stageName: 'dev',
+      status: 'success',
+      subscriptions: [
+        {
+          custom: {},
+          function: 'service-dev-func',
+          type: 'alexaSkill'
         }
       ],
       tenantName: 'tenant',
@@ -182,7 +278,7 @@ describe('parseDeploymentData', () => {
       custom: {},
       error: null,
       functions: {
-        func: {
+        'service-dev-func': {
           custom: {
             awsKmsKeyArn: undefined,
             environment: [],
@@ -201,14 +297,15 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
-          name: 'func',
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
+          name: 'service-dev-func',
           type: 'awsLambda'
         }
       },
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',
@@ -221,14 +318,14 @@ describe('parseDeploymentData', () => {
       subscriptions: [
         {
           custom: {},
-          function: 'func',
+          function: 'service-dev-func',
           type: 'websocket',
           websocketApiId: 'api-id',
           route: '$connect'
         },
         {
           custom: {},
-          function: 'func',
+          function: 'service-dev-func',
           schedule: 'rate(10 minutes)',
           type: 'schedule'
         }
@@ -279,7 +376,7 @@ describe('parseDeploymentData', () => {
       custom: {},
       error: null,
       functions: {
-        func: {
+        'func-custom': {
           custom: {
             awsKmsKeyArn: undefined,
             environment: [],
@@ -298,14 +395,15 @@ describe('parseDeploymentData', () => {
             }
           },
           description: null,
-          name: 'func',
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:func-custom',
+          name: 'func-custom',
           type: 'awsLambda'
         }
       },
       layers: {},
       plugins: [],
       provider: {
-        aws: { accountId: undefined },
+        aws: { accountId: 'account-id' },
         type: 'aws'
       },
       regionName: 'us-est-1',

@@ -57,13 +57,16 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
 
     for (const fnName in service.functions) {
       const fn = service.functions[fnName]
+      const deployedFunctionName =
+        fn.name || `${service.service}-${ctx.provider.getStage()}-${fnName}`
       fn.events = fn.events || []
 
       // Function
       deployment.setFunction({
-        name: fnName,
+        name: deployedFunctionName,
         description: fn.description || null,
         type: 'awsLambda',
+        arn: `arn:aws:lambda:${ctx.provider.getRegion()}:${accountId}:function:${deployedFunctionName}`,
         custom: {
           handler: fn.handler,
           memorySize: fn.memory,
@@ -85,40 +88,46 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
        */
 
       for (const sub of fn.events) {
-        const type = Object.keys(sub)[0]
         let subDetails = {}
-        if (type === 'http') {
-          const apigResource = _.find(
-            cfnStack.Stacks[0].Outputs,
-            ({ OutputKey }) =>
-              !OutputKey.endsWith('Websocket') &&
-              OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
-          )
-          const apiId = apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
-          subDetails = {
-            path: sub.http.path,
-            method: sub.http.method,
-            cors: sub.http.cors,
-            integration: sub.http.integration,
-            restApiId: apiId
-          }
-        } else if (sub[type] instanceof Object) {
-          Object.assign(subDetails, sub[type])
+        let type
+        if (typeof sub === 'string') {
+          type = sub
         } else {
-          Object.assign(subDetails, { [type]: sub[type] })
-        }
-        if (type === 'websocket') {
-          const apigResource = _.find(
-            cfnStack.Stacks[0].Outputs,
-            ({ OutputKey }) =>
-              OutputKey.endsWith('Websocket') &&
-              OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
-          )
-          const apiId = apigResource && apigResource.OutputValue.split('wss://')[1].split('.')[0]
-          subDetails.websocketApiId = apiId
+          type = Object.keys(sub)[0]
+          if (type === 'http') {
+            const apigResource = _.find(
+              cfnStack.Stacks[0].Outputs,
+              ({ OutputKey }) =>
+                !OutputKey.endsWith('Websocket') &&
+                OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
+            )
+            const apiId =
+              apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
+            subDetails = {
+              path: sub.http.path,
+              method: sub.http.method,
+              cors: sub.http.cors,
+              integration: sub.http.integration,
+              restApiId: apiId
+            }
+          } else if (sub[type] instanceof Object) {
+            Object.assign(subDetails, sub[type])
+          } else {
+            Object.assign(subDetails, { [type]: sub[type] })
+          }
+          if (type === 'websocket') {
+            const apigResource = _.find(
+              cfnStack.Stacks[0].Outputs,
+              ({ OutputKey }) =>
+                OutputKey.endsWith('Websocket') &&
+                OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
+            )
+            const apiId = apigResource && apigResource.OutputValue.split('wss://')[1].split('.')[0]
+            subDetails.websocketApiId = apiId
+          }
         }
 
-        deployment.setSubscription({ type: type, function: fnName, ...subDetails })
+        deployment.setSubscription({ type, function: deployedFunctionName, ...subDetails })
       }
     }
   } else {
