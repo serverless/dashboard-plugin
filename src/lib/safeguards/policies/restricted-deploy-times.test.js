@@ -20,14 +20,22 @@ describe('restrictedDeployTimesPolicy', () => {
 
   it('allow blocks deployment on Friday when Friday is blocked', () => {
     Date.now = jest.fn().mockReturnValue(new Date('2019-03-08T01:00:00').getTime())
-    restrictedDeployTimesPolicy(policy, {}, { time: '2019-03-01', interval: 'P1W', duration: 'P1D' })
+    restrictedDeployTimesPolicy(
+      policy,
+      {},
+      { time: '2019-03-01', interval: 'P1W', duration: 'P1D' }
+    )
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith('Deploying on 2019-03-08 is not allowed')
   })
 
   it('allow deployment on Monday when Friday is blocked', () => {
     Date.now = jest.fn().mockReturnValue(new Date('2019-03-04T01:00:00').getTime())
-    restrictedDeployTimesPolicy(policy, {}, { time: '2019-03-01', interval: 'P1W', duration: 'P1D' })
+    restrictedDeployTimesPolicy(
+      policy,
+      {},
+      { time: '2019-03-01', interval: 'P1W', duration: 'P1D' }
+    )
     expect(policy.approve).toHaveBeenCalledTimes(1)
     expect(policy.fail).toHaveBeenCalledTimes(0)
   })
@@ -41,14 +49,22 @@ describe('restrictedDeployTimesPolicy', () => {
 
   it('blocks deployment on Christmas when it is blocked', () => {
     Date.now = jest.fn().mockReturnValue(new Date('2019-12-25T01:00:00').getTime())
-    restrictedDeployTimesPolicy(policy, {}, { time: '2019-12-25', duration: 'P1D', interval: 'P1Y' })
+    restrictedDeployTimesPolicy(
+      policy,
+      {},
+      { time: '2019-12-25', duration: 'P1D', interval: 'P1Y' }
+    )
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith('Deploying on 2019-12-25 is not allowed')
   })
 
   it('blocks deployment on next Christmas when it is blocked', () => {
     Date.now = jest.fn().mockReturnValue(new Date('2020-12-25T01:00:00').getTime())
-    restrictedDeployTimesPolicy(policy, {}, { time: '2019-12-25', duration: 'P1D', interval: 'P1Y' })
+    restrictedDeployTimesPolicy(
+      policy,
+      {},
+      { time: '2019-12-25', duration: 'P1D', interval: 'P1Y' }
+    )
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith('Deploying on 2020-12-25 is not allowed')
   })
