@@ -11,6 +11,7 @@ const asyncEvents = new Set([
   'alexaSmartHome'
 ])
 module.exports = function dlqPolicy(policy, service) {
+  let failed = false
   const {
     declaration: { functions },
     provider: { naming },
@@ -34,7 +35,8 @@ module.exports = function dlqPolicy(policy, service) {
     const eventTypes = new Set(events.map((ev) => Object.keys(ev)[0]))
     const eventIntersection = new Set([...asyncEvents].filter((x) => eventTypes.has(x)))
     if (events.length === 0 || eventIntersection.size > 0) {
-      policy.warn(
+      failed = true
+      policy.fail(
         `Function "${
           logicalFuncNamesToConfigFuncName[funcName]
         }" doesn't have a Dead Letter Queue configured.`
@@ -42,5 +44,9 @@ module.exports = function dlqPolicy(policy, service) {
     }
   }
 
-  policy.approve()
+  if (!failed) {
+    policy.approve()
+  }
 }
+
+module.exports.docs = 'https://git.io/fjfkN'
