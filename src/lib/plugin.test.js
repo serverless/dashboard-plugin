@@ -6,6 +6,7 @@ import wrap from './wrap'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
+import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
 
 afterAll(() => jest.restoreAllMocks())
@@ -51,6 +52,7 @@ jest.mock('./safeguards', () => jest.fn())
 jest.mock('./awsApiGatewayLogsCollection', () => jest.fn())
 jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
+jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 
 describe('plugin', () => {
@@ -80,7 +82,7 @@ describe('plugin', () => {
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
-    expect(hookIntoVariableGetter).toBeCalledWith(sls)
+    expect(hookIntoVariableGetter).toBeCalledWith(instance)
   })
 
   it('construct requires tenant', () => {
@@ -142,10 +144,17 @@ describe('plugin', () => {
     expect(getCredentials).toBeCalledWith(instance)
   })
 
+  it('routes after:aws:deploy:finalize:cleanup hook correctly', async () => {
+    const instance = new ServerlessEnterprisePlugin(sls)
+    await instance.route('after:aws:deploy:finalize:cleanup')()
+    expect(saveDeployment).toBeCalledWith(instance)
+  })
+
   it('routes after:remove:remove hook correctly', async () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('after:remove:remove')()
     expect(removeDestination).toBeCalledWith(instance)
+    expect(saveDeployment).toBeCalledWith(instance, true)
   })
 
   it('routes before:aws:package:finalize:saveServiceState', async () => {

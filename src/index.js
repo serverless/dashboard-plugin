@@ -1,5 +1,3 @@
-if (!global._babelPolyfill) {
-  require('@babel/polyfill')
-}
+require('./polyfill')
 
 module.exports = require('./lib/plugin').default

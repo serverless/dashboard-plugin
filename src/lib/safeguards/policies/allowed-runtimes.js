@@ -1,16 +1,22 @@
 module.exports = function allowedRuntimesPolicy(policy, service, allowedRuntimes) {
+  let failed = false
   for (const fnName in service.declaration.functions || {}) {
     if (
       !allowedRuntimes.includes(
         service.declaration.functions[fnName].runtime || service.declaration.provider.runtime
       )
     ) {
-      throw new policy.Failure(
+      failed = true
+      policy.fail(
         `Runtime of function ${fnName} not in list of permitted runtimes: ${JSON.stringify(
           allowedRuntimes
         )}`
       )
     }
   }
-  policy.approve()
+  if (!failed) {
+    policy.approve()
+  }
 }
+
+module.exports.docs = 'https://git.io/fjfkx'
