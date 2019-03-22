@@ -2,7 +2,7 @@ module.exports = function allowedStagePolicy(policy, service, options) {
   const stageName = service.provider.getStage()
   if (typeof options === 'string') {
     if (!stageName.match(options)) {
-      throw new policy.Failure(`Stage name "${stageName}" not permitted by RegExp: "${options}"`)
+      policy.fail(`Stage name "${stageName}" not permitted by RegExp: "${options}"`)
     } else {
       policy.approve()
     }
@@ -13,8 +13,10 @@ module.exports = function allowedStagePolicy(policy, service, options) {
         return
       }
     }
-    throw new policy.Failure(
+    policy.fail(
       `Stage name "${stageName}" not in list of permitted names: ${JSON.stringify(options)}`
     )
   }
 }
+
+module.exports.docs = 'https://git.io/fjfkp'
