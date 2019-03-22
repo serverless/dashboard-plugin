@@ -1,4 +1,5 @@
 module.exports = function noWildIamPolicy(policy, service) {
+  let failed = false
   const {
     compiled: {
       'cloudformation-template-update-stack.json': { Resources }
@@ -18,12 +19,14 @@ module.exports = function noWildIamPolicy(policy, service) {
 
         for (const action of Action) {
           if (action === '*') {
-            policy.warn(
+            failed = true
+            policy.fail(
               `iamRoleStatement granting Action='*'. Wildcard actions in iamRoleStatements are not permitted.`
             )
           }
           if (action.split(':')[1] === '*') {
-            policy.warn(
+            failed = true
+            policy.fail(
               `iamRoleStatement granting Action='${action}'. Wildcard actions in iamRoleStatements are not permitted.`
             )
           }
@@ -42,13 +45,15 @@ module.exports = function noWildIamPolicy(policy, service) {
             }
           }
           if (resourceStr === '*') {
-            policy.warn(
+            failed = true
+            policy.fail(
               `iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
             )
           } else if (typeof resourceStr === 'string') {
             const [, , arnService, , , resourceType, resource] = resourceStr.split(':')
             if (arnService === '*' || resourceType === '*' || resource === '*') {
-              policy.warn(
+              failed = true
+              policy.fail(
                 `iamRoleStatement granting Resource=${JSON.stringify(
                   rawResource
                 )}. Wildcard resources or resourcetypes in iamRoleStatements are not permitted.`
@@ -67,5 +72,9 @@ module.exports = function noWildIamPolicy(policy, service) {
     }
   }
 
-  policy.approve()
+  if (!failed) {
+    policy.approve()
+  }
 }
+
+module.exports.docs = 'https://git.io/fjfk7'

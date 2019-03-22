@@ -5,7 +5,7 @@ describe('requiredStackTagsPolicy', () => {
   let declaration
 
   beforeEach(() => {
-    policy = { approve: jest.fn(), warn: jest.fn(), Failure: Error }
+    policy = { approve: jest.fn(), fail: jest.fn() }
     declaration = { provider: {} }
   })
 
@@ -13,23 +13,21 @@ describe('requiredStackTagsPolicy', () => {
     declaration.provider.stackTags = { foo: 'bar', floo: 'baz' }
     requiredStackTagsPolicy(policy, { declaration }, { foo: 'bar' })
     expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('forbids if specified tags are missing', () => {
-    expect(() => requiredStackTagsPolicy(policy, { declaration }, { foo: 'bar' })).toThrow(
-      'Required stack tag foo not set'
-    )
+    requiredStackTagsPolicy(policy, { declaration }, { foo: 'bar' })
     expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith('Required stack tag foo not set')
   })
 
   it('forbids if specified tag doesnt match RegExp', () => {
     declaration.provider.stackTags = { foo: 'baz' }
-    expect(() => requiredStackTagsPolicy(policy, { declaration }, { foo: 'bar' })).toThrow(
+    requiredStackTagsPolicy(policy, { declaration }, { foo: 'bar' })
+    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith(
       'Required stack tag foo value baz does not match RegExp: bar'
     )
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.warn).toHaveBeenCalledTimes(0)
   })
 })
