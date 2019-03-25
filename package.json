@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "The Serverless Enterprise plugin",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@serverless/platform-sdk": "^0.6.0",
+    "@serverless/platform-sdk": "^0.7.0",
     "chalk": "^2.4.2",
     "flat": "^4.1.0",
     "fs-extra": "^7.0.1",
@@ -44,6 +44,9 @@
     "pre-commit": "^1.2.2",
     "prettier": "^1.14.3",
     "webpack": "4.24.0"
+  },
+  "peerDependencies": {
+    "serverless": "^1.39.1"
   },
   "author": "",
   "license": "Apache-2.0",
