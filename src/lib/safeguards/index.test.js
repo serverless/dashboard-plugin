@@ -117,14 +117,16 @@ describe('safeguards', () => {
           safeguardName: 'require-dlq',
           policyUid: 'asdfasfdasf',
           enforcementLevel: 'error',
-          safeguardConfig: null
+          safeguardConfig: null,
+          description: 'You gotta use a DLQ!'
         },
         {
           title: 'no wild iam',
           safeguardName: 'no-wild-iam-role-statements',
           policyUid: 'asdfasfdasabdaslfhsaf',
           enforcementLevel: 'error',
-          safeguardConfig: null
+          safeguardConfig: null,
+          describe: 'dude! no wild cards in iam roles!'
         }
       ])
     )
@@ -151,7 +153,8 @@ describe('safeguards', () => {
           safeguardName: 'no-secret-env-vars',
           policyUid: 'nos-secrest-policy-id',
           enforcementLevel: 'warning',
-          safeguardConfig: null
+          safeguardConfig: null,
+          description: 'wtf yo? no secrets!'
         }
       ])
     )
@@ -164,6 +167,7 @@ describe('safeguards', () => {
       [
         chalk.keyword('orange')(`warned       
       Error Message
+      wtf yo? no secrets!
       For info on how to resolve this, see: https://git.io/secretDocs
 `)
       ]
@@ -179,7 +183,8 @@ describe('safeguards', () => {
           safeguardName: 'no-secret-env-vars',
           policyUid: 'nos-secrest-policy-id',
           enforcementLevel: 'error',
-          safeguardConfig: null
+          safeguardConfig: null,
+          description: 'wtf yo? no secrets!'
         }
       ])
     )
@@ -194,6 +199,7 @@ describe('safeguards', () => {
       [
         chalk.red(`failed       
       Error Message
+      wtf yo? no secrets!
       For info on how to resolve this, see: https://git.io/secretDocs
 `)
       ]

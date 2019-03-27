@@ -134,7 +134,7 @@ async function runPolicies(ctx) {
       process.stdout.write(`\r    ${policy.title}: ${emoji} `)
       process.stdout.write(
         color(`${errorWord}       
-      ${message}
+      ${message}${policy.description ? `\n      ${policy.description}` : ''}
       For info on how to resolve this, see: ${policy.function.docs}
 `)
       )
