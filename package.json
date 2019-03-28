@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The Serverless Enterprise plugin",
   "main": "dist/index.js",
   "scripts": {
