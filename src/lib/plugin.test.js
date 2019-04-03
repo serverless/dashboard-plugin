@@ -79,7 +79,8 @@ describe('plugin', () => {
       'before:offline:start:init',
       'before:step-functions-offline:start',
       'login:login',
-      'logout:logout'
+      'logout:logout',
+      'generate-event:generate-event'
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
