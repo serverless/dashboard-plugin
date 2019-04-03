@@ -85,11 +85,11 @@ class ServerlessEnterprisePlugin {
             required: true
           },
           body: {
-            usage: `Specify the HTTP body.`,
+            usage: `Specify the HTTP or SQS body.`,
             shortcut: 'b'
           },
           message: {
-            usage: `Specify the SNS/SQS Message.`,
+            usage: `Specify the SNS Message.`,
             shortcut: 'm'
           }
         },

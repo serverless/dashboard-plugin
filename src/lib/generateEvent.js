@@ -25,6 +25,22 @@ export default async function(ctx) {
           ]
         }
       })
+      break
+    case 'sqs':
+      e = createEvent({
+        template: 'aws:sqs',
+        merge: {
+          Records: [
+            {
+              body: options.body
+            }
+          ]
+        }
+      })
+      break
+    default:
+      ctx.sls.cli.error('Invalid event specified.')
+      return
   }
   // eslint-disable-next-line no-console
   return console.log(JSON.stringify(e))
