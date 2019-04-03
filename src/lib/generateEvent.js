@@ -39,8 +39,7 @@ export default async function(ctx) {
       })
       break
     default:
-      ctx.sls.cli.error('Invalid event specified.')
-      return
+      throw new Error('Invalid event specified.')
   }
   // eslint-disable-next-line no-console
   return console.log(JSON.stringify(e))

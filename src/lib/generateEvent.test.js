@@ -144,4 +144,18 @@ describe('generating events', () => {
       })
     )
   })
+  it('throws errors for invalid events', async () => {
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'none',
+            body: '{"json_string": "with some attrs"}'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await expect(generateEvent.bind(that)(ctx)).toThrowError
+  })
 })
