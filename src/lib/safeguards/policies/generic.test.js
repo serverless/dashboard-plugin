@@ -31,8 +31,14 @@ describe('genericPolicy', () => {
   it('forbids services with options ["declaration.provider[stage=prod"]', () => {
     genericPolicy(policy, serviceData, ["declaration.provider[stage='prod']"])
     expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.fail).toBeCalledWith('Must comply with all of the configured queries.')
+  })
+
+  it('forbids invalid queries', () => {
+    genericPolicy(policy, serviceData, ['this is not a valid query'])
+    expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith(
-      'Configuration must comply with all of the configured queries.'
+      'Configuration setting is invalid: "this is not a valid query"'
     )
   })
 })
