@@ -1,24 +1,38 @@
 const jsonata = require('jsonata')
+const vm = require('vm')
+
+const execStatement = (service, statement) => {
+  const query = (queryStatement) => {
+    const expression = jsonata(queryStatement)
+    const value = expression.evaluate(service)
+    return typeof value != 'undefined' && value != null
+  }
+
+  const sandbox = {
+    query: query,
+    service: service
+  }
+
+  vm.createContext(sandbox)
+
+  return vm.runInContext(statement, sandbox)
+}
 
 module.exports = function genericPolicy(policy, service, options) {
-  let expression, value
-  const passed = options.every((query) => {
+  for (const statement of options) {
+    let response
     try {
-      expression = jsonata(query)
+      response = execStatement(service, statement)
     } catch (ex) {
-      policy.fail(`Configuration setting is invalid: "${query}"`)
+      policy.fail(`Error in the policy statement: "${statement}"`)
       return
     }
-
-    value = expression.evaluate(service)
-    return typeof value != 'undefined' && value != null
-  })
-
-  if (passed) {
-    policy.approve()
-  } else {
-    policy.fail('Must comply with all of the configured queries.')
+    if (!response) {
+      policy.fail('Must comply with all of the configured queries.')
+      return
+    }
   }
+  policy.approve()
 }
 
 module.exports.docs = 'https://git.io/fjI97'
