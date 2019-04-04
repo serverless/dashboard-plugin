@@ -2,13 +2,20 @@ const createEvent = require('aws-event-mocks')
 
 export default async function(ctx) {
   const { options } = ctx.sls.processedInput
-  let e
+  let e, parsedBody
+  if (options.body) {
+    try {
+      parsedBody = JSON.parse(options.body)
+    } catch (error) {
+      parsedBody = {}
+    }
+  }
   switch (options.type) {
     case 'http':
       e = createEvent({
         template: 'aws:apiGateway',
         merge: {
-          body: JSON.parse(options.body)
+          body: parsedBody
         }
       })
       break
@@ -32,7 +39,7 @@ export default async function(ctx) {
         merge: {
           Records: [
             {
-              body: options.body
+              body: parsedBody
             }
           ]
         }
