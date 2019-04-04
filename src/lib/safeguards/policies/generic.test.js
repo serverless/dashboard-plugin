@@ -53,8 +53,8 @@ describe('genericPolicy', () => {
   it('allows javascript statements with services', () => {
     const rules = [`declaration.provider.stage == "dev"`]
     genericPolicy(policy, serviceData, rules)
-    expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.fail).toHaveBeenCalledTimes(1)
+    expect(policy.approve).toHaveBeenCalledTimes(1)
+    expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('forbids failed javascript statements', () => {

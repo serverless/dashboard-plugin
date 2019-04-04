@@ -10,7 +10,7 @@ const execStatement = (service, statement) => {
 
   const sandbox = {
     query: query,
-    service: service
+    ...service
   }
 
   vm.createContext(sandbox)
