@@ -1,15 +1,15 @@
-const jsonata = require('jsonata')
+const jsonataQuery = require('jsonata')
 const vm = require('vm')
 
 const execStatement = (service, statement) => {
-  const query = (queryStatement) => {
-    const expression = jsonata(queryStatement)
+  const jsonata = (queryStatement) => {
+    const expression = jsonataQuery(queryStatement)
     const value = expression.evaluate(service)
     return typeof value != 'undefined' && value != null
   }
 
   const sandbox = {
-    query: query,
+    jsonata,
     ...service
   }
 
@@ -18,7 +18,7 @@ const execStatement = (service, statement) => {
   return vm.runInContext(statement, sandbox)
 }
 
-module.exports = function genericPolicy(policy, service, options) {
+module.exports = function javascriptPolicy(policy, service, options) {
   for (const statement of options) {
     let response
     try {
