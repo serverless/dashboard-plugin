@@ -32,6 +32,7 @@ const sls = {
 
 // Mock SDK
 jest.mock('@serverless/platform-sdk', () => ({
+  configureFetchDefaults: jest.fn(),
   getLoggedInUser: jest.fn().mockReturnValue({
     accessKeys: {
       tenant: '12345'
