@@ -160,7 +160,6 @@ class ServerlessSDK {
           trans.set('event.custom.apiId', event.requestContext.apiId)
           trans.set('event.custom.resourceId', event.requestContext.resourceId)
           trans.set('event.custom.domainPrefix', event.requestContext.domainPrefix)
-          trans.set('event.custom.stage', event.requestContext.stage)
           trans.set('event.custom.domain', event.requestContext.domainName)
           trans.set('event.custom.requestId', event.requestContext.requestId)
           trans.set('event.custom.extendedRequestId', event.requestContext.extendedRequestId)
@@ -172,6 +171,7 @@ class ServerlessSDK {
           trans.set('event.custom.xForwardedFor', event.headers['X-Forwarded-For'])
           trans.set('event.custom.userAgent', event.headers['User-Agent'])
         }
+        trans.set('event.custom.stage', meta.stageName)
 
         /*
          * Callback Wrapper

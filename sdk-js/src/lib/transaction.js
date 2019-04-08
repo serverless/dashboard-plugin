@@ -112,10 +112,12 @@ class Transaction {
         schemas.eventAwsApiGatewayHttp = require('./schemas/transaction-function-event-awsapigatewayhttp.json')
       }
       this.$.schema.event.custom = _.cloneDeep(schemas.eventAwsApiGatewayHttp)
+    } else {
+      this.$.schema.event.custom = { stage: null }
     }
 
     if (data.computeType === 'aws.lambda') {
-      this.$.eTransaction = {}
+      this.$.eTransaction = { stageName: null }
     }
   }
 
