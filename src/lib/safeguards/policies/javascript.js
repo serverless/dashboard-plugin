@@ -5,7 +5,13 @@ const execStatement = (service, statement) => {
   const jsonata = (queryStatement) => {
     const expression = jsonataQuery(queryStatement)
     const value = expression.evaluate(service)
-    return typeof value != 'undefined' && value != null
+if (Array.isArray(value)) {
+  return value.length > 0
+} else if (typeof value === 'object') {
+  return Object.keys(value).length > 0
+} else {
+  return Boolean(value)
+}
   }
 
   const sandbox = {
