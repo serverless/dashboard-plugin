@@ -70,7 +70,7 @@ beforeEach(() => {
 
 describe('safeguards - loadPolicy', () => {
   it('loads a safeguard from inside the plugin', async () => {
-    expect(typeof loadPolicy('./policies', 'require-dlq')).toBe('function')
+    expect(typeof loadPolicy(undefined, 'require-dlq')).toBe('function')
   })
 
   it('loads a safeguard from outside the plugin', async () => {
