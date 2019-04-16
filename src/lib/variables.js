@@ -12,7 +12,7 @@ export const hookIntoVariableGetter = (ctx) => {
 
   ctx.sls.variables.getValueFromSource = (variableString) => {
     if (variableString.startsWith(`secrets:`)) {
-      ctx.state.secretsUsed.add(variableString)
+      ctx.state.secretsUsed.add(variableString.substring(8))
       if (ctx.sls.processedInput.commands[0] === 'login') {
         return {}
       }
