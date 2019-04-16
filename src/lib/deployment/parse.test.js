@@ -65,7 +65,7 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
@@ -171,7 +171,7 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
@@ -266,7 +266,7 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
@@ -364,7 +364,7 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })

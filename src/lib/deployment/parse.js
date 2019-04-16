@@ -47,9 +47,10 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       plugins: service.plugins || [],
       custom: service.custom || {},
       safeguards: ctx.state.safeguardsResults,
-      secrets: ctx.state.secretsUsed,
+      secrets: Array.from(ctx.state.secretsUsed),
       error
     })
+    console.log(JSON.stringify(deployment.data)) // eslint-disable-line no-console
 
     /*
      * Add this deployment's functions...
@@ -143,7 +144,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       regionName: ctx.provider.getRegion(),
       archived,
       status,
-      secrets: ctx.state.secretsUsed,
+      secrets: Array.from(ctx.state.secretsUsed),
       error
     })
   }
