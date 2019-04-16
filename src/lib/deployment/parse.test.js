@@ -18,6 +18,10 @@ describe('parseDeploymentData', () => {
           {
             Outputs: [
               {
+                OutputKey: 'EnterpriseLogAccessIamRole',
+                OutputValue: 'arn:aws:iam::111111111111:role/foobarRole'
+              },
+              {
                 OutputKey: 'apig',
                 OutputValue: 'https://api-id.execute.aws.amazon.com'
               },
@@ -76,6 +80,7 @@ describe('parseDeploymentData', () => {
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'service-dev-func': {
           custom: {
@@ -182,6 +187,7 @@ describe('parseDeploymentData', () => {
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'service-dev-func': {
           custom: {
@@ -277,6 +283,7 @@ describe('parseDeploymentData', () => {
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'service-dev-func': {
           custom: {
@@ -375,6 +382,7 @@ describe('parseDeploymentData', () => {
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'func-custom': {
           custom: {
