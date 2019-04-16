@@ -50,7 +50,6 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       secrets: Array.from(ctx.state.secretsUsed),
       error
     })
-    console.log(JSON.stringify(deployment.data)) // eslint-disable-line no-console
 
     /*
      * Add this deployment's functions...
