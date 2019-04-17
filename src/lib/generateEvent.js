@@ -34,6 +34,15 @@ export default async function(ctx) {
         ]
       })
       break
+    case 'dynamodb':
+      e = createEvent('aws:dynamo', {
+        Records: [
+          {
+            dynamodb: parsedBody
+          }
+        ]
+      })
+      break
     default:
       throw new Error('Invalid event specified.')
   }
