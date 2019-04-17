@@ -1,51 +1,37 @@
 import createEvent from '@serverless/event-mocks'
 
+function recordWrapper(event) {
+  return {
+    Records: [event]
+  }
+}
+
+function encodeBody(body) {
+  if (body) {
+    return Buffer.from(body).toString('base64')
+  }
+}
+function wrapEvent(eventType, body) {
+  const eventDict = {
+    'aws:apiGateway': { body: body },
+    'aws:sns': recordWrapper({ Sns: { Message: body } }),
+    'aws:sqs': recordWrapper({ body: body }),
+    'aws:dynamo': recordWrapper({ dynamodb: body }),
+    'aws:kinesis': recordWrapper({
+      kinesis: { data: encodeBody(body) }
+    }),
+    'aws:s3': {}
+  }
+  if (eventDict.hasOwnProperty(eventType)) {
+    return createEvent(eventType, eventDict[eventType])
+  }
+
+  throw new Error('Invalid event specified.')
+}
+
 export default async function(ctx) {
   const { options } = ctx.sls.processedInput
-  let e, parsedBody
-  if (options.body) {
-    try {
-      parsedBody = JSON.parse(options.body)
-    } catch (error) {
-      parsedBody = {}
-    }
-  }
-  switch (options.type) {
-    case 'http':
-      e = createEvent('aws:apiGateway', { body: parsedBody })
-      break
-    case 'sns':
-      e = createEvent('aws:sns', {
-        Records: [
-          {
-            Sns: {
-              Message: options.message
-            }
-          }
-        ]
-      })
-      break
-    case 'sqs':
-      e = createEvent('aws:sqs', {
-        Records: [
-          {
-            body: parsedBody
-          }
-        ]
-      })
-      break
-    case 'dynamodb':
-      e = createEvent('aws:dynamo', {
-        Records: [
-          {
-            dynamodb: parsedBody
-          }
-        ]
-      })
-      break
-    default:
-      throw new Error('Invalid event specified.')
-  }
+  const e = wrapEvent(options.type, options.body)
   // eslint-disable-next-line no-console
   return console.log(JSON.stringify(e))
 }

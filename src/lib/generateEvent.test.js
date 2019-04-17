@@ -7,7 +7,7 @@ describe('generating events', () => {
       sls: {
         processedInput: {
           options: {
-            type: 'http',
+            type: 'aws:apiGateway',
             body: '{"foo": "bar"}'
           }
         }
@@ -17,9 +17,7 @@ describe('generating events', () => {
     await generateEvent.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
-        body: {
-          foo: 'bar'
-        },
+        body: '{"foo": "bar"}',
         path: '/test/hello',
         headers: {
           Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -41,9 +39,7 @@ describe('generating events', () => {
           'X-Forwarded-Port': '443',
           'X-Forwarded-Proto': 'https'
         },
-        pathParameters: {
-          proxy: 'hello'
-        },
+        pathParameters: { proxy: 'hello' },
         multiValueHeaders: {},
         isBase64Encoded: false,
         multiValueQueryStringParameters: {},
@@ -76,12 +72,8 @@ describe('generating events', () => {
         },
         resource: '/{proxy+}',
         httpMethod: 'GET',
-        queryStringParameters: {
-          name: 'me'
-        },
-        stageVariables: {
-          stageVarName: 'stageVarValue'
-        }
+        queryStringParameters: { name: 'me' },
+        stageVariables: { stageVarName: 'stageVarValue' }
       })
     )
   })
@@ -92,8 +84,8 @@ describe('generating events', () => {
       sls: {
         processedInput: {
           options: {
-            type: 'sns',
-            message: '{"json_string": "with some attrs"}'
+            type: 'aws:sns',
+            body: '{"json_string": "with some attrs"}'
           }
         }
       }
@@ -136,7 +128,7 @@ describe('generating events', () => {
       sls: {
         processedInput: {
           options: {
-            type: 'sqs',
+            type: 'aws:sqs',
             body: '{"json_string": "with some attrs"}'
           }
         }
@@ -150,9 +142,7 @@ describe('generating events', () => {
           {
             messageId: '059f36b4-87a3-44ab-83d2-661975830a7d',
             receiptHandle: 'AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...',
-            body: {
-              json_string: 'with some attrs'
-            },
+            body: '{"json_string": "with some attrs"}',
             attributes: {
               ApproximateReceiveCount: '1',
               SentTimestamp: '1545082649183',
@@ -169,13 +159,137 @@ describe('generating events', () => {
       })
     )
   })
+
+  it('builds DynamoDB events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:dynamo',
+            body:
+              '{ "Keys": { "Id": { "N": "101" } }, "NewImage": { "Message": { "S": "New item!" }, "Id": { "N": "101"}'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        Records: [
+          {
+            eventID: '1',
+            eventVersion: '1.0',
+            dynamodb:
+              '{ "Keys": { "Id": { "N": "101" } }, "NewImage": { "Message": { "S": "New item!" }, "Id": { "N": "101"}',
+            awsRegion: 'us-west-2',
+            eventName: 'INSERT',
+            eventSourceARN: 'arn:aws:dynamodb:us-east-1:123456789012:table/images',
+            eventSource: 'aws:dynamodb'
+          }
+        ]
+      })
+    )
+  })
+
+  it('builds Kinesis events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:kinesis',
+            body: 'some string to be base64 encoded'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        Records: [
+          {
+            eventSource: 'aws:kinesis',
+            eventVersion: '1.0',
+            eventID:
+              'shardId-000000000000:49574408222142592692164662027912822768781511344925966338',
+            eventName: 'aws:kinesis:record',
+            invokeIdentityArn: 'arn:aws:iam::999999999999:role/lambda_kinesis',
+            awsRegion: 'ap-northeast-1',
+            eventSourceARN: 'arn:aws:kinesis:ap-northeast-1:999999999999:stream/test',
+            kinesis: {
+              kinesisSchemaVersion: '1.0',
+              partitionKey: 'pk_7319',
+              sequenceNumber: '49574408222142592692164662027912822768781511344925966338',
+              data: 'c29tZSBzdHJpbmcgdG8gYmUgYmFzZTY0IGVuY29kZWQ=',
+              approximateArrivalTimestamp: 1499672242.6
+            }
+          }
+        ]
+      })
+    )
+  })
+
+  it('builds S3 events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:s3'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        Records: [
+          {
+            eventVersion: '2.0',
+            eventSource: 'aws:s3',
+            awsRegion: 'us-east-1',
+            eventTime: '2016-09-25T05:15:44.261Z',
+            eventName: 'ObjectCreated:Put',
+            userIdentity: { principalId: 'AWS:AROAW5CA2KAGZPAWYRL7K:cli' },
+            requestParameters: { sourceIPAddress: '222.24.107.21' },
+            responseElements: {
+              'x-amz-request-id': '00093EEAA5C7G7F2',
+              'x-amz-id-2':
+                '9tTklyI/OEj4mco12PgsNksgxAV3KePn7WlNSq2rs+LXD3xFG0tlzgvtH8hClZzI963KYJgVnXw='
+            },
+            s3: {
+              s3SchemaVersion: '1.0',
+              configurationId: '151dfa64-d57a-4383-85ac-620bce65f269',
+              bucket: {
+                name: 'service-1474780369352-1',
+                ownerIdentity: { principalId: 'A3QLJ3P3P5QY05' },
+                arn: 'arn:aws:s3:::service-1474780369352-1'
+              },
+              object: {
+                key: 'object',
+                size: 11,
+                eTag: '5eb63bbbe01eetd093cb22bb8f5acdc3',
+                sequencer: '0057E75D80IA35C3E0'
+              }
+            }
+          }
+        ]
+      })
+    )
+  })
+
   it('throws errors for invalid events', async () => {
     const ctx = {
       sls: {
         processedInput: {
           options: {
             type: 'none',
-            body: '{"json_string": "with some attrs"}'
+            body:
+              '{ "Keys": { "Id": { "N": "101" } }, "NewImage": { "Message": { "S": "New item!" }, "Id": { "N": "101"}'
           }
         }
       }

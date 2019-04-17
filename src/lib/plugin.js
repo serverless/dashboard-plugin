@@ -82,17 +82,13 @@ class ServerlessEnterprisePlugin {
         lifecycleEvents: ['generate-event'],
         options: {
           type: {
-            usage: `Specify event type. HTTP, SNS, SQS are supported.`,
+            usage: `Specify event type. aws:http, aws:sns, aws:sns, aws:s3, aws:dynamo, and aws:kinesis are supported.`,
             shortcut: 't',
             required: true
           },
           body: {
-            usage: `Specify the HTTP or SQS body.`,
+            usage: `Specify the body for the message, request, or stream event.`,
             shortcut: 'b'
-          },
-          message: {
-            usage: `Specify the SNS Message.`,
-            shortcut: 'm'
           }
         },
         enterprise: true
