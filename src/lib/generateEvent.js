@@ -1,4 +1,4 @@
-const createEvent = require('aws-event-mocks')
+import createEvent from '@serverless/event-mocks'
 
 export default async function(ctx) {
   const { options } = ctx.sls.processedInput
@@ -12,37 +12,26 @@ export default async function(ctx) {
   }
   switch (options.type) {
     case 'http':
-      e = createEvent({
-        template: 'aws:apiGateway',
-        merge: {
-          body: parsedBody
-        }
-      })
+      e = createEvent('aws:apiGateway', { body: parsedBody })
       break
     case 'sns':
-      e = createEvent({
-        template: 'aws:sns',
-        merge: {
-          Records: [
-            {
-              Sns: {
-                Message: options.message
-              }
+      e = createEvent('aws:sns', {
+        Records: [
+          {
+            Sns: {
+              Message: options.message
             }
-          ]
-        }
+          }
+        ]
       })
       break
     case 'sqs':
-      e = createEvent({
-        template: 'aws:sqs',
-        merge: {
-          Records: [
-            {
-              body: parsedBody
-            }
-          ]
-        }
+      e = createEvent('aws:sqs', {
+        Records: [
+          {
+            body: parsedBody
+          }
+        ]
       })
       break
     default:

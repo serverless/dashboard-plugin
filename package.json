@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "@serverless/event-mocks": "^1.0.0",
     "@serverless/platform-sdk": "^0.7.0",
     "aws-event-mocks": "github:serverless/aws-event-mocks#master",
     "chalk": "^2.4.2",
