@@ -32,10 +32,10 @@ class ServerlessEnterprisePlugin {
         currentCommand !== 'logout' &&
         !process.env.SERVERLESS_ACCESS_KEY)
     ) {
+      const errorMessage = `You are not currently logged in. To log in, use: $ serverless login`
       console.log('') // eslint-disable-line
-      sls.cli.log(`Warning: You are not currently logged in.  All enterprise features will be disabled.  To log in, use: $ serverless login`, 'Serverless Enterprise') // eslint-disable-line
-      console.log('') // eslint-disable-line
-      return
+      sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
+      throw new Error(errorMessage) // eslint-disable-line
     }
 
     // Defaults
