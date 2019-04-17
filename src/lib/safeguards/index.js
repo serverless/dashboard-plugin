@@ -13,7 +13,7 @@ const checkEmoji = '\u2705'
 
 // NOTE: not using path.join because it strips off the leading
 export const loadPolicy = (policyPath, safeguardName) =>
-  require(`${policyPath || `.${path.sep}policies`}${path.sep}${safeguardName}`)
+  require(`${policyPath || `./policies`}/${safeguardName}`)
 
 async function runPolicies(ctx) {
   const basePath = ctx.sls.config.servicePath

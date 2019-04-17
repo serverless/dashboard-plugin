@@ -1,4 +1,4 @@
-import { getLoggedInUser } from '@serverless/platform-sdk'
+import { configureFetchDefaults, getLoggedInUser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -20,6 +20,7 @@ import { hookIntoVariableGetter } from './variables'
 
 class ServerlessEnterprisePlugin {
   constructor(sls) {
+    configureFetchDefaults()
     const user = getLoggedInUser()
     const currentCommand = sls.processedInput.commands[0]
 
