@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "0.3.1",
+  "version": "0.3.4",
   "description": "The Serverless Enterprise plugin",
   "main": "dist/index.js",
   "scripts": {
@@ -14,9 +14,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@serverless/event-mocks": "^1.0.0",
-    "@serverless/platform-sdk": "^0.7.0",
-    "aws-event-mocks": "github:serverless/aws-event-mocks#master",
-    "chalk": "^2.4.2",
+    "@serverless/platform-sdk": "^0.7.1",
     "flat": "^4.1.0",
     "fs-extra": "^7.0.1",
     "iso8601-duration": "^1.1.7",

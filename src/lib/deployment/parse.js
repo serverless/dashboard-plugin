@@ -47,7 +47,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       plugins: service.plugins || [],
       custom: service.custom || {},
       safeguards: ctx.state.safeguardsResults,
-      secrets: ctx.state.secretsUsed,
+      secrets: Array.from(ctx.state.secretsUsed),
       error
     })
 
@@ -143,7 +143,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       regionName: ctx.provider.getRegion(),
       archived,
       status,
-      secrets: ctx.state.secretsUsed,
+      secrets: Array.from(ctx.state.secretsUsed),
       error
     })
   }
