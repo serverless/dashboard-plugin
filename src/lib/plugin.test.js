@@ -8,6 +8,7 @@ import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
+import injectLogsIamRole from './injectLogsIamRole'
 
 afterAll(() => jest.restoreAllMocks())
 
@@ -40,7 +41,8 @@ jest.mock('@serverless/platform-sdk', () => ({
     idToken: 'ID'
   }),
   getAccessKeyForTenant: jest.fn().mockReturnValue('123456'),
-  archiveService: jest.fn().mockImplementation(() => Promise.resolve())
+  archiveService: jest.fn().mockImplementation(() => Promise.resolve()),
+  getMetadata: jest.fn().mockReturnValue(Promise.resolve('token'))
 }))
 
 jest.mock('./credentials', () => jest.fn())
@@ -55,6 +57,7 @@ jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
 jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
+jest.mock('./injectLogsIamRole', () => jest.fn())
 
 describe('plugin', () => {
   it('constructs and sets hooks', () => {
@@ -102,6 +105,7 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:package:createDeploymentArtifacts')()
     expect(wrap).toBeCalledWith(instance)
+    expect(injectLogsIamRole).toBeCalledWith(instance)
   })
 
   it('routes after:package:createDeploymentArtifacts hook correctly', async () => {
