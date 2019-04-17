@@ -58,7 +58,16 @@ describe('injectLogsIamRole', () => {
                     {
                       Effect: 'Allow',
                       Action: ['logs:FilterLogEvents'],
-                      Resource: [{ Ref: 'Foo' }, { Ref: 'Bar' }]
+                      Resource: [
+                        {
+                          'Fn::Sub':
+                            'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${Foo}'
+                        },
+                        {
+                          'Fn::Sub':
+                            'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${Bar}'
+                        }
+                      ]
                     }
                   ]
                 }

@@ -37,7 +37,9 @@ export default async function(ctx) {
                   ctx.sls.service.provider.compiledCloudFormationTemplate.Resources
                 )
                   .filter(([, { Type }]) => Type === 'AWS::Logs::LogGroup')
-                  .map(([logicalId]) => ({ Ref: logicalId }))
+                  .map(([logicalId]) => ({
+                    'Fn::Sub': `arn:aws:logs:$\{AWS::Region}:$\{AWS::AccountId}:log-group:$\{${logicalId}}`
+                  }))
               }
             ]
           }
