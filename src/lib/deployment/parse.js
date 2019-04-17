@@ -26,6 +26,12 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       StackName: ctx.provider.naming.getStackName()
     })
 
+    // get log access role info
+    const logsRoleArn = _.find(
+      cfnStack.Stacks[0].Outputs,
+      ({ OutputKey }) => OutputKey === 'EnterpriseLogAccessIamRole'
+    ).OutputValue
+
     deployment.set({
       versionFramework: ctx.sls.version,
       versionEnterprisePlugin: packageJsonVersion,
@@ -36,6 +42,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       serviceName: service.service,
       stageName: ctx.provider.getStage(),
       regionName: ctx.provider.getRegion(),
+      logsRoleArn,
       archived,
       status,
       provider: {

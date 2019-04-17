@@ -5,6 +5,7 @@ import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import login from './login'
 import logout from './logout'
 import wrap from './wrap'
+import injectLogsIamRole from './injectLogsIamRole'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import generateEvent from './generateEvent'
@@ -141,6 +142,7 @@ class ServerlessEnterprisePlugin {
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
           )
           await wrap(self)
+          await injectLogsIamRole(self)
           break
         case 'after:package:createDeploymentArtifacts':
           await wrapClean(self)
