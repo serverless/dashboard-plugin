@@ -4,6 +4,13 @@ import parseDeploymentData from './parse'
 
 const frameworkVersion = '1.38.0'
 
+jest.mock('./getServerlessFilePath', () =>
+  jest.fn().mockReturnValue(Promise.resolve('serverless.yml'))
+)
+jest.mock('fs-extra', () => ({
+  read: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
+}))
+
 describe('parseDeploymentData', () => {
   let getAccountId
   let request
@@ -75,6 +82,8 @@ describe('parseDeploymentData', () => {
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
@@ -182,6 +191,8 @@ describe('parseDeploymentData', () => {
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
@@ -278,6 +289,8 @@ describe('parseDeploymentData', () => {
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
@@ -377,6 +390,8 @@ describe('parseDeploymentData', () => {
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,

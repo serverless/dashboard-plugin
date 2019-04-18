@@ -3,8 +3,10 @@
  * - This uses the new deployment data model.
  */
 
+import fs from 'fs-extra'
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
+import getServerlessFilePath from './getServerlessFilePath'
 import { version as packageJsonVersion } from '../../../package.json'
 
 /*
@@ -17,6 +19,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
   const deployment = new SDK.Deployment()
 
   const accountId = await ctx.provider.getAccountId()
+  const serverlessFileName = await getServerlessFilePath()
+  const serverlessFile = (await fs.read(serverlessFileName)).toString()
   /*
    * Add deployment data...
    */
@@ -33,6 +37,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
     ).OutputValue
 
     deployment.set({
+      serverlessFile,
+      serverlessFileName,
       versionFramework: ctx.sls.version,
       versionEnterprisePlugin: packageJsonVersion,
       tenantUid: service.tenantUid,
