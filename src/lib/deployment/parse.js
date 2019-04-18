@@ -19,8 +19,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
   const deployment = new SDK.Deployment()
 
   const accountId = await ctx.provider.getAccountId()
-  const serverlessFileName = await getServerlessFilePath()
-  const serverlessFile = (await fs.read(serverlessFileName)).toString()
+  const serverlessFileName = await getServerlessFilePath(ctx.sls.config.servicePath)
+  const serverlessFile = (await fs.readFile(serverlessFileName)).toString()
   /*
    * Add deployment data...
    */
