@@ -8,7 +8,7 @@ jest.mock('./getServerlessFilePath', () =>
   jest.fn().mockReturnValue(Promise.resolve('serverless.yml'))
 )
 jest.mock('fs-extra', () => ({
-  read: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
+  readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
 }))
 
 describe('parseDeploymentData', () => {
@@ -48,6 +48,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -157,6 +158,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly with zeroconf alexaSkill', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -255,6 +257,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly with websocket', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -361,6 +364,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly without http events', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
