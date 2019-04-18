@@ -8,6 +8,7 @@ import wrap from './wrap'
 import injectLogsIamRole from './injectLogsIamRole'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
+import generateEvent from './generateEvent'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
@@ -75,6 +76,22 @@ class ServerlessEnterprisePlugin {
         usage: 'Logout from Serverless Enterprise',
         lifecycleEvents: ['logout'],
         enterprise: true
+      },
+      'generate-event': {
+        usage: 'Generate event',
+        lifecycleEvents: ['generate-event'],
+        options: {
+          type: {
+            usage: `Specify event type. aws:http, aws:sns, aws:sns, aws:s3, aws:dynamo, and aws:kinesis are supported.`,
+            shortcut: 't',
+            required: true
+          },
+          body: {
+            usage: `Specify the body for the message, request, or stream event.`,
+            shortcut: 'b'
+          }
+        },
+        enterprise: true
       }
     }
 
@@ -103,6 +120,7 @@ class ServerlessEnterprisePlugin {
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this), // eslint-disable-line
       'login:login': this.route('login:login').bind(this), // eslint-disable-line
       'logout:logout': this.route('logout:logout').bind(this), // eslint-disable-line
+      'generate-event:generate-event': this.route('generate-event:generate-event').bind(this), // eslint-disable-line
     }
   }
 
@@ -188,6 +206,9 @@ class ServerlessEnterprisePlugin {
           break
         case 'logout:logout':
           await logout(self)
+          break
+        case 'generate-event:generate-event':
+          await generateEvent(self)
           break
       }
     }
