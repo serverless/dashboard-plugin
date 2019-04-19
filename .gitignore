@@ -15,3 +15,4 @@ node_modules
 .eslintcache
 dist
 sdk-js/dist
+/package-lock.json
