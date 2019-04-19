@@ -1,6 +1,10 @@
 import generateEvent from './generateEvent'
 
 describe('generating events', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   it('builds http events', async () => {
     const logSpy = jest.spyOn(global.console, 'log')
     const ctx = {
@@ -278,6 +282,204 @@ describe('generating events', () => {
             }
           }
         ]
+      })
+    )
+  })
+
+  it('builds Alexa Skill events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:alexaSkill',
+            body: '{"session": {"new": false} }'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        version: '1.0',
+        session: {
+          new: false,
+          sessionId: 'amzn1.echo-api.session.123123123',
+          application: { applicationId: 'amzn1.ask.skill.123' },
+          attributes: { key: 'this is an attribute' },
+          user: {
+            userId: 'amzn1.ask.account.abc',
+            accessToken: 'Atza|AAAAAAAA...',
+            permissions: { consentToken: 'ZZZZZZZ...' }
+          }
+        },
+        context: {
+          System: {
+            device: { deviceId: '123456', supportedInterfaces: { AudioPlayer: {} } },
+            application: { applicationId: 'amzn1.ask.skill.foobar' },
+            user: {
+              userId: 'amzn1.ask.account.user_name',
+              accessToken: 'Atza|AAAAAAAA...',
+              permissions: { consentToken: 'ZZZZZZZ...' }
+            },
+            apiEndpoint: 'https://api.amazonalexa.com',
+            apiAccessToken: 'AxThk...'
+          },
+          AudioPlayer: {
+            playerActivity: 'PLAYING',
+            token: 'audioplayer-token',
+            offsetInMilliseconds: 0
+          }
+        },
+        request: {
+          type: 'LaunchRequest',
+          requestId: '1234-5678-abcd',
+          timestamp: '123123',
+          locale: 'en-US'
+        }
+      })
+    )
+  })
+
+  it('builds Alexa Smart Home events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:alexaSmartHome',
+            body: '{"header": {"name": "SwitchOnRequest"} }'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        header: { payloadVersion: '1', namespace: 'Control', name: 'SwitchOnRequest' },
+        payload: {
+          switchControlAction: 'TURN_ON',
+          appliance: {
+            additionalApplianceDetails: { key2: 'value2', key1: 'value1' },
+            applianceId: 'sampleId'
+          },
+          accessToken: 'sampleAccessToken'
+        }
+      })
+    )
+  })
+
+  it('builds Cloud Watch Log events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:cloudWatchLog',
+            body: 'log data to be gzipped then base64 encoded'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        awslogs: {
+          data:
+            'H4sIAAAAAAAAE8vJT1dISSxJVCjJV0hKVUivyiwoSE1RKMlIzVNISixONTNRSM1Lzk9JTQEAgTpNiioAAAA='
+        }
+      })
+    )
+  })
+
+  it('builds Cloud Watch events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:cloudWatch',
+            body: '{"detail": { "instance-id": "some great instance", "state": "started" } }'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        version: '0',
+        id: '6a7e8feb-b491-4cf7-a9f1-bf3703467718',
+        'detail-type': 'EC2 Instance State-change Notification',
+        source: 'aws.ec2',
+        account: '111122223333',
+        time: '2017-12-22T18:43:48Z',
+        region: 'us-west-1',
+        resources: ['arn:aws:ec2:us-west-1:123456789012:instance/ i-1234567890abcdef0'],
+        detail: {
+          'instance-id': 'some great instance',
+          state: 'started'
+        }
+      })
+    )
+  })
+
+  it('builds IoT events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:iot',
+            body: '{"can": "be anything"}'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        can: 'be anything'
+      })
+    )
+  })
+
+  it('builds Cognito User Pool events', async () => {
+    const logSpy = jest.spyOn(global.console, 'log')
+    const ctx = {
+      sls: {
+        processedInput: {
+          options: {
+            type: 'aws:cognitoUserPool',
+            body: '{"userName": "Aaron Stuyvenberg", "request": {"userAttributes": {"foo": "bar"}}}'
+          }
+        }
+      }
+    }
+    const that = { serverless: { classes: { Error } } }
+    await generateEvent.bind(that)(ctx)
+    expect(logSpy).toBeCalledWith(
+      JSON.stringify({
+        version: 2,
+        triggerSource: 'string',
+        region: 'us-east-1',
+        userPoolId: 'abcd123',
+        userName: 'Aaron Stuyvenberg',
+        callerContext: {
+          awsSdkVersion: '1',
+          clientId: 'abc1234'
+        },
+        request: {
+          userAttributes: {
+            someAttr: 'someValue',
+            foo: 'bar'
+          }
+        },
+        response: {}
       })
     )
   })
