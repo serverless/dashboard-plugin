@@ -49,7 +49,7 @@ export default async function(ctx) {
   }
   ctx.sls.service.provider.compiledCloudFormationTemplate.Outputs.EnterpriseLogAccessIamRole = {
     Value: {
-      Ref: 'EnterpriseLogAccessIamRole'
+      'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn']
     }
   }
 }

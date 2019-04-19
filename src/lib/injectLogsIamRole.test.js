@@ -79,7 +79,7 @@ describe('injectLogsIamRole', () => {
       Outputs: {
         EnterpriseLogAccessIamRole: {
           Value: {
-            Ref: 'EnterpriseLogAccessIamRole'
+            'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn']
           }
         }
       }
