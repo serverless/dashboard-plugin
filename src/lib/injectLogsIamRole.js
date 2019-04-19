@@ -38,7 +38,7 @@ export default async function(ctx) {
                 )
                   .filter(([, { Type }]) => Type === 'AWS::Logs::LogGroup')
                   .map(([logicalId]) => ({
-                    'Fn::Sub': `arn:aws:logs:$\{AWS::Region}:$\{AWS::AccountId}:log-group:$\{${logicalId}}`
+                    'Fn::GetAtt': [logicalId, 'Arn']
                   }))
               }
             ]

@@ -60,12 +60,10 @@ describe('injectLogsIamRole', () => {
                       Action: ['logs:FilterLogEvents'],
                       Resource: [
                         {
-                          'Fn::Sub':
-                            'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${Foo}'
+                          'Fn::GetAtt': ['Foo', 'Arn']
                         },
                         {
-                          'Fn::Sub':
-                            'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${Bar}'
+                          'Fn::GetAtt': ['Bar', 'Arn']
                         }
                       ]
                     }
