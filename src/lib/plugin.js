@@ -82,7 +82,9 @@ class ServerlessEnterprisePlugin {
         lifecycleEvents: ['generate-event'],
         options: {
           type: {
-            usage: `Specify event type. aws:http, aws:sns, aws:sns, aws:s3, aws:dynamo, and aws:kinesis are supported.`,
+            usage: `Specify event type. aws:http, aws:sns, aws:sns, aws:s3, aws:dynamo,\n
+                    aws:websocket, aws:cloudWatch, aws:cloudWatchLog, aws:alexaSmartHome, aws:alexaSkill,\n
+                    aws:iot, aws:cognitoUserPool, aws:websocket, and aws:kinesis are supported.`,
             shortcut: 't',
             required: true
           },
