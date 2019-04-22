@@ -8,7 +8,7 @@ import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
-import generateEvent from './generateEvent'
+import { generate } from './generateEvent'
 import injectLogsIamRole from './injectLogsIamRole'
 
 afterAll(() => jest.restoreAllMocks())
@@ -61,7 +61,7 @@ jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
 jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
-jest.mock('./generateEvent', () => jest.fn())
+jest.mock('./generateEvent', () => ({ eventDict: {}, generate: jest.fn() }))
 jest.mock('./injectLogsIamRole', () => jest.fn())
 
 describe('plugin', () => {
@@ -187,6 +187,6 @@ describe('plugin', () => {
   it('routes generate-event:generate-event hook correctly', async () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('generate-event:generate-event')()
-    expect(generateEvent).toBeCalledWith(instance)
+    expect(generate).toBeCalledWith(instance)
   })
 })
