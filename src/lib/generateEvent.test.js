@@ -1,4 +1,5 @@
 import generateEvent from './generateEvent'
+import zlib from 'zlib'
 
 describe('generating events', () => {
   afterEach(() => {
@@ -372,13 +373,24 @@ describe('generating events', () => {
   })
 
   it('builds Cloud Watch Log events', async () => {
+    const body = 'log data to be gzipped then base64 encoded'
+    const zippedBody = await new Promise((res, rej) => {
+      zlib.gzip(body, function(error, result) {
+        if (error) {
+          return rej(error)
+        }
+        res(result)
+      })
+    })
+    const encodedBody = Buffer.from(zippedBody).toString('base64')
+
     const logSpy = jest.spyOn(global.console, 'log')
     const ctx = {
       sls: {
         processedInput: {
           options: {
             type: 'aws:cloudWatchLog',
-            body: 'log data to be gzipped then base64 encoded'
+            body: body
           }
         }
       }
@@ -388,8 +400,7 @@ describe('generating events', () => {
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         awslogs: {
-          data:
-            'H4sIAAAAAAAAE8vJT1dISSxJVCjJV0hKVUivyiwoSE1RKMlIzVNISixONTNRSM1Lzk9JTQEAgTpNiioAAAA='
+          data: encodedBody
         }
       })
     )
