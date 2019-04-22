@@ -8,6 +8,8 @@ import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
+import { generate } from './generateEvent'
+import injectLogsIamRole from './injectLogsIamRole'
 
 afterAll(() => jest.restoreAllMocks())
 
@@ -26,12 +28,16 @@ const sls = {
     log: jest.fn()
   },
   processedInput: {
-    commands: []
+    commands: [],
+    options: {
+      type: 'sqs'
+    }
   }
 }
 
 // Mock SDK
 jest.mock('@serverless/platform-sdk', () => ({
+  configureFetchDefaults: jest.fn(),
   getLoggedInUser: jest.fn().mockReturnValue({
     accessKeys: {
       tenant: '12345'
@@ -39,7 +45,8 @@ jest.mock('@serverless/platform-sdk', () => ({
     idToken: 'ID'
   }),
   getAccessKeyForTenant: jest.fn().mockReturnValue('123456'),
-  archiveService: jest.fn().mockImplementation(() => Promise.resolve())
+  archiveService: jest.fn().mockImplementation(() => Promise.resolve()),
+  getMetadata: jest.fn().mockReturnValue(Promise.resolve('token'))
 }))
 
 jest.mock('./credentials', () => jest.fn())
@@ -54,6 +61,8 @@ jest.mock('./awsLambdaLogsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
 jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
+jest.mock('./generateEvent', () => ({ eventDict: {}, generate: jest.fn() }))
+jest.mock('./injectLogsIamRole', () => jest.fn())
 
 describe('plugin', () => {
   it('constructs and sets hooks', () => {
@@ -79,7 +88,8 @@ describe('plugin', () => {
       'before:offline:start:init',
       'before:step-functions-offline:start',
       'login:login',
-      'logout:logout'
+      'logout:logout',
+      'generate-event:generate-event'
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
@@ -101,6 +111,7 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:package:createDeploymentArtifacts')()
     expect(wrap).toBeCalledWith(instance)
+    expect(injectLogsIamRole).toBeCalledWith(instance)
   })
 
   it('routes after:package:createDeploymentArtifacts hook correctly', async () => {
@@ -171,5 +182,11 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:deploy:deploy')()
     expect(runPolicies).toBeCalledWith(instance)
+  })
+
+  it('routes generate-event:generate-event hook correctly', async () => {
+    const instance = new ServerlessEnterprisePlugin(sls)
+    await instance.route('generate-event:generate-event')()
+    expect(generate).toBeCalledWith(instance)
   })
 })

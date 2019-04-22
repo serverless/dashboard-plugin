@@ -3,8 +3,10 @@
  * - This uses the new deployment data model.
  */
 
+import fs from 'fs-extra'
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
+import getServerlessFilePath from './getServerlessFilePath'
 import { version as packageJsonVersion } from '../../../package.json'
 
 /*
@@ -17,6 +19,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
   const deployment = new SDK.Deployment()
 
   const accountId = await ctx.provider.getAccountId()
+  const serverlessFileName = await getServerlessFilePath(ctx.sls.config.servicePath)
+  const serverlessFile = (await fs.readFile(serverlessFileName)).toString()
   /*
    * Add deployment data...
    */
@@ -26,7 +30,15 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       StackName: ctx.provider.naming.getStackName()
     })
 
+    // get log access role info
+    const logsRoleArn = _.find(
+      cfnStack.Stacks[0].Outputs,
+      ({ OutputKey }) => OutputKey === 'EnterpriseLogAccessIamRole'
+    ).OutputValue
+
     deployment.set({
+      serverlessFile,
+      serverlessFileName,
       versionFramework: ctx.sls.version,
       versionEnterprisePlugin: packageJsonVersion,
       tenantUid: service.tenantUid,
@@ -36,6 +48,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       serviceName: service.service,
       stageName: ctx.provider.getStage(),
       regionName: ctx.provider.getRegion(),
+      logsRoleArn,
       archived,
       status,
       provider: {
@@ -47,7 +60,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       plugins: service.plugins || [],
       custom: service.custom || {},
       safeguards: ctx.state.safeguardsResults,
-      secrets: ctx.state.secretsUsed,
+      secrets: Array.from(ctx.state.secretsUsed),
       error
     })
 
@@ -143,7 +156,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       regionName: ctx.provider.getRegion(),
       archived,
       status,
-      secrets: ctx.state.secretsUsed,
+      secrets: Array.from(ctx.state.secretsUsed),
       error
     })
   }

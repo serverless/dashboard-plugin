@@ -1,10 +1,11 @@
-import { getLoggedInUser } from '@serverless/platform-sdk'
+import { configureFetchDefaults, getLoggedInUser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
 import login from './login'
 import logout from './logout'
 import wrap from './wrap'
+import injectLogsIamRole from './injectLogsIamRole'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import getCredentials from './credentials'
@@ -12,6 +13,7 @@ import getAppUids from './appUids'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
+import { generate, eventDict } from './generateEvent'
 
 /*
  * Serverless Enterprise Plugin
@@ -19,6 +21,7 @@ import { hookIntoVariableGetter } from './variables'
 
 class ServerlessEnterprisePlugin {
   constructor(sls) {
+    configureFetchDefaults()
     const user = getLoggedInUser()
     const currentCommand = sls.processedInput.commands[0]
 
@@ -29,10 +32,10 @@ class ServerlessEnterprisePlugin {
         currentCommand !== 'logout' &&
         !process.env.SERVERLESS_ACCESS_KEY)
     ) {
+      const errorMessage = `You are not currently logged in. To log in, use: $ serverless login`
       console.log('') // eslint-disable-line
-      sls.cli.log(`Warning: You are not currently logged in.  All enterprise features will be disabled.  To log in, use: $ serverless login`, 'Serverless Enterprise') // eslint-disable-line
-      console.log('') // eslint-disable-line
-      return
+      sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
+      throw new Error(errorMessage) // eslint-disable-line
     }
 
     // Defaults
@@ -73,6 +76,22 @@ class ServerlessEnterprisePlugin {
         usage: 'Logout from Serverless Enterprise',
         lifecycleEvents: ['logout'],
         enterprise: true
+      },
+      'generate-event': {
+        usage: 'Generate event',
+        lifecycleEvents: ['generate-event'],
+        options: {
+          type: {
+            usage: `Specify event type. ${Object.keys(eventDict).join(', ')} are supported.`,
+            shortcut: 't',
+            required: true
+          },
+          body: {
+            usage: `Specify the body for the message, request, or stream event.`,
+            shortcut: 'b'
+          }
+        },
+        enterprise: true
       }
     }
 
@@ -101,6 +120,7 @@ class ServerlessEnterprisePlugin {
       'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this), // eslint-disable-line
       'login:login': this.route('login:login').bind(this), // eslint-disable-line
       'logout:logout': this.route('logout:logout').bind(this), // eslint-disable-line
+      'generate-event:generate-event': this.route('generate-event:generate-event').bind(this), // eslint-disable-line
     }
   }
 
@@ -118,6 +138,7 @@ class ServerlessEnterprisePlugin {
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
           )
           await wrap(self)
+          await injectLogsIamRole(self)
           break
         case 'after:package:createDeploymentArtifacts':
           await wrapClean(self)
@@ -185,6 +206,9 @@ class ServerlessEnterprisePlugin {
           break
         case 'logout:logout':
           await logout(self)
+          break
+        case 'generate-event:generate-event':
+          await generate(self)
           break
       }
     }

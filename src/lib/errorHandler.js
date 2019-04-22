@@ -2,6 +2,7 @@
  * Error Handler
  */
 
+import serializeError from 'serialize-error'
 import { parseDeploymentData } from './deployment'
 
 export default function(ctx) {
@@ -13,12 +14,7 @@ export default function(ctx) {
 
     ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
-    let deployment
-    try {
-      deployment = await parseDeploymentData(ctx, 'error', error)
-    } catch (err) {
-      throw new Error(err)
-    }
+    const deployment = await parseDeploymentData(ctx, 'error', serializeError(error))
 
     const result = await deployment.save()
 

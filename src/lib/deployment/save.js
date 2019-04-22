@@ -6,14 +6,12 @@
 import parseDeploymentData from './parse'
 
 export default async function(ctx, archived = false) {
+  if (ctx.sls.service.provider.shouldNotDeploy) {
+    return
+  }
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
-  let deployment
-  try {
-    deployment = await parseDeploymentData(ctx, undefined, undefined, archived)
-  } catch (error) {
-    throw new Error(error)
-  }
+  const deployment = await parseDeploymentData(ctx, undefined, undefined, archived)
 
   const result = await deployment.save()
 

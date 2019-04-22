@@ -4,6 +4,13 @@ import parseDeploymentData from './parse'
 
 const frameworkVersion = '1.38.0'
 
+jest.mock('./getServerlessFilePath', () =>
+  jest.fn().mockReturnValue(Promise.resolve('serverless.yml'))
+)
+jest.mock('fs-extra', () => ({
+  readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
+}))
+
 describe('parseDeploymentData', () => {
   let getAccountId
   let request
@@ -17,6 +24,10 @@ describe('parseDeploymentData', () => {
         Stacks: [
           {
             Outputs: [
+              {
+                OutputKey: 'EnterpriseLogAccessIamRole',
+                OutputValue: 'arn:aws:iam::111111111111:role/foobarRole'
+              },
               {
                 OutputKey: 'apig',
                 OutputValue: 'https://api-id.execute.aws.amazon.com'
@@ -37,6 +48,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -65,17 +77,20 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'service-dev-func': {
           custom: {
@@ -143,6 +158,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly with zeroconf alexaSkill', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -171,17 +187,20 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'service-dev-func': {
           custom: {
@@ -238,6 +257,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly with websocket', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -266,17 +286,20 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'service-dev-func': {
           custom: {
@@ -341,6 +364,7 @@ describe('parseDeploymentData', () => {
   it('creates a deployment object correctly without http events', async () => {
     const serverless = {
       version: frameworkVersion,
+      config: { servicePath: '.' },
       service: {
         tenantUid: 'txxx',
         tenant: 'tenant',
@@ -364,17 +388,20 @@ describe('parseDeploymentData', () => {
     }
     const state = {
       safeguardsResults: [],
-      secretsUsed: ['secret']
+      secretsUsed: new Set(['secret'])
     }
 
     const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
 
     expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
       appName: 'app',
       appUid: 'axxx',
       archived: false,
       custom: {},
       error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
       functions: {
         'func-custom': {
           custom: {
