@@ -8,12 +8,12 @@ import wrap from './wrap'
 import injectLogsIamRole from './injectLogsIamRole'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
-import generateEvent from './generateEvent'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
+import { generate, eventDict } from './generateEvent'
 
 /*
  * Serverless Enterprise Plugin
@@ -82,9 +82,7 @@ class ServerlessEnterprisePlugin {
         lifecycleEvents: ['generate-event'],
         options: {
           type: {
-            usage: `Specify event type. aws:http, aws:sns, aws:sns, aws:s3, aws:dynamo,\n
-                    aws:websocket, aws:cloudWatch, aws:cloudWatchLog, aws:alexaSmartHome, aws:alexaSkill,\n
-                    aws:iot, aws:cognitoUserPool, aws:websocket, and aws:kinesis are supported.`,
+            usage: `Specify event type. ${Object.keys(eventDict).join(', ')} are supported.`,
             shortcut: 't',
             required: true
           },
@@ -210,7 +208,7 @@ class ServerlessEnterprisePlugin {
           await logout(self)
           break
         case 'generate-event:generate-event':
-          await generateEvent(self)
+          await generate(self)
           break
       }
     }

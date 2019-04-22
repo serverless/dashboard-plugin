@@ -28,39 +28,45 @@ function parsedBody(body) {
   return JSON.parse(body)
 }
 
-async function wrapEvent(eventType, body) {
-  const eventDict = {
-    'aws:apiGateway': () => ({ body: body }),
-    'aws:websocket': () => ({ body: body }),
-    'aws:sns': () => recordWrapper({ Sns: { Message: body } }),
-    'aws:sqs': () => recordWrapper({ body: body }),
-    'aws:dynamo': () => recordWrapper({ dynamodb: body }),
-    'aws:kinesis': () =>
-      recordWrapper({
-        kinesis: { data: encodeBody(body) }
-      }),
-    'aws:cloudWatchLog': async () => ({
-      awslogs: { data: encodeBody(await gzipBody(body)) }
+export const eventDict = {
+  'aws:apiGateway': (body) => ({ body: body }),
+  'aws:websocket': (body) => ({ body: body }),
+  'aws:sns': (body) => recordWrapper({ Sns: { Message: body } }),
+  'aws:sqs': (body) => recordWrapper({ body: body }),
+  'aws:dynamo': (body) => recordWrapper({ dynamodb: body }),
+  'aws:kinesis': (body) =>
+    recordWrapper({
+      kinesis: { data: encodeBody(body) }
     }),
-    'aws:s3': () => ({}),
-    'aws:alexaSmartHome': () => parsedBody(body),
-    'aws:alexaSkill': () => parsedBody(body),
-    'aws:cloudWatch': () => parsedBody(body),
-    'aws:iot': () => parsedBody(body),
-    'aws:cognitoUserPool': () => parsedBody(body),
-    'aws:websocket': () => ({ body: body })
-  }
+  'aws:cloudWatchLog': async (body) => ({
+    awslogs: { data: encodeBody(await gzipBody(body)) }
+  }),
+  'aws:s3': () => ({}),
+  'aws:alexaSmartHome': (body) => parsedBody(body),
+  'aws:alexaSkill': (body) => parsedBody(body),
+  'aws:cloudWatch': (body) => parsedBody(body),
+  'aws:iot': (body) => parsedBody(body),
+  'aws:cognitoUserPool': (body) => parsedBody(body),
+  'aws:websocket': (body) => ({ body: body })
+}
+
+async function wrapEvent(eventType, body) {
   if (eventDict.hasOwnProperty(eventType)) {
-    return createEvent(eventType, await eventDict[eventType]())
+    return createEvent(eventType, await eventDict[eventType](body))
   }
 
   throw new Error('Invalid event specified.')
 }
 
-export default async function(ctx) {
+export async function generate(ctx) {
   const { options } = ctx.sls.processedInput
   const body = options.body === undefined ? '{}' : options.body
-  const e = await wrapEvent(options.type, body)
+  const event = await wrapEvent(options.type, body)
   // eslint-disable-next-line no-console
-  return console.log(JSON.stringify(e))
+  return console.log(JSON.stringify(event))
+}
+
+module.exports = {
+  generate,
+  eventDict
 }

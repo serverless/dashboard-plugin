@@ -1,4 +1,4 @@
-import generateEvent from './generateEvent'
+import { generate } from './generateEvent'
 import zlib from 'zlib'
 
 describe('generating events', () => {
@@ -19,7 +19,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         body: '{"foo": "bar"}',
@@ -96,7 +96,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -140,7 +140,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -179,7 +179,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -211,7 +211,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -249,7 +249,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -300,7 +300,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         version: '1.0',
@@ -356,7 +356,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         header: { payloadVersion: '1', namespace: 'Control', name: 'SwitchOnRequest' },
@@ -396,7 +396,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         awslogs: {
@@ -419,7 +419,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         version: '0',
@@ -451,7 +451,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         can: 'be anything'
@@ -472,7 +472,7 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await generateEvent.bind(that)(ctx)
+    await generate.bind(that)(ctx)
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         version: 2,
@@ -508,6 +508,6 @@ describe('generating events', () => {
       }
     }
     const that = { serverless: { classes: { Error } } }
-    await expect(generateEvent.bind(that)(ctx)).toThrowError
+    await expect(generate.bind(that)(ctx)).toThrowError
   })
 })
