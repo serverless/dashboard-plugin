@@ -5,12 +5,6 @@ import { get, fromPairs, cloneDeep, omit } from 'lodash'
 import { getAccessKeyForTenant, getSafeguards } from '@serverless/platform-sdk'
 import chalk from 'chalk'
 
-const shieldEmoji = '\uD83D\uDEE1\uFE0F '
-const warningEmoji = '\u26A0\uFE0F'
-const gearEmoji = '\u2699\uFE0F'
-const xEmoji = '\u274C'
-const checkEmoji = '\u2705'
-
 // NOTE: not using path.join because it strips off the leading
 export const loadPolicy = (policyPath, safeguardName) =>
   require(`${policyPath || `./policies`}/${safeguardName}`)
@@ -53,31 +47,13 @@ async function runPolicies(ctx) {
     accessKey
   })
 
-  if (remotePolicies.length === 0 && get(ctx.sls.service, 'custom.safeguards') === true) {
-    localPolicies.push({
-      safeguardName: 'require-dlq',
-      enforcementLevel: 'warning',
-      title: `Default policy: require-dlq`
-    })
-    localPolicies.push({
-      safeguardName: 'no-wild-iam-role-statements',
-      enforcementLevel: 'warning',
-      title: `Default policy: no-wild-iam-role-statments`
-    })
-    localPolicies.push({
-      safeguardName: 'no-secret-env-vars',
-      enforcementLevel: 'warning',
-      title: `Default policy: no-secret-env-vars`
-    })
-  }
-
   const policyConfigs = [...localPolicies, ...remotePolicies]
 
   if (policyConfigs.length === 0) {
     return
   }
 
-  ctx.sls.cli.log(`${shieldEmoji} Safeguards`, `Serverless Enterprise`)
+  ctx.sls.cli.log(`Safeguards Processing...`, `Serverless Enterprise`)
 
   const policies = policyConfigs.map((policy) => ({
     ...policy,
@@ -105,17 +81,25 @@ async function runPolicies(ctx) {
           return [filename, yml.parse(content)]
         } catch (error) {
           ctx.sls.cli.log(
-            `(${shieldEmoji}Safeguards) Failed to parse file ${filename} in the artifacts directory.`,
+            `(Safeguards) Failed to parse file ${filename} in the artifacts directory.`,
             `Serverless Enterprise`
           )
           throw error
         }
       })
   )
-  service.compiled = fromPairs(jsonYamlArtifacts)
 
+  ctx.sls.cli.log(
+    `Safeguards Results:
+
+   Summary --------------------------------------------------
+`,
+    `Serverless Enterprise`
+  )
+
+  service.compiled = fromPairs(jsonYamlArtifacts)
   const runningPolicies = policies.map(async (policy) => {
-    process.stdout.write(`    ${policy.title}: ${gearEmoji} running...`)
+    process.stdout.write(`  running - ${policy.title}`)
 
     const result = {
       approved: false,
@@ -124,28 +108,21 @@ async function runPolicies(ctx) {
     }
     const approve = () => {
       result.approved = true
-      process.stdout.write(`\r    ${policy.title}: ${checkEmoji} `)
-      process.stdout.write(chalk.green(`passed     \n`))
+      process.stdout.write(`\r   ${chalk.green('passed')} - ${policy.title}\n`)
     }
     const fail = (message) => {
-      const emoji = policy.enforcementLevel === 'error' ? xEmoji : warningEmoji
       const errorWord = policy.enforcementLevel === 'error' ? 'failed' : 'warned'
       const color = policy.enforcementLevel === 'error' ? chalk.red : chalk.keyword('orange')
-      process.stdout.write(`\r    ${policy.title}: ${emoji} `)
-      process.stdout.write(
-        color(`${errorWord}       
-      ${message}${policy.description ? `\n      ${policy.description}` : ''}
-      For info on how to resolve this, see: ${policy.function.docs}
-`)
-      )
+      process.stdout.write(`\r   ${color(errorWord)} - ${policy.title}\n`)
       result.failed = true
+      result.message = message
     }
     const policyHandle = { approve, fail }
 
     await policy.function(policyHandle, service, policy.safeguardConfig)
     if (!result.approved && !result.failed) {
       ctx.sls.cli.log(
-        `(${shieldEmoji}Safeguards) ${warningEmoji} Policy "${
+        `Safeguard Policy "${
           policy.title
         }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`,
         `Serverless Enterprise`
@@ -156,36 +133,39 @@ async function runPolicies(ctx) {
 
   ctx.state.safeguardsResults = await Promise.all(runningPolicies)
   const markedPolicies = ctx.state.safeguardsResults.filter((res) => !res.approved && res.failed)
-  if (markedPolicies.length === 0) {
-    return
+
+  const failed = markedPolicies.filter((res) => res.policy.enforcementLevel === 'error').length
+  const warned = markedPolicies.filter((res) => res.policy.enforcementLevel !== 'error').length
+  const passed = ctx.state.safeguardsResults.filter((res) => res.approved && !res.failed).length
+  const summary = `Safeguards Summary: ${chalk.green(`${passed} passed`)}, ${chalk.keyword(
+    'orange'
+  )(`${warned} warnings`)}, ${chalk.red(`${failed} errors`)}`
+
+  if (markedPolicies.length !== 0) {
+    const details =
+      '\n   Details --------------------------------------------------\n\n' +
+      markedPolicies
+        .map(
+          (res, i) =>
+            `   ${i + 1}) ${
+              !res.failed
+                ? 'Finished inconclusively. Deployment halted.'
+                : res.policy.enforcementLevel == 'error'
+                ? chalk.red(`Failed - ${res.message}`)
+                : chalk.keyword('orange')(`Warned - ${res.message}`)
+            }
+      ${chalk.grey(`details: ${res.policy.function.docs}`)}
+      ${res.policy.description}`
+        )
+        .join('\n\n\n')
+
+    process.stdout.write(`${details}\n\n`)
+    if (!markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
+      ctx.sls.cli.log(summary, `Serverless Enterprise`)
+      throw new Error('Deployment blocked by Serverless Enterprise Safeguards')
+    }
   }
-
-  const summary =
-    `(${shieldEmoji} Safeguards) ${markedPolicies.length} polic${
-      markedPolicies.length > 1 ? 'ies' : 'y'
-    } reported irregular conditions. For details, see the logs above.\n      ` +
-    markedPolicies
-      .map((res) => {
-        if (res.failed) {
-          if (res.policy.enforcementLevel == 'error') {
-            return `${xEmoji} ${
-              res.policy.safeguardName
-            }: Requirements not satisfied. Deployment halted.`
-          }
-          return `${warningEmoji} ${res.policy.safeguardName}: Warned of a non-critical condition.`
-        }
-
-        return `\u2049\uFE0F ${
-          res.policy.safeguardName
-        }: Finished inconclusively. Deployment halted.`
-      })
-      .join('\n      ')
-
-  if (markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
-    // ctx.sls.cli.log(summary, `Serverless Enterprise`)
-    return
-  }
-  throw new Error(summary)
+  ctx.sls.cli.log(summary, `Serverless Enterprise`)
 }
 
 export default runPolicies

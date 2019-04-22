@@ -3,12 +3,6 @@ import chalk from 'chalk'
 import runPolicies, { loadPolicy } from './'
 import { getSafeguards } from '@serverless/platform-sdk'
 
-const shieldEmoji = '\uD83D\uDEE1\uFE0F '
-const warningEmoji = '\u26A0\uFE0F'
-const gearEmoji = '\u2699\uFE0F'
-const xEmoji = '\u274C'
-const checkEmoji = '\u2705'
-
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('access-key')),
   getSafeguards: jest.fn(),
@@ -132,14 +126,27 @@ describe('safeguards', () => {
     )
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
-    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
+    expect(log.mock.calls).toEqual([
+      ['Safeguards Processing...', `Serverless Enterprise`],
+      [
+        `Safeguards Results:
+
+   Summary --------------------------------------------------
+`,
+        `Serverless Enterprise`
+      ],
+      [
+        `Safeguards Summary: ${chalk.green('2 passed')}, ${chalk.keyword('orange')(
+          '0 warnings'
+        )}, ${chalk.red('0 errors')}`,
+        `Serverless Enterprise`
+      ]
+    ])
     expect(process.stdout.write.mock.calls).toEqual([
-      [`    Require Dead Letter Queues: ${gearEmoji} running...`],
-      [`\r    Require Dead Letter Queues: ${checkEmoji} `],
-      [chalk.green(`passed     \n`)],
-      [`    no wild iam: ${gearEmoji} running...`],
-      [`\r    no wild iam: ${checkEmoji} `],
-      [chalk.green(`passed     \n`)]
+      [`  running - Require Dead Letter Queues`],
+      [`\r   ${chalk.green('passed')} - Require Dead Letter Queues\n`],
+      [`  running - no wild iam`],
+      [`\r   ${chalk.green('passed')} - no wild iam\n`]
     ])
     expect(requireDlq).toHaveBeenCalledTimes(1)
     expect(iamPolicy).toHaveBeenCalledTimes(1)
@@ -160,16 +167,33 @@ describe('safeguards', () => {
     )
     const ctx = cloneDeep(defualtCtx)
     await runPolicies(ctx)
-    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
-    expect(process.stdout.write.mock.calls).toEqual([
-      [`    no secrets: ${gearEmoji} running...`],
-      [`\r    no secrets: ${warningEmoji} `],
+    expect(log.mock.calls).toEqual([
+      ['Safeguards Processing...', `Serverless Enterprise`],
       [
-        chalk.keyword('orange')(`warned       
-      Error Message
+        `Safeguards Results:
+
+   Summary --------------------------------------------------
+`,
+        `Serverless Enterprise`
+      ],
+      [
+        `Safeguards Summary: ${chalk.green('0 passed')}, ${chalk.keyword('orange')(
+          '1 warnings'
+        )}, ${chalk.red('0 errors')}`,
+        `Serverless Enterprise`
+      ]
+    ])
+    expect(process.stdout.write.mock.calls).toEqual([
+      [`  running - no secrets`],
+      [`\r   ${chalk.keyword('orange')('warned')} - no secrets\n`],
+      [
+        `\n   Details --------------------------------------------------
+
+   1) ${chalk.keyword('orange')('Warned - Error Message')}
+      ${chalk.grey('details: https://git.io/secretDocs')}
       wtf yo? no secrets!
-      For info on how to resolve this, see: https://git.io/secretDocs
-`)
+
+`
       ]
     ])
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
@@ -190,47 +214,37 @@ describe('safeguards', () => {
     )
     const ctx = cloneDeep(defualtCtx)
     await expect(runPolicies(ctx)).rejects.toThrow(
-      `(${shieldEmoji} Safeguards) 1 policy reported irregular conditions. For details, see the logs above.\n      ${xEmoji} no-secret-env-vars: Requirements not satisfied. Deployment halted.`
+      'Deployment blocked by Serverless Enterprise Safeguards'
     )
-    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
-    expect(process.stdout.write.mock.calls).toEqual([
-      [`    no secrets: ${gearEmoji} running...`],
-      [`\r    no secrets: ${xEmoji} `],
+    expect(log.mock.calls).toEqual([
+      ['Safeguards Processing...', `Serverless Enterprise`],
       [
-        chalk.red(`failed       
-      Error Message
-      wtf yo? no secrets!
-      For info on how to resolve this, see: https://git.io/secretDocs
-`)
-      ]
-    ])
-    expect(secretsPolicy).toHaveBeenCalledTimes(1)
-  })
+        `Safeguards Results:
 
-  it('loads & runs default safeguards when specified by local config = true', async () => {
-    getSafeguards.mockReturnValue(Promise.resolve([]))
-    const ctx = cloneDeep(defualtCtx)
-    ctx.sls.service.custom.safeguards = true
-    await runPolicies(ctx)
-    expect(log.mock.calls).toEqual([[`${shieldEmoji} Safeguards`, `Serverless Enterprise`]])
-    expect(process.stdout.write.mock.calls).toEqual([
-      [`    Default policy: require-dlq: ${gearEmoji} running...`],
-      [`\r    Default policy: require-dlq: ${checkEmoji} `],
-      [chalk.green(`passed     \n`)],
-      [`    Default policy: no-wild-iam-role-statments: ${gearEmoji} running...`],
-      [`\r    Default policy: no-wild-iam-role-statments: ${checkEmoji} `],
-      [chalk.green(`passed     \n`)],
-      [`    Default policy: no-secret-env-vars: ${gearEmoji} running...`],
-      [`\r    Default policy: no-secret-env-vars: ${warningEmoji} `],
+   Summary --------------------------------------------------
+`,
+        `Serverless Enterprise`
+      ],
       [
-        chalk.keyword('orange')(`warned       
-      Error Message
-      For info on how to resolve this, see: https://git.io/secretDocs
-`)
+        `Safeguards Summary: ${chalk.green('0 passed')}, ${chalk.keyword('orange')(
+          '0 warnings'
+        )}, ${chalk.red('1 errors')}`,
+        `Serverless Enterprise`
       ]
     ])
-    expect(requireDlq).toHaveBeenCalledTimes(1)
-    expect(iamPolicy).toHaveBeenCalledTimes(1)
+    expect(process.stdout.write.mock.calls).toEqual([
+      [`  running - no secrets`],
+      [`\r   ${chalk.red('failed')} - no secrets\n`],
+      [
+        `\n   Details --------------------------------------------------
+
+   1) ${chalk.red('Failed - Error Message')}
+      ${chalk.grey('details: https://git.io/secretDocs')}
+      wtf yo? no secrets!
+
+`
+      ]
+    ])
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })
 })
