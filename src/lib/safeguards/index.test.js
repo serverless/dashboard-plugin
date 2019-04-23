@@ -187,7 +187,7 @@ describe('safeguards', () => {
       [`  running - no secrets`],
       [`\r   ${chalk.keyword('orange')('warned')} - no secrets\n`],
       [
-        `\n   Details --------------------------------------------------
+        `\n   ${chalk.yellow('Details --------------------------------------------------')}
 
    1) ${chalk.keyword('orange')('Warned - Error Message')}
       ${chalk.grey('details: https://git.io/secretDocs')}
@@ -236,7 +236,7 @@ describe('safeguards', () => {
       [`  running - no secrets`],
       [`\r   ${chalk.red('failed')} - no secrets\n`],
       [
-        `\n   Details --------------------------------------------------
+        `\n   ${chalk.yellow('Details --------------------------------------------------')}
 
    1) ${chalk.red('Failed - Error Message')}
       ${chalk.grey('details: https://git.io/secretDocs')}

@@ -143,7 +143,7 @@ async function runPolicies(ctx) {
 
   if (markedPolicies.length !== 0) {
     const details =
-      '\n   Details --------------------------------------------------\n\n' +
+      `\n   ${chalk.yellow('Details --------------------------------------------------')}\n\n` +
       markedPolicies
         .map(
           (res, i) =>
