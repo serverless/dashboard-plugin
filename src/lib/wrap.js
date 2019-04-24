@@ -7,6 +7,8 @@
 import fs from 'fs-extra'
 import path from 'path'
 import _ from 'lodash'
+import JSZip from 'jszip'
+import { addTree, writeZip } from './zipTree.js'
 
 /*
  * Wrap Node.js Functions
@@ -106,7 +108,16 @@ export default async (ctx) => {
     // Re-assign the handler to point to the wrapper
     ctx.sls.service.functions[fn].handler = `${func.entryNew}.${func.handlerNew}`
 
-    if (
+    if (_.get(ctx.sls.service.functions[fn], 'package.artifact')) {
+      const zipData = await fs.readFile(ctx.sls.service.functions[fn].package.artifact)
+      const zip = await JSZip.loadAsync(zipData)
+      const wrapperData = await fs.readFile(
+        path.join(ctx.sls.config.servicePath, `${func.entryNew}.js`)
+      )
+      zip.file(`${func.entryNew}.js`, wrapperData)
+      await addTree(zip, 'serverless-sdk')
+      await writeZip(zip, ctx.sls.service.functions[fn].package.artifact)
+    } else if (
       _.get(
         ctx.sls.service.functions[fn],
         'package.individually',
