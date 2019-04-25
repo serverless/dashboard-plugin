@@ -8,7 +8,7 @@ import fs from 'fs-extra'
 import path from 'path'
 import _ from 'lodash'
 import JSZip from 'jszip'
-import { addTree, writeZip } from './zipTree.js'
+import { addTree, writeZip } from './zipTree'
 
 /*
  * Wrap Node.js Functions

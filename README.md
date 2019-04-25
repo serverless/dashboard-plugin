@@ -10,3 +10,8 @@ To enable the various features of the [Serverless Framework Enterprise](https://
 - If you are new to the Serverless Framework open source CLI or Serverless Framework Enterprise simply follow the steps in this [new user getting started guide](https://github.com/serverless/enterprise/blob/master/docs/getting-started.md) to get up and running
 
 Upon deployment, the Serverless Framwork Enteprise Plugin will automatically wrap and instrument your functions to work with the Serverless Framework Enterprise dashboard.
+
+
+## Dev notes
+If you need a newer version of platform-sdk, you can change the version depended upon in
+`package.json` to `next`
