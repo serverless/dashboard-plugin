@@ -11,6 +11,8 @@ const flatten = require('flat')
 const TRANSACTION = 'transaction'
 const ERROR = 'error'
 
+let transactionCount = 0
+
 /*
  * nanosecond time
  */
@@ -68,6 +70,7 @@ class Transaction {
     }
 
     this.processed = false
+    transactionCount += 1
     this.$ = {
       schema: null,
       eTransaction: null,
@@ -91,6 +94,8 @@ class Transaction {
     this.$.schema.functionName = data.functionName
     this.$.schema.compute.type = data.computeType
     this.$.schema.event.type = data.eventType || 'unknown'
+    this.$.schema.compute.isColdStart = transactionCount === 1
+    this.$.schema.compute.instanceInvocationCount = transactionCount
 
     // Track uptime of container
     this.$.schema.compute.containerUptime = process.uptime()
