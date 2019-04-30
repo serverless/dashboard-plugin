@@ -161,11 +161,11 @@ async function runPolicies(ctx) {
 
     process.stdout.write(`${details}\n\n`)
     if (!markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
-      ctx.sls.cli.log(summary, `Serverless Enterprise`)
+      ctx.sls.cli.log(summary, `\nServerless Enterprise`)
       throw new Error('Deployment blocked by Serverless Enterprise Safeguards')
     }
   }
-  ctx.sls.cli.log(summary, `Serverless Enterprise`)
+  ctx.sls.cli.log(summary, `\nServerless Enterprise`)
 }
 
 export default runPolicies

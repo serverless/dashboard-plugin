@@ -139,7 +139,7 @@ describe('safeguards', () => {
         `Safeguards Summary: ${chalk.green('2 passed')}, ${chalk.keyword('orange')(
           '0 warnings'
         )}, ${chalk.red('0 errors')}`,
-        `Serverless Enterprise`
+        `\nServerless Enterprise`
       ]
     ])
     expect(process.stdout.write.mock.calls).toEqual([
@@ -180,7 +180,7 @@ describe('safeguards', () => {
         `Safeguards Summary: ${chalk.green('0 passed')}, ${chalk.keyword('orange')(
           '1 warnings'
         )}, ${chalk.red('0 errors')}`,
-        `Serverless Enterprise`
+        `\nServerless Enterprise`
       ]
     ])
     expect(process.stdout.write.mock.calls).toEqual([
@@ -229,7 +229,7 @@ describe('safeguards', () => {
         `Safeguards Summary: ${chalk.green('0 passed')}, ${chalk.keyword('orange')(
           '0 warnings'
         )}, ${chalk.red('1 errors')}`,
-        `Serverless Enterprise`
+        `\nServerless Enterprise`
       ]
     ])
     expect(process.stdout.write.mock.calls).toEqual([
