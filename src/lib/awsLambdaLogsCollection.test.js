@@ -67,7 +67,7 @@ describe('awsLambdaLogsCollection', () => {
           Properties: {
             DestinationArn: 'arn:logdest',
 
-            FilterPattern: '?"\"origin\":\"sls-agent\"" ?"REPORT RequestId: "', // eslint-disable-line
+            FilterPattern: '[w1=REPORT || w1=SERVERLESS_ENTERPRISE]',
             LogGroupName: {
               Ref: 'lambdaLogs'
             }

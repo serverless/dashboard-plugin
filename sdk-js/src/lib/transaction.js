@@ -226,7 +226,7 @@ class Transaction {
       span.tags = tags
       envelope.payload = span
 
-      console.log(JSON.stringify(envelope))
+      console.log('SERVERLESS_ENTERPRISE', JSON.stringify(envelope))
       this.processed = true
     }
   }
