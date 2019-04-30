@@ -15,6 +15,7 @@ script:
 - npm run lint
 - pushd sdk-js && npm run lint && popd
 - npm run test
+- "if [ z$TRAVIS_NODE_VERSION == z10.15 ]; then npm run integration-test ; else echo skipping node $TRAVIS_NODE_VERSION ; fi"
 - pushd sdk-js && npm run test && popd
 - codecov
 - npm run build
@@ -59,3 +60,7 @@ deploy:
       repo: serverless/enterprise-plugin
     api_key:
       secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
+env:
+  global:
+    # SERVERLESS_ACCESS_KEY
+    secure: gmY5akkm08zFBd1rnQR4IKr3kDxHHP3fReAxi3jYLdcFumXZkg+zRBqfUCzhdMi4J3RMsJ6cITqKtdK1g8aKO/LjduCLSUNsJRwVrM88TzKTmXHoczVfbnGSgrtCuQ1cC/1OAkRrr+EqWz1Y82hGZomMAJeoQKkd7CmTAsvf7yTs99zmrVozLpTZ+mH9T/acMg11bjEuWTGis/H00SLXo0JDa+KGe1lqa43nwYeRbB5A2DqRVkgZ05HkLIyurVMAftZk7SGN03aX54GUpPEyT6QrvcvErzASzkW0GMvBzDKmEBhxKSOfCQXVgkxp9ibwQ3qZ1tLGr8qFj5jNtt3g/LsphYNGtdaojMzWcCy9h/2btTIZygHe/m+m1fe9KNV4rlWninb8RX2Et0bMe67QToUxpM3lBYObqvy2+MEQ9mtGDzN5YENkJJR2P61ad9acEmu8OWeUSC5OQI2nGMgCdOI2m43AmGFLcPTWyQR8iJmk60EljaJQuBrO5o4oHCzKqT8ddhlJV5qges/j5kCooqD09LMDD158Oq//JssZVx3Meu9nPVbNLkDzG+b7zDzlS7D53Jm8BbxyPEBVES/aOhZlUXG4AzsBi9qZ+aSu5wDVxmEwllzbSyTdccEAmgmdnRbu+nsJ7EiWdE9e3m5qDVcMas+Y9FLPjvRbZjjGKQA=

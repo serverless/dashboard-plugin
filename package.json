@@ -7,14 +7,15 @@
     "build": "./scripts/build.sh",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack",
-    "lint": "if [ -z \"$CI\" ]; then eslint src --fix --cache; else eslint src; fi",
+    "lint": "if [ -z \"$CI\" ]; then eslint src integration-testing/*.js --fix --cache; else eslint src integration-testing/*.js; fi",
     "lint:staged": "lint-staged",
-    "test": "jest src"
+    "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
+    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@serverless/event-mocks": "^1.1.1",
-    "@serverless/platform-sdk": "^0.7.3",
+    "@serverless/platform-sdk": "next",
     "chalk": "^2.4.2",
     "flat": "^4.1.0",
     "fs-extra": "^7.0.1",
