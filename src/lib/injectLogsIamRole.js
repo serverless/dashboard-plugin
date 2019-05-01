@@ -1,6 +1,13 @@
 import { getAccessKeyForTenant, getMetadata } from '@serverless/platform-sdk'
 
 export default async function(ctx) {
+  if (
+    ctx.sls.service.custom &&
+    ctx.sls.service.custom.enterprise &&
+    ctx.sls.service.custom.enterprise.collectLambdaLogs === false
+  ) {
+    return
+  }
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
   const { awsAccountId } = await getMetadata(accessKey)
