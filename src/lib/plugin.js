@@ -25,6 +25,27 @@ class ServerlessEnterprisePlugin {
     const user = getLoggedInUser()
     const currentCommand = sls.processedInput.commands[0]
 
+    // default hook, only applies if user isn't using SFE. gets overridden if they are
+    this.hooks = {
+      'after:aws:deploy:finalize:cleanup': () =>
+        sls.cli.log(
+          'Run `serverless login` and deploy again to explore, monitor, secure your serverless project for free.',
+          'Serverless Enterprise'
+        )
+    }
+
+    // Check if Enterprise is configured
+    const missing = []
+    if (!sls.service.tenant) {
+      missing.push('tenant')
+    }
+    if (!sls.service.app) {
+      missing.push('app')
+    }
+    if (!sls.service.service) {
+      missing.push('service')
+    }
+
     // Skip everything if user is not logged in and not trying to log in or out...
     if (
       !user &&
@@ -32,31 +53,17 @@ class ServerlessEnterprisePlugin {
         currentCommand !== 'logout' &&
         !process.env.SERVERLESS_ACCESS_KEY)
     ) {
+      if (missing.includes('tenant') && missing.includes('app')) {
+        return // user isn't trying to use SFE
+      }
       const errorMessage = `You are not currently logged in. To log in, use: $ serverless login`
-      console.log('') // eslint-disable-line
-      sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
-      throw new Error(errorMessage) // eslint-disable-line
-    }
-
-    // Defaults
-    this.sls = sls
-    this.state = {} // Useful for storing data across hooks
-    this.state.secretsUsed = new Set()
-    this.provider = this.sls.getProvider('aws')
-
-    // Check if Enterprise is configured
-    const missing = []
-    if (!this.sls.service.tenant) {
-      missing.push('tenant')
-    }
-    if (!this.sls.service.app) {
-      missing.push('app')
-    }
-    if (!this.sls.service.service) {
-      missing.push('service')
+        console.log('') // eslint-disable-line
+        sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
+        throw new Error(errorMessage) // eslint-disable-line
+      
     }
     if (missing.length > 0) {
-      this.sls.cli.log(
+      sls.cli.log(
         `Warning: The Enterprise Plugin requires a ${missing
           .map((opt) => `"${opt}"`)
           .join(', ')} property in your "serverless.yml" and will not work without it.`,
@@ -64,6 +71,12 @@ class ServerlessEnterprisePlugin {
       )
       return
     }
+
+    // Defaults
+    this.sls = sls
+    this.state = {} // Useful for storing data across hooks
+    this.state.secretsUsed = new Set()
+    this.provider = this.sls.getProvider('aws')
 
     // Add commands
     this.commands = {
