@@ -67,7 +67,7 @@ describe('awsLambdaLogsCollection', () => {
           Properties: {
             DestinationArn: 'arn:logdest',
 
-            FilterPattern: '[w1=REPORT || w1=SERVERLESS_ENTERPRISE]',
+            FilterPattern: '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"',
             LogGroupName: {
               Ref: 'lambdaLogs'
             }
