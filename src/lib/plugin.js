@@ -60,9 +60,8 @@ class ServerlessEnterprisePlugin {
         console.log('') // eslint-disable-line
         sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
         throw new Error(errorMessage) // eslint-disable-line
-      
     }
-    if (missing.length > 0) {
+    if (currentCommand !== 'login' && currentCommand !== 'logout' && missing.length > 0) {
       sls.cli.log(
         `Warning: The Enterprise Plugin requires a ${missing
           .map((opt) => `"${opt}"`)
