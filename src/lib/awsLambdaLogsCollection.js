@@ -64,7 +64,7 @@ export default async (ctx) => {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
         DestinationArn: destinationArn,
-        FilterPattern: '[w1=REPORT || w1=SERVERLESS_ENTERPRISE]',
+        FilterPattern: '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"',
         LogGroupName: {
           Ref: lambdaLogGroupKey
         }
