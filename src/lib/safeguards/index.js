@@ -111,11 +111,15 @@ async function runPolicies(ctx) {
       process.stdout.write(`\r   ${chalk.green('passed')} - ${policy.title}\n`)
     }
     const fail = (message) => {
-      const errorWord = policy.enforcementLevel === 'error' ? 'failed' : 'warned'
-      const color = policy.enforcementLevel === 'error' ? chalk.red : chalk.keyword('orange')
-      process.stdout.write(`\r   ${color(errorWord)} - ${policy.title}\n`)
-      result.failed = true
-      result.message = message
+      if (result.failed) {
+        result.message += ` ${message}`
+      } else {
+        const errorWord = policy.enforcementLevel === 'error' ? 'failed' : 'warned'
+        const color = policy.enforcementLevel === 'error' ? chalk.red : chalk.keyword('orange')
+        process.stdout.write(`\r   ${color(errorWord)} - ${policy.title}\n`)
+        result.failed = true
+        result.message = message
+      }
     }
     const policyHandle = { approve, fail }
 
