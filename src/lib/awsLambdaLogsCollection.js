@@ -64,7 +64,7 @@ export default async (ctx) => {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
         DestinationArn: destinationArn,
-        FilterPattern: '{ $.origin = "sls-agent" }',
+        FilterPattern: '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"',
         LogGroupName: {
           Ref: lambdaLogGroupKey
         }
