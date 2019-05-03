@@ -10,6 +10,7 @@ import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
 import { generate } from './generateEvent'
 import injectLogsIamRole from './injectLogsIamRole'
+import _ from 'lodash'
 
 afterAll(() => jest.restoreAllMocks())
 
@@ -97,7 +98,7 @@ describe('plugin', () => {
   })
 
   it('construct requires tenant', () => {
-    const slsClone = Object.assign({}, sls)
+    const slsClone = _.cloneDeep(sls)
     delete slsClone.service.tenant
     const instance = new ServerlessEnterprisePlugin(slsClone) // eslint-disable-line
     expect(slsClone.getProvider).toBeCalledWith('aws')
