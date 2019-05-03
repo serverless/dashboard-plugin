@@ -42,6 +42,7 @@ const secretsPolicy = require('./policies/no-secret-env-vars')
 jest.mock('./policies/no-secret-env-vars', () =>
   jest.fn().mockImplementation((policy) => {
     policy.fail('Error Message')
+    policy.fail('Error Message')
   })
 )
 
@@ -189,7 +190,7 @@ describe('safeguards', () => {
       [
         `\n   ${chalk.yellow('Details --------------------------------------------------')}
 
-   1) ${chalk.keyword('orange')('Warned - Error Message')}
+   1) ${chalk.keyword('orange')('Warned - Error Message Error Message')}
       ${chalk.grey('details: https://git.io/secretDocs')}
       wtf yo? no secrets!
 
@@ -238,7 +239,7 @@ describe('safeguards', () => {
       [
         `\n   ${chalk.yellow('Details --------------------------------------------------')}
 
-   1) ${chalk.red('Failed - Error Message')}
+   1) ${chalk.red('Failed - Error Message Error Message')}
       ${chalk.grey('details: https://git.io/secretDocs')}
       wtf yo? no secrets!
 
