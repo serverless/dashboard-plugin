@@ -68,6 +68,18 @@ class ServerlessEnterprisePlugin {
           .join(', ')} property in your "serverless.yml" and will not work without it.`,
         'Serverless Enterprise'
       )
+      // replace the default hook with a message about configuring sls enterprise
+      this.hooks = {
+        'after:aws:deploy:finalize:cleanup': () =>
+          sls.cli.log(
+            `Update your "serverless.yml" with ${missing
+              .map((opt) => `"${opt}"`)
+              .join(
+                ', '
+              )} properties and deploy again to explore, monitor, secure your serverless project for free.`,
+            'Serverless Enterprise'
+          )
+      }
       return
     }
 
