@@ -83,6 +83,8 @@ class ServerlessEnterprisePlugin {
       return
     }
 
+    sls.enterpriseEnabled = true
+
     // Defaults
     this.sls = sls
     this.state = {} // Useful for storing data across hooks
