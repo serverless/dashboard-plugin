@@ -18,7 +18,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@serverless/event-mocks": "^1.1.1",
-    "@serverless/platform-sdk": "latest",
+    "@serverless/platform-sdk": "github:serverless/platform-sdk#plat-785",
     "chalk": "^2.4.2",
     "flat": "^4.1.0",
     "fs-extra": "^7.0.1",

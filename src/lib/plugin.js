@@ -1,4 +1,10 @@
-import { configureFetchDefaults, getLoggedInUser } from '@serverless/platform-sdk'
+import {
+  configureFetchDefaults,
+  getLoggedInUser,
+  getAccessKeyForTenant,
+  getDeployProfile
+} from '@serverless/platform-sdk'
+import _ from 'lodash'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -121,8 +127,6 @@ class ServerlessEnterprisePlugin {
       }
     }
 
-    hookIntoVariableGetter(this)
-
     // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
       'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
@@ -238,6 +242,24 @@ class ServerlessEnterprisePlugin {
           break
       }
     }
+  }
+
+  async asyncInit() {
+    if (!this.sls.enterpriseEnabled) {
+      return
+    }
+
+    const accessKey = await getAccessKeyForTenant(this.sls.service.tenant)
+    const deploymentProfile = await getDeployProfile({
+      accessKey,
+      stage: this.provider.getStage(),
+      ..._.pick(this.sls.service, ['tenant', 'app', 'service'])
+    })
+    this.safeguards = deploymentProfile.safeguardsPolicies
+    hookIntoVariableGetter(
+      this,
+      _.fromPairs(deploymentProfile.secretValues.map((secret) => [secret.name, secret.secretValue]))
+    )
   }
 }
 
