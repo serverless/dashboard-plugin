@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "engines": {
       "node": ">=6.0"
   },
@@ -18,7 +18,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@serverless/event-mocks": "^1.1.1",
-    "@serverless/platform-sdk": "next",
+    "@serverless/platform-sdk": "latest",
     "chalk": "^2.4.2",
     "flat": "^4.1.0",
     "fs-extra": "^7.0.1",

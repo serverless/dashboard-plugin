@@ -11,7 +11,7 @@ module.exports = function noWildIamPolicy(policy, service) {
       continue
     }
 
-    for (const iamPolicy of Properties.Policies) {
+    for (const iamPolicy of Properties.Policies || []) {
       for (const { Effect, Action, Resource } of iamPolicy.PolicyDocument.Statement) {
         if (Effect === 'Deny') {
           continue
