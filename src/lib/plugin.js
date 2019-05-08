@@ -1,10 +1,4 @@
-import {
-  configureFetchDefaults,
-  getLoggedInUser,
-  getAccessKeyForTenant,
-  getDeployProfile
-} from '@serverless/platform-sdk'
-import _ from 'lodash'
+import { configureFetchDefaults, getLoggedInUser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -18,8 +12,8 @@ import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
-import { hookIntoVariableGetter } from './variables'
 import { generate, eventDict } from './generateEvent'
+import { configureDeployProfile } from './deployProfile'
 
 /*
  * Serverless Enterprise Plugin
@@ -249,17 +243,7 @@ class ServerlessEnterprisePlugin {
       return
     }
 
-    const accessKey = await getAccessKeyForTenant(this.sls.service.tenant)
-    const deploymentProfile = await getDeployProfile({
-      accessKey,
-      stage: this.provider.getStage(),
-      ..._.pick(this.sls.service, ['tenant', 'app', 'service'])
-    })
-    this.safeguards = deploymentProfile.safeguardsPolicies
-    hookIntoVariableGetter(
-      this,
-      _.fromPairs(deploymentProfile.secretValues.map((secret) => [secret.name, secret.secretValue]))
-    )
+    await configureDeployProfile(this)
   }
 }
 
