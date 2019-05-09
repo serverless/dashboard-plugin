@@ -7,8 +7,8 @@ import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
-import { hookIntoVariableGetter } from './variables'
 import { generate } from './generateEvent'
+import { configureDeployProfile } from './deployProfile'
 import injectLogsIamRole from './injectLogsIamRole'
 import _ from 'lodash'
 
@@ -64,6 +64,7 @@ jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 jest.mock('./generateEvent', () => ({ eventDict: {}, generate: jest.fn() }))
 jest.mock('./injectLogsIamRole', () => jest.fn())
+jest.mock('./deployProfile', () => ({ configureDeployProfile: jest.fn() }))
 
 describe('plugin', () => {
   it('constructs and sets hooks', () => {
@@ -94,7 +95,6 @@ describe('plugin', () => {
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
-    expect(hookIntoVariableGetter).toBeCalledWith(instance)
   })
 
   it('construct requires tenant', () => {
@@ -189,5 +189,11 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('generate-event:generate-event')()
     expect(generate).toBeCalledWith(instance)
+  })
+
+  it('it calls deploy profile config in async initializer', async () => {
+    const instance = new ServerlessEnterprisePlugin(sls)
+    await instance.asyncInit()
+    expect(configureDeployProfile).toBeCalledWith(instance)
   })
 })
