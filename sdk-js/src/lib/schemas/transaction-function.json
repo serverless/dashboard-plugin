@@ -9,6 +9,7 @@
   "functionName": null,
   "compute": {
     "type": "unknown",
+    "timeout": null,
     "runtime": null,
     "region": null,
     "memorySize": null,

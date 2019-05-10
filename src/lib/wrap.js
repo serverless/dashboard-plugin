@@ -21,6 +21,7 @@ tenantId: '${ctx.sls.service.tenant}',
 applicationName: '${ctx.sls.service.app}',
 appUid: '${ctx.sls.service.appUid}',
 tenantUid: '${ctx.sls.service.tenantUid}',
+timeout: '${fn.timeout}',
 serviceName: '${ctx.sls.service.service}',
 stageName: '${ctx.provider.getStage()}'})
 module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
@@ -52,6 +53,11 @@ export default async (ctx) => {
       continue
     }
 
+    // the default is 6s: https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/
+    const timeout = functions[func].timeout
+      ? function[func].timeout
+      : 6
+
     // Process name
     let name
     if (functions[func].name) {
@@ -68,6 +74,7 @@ export default async (ctx) => {
       key: func,
       name: name,
       runtime: runtime,
+      timeout: timeout,
       entryOrig: entry,
       handlerOrig: handler,
       entryNew: `s-${func}`,
