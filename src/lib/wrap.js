@@ -55,7 +55,7 @@ export default async (ctx) => {
 
     // the default is 6s: https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/
     const timeout = functions[func].timeout
-      ? function[func].timeout
+      ? functions[func].timeout
       : 6
 
     // Process name
