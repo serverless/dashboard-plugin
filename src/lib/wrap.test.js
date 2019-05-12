@@ -65,7 +65,7 @@ describe('wrap - wrap', () => {
         handlerOrig: 'handlerFunc',
         key: 'func',
         name: 'service-dev-func',
-        timeout: 6,
+        timeout: 999,
         runtime: 'nodejs8.10'
       }
     })
@@ -132,7 +132,6 @@ module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handl
         handlerOrig: 'handlerFunc',
         key: 'func',
         name: 'service-dev-func',
-        timeout: 6,
         runtime: 'nodejs8.10'
       }
     })
