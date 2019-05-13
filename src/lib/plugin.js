@@ -1,4 +1,5 @@
-import { configureFetchDefaults, getLoggedInUser } from '@serverless/platform-sdk'
+import chalk from 'chalk'
+import { configureFetchDefaults, getLoggedInUser, urls } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -137,6 +138,7 @@ class ServerlessEnterprisePlugin {
       'after:deploy:finalize': this.route('after:deploy:finalize').bind(this), // eslint-disable-line
       'after:deploy:deploy': this.route('after:deploy:deploy').bind(this), // eslint-disable-line
       'before:info:info': this.route('before:info:info').bind(this), // eslint-disable-line
+      'after:info:info': this.route('after:info:info').bind(this), // eslint-disable-line
       'before:logs:logs': this.route('before:logs:logs').bind(this), // eslint-disable-line
       'before:metrics:metrics': this.route('before:metrics:metrics').bind(this), // eslint-disable-line
       'before:remove:remove': this.route('before:remove:remove').bind(this), // eslint-disable-line
@@ -193,6 +195,16 @@ class ServerlessEnterprisePlugin {
           break
         case 'before:info:info':
           await getCredentials(self)
+          break
+        case 'after:info:info':
+          let dashboardUrl = urls.frontendUrl
+          dashboardUrl += `tenants/${self.sls.service.tenant}/`
+          dashboardUrl += `applications/${self.sls.service.app}/`
+          dashboardUrl += `services/${self.sls.service.service}/`
+          dashboardUrl += `stage/${self.provider.getStage()}/`
+          dashboardUrl += `region/${self.provider.getRegion()}`
+          // eslint-disable-next-line no-console
+          console.log(chalk.yellow('dashboard:'), dashboardUrl)
           break
         case 'before:logs:logs':
           await getCredentials(self)
