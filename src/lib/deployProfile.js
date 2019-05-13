@@ -10,7 +10,6 @@ export const configureDeployProfile = async (ctx) => {
     ..._.pick(ctx.sls.service, ['tenant', 'app', 'service'])
   })
   if (deploymentProfile.providerCredentials) {
-    // TODO - is it the right shap to just assign it like this?
     ctx.sls.service.provider.credentials = deploymentProfile.providerCredentials.secretValue
   }
   ctx.safeguards = deploymentProfile.safeguardsPolicies
