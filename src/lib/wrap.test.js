@@ -89,7 +89,7 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
-timeout: '6',
+timeout: 6,
 serviceName: 'service',
 stageName: 'dev'})
 module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
@@ -154,7 +154,7 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
-timeout: '6',
+timeout: 6,
 serviceName: 'service',
 stageName: 'dev'})
 module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
@@ -233,7 +233,7 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
-timeout: '6',
+timeout: 6,
 serviceName: 'service',
 stageName: 'dev'})
 module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`

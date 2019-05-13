@@ -103,8 +103,8 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
+            timeout: null,
             tags: {},
-            timeout: undefined,
             vpc: {
               securityGroupIds: [],
               subnetIds: []
@@ -113,6 +113,7 @@ describe('parseDeploymentData', () => {
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
+          timeout: undefined,
           type: 'awsLambda'
         }
       },
@@ -213,8 +214,8 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
+            timeout: null,
             tags: {},
-            timeout: undefined,
             vpc: {
               securityGroupIds: [],
               subnetIds: []
@@ -223,6 +224,7 @@ describe('parseDeploymentData', () => {
           description: null,
           name: 'service-dev-func',
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
+          timeout: undefined,
           type: 'awsLambda'
         }
       },
@@ -312,8 +314,8 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
+            timeout: null,
             tags: {},
-            timeout: undefined,
             vpc: {
               securityGroupIds: [],
               subnetIds: []
@@ -322,6 +324,7 @@ describe('parseDeploymentData', () => {
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
+          timeout: undefined,
           type: 'awsLambda'
         }
       },
@@ -414,8 +417,8 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
+            timeout: null,
             tags: {},
-            timeout: undefined,
             vpc: {
               securityGroupIds: [],
               subnetIds: []
@@ -424,6 +427,7 @@ describe('parseDeploymentData', () => {
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:func-custom',
           name: 'func-custom',
+          timeout: undefined,
           type: 'awsLambda'
         }
       },

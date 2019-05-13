@@ -7,9 +7,9 @@
   "serviceName": null,
   "stageName": null,
   "functionName": null,
+  "timeout": null,
   "compute": {
     "type": "unknown",
-    "timeout": null,
     "runtime": null,
     "region": null,
     "memorySize": null,
