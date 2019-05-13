@@ -6,7 +6,9 @@ jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey')),
   getDeployProfile: jest.fn().mockReturnValue(
     Promise.resolve({
-      secretValues: [{ secretName: 'name', secretProperties: { value: 'value' } }]
+      secretValues: [{ secretName: 'name', secretProperties: { value: 'value' } }],
+      safeguardsPolicies: [{ policy: 'name' }],
+      credentials: { accessKeyId: 'id', secretAccessKey: 'secret' }
     })
   )
 }))
@@ -14,13 +16,16 @@ jest.mock('@serverless/platform-sdk', () => ({
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 
 describe('configureDeployProfile', () => {
-  it('gets creds & profile then sets safeguards and hooks into variable system', async () => {
+  it('gets creds & secrets then sets safeguards and hooks into variable system', async () => {
     const getStage = jest.fn().mockReturnValue('stage')
-    const sls = {
+    const ctx = {
       provider: { getStage },
-      sls: { service: { app: 'app', tenant: 'tenant', service: 'service' } }
+      sls: {
+        service: { app: 'app', tenant: 'tenant', service: 'service', provider: { name: 'aws' } }
+      }
     }
-    await configureDeployProfile(sls)
+    await configureDeployProfile(ctx)
+    expect(ctx.safeguards).toEqual([{ policy: 'name' }])
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')
     expect(getDeployProfile).toBeCalledWith({
       accessKey: 'accessKey',
@@ -29,6 +34,10 @@ describe('configureDeployProfile', () => {
       service: 'service',
       stage: 'stage'
     })
-    expect(hookIntoVariableGetter).toBeCalledWith(sls, { name: 'value' })
+    expect(hookIntoVariableGetter).toBeCalledWith(ctx, { name: 'value' })
+    expect(ctx.sls.service.provider.credentials).toEqual({
+      accessKeyId: 'id',
+      secretAccessKey: 'secret'
+    })
   })
 })
