@@ -21,12 +21,11 @@ tenantId: '${ctx.sls.service.tenant}',
 applicationName: '${ctx.sls.service.app}',
 appUid: '${ctx.sls.service.appUid}',
 tenantUid: '${ctx.sls.service.tenantUid}',
-timeout: '${fn.timeout}',
 serviceName: '${ctx.sls.service.service}',
 stageName: '${ctx.provider.getStage()}'})
 module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
     fn.handlerOrig
-  }, { functionName: '${fn.name}' })`
+  }, { functionName: '${fn.name}', timeout: '${fn.timeout}'})`
 
   // Create new handlers
   fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
