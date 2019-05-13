@@ -10,9 +10,9 @@ export const configureDeployProfile = async (ctx) => {
     ..._.pick(ctx.sls.service, ['tenant', 'app', 'service'])
   })
   // TODO - what's the real name?!
-  if (deploymentProfile.credentials) {
+  if (deploymentProfile.providerCredentials) {
     // TODO - is it the right shap to just assign it like this?
-    ctx.sls.service.provider.credentials = deploymentProfile.credentials
+    ctx.sls.service.provider.credentials = deploymentProfile.providerCredentials
   }
   ctx.safeguards = deploymentProfile.safeguardsPolicies
   hookIntoVariableGetter(
