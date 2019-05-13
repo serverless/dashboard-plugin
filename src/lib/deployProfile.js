@@ -9,8 +9,8 @@ export const configureDeployProfile = async (ctx) => {
     stage: ctx.provider.getStage(),
     ..._.pick(ctx.sls.service, ['tenant', 'app', 'service'])
   })
+  // TODO - what's the real name?!
   if (deploymentProfile.credentials) {
-    // TODO - what's the real name?!
     // TODO - is it the right shap to just assign it like this?
     ctx.sls.service.provider.credentials = deploymentProfile.credentials
   }
