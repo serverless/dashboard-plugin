@@ -98,8 +98,6 @@ class Transaction {
     this.$.schema.compute.isColdStart = transactionCount === 1
     this.$.schema.compute.instanceInvocationCount = transactionCount
 
-    console.log('TIMEOUT:', data.timeout)
-
     // Track uptime of container
     this.$.schema.compute.containerUptime = process.uptime()
 
