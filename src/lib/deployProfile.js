@@ -11,7 +11,7 @@ export const configureDeployProfile = async (ctx) => {
   })
   if (deploymentProfile.providerCredentials) {
     // TODO - is it the right shap to just assign it like this?
-    ctx.sls.service.provider.credentials = deploymentProfile.providerCredentials
+    ctx.sls.service.provider.credentials = deploymentProfile.providerCredentials.secretValue
   }
   ctx.safeguards = deploymentProfile.safeguardsPolicies
   hookIntoVariableGetter(

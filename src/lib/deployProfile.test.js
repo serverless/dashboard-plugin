@@ -8,7 +8,7 @@ jest.mock('@serverless/platform-sdk', () => ({
     Promise.resolve({
       secretValues: [{ secretName: 'name', secretProperties: { value: 'value' } }],
       safeguardsPolicies: [{ policy: 'name' }],
-      providerCredentials: { accessKeyId: 'id', secretAccessKey: 'secret' }
+      providerCredentials: { secretValue: { accessKeyId: 'id', secretAccessKey: 'secret' } }
     })
   )
 }))
