@@ -92,6 +92,7 @@ class Transaction {
     this.$.schema.serviceName = data.serviceName
     this.$.schema.stageName = data.stageName
     this.$.schema.functionName = data.functionName
+    this.$.schema.timeout = data.timeout
     this.$.schema.compute.type = data.computeType
     this.$.schema.event.type = data.eventType || 'unknown'
     this.$.schema.compute.isColdStart = transactionCount === 1

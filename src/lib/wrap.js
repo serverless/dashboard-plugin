@@ -25,7 +25,7 @@ serviceName: '${ctx.sls.service.service}',
 stageName: '${ctx.provider.getStage()}'})
 module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
     fn.handlerOrig
-  }, { functionName: '${fn.name}' })`
+  }, { functionName: '${fn.name}', timeout: ${fn.timeout}})`
 
   // Create new handlers
   fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
@@ -52,6 +52,9 @@ export default async (ctx) => {
       continue
     }
 
+    // the default is 6s: https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/
+    const timeout = functions[func].timeout ? functions[func].timeout : 6
+
     // Process name
     let name
     if (functions[func].name) {
@@ -68,6 +71,7 @@ export default async (ctx) => {
       key: func,
       name: name,
       runtime: runtime,
+      timeout: timeout,
       entryOrig: entry,
       handlerOrig: handler,
       entryNew: `s-${func}`,
