@@ -202,6 +202,7 @@ describe('plugin', () => {
   it('routes after:info:info hook correctly', async () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('after:info:info')()
+    // eslint-disable-next-line no-console
     expect(console.log).toBeCalledWith(
       chalk.yellow('dashboard:'),
       'https://dashboard/tenants/tenant/applications/app/services/service/stage/stage/region/region'
