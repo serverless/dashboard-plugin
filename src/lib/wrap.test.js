@@ -89,10 +89,9 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
-timeout: 6,
 serviceName: 'service',
 stageName: 'dev'})
-module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
+module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func', timeout: 6})`
     )
   })
 
@@ -154,10 +153,9 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
-timeout: 6,
 serviceName: 'service',
 stageName: 'dev'})
-module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
+module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func', timeout: 6})`
     )
     expect(fs.readFile).toBeCalledWith('bundle.zip')
     expect(JSZip.loadAsync).toBeCalledWith('zipcontents')
@@ -233,10 +231,9 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
-timeout: 6,
 serviceName: 'service',
 stageName: 'dev'})
-module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func' })`
+module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handlerFunc, { functionName: 'service-dev-func', timeout: 6})`
     )
   })
 })
