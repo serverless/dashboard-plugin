@@ -239,7 +239,11 @@ class ServerlessEnterprisePlugin {
   }
 
   async asyncInit() {
-    if (!this.sls.enterpriseEnabled) {
+    if (
+      !this.sls.enterpriseEnabled ||
+      this.sls.processedInput.commands[0] === 'login' ||
+      this.sls.processedInput.commands[0] === 'logout'
+    ) {
       return
     }
 
