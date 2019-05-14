@@ -57,7 +57,10 @@ describe('login', () => {
     const ctx = { sls: { service: { tenant: 'signup' }, cli: { log } } }
     await login(ctx)
     expect(sdk.login).toBeCalledWith('signup')
-    expect(log).toBeCalledWith('Complete sign-up before logging in.', 'Serverless Enterprise')
+    expect(log).toBeCalledWith(
+      'Complete sign-up and configure your app & tenant before logging in.',
+      'Serverless Enterprise'
+    )
     expect(process.exit).toBeCalledWith(1)
   })
 })

@@ -8,7 +8,10 @@ export default async function(ctx) {
     await login(ctx.sls.service.tenant)
   } catch (err) {
     if (err === 'Complete sign-up before logging in.') {
-      ctx.sls.cli.log(err, 'Serverless Enterprise')
+      ctx.sls.cli.log(
+        'Complete sign-up and configure your app & tenant before logging in.',
+        'Serverless Enterprise'
+      )
       process.exit(1)
     }
   }
