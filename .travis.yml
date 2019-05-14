@@ -15,7 +15,7 @@ script:
 - npm run lint
 - pushd sdk-js && npm run lint && popd
 - npm run test
-- "if [ z$TRAVIS_NODE_VERSION == z10.15 ]; then npm run integration-test ; else echo skipping node $TRAVIS_NODE_VERSION ; fi"
+  #- "if [ z$TRAVIS_NODE_VERSION == z10.15 ]; then npm run integration-test ; else echo skipping node $TRAVIS_NODE_VERSION ; fi"
 - pushd sdk-js && npm run test && popd
 - codecov
 - npm run build
