@@ -216,6 +216,7 @@ class Transaction {
       envelope.requestId = tags.computeCustomAwsRequestId
       envelope.type = type
 
+      // TODO: Redundant with `spans`? Why is there a singular span on the whole transaction?
       span.operationName = this.$.schema.schemaType
       span.startTime = this.$.schema.timestamp
       span.endTime = new Date().toISOString()
