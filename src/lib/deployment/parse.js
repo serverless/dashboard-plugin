@@ -78,13 +78,13 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       deployment.setFunction({
         name: deployedFunctionName,
         description: fn.description || null,
+        timeout: fn.timeout,
         type: 'awsLambda',
         arn: `arn:aws:lambda:${ctx.provider.getRegion()}:${accountId}:function:${deployedFunctionName}`,
         custom: {
           handler: fn.handler,
           memorySize: fn.memory,
           runtime: fn.runtime,
-          timeout: fn.timeout,
           environment: Object.keys(fn.environment || {}),
           role: fn.role,
           onError: fn.onError,

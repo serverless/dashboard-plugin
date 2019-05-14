@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import ServerlessEnterprisePlugin from './plugin'
 import getCredentials from './credentials'
 import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
@@ -18,7 +19,10 @@ afterAll(() => jest.restoreAllMocks())
 
 // Mock Serverless Instance
 const sls = {
-  getProvider: jest.fn(),
+  getProvider: jest.fn().mockReturnValue({
+    getStage: jest.fn().mockReturnValue('stage'),
+    getRegion: jest.fn().mockReturnValue('region')
+  }),
   service: {
     service: 'service',
     app: 'app',
@@ -36,6 +40,8 @@ const sls = {
   }
 }
 
+jest.spyOn(global.console, 'log')
+
 // Mock SDK
 jest.mock('@serverless/platform-sdk', () => ({
   configureFetchDefaults: jest.fn(),
@@ -47,7 +53,8 @@ jest.mock('@serverless/platform-sdk', () => ({
   }),
   getAccessKeyForTenant: jest.fn().mockReturnValue('123456'),
   archiveService: jest.fn().mockImplementation(() => Promise.resolve()),
-  getMetadata: jest.fn().mockReturnValue(Promise.resolve('token'))
+  getMetadata: jest.fn().mockReturnValue(Promise.resolve('token')),
+  urls: { frontendUrl: 'https://dashboard/' }
 }))
 
 jest.mock('./credentials', () => jest.fn())
@@ -82,6 +89,7 @@ describe('plugin', () => {
       'after:deploy:finalize',
       'after:deploy:deploy',
       'before:info:info',
+      'after:info:info',
       'before:logs:logs',
       'before:metrics:metrics',
       'before:remove:remove',
@@ -195,5 +203,15 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.asyncInit()
     expect(configureDeployProfile).toBeCalledWith(instance)
+  })
+
+  it('routes after:info:info hook correctly', async () => {
+    const instance = new ServerlessEnterprisePlugin(sls)
+    await instance.route('after:info:info')()
+    // eslint-disable-next-line no-console
+    expect(console.log).toBeCalledWith(
+      chalk.yellow('dashboard:'),
+      'https://dashboard/tenants/tenant/applications/app/services/service/stage/stage/region/region'
+    )
   })
 })

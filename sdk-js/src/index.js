@@ -74,6 +74,7 @@ class ServerlessSDK {
     meta.serviceName = meta.serviceName || (this.$.serviceName || null)
     meta.stageName = meta.stageName || (this.$.stageName || null)
     meta.functionName = config.functionName
+    meta.timeout = config.timeout || 6
     meta.computeType = config.computeType || null
 
     /*
@@ -127,6 +128,7 @@ class ServerlessSDK {
           serviceName: meta.serviceName,
           stageName: meta.stageName,
           functionName: meta.functionName,
+          timeout: meta.timeout,
           computeType: meta.computeType,
           eventType: eventType
         })
