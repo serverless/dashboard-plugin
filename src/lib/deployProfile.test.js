@@ -18,8 +18,9 @@ jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 describe('configureDeployProfile', () => {
   it('gets creds & secrets then sets safeguards and hooks into variable system', async () => {
     const getStage = jest.fn().mockReturnValue('stage')
+    const getRegion = jest.fn().mockReturnValue('region')
     const ctx = {
-      provider: { getStage },
+      provider: { getStage, getRegion },
       sls: {
         service: { app: 'app', tenant: 'tenant', service: 'service', provider: { name: 'aws' } }
       }
@@ -35,9 +36,10 @@ describe('configureDeployProfile', () => {
       stage: 'stage'
     })
     expect(hookIntoVariableGetter).toBeCalledWith(ctx, { name: 'value' })
-    expect(ctx.sls.service.provider.credentials).toEqual({
+    expect(ctx.provider.cachedCredentials).toEqual({
       accessKeyId: 'id',
-      secretAccessKey: 'secret'
+      secretAccessKey: 'secret',
+      region: 'region'
     })
   })
 })

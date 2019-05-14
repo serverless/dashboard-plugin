@@ -10,7 +10,8 @@ export const configureDeployProfile = async (ctx) => {
     ..._.pick(ctx.sls.service, ['tenant', 'app', 'service'])
   })
   if (deploymentProfile.providerCredentials) {
-    ctx.sls.service.provider.credentials = deploymentProfile.providerCredentials.secretValue
+    ctx.provider.cachedCredentials = deploymentProfile.providerCredentials.secretValue
+    ctx.provider.cachedCredentials.region = ctx.provider.getRegion()
   }
   ctx.safeguards = deploymentProfile.safeguardsPolicies
   hookIntoVariableGetter(

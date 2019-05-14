@@ -7,6 +7,9 @@ export const hookIntoVariableGetter = (ctx, secrets) => {
       if (ctx.sls.processedInput.commands[0] === 'login') {
         return {}
       }
+      if (!secrets[variableString.split(`secrets:`)[1]]) {
+        throw new Error(`$\{${variableString}} not defined`)
+      }
       return secrets[variableString.split(`secrets:`)[1]]
     }
 
