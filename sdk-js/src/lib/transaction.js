@@ -74,7 +74,8 @@ class Transaction {
     this.$ = {
       schema: null,
       eTransaction: null,
-      duration: nanosecondnow() // start transaction timer
+      duration: nanosecondnow(), // start transaction timer
+      spans: []
     }
 
     /*
@@ -228,6 +229,7 @@ class Transaction {
       }
       span.tags = tags
       envelope.payload = span
+      envelope.payload.spans = this.$.spans
 
       console.log('SERVERLESS_ENTERPRISE', JSON.stringify(envelope))
       this.processed = true

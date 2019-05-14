@@ -8,7 +8,6 @@
   "stageName": null,
   "functionName": null,
   "timeout": null,
-  "spans": [],
   "compute": {
     "type": "unknown",
     "runtime": null,

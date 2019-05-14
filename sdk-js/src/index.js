@@ -155,9 +155,6 @@ class ServerlessSDK {
         trans.set('compute.custom.envMemoryFree', os.freemem())
         trans.set('compute.custom.envCpus', JSON.stringify(os.cpus()))
 
-        const transactionSpans = []
-        trans.set('spans', transactionSpans)
-
         // Capture Event Data: aws.apigateway.http
         if (eventType === 'aws.apigateway.http') {
           const timestamp = event.requestContext.requestTimeEpoch || Date.now().valueOf() // local testing does not contain a requestTimeEpoc
@@ -179,6 +176,8 @@ class ServerlessSDK {
           trans.set('event.custom.userAgent', event.headers['User-Agent'])
         }
         trans.set('event.custom.stage', meta.stageName)
+
+        const transactionSpans = trans.$.spans
 
         /*
          * Callback Wrapper
