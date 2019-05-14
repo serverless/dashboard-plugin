@@ -13,6 +13,7 @@ import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
+import { hookIntoVariableGetter } from './variables'
 import { generate, eventDict } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
 
@@ -256,6 +257,7 @@ class ServerlessEnterprisePlugin {
       this.sls.processedInput.commands[0] === 'login' ||
       this.sls.processedInput.commands[0] === 'logout'
     ) {
+      hookIntoVariableGetter(this, {})
       return
     }
 
