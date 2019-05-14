@@ -143,10 +143,6 @@ class Transaction {
   }
 
   /*
-   * TODO: Span
-   */
-
-  /*
    * Error
    * - Sends the error and ends the transaction
    */

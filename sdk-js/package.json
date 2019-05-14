@@ -14,8 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.11",
-    "uuid": "^3.3.2",
-    "stackman": "^3.0.2"
+    "require-in-the-middle": "^4.0.0",
+    "stackman": "^3.0.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "eslint": "^5.8.0",
