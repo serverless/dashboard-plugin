@@ -2,7 +2,6 @@ import { readdir, readFile } from 'fs-extra'
 import yml from 'yamljs'
 import path from 'path'
 import { get, fromPairs, cloneDeep, omit } from 'lodash'
-import { getAccessKeyForTenant, getSafeguards } from '@serverless/platform-sdk'
 import chalk from 'chalk'
 
 // NOTE: not using path.join because it strips off the leading
@@ -40,14 +39,10 @@ async function runPolicies(ctx) {
     }
   })
 
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
-  const remotePolicies = await getSafeguards({
-    app: ctx.sls.service.app,
-    tenant: ctx.sls.service.tenant,
-    accessKey
-  })
-
-  const policyConfigs = [...localPolicies, ...remotePolicies]
+  const policyConfigs = [
+    ...localPolicies,
+    ...ctx.safeguards // fetched during asyncInit in deployment profile
+  ]
 
   if (policyConfigs.length === 0) {
     return

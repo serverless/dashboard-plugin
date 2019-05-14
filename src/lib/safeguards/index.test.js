@@ -88,7 +88,8 @@ describe('safeguards', () => {
     provider: {
       naming: {}
     },
-    state: {}
+    state: {},
+    safeguards: []
   }
   beforeEach(() => {
     log = jest.fn()
@@ -105,27 +106,25 @@ describe('safeguards', () => {
   })
 
   it('loads & runs 2 safeguards when specified by remote config', async () => {
-    getSafeguards.mockReturnValue(
-      Promise.resolve([
-        {
-          title: 'Require Dead Letter Queues',
-          safeguardName: 'require-dlq',
-          policyUid: 'asdfasfdasf',
-          enforcementLevel: 'error',
-          safeguardConfig: null,
-          description: 'You gotta use a DLQ!'
-        },
-        {
-          title: 'no wild iam',
-          safeguardName: 'no-wild-iam-role-statements',
-          policyUid: 'asdfasfdasabdaslfhsaf',
-          enforcementLevel: 'error',
-          safeguardConfig: null,
-          describe: 'dude! no wild cards in iam roles!'
-        }
-      ])
-    )
     const ctx = cloneDeep(defualtCtx)
+    ctx.safeguards = [
+      {
+        title: 'Require Dead Letter Queues',
+        safeguardName: 'require-dlq',
+        policyUid: 'asdfasfdasf',
+        enforcementLevel: 'error',
+        safeguardConfig: null,
+        description: 'You gotta use a DLQ!'
+      },
+      {
+        title: 'no wild iam',
+        safeguardName: 'no-wild-iam-role-statements',
+        policyUid: 'asdfasfdasabdaslfhsaf',
+        enforcementLevel: 'error',
+        safeguardConfig: null,
+        describe: 'dude! no wild cards in iam roles!'
+      }
+    ]
     await runPolicies(ctx)
     expect(log.mock.calls).toEqual([
       ['Safeguards Processing...', `Serverless Enterprise`],
@@ -154,19 +153,17 @@ describe('safeguards', () => {
   })
 
   it('loads & runs 1 warning safeguards at enforcementLevel=warning when specified by remote config', async () => {
-    getSafeguards.mockReturnValue(
-      Promise.resolve([
-        {
-          title: 'no secrets',
-          safeguardName: 'no-secret-env-vars',
-          policyUid: 'nos-secrest-policy-id',
-          enforcementLevel: 'warning',
-          safeguardConfig: null,
-          description: 'wtf yo? no secrets!'
-        }
-      ])
-    )
     const ctx = cloneDeep(defualtCtx)
+    ctx.safeguards = [
+      {
+        title: 'no secrets',
+        safeguardName: 'no-secret-env-vars',
+        policyUid: 'nos-secrest-policy-id',
+        enforcementLevel: 'warning',
+        safeguardConfig: null,
+        description: 'wtf yo? no secrets!'
+      }
+    ]
     await runPolicies(ctx)
     expect(log.mock.calls).toEqual([
       ['Safeguards Processing...', `Serverless Enterprise`],
@@ -200,20 +197,18 @@ describe('safeguards', () => {
     expect(secretsPolicy).toHaveBeenCalledTimes(1)
   })
 
-  it('loads & runs 1 warning safeguards at enforcementLevel=error when specified by remote config', async () => {
-    getSafeguards.mockReturnValue(
-      Promise.resolve([
-        {
-          title: 'no secrets',
-          safeguardName: 'no-secret-env-vars',
-          policyUid: 'nos-secrest-policy-id',
-          enforcementLevel: 'error',
-          safeguardConfig: null,
-          description: 'wtf yo? no secrets!'
-        }
-      ])
-    )
+  it('loads & runs 1 error safeguards at enforcementLevel=error when specified by remote config', async () => {
     const ctx = cloneDeep(defualtCtx)
+    ctx.safeguards = [
+      {
+        title: 'no secrets',
+        safeguardName: 'no-secret-env-vars',
+        policyUid: 'nos-secrest-policy-id',
+        enforcementLevel: 'error',
+        safeguardConfig: null,
+        description: 'wtf yo? no secrets!'
+      }
+    ]
     await expect(runPolicies(ctx)).rejects.toThrow(
       'Deployment blocked by Serverless Enterprise Safeguards'
     )

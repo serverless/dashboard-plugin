@@ -13,8 +13,8 @@ import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
 import { saveDeployment } from './deployment'
-import { hookIntoVariableGetter } from './variables'
 import { generate, eventDict } from './generateEvent'
+import { configureDeployProfile } from './deployProfile'
 
 /*
  * Serverless Enterprise Plugin
@@ -121,8 +121,6 @@ class ServerlessEnterprisePlugin {
         enterprise: true
       }
     }
-
-    hookIntoVariableGetter(this)
 
     // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
@@ -250,6 +248,18 @@ class ServerlessEnterprisePlugin {
           break
       }
     }
+  }
+
+  async asyncInit() {
+    if (
+      !this.sls.enterpriseEnabled ||
+      this.sls.processedInput.commands[0] === 'login' ||
+      this.sls.processedInput.commands[0] === 'logout'
+    ) {
+      return
+    }
+
+    await configureDeployProfile(this)
   }
 }
 
