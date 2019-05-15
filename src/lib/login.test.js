@@ -46,7 +46,7 @@ describe('login', () => {
       'Serverless Enterprise'
     )
     expect(log).toBeCalledWith(
-      "You don't currently have an app & tenant configured in your serverless config, please add them and log in again.",
+      "Please configure your service with the tenant and application (documentation - link) and run 'serverless login' again",
       'Serverless Enterprise'
     )
     expect(process.exit).toBeCalledWith(0)
@@ -58,7 +58,7 @@ describe('login', () => {
     await login(ctx)
     expect(sdk.login).toBeCalledWith('signup')
     expect(log).toBeCalledWith(
-      'Complete sign-up and configure your app & tenant before logging in.',
+      "Please complete sign-up at dashboard.serverless.com, configure your service with the tenant and application (documentation - https://git.io/fjl3F) and run 'serverless login' again",
       'Serverless Enterprise'
     )
     expect(process.exit).toBeCalledWith(1)

@@ -9,7 +9,7 @@ export default async function(ctx) {
   } catch (err) {
     if (err === 'Complete sign-up before logging in.') {
       ctx.sls.cli.log(
-        'Complete sign-up and configure your app & tenant before logging in.',
+        "Please complete sign-up at dashboard.serverless.com, configure your service with the tenant and application (documentation - https://git.io/fjl3F) and run 'serverless login' again",
         'Serverless Enterprise'
       )
       process.exit(1)
@@ -18,7 +18,7 @@ export default async function(ctx) {
   ctx.sls.cli.log('You sucessfully logged in to Serverless Enterprise.', 'Serverless Enterprise')
   if (!ctx.sls.service.tenant || !ctx.sls.service.app) {
     ctx.sls.cli.log(
-      "You don't currently have an app & tenant configured in your serverless config, please add them and log in again.",
+      "Please configure your service with the tenant and application (documentation - link) and run 'serverless login' again",
       'Serverless Enterprise'
     )
   }
