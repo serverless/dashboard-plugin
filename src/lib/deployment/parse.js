@@ -31,10 +31,11 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
     })
 
     // get log access role info
-    const logsRoleArn = _.find(
+    const logsRole = _.find(
       cfnStack.Stacks[0].Outputs,
       ({ OutputKey }) => OutputKey === 'EnterpriseLogAccessIamRole'
-    ).OutputValue
+    )
+    const logsRoleArn = logsRole && logsRole.OutputValue
 
     deployment.set({
       serverlessFile,
