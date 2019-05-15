@@ -13,7 +13,7 @@ export const configureDeployProfile = async (ctx) => {
     ctx.provider.cachedCredentials = deploymentProfile.providerCredentials.secretValue
     ctx.provider.cachedCredentials.region = ctx.provider.getRegion()
   }
-  ctx.safeguards = deploymentProfile.safeguardsPolicies
+  ctx.safeguards = deploymentProfile.safeguardPolicies
   hookIntoVariableGetter(
     ctx,
     _.fromPairs(
