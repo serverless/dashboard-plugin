@@ -35,7 +35,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       cfnStack.Stacks[0].Outputs,
       ({ OutputKey }) => OutputKey === 'EnterpriseLogAccessIamRole'
     )
-    const logsRoleArn = logsRole && logsRole.outputvalue
+    const logsRoleArn = logsRole && logsRole.OutputValue
 
     deployment.set({
       serverlessFile,
