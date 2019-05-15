@@ -62,7 +62,8 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
           }
-        }
+        },
+        outputs: { foo: 'bar' }
       }
     }
     const provider = {
@@ -127,6 +128,7 @@ describe('parseDeploymentData', () => {
       resources: {},
       safeguards: [],
       secrets: ['secret'],
+      outputs: { foo: 'bar' },
       serviceName: 'service',
       stageName: 'dev',
       status: 'success',
@@ -173,7 +175,8 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             events: ['alexaSkill']
           }
-        }
+        },
+        outputs: { foo: 'bar' }
       }
     }
     const provider = {
@@ -238,6 +241,7 @@ describe('parseDeploymentData', () => {
       resources: {},
       safeguards: [],
       secrets: ['secret'],
+      outputs: { foo: 'bar' },
       serviceName: 'service',
       stageName: 'dev',
       status: 'success',
@@ -273,7 +277,8 @@ describe('parseDeploymentData', () => {
             handler: 'func.handler',
             events: [{ websocket: { route: '$connect' } }, { schedule: 'rate(10 minutes)' }]
           }
-        }
+        },
+        outputs: { foo: 'bar' }
       }
     }
     const provider = {
@@ -338,6 +343,7 @@ describe('parseDeploymentData', () => {
       resources: {},
       safeguards: [],
       secrets: ['secret'],
+      outputs: { foo: 'bar' },
       serviceName: 'service',
       stageName: 'dev',
       status: 'success',
@@ -376,7 +382,8 @@ describe('parseDeploymentData', () => {
         service: 'service',
         provider: { stage: 'prod', region: 'us-est-2' },
         layers: {},
-        functions: { func: { handler: 'func.handler', name: 'func-custom' } }
+        functions: { func: { handler: 'func.handler', name: 'func-custom' } },
+        outputs: { foo: 'bar' }
       }
     }
     const provider = {
@@ -441,6 +448,7 @@ describe('parseDeploymentData', () => {
       resources: {},
       safeguards: [],
       secrets: ['secret'],
+      outputs: { foo: 'bar' },
       serviceName: 'service',
       stageName: 'dev',
       status: 'success',

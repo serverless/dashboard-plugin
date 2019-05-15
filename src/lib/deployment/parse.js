@@ -62,6 +62,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       custom: service.custom || {},
       safeguards: ctx.state.safeguardsResults,
       secrets: Array.from(ctx.state.secretsUsed),
+      outputs: service.outputs,
       error
     })
 
