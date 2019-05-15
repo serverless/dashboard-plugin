@@ -46,7 +46,7 @@ describe('login', () => {
       'Serverless Enterprise'
     )
     expect(log).toBeCalledWith(
-      "Please configure your service with the tenant and application (documentation - link) and run 'serverless login' again",
+      "Please configure your service with the tenant and application (documentation - https://git.io/fjl3F) and run 'serverless login' again",
       'Serverless Enterprise'
     )
     expect(process.exit).toBeCalledWith(0)

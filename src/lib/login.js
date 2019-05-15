@@ -18,7 +18,7 @@ export default async function(ctx) {
   ctx.sls.cli.log('You sucessfully logged in to Serverless Enterprise.', 'Serverless Enterprise')
   if (!ctx.sls.service.tenant || !ctx.sls.service.app) {
     ctx.sls.cli.log(
-      "Please configure your service with the tenant and application (documentation - link) and run 'serverless login' again",
+      "Please configure your service with the tenant and application (documentation - https://git.io/fjl3F) and run 'serverless login' again",
       'Serverless Enterprise'
     )
   }
