@@ -179,11 +179,13 @@ module.exports.captureAwsRequestSpan = function(resp) {
   const spanDetails = {
     tags: {
       requestHostname: hostname,
-      'aws.region': awsRegion,
-      'aws.service': awsService,
-      'aws.operation': resp.request.operation,
-      'aws.requestId': resp.requestId,
-      'aws.errorCode': (resp.error && resp.error.code) || null
+      aws: {
+        region: awsRegion,
+        service: awsService,
+        operation: resp.request.operation,
+        requestId: resp.requestId,
+        errorCode: (resp.error && resp.error.code) || null
+      }
     },
     startTime: resp.request.startTime.toISOString(),
     endTime: endTime.toISOString(),
