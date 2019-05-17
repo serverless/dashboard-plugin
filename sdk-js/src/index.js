@@ -2,6 +2,8 @@
  * Serverless SDK
  */
 
+const spanEmitter = require('./lib/proxyAwsSdk')
+
 const os = require('os')
 const ServerlessTransaction = require('./lib/transaction.js')
 
@@ -175,24 +177,31 @@ class ServerlessSDK {
         }
         trans.set('event.custom.stage', meta.stageName)
 
+        const transactionSpans = trans.$.spans
+
         /*
          * Callback Wrapper
          * - TODO: Inspect outgoing HTTP status codes
          */
 
         const wrappedCallback = (error, res) => {
-          if (self.$.config.debug) {
-            console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
-          }
+          try {
+            if (self.$.config.debug) {
+              console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
+            }
 
-          const cb = () => {
-            return callback.call(functionContext, error || null, res || null)
-          }
+            const cb = () => {
+              return callback.call(functionContext, error || null, res || null)
+            }
 
-          if (error) {
-            return trans.error(error, cb)
+            if (error) {
+              return trans.error(error, cb)
+            }
+            return trans.end(cb)
+          } finally {
+            // Remove the span listeners
+            spanEmitter.removeAllListeners('span')
           }
-          return trans.end(cb)
         }
 
         // Patch context methods
@@ -203,6 +212,11 @@ class ServerlessSDK {
         context.fail = (err) => {
           return wrappedCallback(err, null)
         }
+
+        // Set up span listener
+        spanEmitter.on('span', (span) => {
+          transactionSpans.push(span)
+        })
 
         /*
          * Try Running Code

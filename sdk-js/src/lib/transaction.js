@@ -74,7 +74,8 @@ class Transaction {
     this.$ = {
       schema: null,
       eTransaction: null,
-      duration: nanosecondnow() // start transaction timer
+      duration: nanosecondnow(), // start transaction timer
+      spans: []
     }
 
     /*
@@ -141,10 +142,6 @@ class Transaction {
       _.set(this.$.schema, key, val)
     }
   }
-
-  /*
-   * TODO: Span
-   */
 
   /*
    * Error
@@ -220,6 +217,7 @@ class Transaction {
       envelope.requestId = tags.computeCustomAwsRequestId
       envelope.type = type
 
+      // TODO: Redundant with `spans`? Why is there a singular span on the whole transaction?
       span.operationName = this.$.schema.schemaType
       span.startTime = this.$.schema.timestamp
       span.endTime = new Date().toISOString()
@@ -231,6 +229,7 @@ class Transaction {
       }
       span.tags = tags
       envelope.payload = span
+      envelope.payload.spans = this.$.spans
 
       console.log('SERVERLESS_ENTERPRISE', JSON.stringify(envelope))
       this.processed = true

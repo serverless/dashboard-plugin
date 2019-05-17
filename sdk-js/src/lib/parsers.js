@@ -161,3 +161,36 @@ exports.parseCallsite = function(callsite, isError, agent, cb) {
     cb(null, frame)
   })
 }
+
+module.exports.captureAwsRequestSpan = function(resp) {
+  const endTime = new Date()
+
+  const awsRegion = resp.request.httpRequest.region || null
+  // Global services do not include a region in the hostname
+  const awsBaseDomain = resp.request.service.isGlobalEndpoint
+    ? 'amazonaws.com'
+    : `${awsRegion}.amazonaws.com`
+  const hostname = resp.request.service.endpoint.host
+  // Strip the base domain (with region if applicable) from the end of the hostname to get the AWS service subdomain
+  const awsService = resp.request.service.endpoint.host.endsWith(awsBaseDomain)
+    ? resp.request.service.endpoint.host.slice(0, -1 * (awsBaseDomain.length + 1))
+    : resp.request.service.endpoint.host
+
+  const spanDetails = {
+    tags: {
+      requestHostname: hostname,
+      aws: {
+        region: awsRegion,
+        service: awsService,
+        operation: resp.request.operation,
+        requestId: resp.requestId,
+        errorCode: (resp.error && resp.error.code) || null
+      }
+    },
+    startTime: resp.request.startTime.toISOString(),
+    endTime: endTime.toISOString(),
+    duration: endTime.getTime() - resp.request.startTime.getTime()
+  }
+
+  return spanDetails
+}
