@@ -1,14 +1,12 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 's3';
+const type = 's3'
 
 function eventType(event = {}) {
-  const { Records = [] } = event;
-  const [firstEvent = {}] = Records;
-  const { eventVersion, eventSource } = firstEvent;
-  return ['2.0', '2.1'].indexOf(eventVersion) !== -1 && eventSource === 'aws:s3'
-    ? type
-    : false;
+  const { Records = [] } = event
+  const [firstEvent = {}] = Records
+  const { eventVersion, eventSource } = firstEvent
+  return ['2.0', '2.1'].indexOf(eventVersion) !== -1 && eventSource === 'aws:s3' ? type : false
 }
 
 const keys = [
@@ -24,7 +22,7 @@ const keys = [
   'eventName',
   'userIdentity.principalId',
   'requestParameters.sourceIPAddress'
-].map(str => `Records[0].${str}`);
+].map((str) => `Records[0].${str}`)
 
 function plugin(event, log) {
   logFromKeys({
@@ -32,7 +30,7 @@ function plugin(event, log) {
     event,
     keys,
     log
-  });
+  })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

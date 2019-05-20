@@ -1,12 +1,12 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 'sqs';
+const type = 'sqs'
 
 function eventType(event = {}) {
-  const { Records = [] } = event;
-  const [firstEvent = {}] = Records;
-  const { eventSource } = firstEvent;
-  return eventSource === 'aws:sqs' ? type : false;
+  const { Records = [] } = event
+  const [firstEvent = {}] = Records
+  const { eventSource } = firstEvent
+  return eventSource === 'aws:sqs' ? type : false
 }
 
 const keys = [
@@ -19,7 +19,7 @@ const keys = [
   'attributes.SenderId',
   'attributes.ApproximateReceiveCount',
   'attributes.SentTimestamp'
-].map(str => `Records[0].${str}`);
+].map((str) => `Records[0].${str}`)
 
 function plugin(event, log) {
   logFromKeys({
@@ -27,7 +27,7 @@ function plugin(event, log) {
     event,
     keys,
     log
-  });
+  })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

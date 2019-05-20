@@ -1,10 +1,10 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 'cloudFront';
+const type = 'cloudFront'
 
 function eventType(event = {}) {
-  const { Records = [] } = event;
-  return Records[0] && Records[0].cf ? type : false;
+  const { Records = [] } = event
+  return Records[0] && Records[0].cf ? type : false
 }
 
 const keys = [
@@ -14,7 +14,7 @@ const keys = [
   'request.uri',
   'request.headers.host[0].value',
   'request.headers.["user-agent"][0].value'
-].map(str => `Records[0].cf.${str}`);
+].map((str) => `Records[0].cf.${str}`)
 
 function plugin(event, log) {
   logFromKeys({
@@ -22,7 +22,7 @@ function plugin(event, log) {
     event,
     keys,
     log
-  });
+  })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

@@ -1,19 +1,13 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 'apiGateway';
+const type = 'apiGateway'
 
 function eventType(event) {
-  const apiGatewayRequiredKeys = [
-    'path',
-    'headers',
-    'requestContext',
-    'resource',
-    'httpMethod'
-  ];
+  const apiGatewayRequiredKeys = ['path', 'headers', 'requestContext', 'resource', 'httpMethod']
   if (typeof event === 'object') {
-    return apiGatewayRequiredKeys.every(s => s in event) ? type : false;
+    return apiGatewayRequiredKeys.every((s) => s in event) ? type : false
   }
-  return false;
+  return false
 }
 
 const keys = [
@@ -26,10 +20,10 @@ const keys = [
   'requestContext.resourcePath',
   'requestContext.stage',
   'resource'
-];
+]
 
 function plugin(event, log) {
-  logFromKeys({ event, type, keys, log });
+  logFromKeys({ event, type, keys, log })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

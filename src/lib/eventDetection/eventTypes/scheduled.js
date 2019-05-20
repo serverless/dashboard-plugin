@@ -1,12 +1,12 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 'scheduled';
+const type = 'scheduled'
 
 function eventType(event = {}) {
-  return event.source === 'aws.events' ? type : false;
+  return event.source === 'aws.events' ? type : false
 }
 
-const keys = ['region', 'account', 'time', 'id', 'resources[0]'];
+const keys = ['region', 'account', 'time', 'id', 'resources[0]']
 
 function plugin(event, log) {
   logFromKeys({
@@ -14,7 +14,7 @@ function plugin(event, log) {
     event,
     keys,
     log
-  });
+  })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

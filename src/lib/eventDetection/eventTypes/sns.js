@@ -1,12 +1,12 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 'sns';
+const type = 'sns'
 
 function eventType(event = {}) {
-  const { Records = [] } = event;
-  const [firstEvent = {}] = Records;
-  const { EventVersion, EventSource } = firstEvent;
-  return EventVersion === '1.0' && EventSource === 'aws:sns' ? type : false;
+  const { Records = [] } = event
+  const [firstEvent = {}] = Records
+  const { EventVersion, EventSource } = firstEvent
+  return EventVersion === '1.0' && EventSource === 'aws:sns' ? type : false
 }
 
 const keys = [
@@ -20,7 +20,7 @@ const keys = [
   'Sns.SigningCertUrl',
   'Sns.UnsubscribeUrl',
   'Sns.Subject'
-].map(str => `Records[0].${str}`);
+].map((str) => `Records[0].${str}`)
 
 function plugin(event, log) {
   logFromKeys({
@@ -28,7 +28,7 @@ function plugin(event, log) {
     event,
     keys,
     log
-  });
+  })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

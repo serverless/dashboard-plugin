@@ -1,7 +1,7 @@
-import get from 'lodash.get';
+import get from 'lodash.get'
 
-import logFromKeys from '../util/logFromKeys';
-import { pluginName } from '../util/constants';
+import logFromKeys from '../util/logFromKeys'
+import { pluginName } from '../util/constants'
 
 /* This module supports the "lambda" type integration
    for the serverless framework which provides a
@@ -11,29 +11,25 @@ import { pluginName } from '../util/constants';
    https://serverless.com/framework/docs/providers/aws/events/apigateway/#example-lambda-event-before-customization
  */
 
-const type = 'apiGateway';
-const source = 'slsIntegrationLambda';
+const type = 'apiGateway'
+const source = 'slsIntegrationLambda'
 
-const keys = ['body', 'method', 'principalId', 'stage'];
+const keys = ['body', 'method', 'principalId', 'stage']
 
-const keysThatNeedValues = [
-  'identity.userAgent',
-  'identity.sourceIp',
-  'identity.accountId'
-];
+const keysThatNeedValues = ['identity.userAgent', 'identity.sourceIp', 'identity.accountId']
 
 function eventType(event) {
   if (typeof event === 'object') {
-    const keysArePresent = keys.every(s => s in event);
+    const keysArePresent = keys.every((s) => s in event)
     const valuesArePresent =
       keysThatNeedValues
-        .map(k => {
-          return typeof get(event, k) !== 'undefined';
+        .map((k) => {
+          return typeof get(event, k) !== 'undefined'
         })
-        .filter(Boolean).length === keysThatNeedValues.length;
-    return keysArePresent && valuesArePresent ? source : false;
+        .filter(Boolean).length === keysThatNeedValues.length
+    return keysArePresent && valuesArePresent ? source : false
   }
-  return false;
+  return false
 }
 
 const pluginKeyMapping = [
@@ -44,11 +40,11 @@ const pluginKeyMapping = [
   ['stage', 'requestContext.stage'],
   'headers.X-Amz-Cf-Id',
   'headers.X-Amzn-Trace-Id'
-];
+]
 
 function plugin(event, log) {
-  logFromKeys({ event, type, keys: pluginKeyMapping, log });
-  log(`${pluginName}.eventType.source`, source);
+  logFromKeys({ event, type, keys: pluginKeyMapping, log })
+  log(`${pluginName}.eventType.source`, source)
 }
 
-export { eventType, plugin };
+export { eventType, plugin }

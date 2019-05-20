@@ -1,17 +1,13 @@
-import logFromKeys from '../util/logFromKeys';
+import logFromKeys from '../util/logFromKeys'
 
-const type = 'firehose';
+const type = 'firehose'
 
 function eventType(event = {}) {
-  const { records = [] } = event;
-  return event.deliveryStreamArn &&
-    records[0] &&
-    records[0].kinesisRecordMetadata
-    ? type
-    : false;
+  const { records = [] } = event
+  return event.deliveryStreamArn && records[0] && records[0].kinesisRecordMetadata ? type : false
 }
 
-const keys = ['records.length', 'deliveryStreamArn', 'region'];
+const keys = ['records.length', 'deliveryStreamArn', 'region']
 
 function plugin(event, log) {
   logFromKeys({
@@ -19,7 +15,7 @@ function plugin(event, log) {
     event,
     keys,
     log
-  });
+  })
 }
 
-export { eventType, plugin };
+export { eventType, plugin }
