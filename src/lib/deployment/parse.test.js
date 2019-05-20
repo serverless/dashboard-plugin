@@ -45,7 +45,7 @@ describe('parseDeploymentData', () => {
     getServiceEndpointRegex = jest.fn().mockReturnValue('apig')
   })
 
-  it('creates a deployment object correctly', async () => {
+  it('creates a deployment object correctly w/ no plugins', async () => {
     const serverless = {
       version: frameworkVersion,
       config: { servicePath: '.' },
@@ -120,6 +120,234 @@ describe('parseDeploymentData', () => {
       },
       layers: {},
       plugins: [],
+      provider: {
+        aws: { accountId: 'account-id' },
+        type: 'aws'
+      },
+      regionName: 'us-est-1',
+      resources: {},
+      safeguards: [],
+      secrets: ['secret'],
+      outputs: { foo: 'bar' },
+      serviceName: 'service',
+      stageName: 'dev',
+      status: 'success',
+      subscriptions: [
+        {
+          cors: undefined,
+          custom: {},
+          function: 'service-dev-func',
+          integration: undefined,
+          method: 'get',
+          path: '/',
+          restApiId: 'api-id',
+          type: 'http'
+        },
+        {
+          custom: {},
+          function: 'service-dev-func',
+          schedule: 'rate(10 minutes)',
+          type: 'schedule'
+        }
+      ],
+      tenantName: 'tenant',
+      tenantUid: 'txxx',
+      versionEnterprisePlugin: pluginVersion,
+      versionFramework: frameworkVersion,
+      versionSDK: sdkVersion
+    })
+  })
+
+  it('creates a deployment object correctly w/ simple plugin list', async () => {
+    const serverless = {
+      version: frameworkVersion,
+      config: { servicePath: '.' },
+      service: {
+        tenantUid: 'txxx',
+        tenant: 'tenant',
+        appUid: 'axxx',
+        app: 'app',
+        service: 'service',
+        provider: { stage: 'prod', region: 'us-est-2' },
+        layers: {},
+        plugins: ['foo', 'bar'],
+        functions: {
+          func: {
+            handler: 'func.handler',
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
+          }
+        },
+        outputs: { foo: 'bar' }
+      }
+    }
+    const provider = {
+      getAccountId,
+      request,
+      naming: {
+        getStackName,
+        getServiceEndpointRegex
+      },
+      getStage: jest.fn().mockReturnValue('dev'),
+      getRegion: jest.fn().mockReturnValue('us-est-1')
+    }
+    const state = {
+      safeguardsResults: [],
+      secretsUsed: new Set(['secret'])
+    }
+
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+
+    expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
+      appName: 'app',
+      appUid: 'axxx',
+      archived: false,
+      custom: {},
+      error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
+      functions: {
+        'service-dev-func': {
+          custom: {
+            awsKmsKeyArn: undefined,
+            environment: [],
+            handler: 'func.handler',
+            layers: [],
+            memorySize: undefined,
+            name: 'func',
+            onError: undefined,
+            role: undefined,
+            runtime: undefined,
+            timeout: null,
+            tags: {},
+            vpc: {
+              securityGroupIds: [],
+              subnetIds: []
+            }
+          },
+          description: null,
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
+          name: 'service-dev-func',
+          timeout: undefined,
+          type: 'awsLambda'
+        }
+      },
+      layers: {},
+      plugins: ['foo', 'bar'],
+      provider: {
+        aws: { accountId: 'account-id' },
+        type: 'aws'
+      },
+      regionName: 'us-est-1',
+      resources: {},
+      safeguards: [],
+      secrets: ['secret'],
+      outputs: { foo: 'bar' },
+      serviceName: 'service',
+      stageName: 'dev',
+      status: 'success',
+      subscriptions: [
+        {
+          cors: undefined,
+          custom: {},
+          function: 'service-dev-func',
+          integration: undefined,
+          method: 'get',
+          path: '/',
+          restApiId: 'api-id',
+          type: 'http'
+        },
+        {
+          custom: {},
+          function: 'service-dev-func',
+          schedule: 'rate(10 minutes)',
+          type: 'schedule'
+        }
+      ],
+      tenantName: 'tenant',
+      tenantUid: 'txxx',
+      versionEnterprisePlugin: pluginVersion,
+      versionFramework: frameworkVersion,
+      versionSDK: sdkVersion
+    })
+  })
+
+  it('creates a deployment object correctly w/ plugin object', async () => {
+    const serverless = {
+      version: frameworkVersion,
+      config: { servicePath: '.' },
+      service: {
+        tenantUid: 'txxx',
+        tenant: 'tenant',
+        appUid: 'axxx',
+        app: 'app',
+        service: 'service',
+        provider: { stage: 'prod', region: 'us-est-2' },
+        layers: {},
+        plugins: { modules: ['foo', 'bar'] },
+        functions: {
+          func: {
+            handler: 'func.handler',
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
+          }
+        },
+        outputs: { foo: 'bar' }
+      }
+    }
+    const provider = {
+      getAccountId,
+      request,
+      naming: {
+        getStackName,
+        getServiceEndpointRegex
+      },
+      getStage: jest.fn().mockReturnValue('dev'),
+      getRegion: jest.fn().mockReturnValue('us-est-1')
+    }
+    const state = {
+      safeguardsResults: [],
+      secretsUsed: new Set(['secret'])
+    }
+
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+
+    expect(deployment.get()).toEqual({
+      serverlessFile: 'service: foobar',
+      serverlessFileName: 'serverless.yml',
+      appName: 'app',
+      appUid: 'axxx',
+      archived: false,
+      custom: {},
+      error: null,
+      logsRoleArn: 'arn:aws:iam::111111111111:role/foobarRole',
+      functions: {
+        'service-dev-func': {
+          custom: {
+            awsKmsKeyArn: undefined,
+            environment: [],
+            handler: 'func.handler',
+            layers: [],
+            memorySize: undefined,
+            name: 'func',
+            onError: undefined,
+            role: undefined,
+            runtime: undefined,
+            timeout: null,
+            tags: {},
+            vpc: {
+              securityGroupIds: [],
+              subnetIds: []
+            }
+          },
+          description: null,
+          arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
+          name: 'service-dev-func',
+          timeout: undefined,
+          type: 'awsLambda'
+        }
+      },
+      layers: {},
+      plugins: ['foo', 'bar'],
       provider: {
         aws: { accountId: 'account-id' },
         type: 'aws'
