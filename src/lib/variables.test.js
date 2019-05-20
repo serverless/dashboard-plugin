@@ -4,9 +4,9 @@ import { getStateVariable } from '@serverless/platform-sdk'
 jest.mock('@serverless/platform-sdk', () => ({
   getStateVariable: jest.fn().mockImplementation(({ outputName }) => {
     if (outputName === 'withsubkey') {
-      return Promise.resolve({ subkey: 'seeeeeccrreeeetttt' })
+      return Promise.resolve({ value: { subkey: 'seeeeeccrreeeetttt' } })
     }
-    return Promise.resolve('simple seeeeeccrreeeetttt')
+    return Promise.resolve({ value: 'simple seeeeeccrreeeetttt' })
   })
 }))
 
