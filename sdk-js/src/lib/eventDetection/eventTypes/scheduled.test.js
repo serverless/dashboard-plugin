@@ -1,4 +1,4 @@
-import eventType from './scheduled'
+const eventType = require('./scheduled')
 
 const event = {
   account: '123456789012',

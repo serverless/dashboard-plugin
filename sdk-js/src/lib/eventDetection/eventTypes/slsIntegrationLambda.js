@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+const { get } = require('lodash')
 
 /* This module supports the "lambda" type integration
    for the serverless framework which provides a
@@ -15,7 +15,7 @@ const keys = ['body', 'method', 'principalId', 'stage']
 
 const keysThatNeedValues = ['identity.userAgent', 'identity.sourceIp', 'identity.accountId']
 
-export default function eventType(event) {
+module.exports = function eventType(event) {
   if (typeof event === 'object') {
     const keysArePresent = keys.every((key) => key in event)
     const valuesArePresent =

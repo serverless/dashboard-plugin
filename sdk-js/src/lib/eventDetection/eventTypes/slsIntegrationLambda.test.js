@@ -1,4 +1,4 @@
-import eventType from './slsIntegrationLambda'
+const eventType = require('./slsIntegrationLambda')
 
 const event = {
   body: {},

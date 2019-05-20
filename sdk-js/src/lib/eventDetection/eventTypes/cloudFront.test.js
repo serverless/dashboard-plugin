@@ -1,4 +1,4 @@
-import eventType from './cloudFront'
+const eventType = require('./cloudFront')
 
 const event = {
   Records: [

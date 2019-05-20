@@ -1,4 +1,4 @@
-import eventType from './alexaSkill'
+const eventType = require('./alexaSkill')
 
 const event = {
   session: {

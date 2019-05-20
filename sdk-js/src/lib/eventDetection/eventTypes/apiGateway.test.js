@@ -1,4 +1,4 @@
-import eventType from './apiGateway'
+const eventType = require('./apiGateway')
 
 const event = {
   path: '/test/hello',

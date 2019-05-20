@@ -1,4 +1,4 @@
-import eventType from './kinesis'
+const eventType = require('./kinesis')
 
 const event = {
   Records: [

@@ -1,4 +1,4 @@
-import eventType from './s3'
+const eventType = require('./s3')
 
 const event = {
   Records: [

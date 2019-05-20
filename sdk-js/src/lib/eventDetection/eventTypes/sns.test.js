@@ -1,4 +1,4 @@
-import eventType from './sns'
+const eventType = require('./sns')
 
 const event = {
   Records: [

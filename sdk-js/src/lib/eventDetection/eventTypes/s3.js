@@ -1,6 +1,6 @@
 const type = 's3'
 
-export default function eventType(event = {}) {
+module.exports = function eventType(event = {}) {
   const { Records = [] } = event
   const [firstEvent = {}] = Records
   const { eventVersion, eventSource } = firstEvent

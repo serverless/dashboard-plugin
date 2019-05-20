@@ -1,8 +1,8 @@
-import { get } from 'lodash'
+const { get } = require('lodash')
 
 const type = 'alexaSkill'
 
-export default function eventType(e = {}) {
+module.exports = function eventType(e = {}) {
   return get(e, 'session.attributes') &&
     get(e, 'session.user') &&
     get(e, 'context.System') &&

@@ -1,4 +1,4 @@
-import eventType from './firehose'
+const eventType = require('./firehose')
 
 const event = {
   invocationId: 'invoked123',

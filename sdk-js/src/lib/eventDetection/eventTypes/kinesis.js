@@ -1,6 +1,6 @@
 const type = 'kinesis'
 
-export default function eventType(event = {}) {
+module.exports = function eventType(event = {}) {
   const { Records = [] } = event
   const [firstEvent = {}] = Records
   const { eventVersion, eventSource } = firstEvent

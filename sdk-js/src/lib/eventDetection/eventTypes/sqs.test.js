@@ -1,4 +1,4 @@
-import eventType from './sqs'
+const eventType = require('./sqs')
 
 const event = {
   Records: [
