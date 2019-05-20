@@ -15,6 +15,9 @@
     "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
     "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'"
   },
+  "peerDependencies": {
+    "serverless": "^1.43.0"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@serverless/event-mocks": "^1.1.1",
