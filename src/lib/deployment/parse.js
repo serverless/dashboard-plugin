@@ -58,7 +58,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
         // environment: Object.keys(service.provider.environment || {})
       },
       layers: service.layers || {},
-      plugins: service.plugins || [],
+      plugins: service.plugins ? service.plugins.modules || service.plugins : [],
       custom: service.custom || {},
       safeguards: ctx.state.safeguardsResults,
       secrets: Array.from(ctx.state.secretsUsed),
