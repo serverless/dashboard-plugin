@@ -1,7 +1,5 @@
 const type = 'scheduled'
 
-function eventType(event = {}) {
+export default function eventType(event = {}) {
   return event.source === 'aws.events' ? type : false
 }
-
-export { eventType }

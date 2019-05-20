@@ -1,14 +1,12 @@
-import idx from 'idx'
+import { get } from 'lodash'
 
 const type = 'alexaSkill'
 
-function eventType(e = {}) {
-  return idx(e, (o) => o.session.attributes) &&
-    idx(e, (o) => o.session.user) &&
-    idx(e, (o) => o.context.System) &&
-    idx(e, (o) => o.request.requestId)
+export default function eventType(e = {}) {
+  return get(e, 'session.attributes') &&
+    get(e, 'session.user') &&
+    get(e, 'context.System') &&
+    get(e, 'request.requestId')
     ? type
     : false
 }
-
-export { eventType }
