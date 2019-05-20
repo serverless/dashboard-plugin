@@ -21,6 +21,7 @@ export const configureDeployProfile = async (ctx) => {
         secretName,
         value
       ])
-    )
+    ),
+    accessKey
   )
 }

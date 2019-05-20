@@ -35,7 +35,7 @@ describe('configureDeployProfile', () => {
       service: 'service',
       stage: 'stage'
     })
-    expect(hookIntoVariableGetter).toBeCalledWith(ctx, { name: 'value' })
+    expect(hookIntoVariableGetter).toBeCalledWith(ctx, { name: 'value' }, 'accessKey')
     expect(ctx.provider.cachedCredentials).toEqual({
       accessKeyId: 'id',
       secretAccessKey: 'secret',
