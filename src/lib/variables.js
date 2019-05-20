@@ -22,7 +22,7 @@ export const hookIntoVariableGetter = (ctx, secrets, accessKey) => {
       const key = variableString.substring(6).substr(service.length)
       const outputName = key.split('.')[1]
       const subkey = key.substr(outputName.length + 2)
-      const value = await getStateVariable({
+      const { value } = await getStateVariable({
         accessKey,
         outputName,
         service,
