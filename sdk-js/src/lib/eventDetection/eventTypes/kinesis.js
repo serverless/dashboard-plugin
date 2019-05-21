@@ -1,4 +1,4 @@
-const type = 'kinesis'
+const type = 'aws.kinesis'
 
 module.exports = function eventType(event = {}) {
   const { Records = [] } = event

@@ -1,4 +1,4 @@
-const type = 'sqs'
+const type = 'aws.sqs'
 
 module.exports = function eventType(event = {}) {
   const { Records = [] } = event

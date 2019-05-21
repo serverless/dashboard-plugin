@@ -6,6 +6,7 @@ const spanEmitter = require('./lib/proxyAwsSdk')
 
 const os = require('os')
 const ServerlessTransaction = require('./lib/transaction.js')
+const detectEventType = require('./lib/eventDetection')
 
 /*
 * Serverless SDK Class
@@ -110,16 +111,11 @@ class ServerlessSDK {
         event = event || {}
         context = context || {}
         const functionContext = this
-        let eventType
+        const eventType = detectEventType(event)
 
         /*
          * Auto-Detect: Event Type
          */
-
-        // aws.apigateway.http
-        if (event.httpMethod && event.headers && event.requestContext) {
-          eventType = 'aws.apigateway.http'
-        }
 
         // Start transaction
         const trans = self.transaction({
@@ -132,7 +128,7 @@ class ServerlessSDK {
           functionName: meta.functionName,
           timeout: meta.timeout,
           computeType: meta.computeType,
-          eventType: eventType
+          eventType
         })
 
         // Capture Compute Data: aws.lambda

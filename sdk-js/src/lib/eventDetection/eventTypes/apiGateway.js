@@ -1,4 +1,4 @@
-const type = 'apiGateway'
+const type = 'aws.apigateway.http'
 
 module.exports = function eventType(event) {
   const apiGatewayRequiredKeys = ['path', 'headers', 'requestContext', 'resource', 'httpMethod']

@@ -1,4 +1,4 @@
-const type = 's3'
+const type = 'aws.s3'
 
 module.exports = function eventType(event = {}) {
   const { Records = [] } = event

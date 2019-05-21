@@ -359,31 +359,31 @@ const sqs = {
 
 describe('eventDetection', () => {
   it('identifies alexaSkill', () => {
-    expect(detectEventType(alexaSkill)).toEqual('alexaSkill')
+    expect(detectEventType(alexaSkill)).toEqual('aws.alexaskill')
   })
 
   it('identifies apiGateway', () => {
-    expect(detectEventType(apiGateway)).toEqual('apiGateway')
+    expect(detectEventType(apiGateway)).toEqual('aws.apigateway.http')
   })
 
   it('identifies cloudFront', () => {
-    expect(detectEventType(cloudFront)).toEqual('cloudFront')
+    expect(detectEventType(cloudFront)).toEqual('aws.cloudfront')
   })
 
   it('identifies firehose', () => {
-    expect(detectEventType(firehose)).toEqual('firehose')
+    expect(detectEventType(firehose)).toEqual('aws.firehose')
   })
 
   it('identifies kinesis', () => {
-    expect(detectEventType(kinesis)).toEqual('kinesis')
+    expect(detectEventType(kinesis)).toEqual('aws.kinesis')
   })
 
   it('identifies s3', () => {
-    expect(detectEventType(s3)).toEqual('s3')
+    expect(detectEventType(s3)).toEqual('aws.s3')
   })
 
   it('identifies scheduled', () => {
-    expect(detectEventType(scheduled)).toEqual('scheduled')
+    expect(detectEventType(scheduled)).toEqual('aws.scheduled')
   })
 
   it('identifies slsIntegrationLambda', () => {
@@ -391,11 +391,11 @@ describe('eventDetection', () => {
   })
 
   it('identifies sns', () => {
-    expect(detectEventType(sns)).toEqual('sns')
+    expect(detectEventType(sns)).toEqual('aws.sns')
   })
 
   it('identifies sqs', () => {
-    expect(detectEventType(sqs)).toEqual('sqs')
+    expect(detectEventType(sqs)).toEqual('aws.sqs')
   })
 
   it('does not identify an empty object', () => {

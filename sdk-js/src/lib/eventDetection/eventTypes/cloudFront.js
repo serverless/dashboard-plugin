@@ -1,4 +1,4 @@
-const type = 'cloudFront'
+const type = 'aws.cloudfront'
 
 module.exports = function eventType(event = {}) {
   const { Records = [] } = event

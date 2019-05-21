@@ -1,4 +1,4 @@
-const type = 'firehose'
+const type = 'aws.firehose'
 
 module.exports = function eventType(event = {}) {
   const { records = [] } = event

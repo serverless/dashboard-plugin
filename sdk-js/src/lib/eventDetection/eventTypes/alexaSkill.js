@@ -1,6 +1,6 @@
 const { get } = require('lodash')
 
-const type = 'alexaSkill'
+const type = 'aws.alexaskill'
 
 module.exports = function eventType(e = {}) {
   return get(e, 'session.attributes') &&

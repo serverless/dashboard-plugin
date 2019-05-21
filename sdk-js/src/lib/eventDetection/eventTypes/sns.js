@@ -1,4 +1,4 @@
-const type = 'sns'
+const type = 'aws.sns'
 
 module.exports = function eventType(event = {}) {
   const { Records = [] } = event
