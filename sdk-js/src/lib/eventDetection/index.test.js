@@ -387,7 +387,7 @@ describe('eventDetection', () => {
   })
 
   it('identifies slsIntegrationLambda', () => {
-    expect(detectEventType(slsIntegrationLambda)).toEqual('slsIntegrationLambda')
+    expect(detectEventType(slsIntegrationLambda)).toEqual('aws.apigateway.http')
   })
 
   it('identifies sns', () => {

@@ -8,8 +8,7 @@ const { get } = require('lodash')
    https://serverless.com/framework/docs/providers/aws/events/apigateway/#example-lambda-event-before-customization
  */
 
-// const type = 'apiGateway'
-const source = 'slsIntegrationLambda'
+const type = 'aws.apigateway.http'
 
 const keys = ['body', 'method', 'principalId', 'stage']
 
@@ -24,7 +23,7 @@ module.exports = function eventType(event) {
           return typeof get(event, key) !== 'undefined'
         })
         .filter(Boolean).length === keysThatNeedValues.length
-    return keysArePresent && valuesArePresent ? source : false
+    return keysArePresent && valuesArePresent ? type : false
   }
   return false
 }
