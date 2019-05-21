@@ -1,4 +1,4 @@
-const { fromPairs } = require('lodash')
+const { entries, fromPairs } = require('lodash')
 
 module.exports = function requireGlobalVpcPolicy(
   policy,
@@ -23,7 +23,7 @@ module.exports = function requireGlobalVpcPolicy(
       Properties: { VpcConfig },
       Type
     }
-  ] of Object.entries(Resources)) {
+  ] of entries(Resources)) {
     if (Type !== 'AWS::Lambda::Function') {
       continue
     }

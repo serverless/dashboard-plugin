@@ -1,4 +1,4 @@
-const { fromPairs } = require('lodash')
+const { entries, fromPairs } = require('lodash')
 
 module.exports = function requireDescriptionPolicy(policy, service, options) {
   let failed = false
@@ -13,7 +13,7 @@ module.exports = function requireDescriptionPolicy(policy, service, options) {
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
-  for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
+  for (const [funcName, { Properties, Type }] of entries(Resources)) {
     if (Type !== 'AWS::Lambda::Function') {
       continue
     }

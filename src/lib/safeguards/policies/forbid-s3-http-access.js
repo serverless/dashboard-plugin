@@ -1,3 +1,5 @@
+import { entries } from 'lodash'
+
 module.exports = function forbidS3HttpAccessPolicy(policy, service) {
   let failed = false
   const {
@@ -6,11 +8,9 @@ module.exports = function forbidS3HttpAccessPolicy(policy, service) {
     }
   } = service
 
-  const buckets = new Map(
-    Object.entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::Bucket')
-  )
+  const buckets = new Map(entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::Bucket'))
   const bucketPolicies = new Map(
-    Object.entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::BucketPolicy')
+    entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::BucketPolicy')
   )
   for (const [bucketName, bucket] of buckets) {
     let foundMatchingPolicy = false
