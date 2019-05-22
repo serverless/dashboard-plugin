@@ -2,7 +2,7 @@
  * Error Handler
  */
 
-import serializeError from 'serialize-error'
+import serializeError from './serializeError'
 import { parseDeploymentData } from './deployment'
 
 export default function(ctx) {
