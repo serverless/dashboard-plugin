@@ -1,4 +1,4 @@
-const { fromPairs } = require('lodash')
+const { entries, fromPairs } = require('lodash')
 
 const asyncEvents = new Set([
   's3',
@@ -23,8 +23,8 @@ module.exports = function dlqPolicy(policy, service) {
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
-  // for (const [name, { events, onError }] of Object.entries(functions)) {
-  for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
+  // for (const [name, { events, onError }] of entries(functions)) {
+  for (const [funcName, { Properties, Type }] of entries(Resources)) {
     if (
       Type !== 'AWS::Lambda::Function' ||
       (Properties.DeadLetterConfig && Properties.DeadLetterConfig.TargetArn)

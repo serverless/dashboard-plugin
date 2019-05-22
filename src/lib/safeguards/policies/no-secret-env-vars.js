@@ -1,4 +1,4 @@
-const { fromPairs } = require('lodash')
+const { entries, fromPairs, values } = require('lodash')
 
 // from https://github.com/dxa4481/truffleHogRegexes/blob/master/truffleHogRegexes/regexes.json
 const truffleHogRegexes = {
@@ -32,7 +32,7 @@ const truffleHogRegexes = {
   'Password in URL': new RegExp('[a-zA-Z]{3,10}://[^/\\s:@]{3,20}:[^/\\s:@]{3,20}@.{1,100}["\'\\s]')
 }
 function isSecret(string) {
-  for (const regex of Object.values(truffleHogRegexes)) {
+  for (const regex of values(truffleHogRegexes)) {
     if (regex.test(string)) {
       return true
     }
@@ -53,7 +53,7 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
-  for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
+  for (const [funcName, { Properties, Type }] of entries(Resources)) {
     if (
       Type !== 'AWS::Lambda::Function' ||
       !Properties.Environment ||
@@ -62,7 +62,7 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
       continue
     }
 
-    for (const [name, value] of Object.entries(Properties.Environment.Variables)) {
+    for (const [name, value] of entries(Properties.Environment.Variables)) {
       if (isSecret(value)) {
         const configFuncName = logicalFuncNamesToConfigFuncName[funcName] || funcName
         failed = true

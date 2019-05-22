@@ -1,5 +1,5 @@
 const vm = require('vm')
-const { fromPairs } = require('lodash')
+const { entries, fromPairs } = require('lodash')
 
 /*
  * Converts a string that looks like a tagged template literal into a RegExp.
@@ -22,7 +22,7 @@ module.exports = function allowedFunctionNamesPolicy(policy, service, options) {
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
   )
 
-  for (const [funcName, { Properties, Type }] of Object.entries(Resources)) {
+  for (const [funcName, { Properties, Type }] of entries(Resources)) {
     if (Type !== 'AWS::Lambda::Function') {
       continue
     }

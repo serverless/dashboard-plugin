@@ -4,5 +4,5 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.js'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   testEnvironment: 'node',
-  setupFiles: ['<rootDir>/src/polyfill.js']
+  setupFiles: ['<rootDir>/src/runtime.js']
 }

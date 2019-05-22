@@ -1,4 +1,5 @@
 import { getAccessKeyForTenant, getMetadata } from '@serverless/platform-sdk'
+import { entries } from 'lodash'
 
 export default async function(ctx) {
   if (
@@ -40,9 +41,7 @@ export default async function(ctx) {
               {
                 Effect: 'Allow',
                 Action: ['logs:FilterLogEvents'],
-                Resource: Object.entries(
-                  ctx.sls.service.provider.compiledCloudFormationTemplate.Resources
-                )
+                Resource: entries(ctx.sls.service.provider.compiledCloudFormationTemplate.Resources)
                   .filter(([, { Type }]) => Type === 'AWS::Logs::LogGroup')
                   .map(([logicalId]) => ({
                     'Fn::GetAtt': [logicalId, 'Arn']

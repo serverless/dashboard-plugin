@@ -1,3 +1,5 @@
+import { values } from 'lodash'
+
 module.exports = function noWildIamPolicy(policy, service) {
   let failed = false
   const {
@@ -6,7 +8,7 @@ module.exports = function noWildIamPolicy(policy, service) {
     }
   } = service
 
-  for (const { Type, Properties } of Object.values(Resources)) {
+  for (const { Type, Properties } of values(Resources)) {
     if (Type !== 'AWS::IAM::Role') {
       continue
     }
