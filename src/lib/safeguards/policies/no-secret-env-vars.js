@@ -1,4 +1,4 @@
-const { entries, fromPairs } = require('lodash')
+const { entries, fromPairs, values } = require('lodash')
 
 // from https://github.com/dxa4481/truffleHogRegexes/blob/master/truffleHogRegexes/regexes.json
 const truffleHogRegexes = {
@@ -32,7 +32,7 @@ const truffleHogRegexes = {
   'Password in URL': new RegExp('[a-zA-Z]{3,10}://[^/\\s:@]{3,20}:[^/\\s:@]{3,20}@.{1,100}["\'\\s]')
 }
 function isSecret(string) {
-  for (const regex of Object.values(truffleHogRegexes)) {
+  for (const regex of values(truffleHogRegexes)) {
     if (regex.test(string)) {
       return true
     }
