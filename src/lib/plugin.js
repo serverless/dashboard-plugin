@@ -23,6 +23,8 @@ import { configureDeployProfile } from './deployProfile'
 
 class ServerlessEnterprisePlugin {
   constructor(sls) {
+    this.sls = sls
+
     configureFetchDefaults()
     const user = getLoggedInUser()
     const currentCommand = sls.processedInput.commands[0]
@@ -88,7 +90,6 @@ class ServerlessEnterprisePlugin {
     sls.enterpriseEnabled = true
 
     // Defaults
-    this.sls = sls
     this.state = {} // Useful for storing data across hooks
     this.state.secretsUsed = new Set()
     this.provider = this.sls.getProvider('aws')
