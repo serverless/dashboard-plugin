@@ -17,7 +17,7 @@ jest.mock('./zipTree', () => ({
 }))
 jest.mock('fs-extra', () => ({
   writeFileSync: jest.fn(),
-  pathExistsSync: jest.fn().mockReturnValue(true),
+  existsSync: jest.fn().mockReturnValue(true),
   removeSync: jest.fn(),
   ensureDirSync: jest.fn(),
   copySync: jest.fn(),
@@ -56,7 +56,7 @@ describe('wrap - wrap', () => {
     }
     await wrap(ctx)
 
-    expect(fs.pathExistsSync).toBeCalledWith('path/serverless-sdk')
+    expect(fs.existsSync).toBeCalledWith('path/serverless-sdk')
     expect(ctx.state.functions).toEqual({
       func: {
         entryNew: 's-func',
@@ -123,7 +123,7 @@ module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handl
     }
     await wrap(ctx)
 
-    expect(fs.pathExistsSync).toBeCalledWith('path/serverless-sdk')
+    expect(fs.existsSync).toBeCalledWith('path/serverless-sdk')
     expect(ctx.state.functions).toEqual({
       func: {
         entryNew: 's-func',
@@ -195,7 +195,7 @@ module.exports.handler = serverlessSDK.handler(require('./handlerFile.js').handl
     }
     await wrap(ctx)
 
-    expect(fs.pathExistsSync).toBeCalledWith('path/serverless-sdk')
+    expect(fs.existsSync).toBeCalledWith('path/serverless-sdk')
     expect(ctx.state.functions).toEqual({
       func: {
         entryNew: 's-func',

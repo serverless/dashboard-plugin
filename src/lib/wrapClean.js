@@ -8,7 +8,7 @@ import path from 'path'
 
 export default async (ctx) => {
   // Clear assets (serverless-sdk)
-  if (fs.pathExistsSync(ctx.state.pathAssets)) {
+  if (fs.existsSync(ctx.state.pathAssets)) {
     fs.removeSync(ctx.state.pathAssets)
   }
 
@@ -23,7 +23,7 @@ export default async (ctx) => {
     const filePath = path.join(ctx.sls.config.servicePath, file)
 
     // Clear wrapper file for this function
-    if (fs.pathExistsSync(filePath)) {
+    if (fs.existsSync(filePath)) {
       fs.removeSync(filePath)
     }
   }

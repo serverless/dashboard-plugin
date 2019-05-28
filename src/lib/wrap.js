@@ -86,7 +86,7 @@ export default async (ctx) => {
   ctx.state.pathAssets = path.join(ctx.sls.config.servicePath, 'serverless-sdk')
 
   // Clear existing handler dir
-  if (fs.pathExistsSync(ctx.state.pathAssets)) {
+  if (fs.existsSync(ctx.state.pathAssets)) {
     fs.removeSync(ctx.state.pathAssets)
   }
 

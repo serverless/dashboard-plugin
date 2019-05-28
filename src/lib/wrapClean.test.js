@@ -2,7 +2,7 @@ import wrapClean from './wrapClean'
 import fs from 'fs-extra'
 
 jest.mock('fs-extra', () => ({
-  pathExistsSync: jest.fn().mockReturnValue(true),
+  existsSync: jest.fn().mockReturnValue(true),
   removeSync: jest.fn()
 }))
 
@@ -23,10 +23,10 @@ describe('wrapClean', () => {
       }
     })
 
-    expect(fs.pathExistsSync).toHaveBeenCalledTimes(2)
+    expect(fs.existsSync).toHaveBeenCalledTimes(2)
     expect(fs.removeSync).toHaveBeenCalledTimes(2)
-    expect(fs.pathExistsSync).toBeCalledWith('/assets')
-    expect(fs.pathExistsSync).toBeCalledWith('/service/s-func.js')
+    expect(fs.existsSync).toBeCalledWith('/assets')
+    expect(fs.existsSync).toBeCalledWith('/service/s-func.js')
     expect(fs.removeSync).toBeCalledWith('/assets')
     expect(fs.removeSync).toBeCalledWith('/service/s-func.js')
   })
