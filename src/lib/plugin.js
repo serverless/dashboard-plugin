@@ -16,6 +16,7 @@ import { saveDeployment } from './deployment'
 import { hookIntoVariableGetter } from './variables'
 import { generate, eventDict } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
+import { test } from './test'
 
 /*
  * Serverless Enterprise Plugin
@@ -121,6 +122,21 @@ class ServerlessEnterprisePlugin {
           }
         },
         enterprise: true
+      },
+      test: {
+        usage: 'Run HTTP tests',
+        lifecycleEvents: ['test'],
+        options: {
+          ['function']: {
+            usage: `Specify the function to test`,
+            shortcut: 'f'
+          },
+          test: {
+            usage: `Specify a specific test to run`,
+            shortcut: 't'
+          }
+        },
+        enterprise: true
       }
     }
 
@@ -149,6 +165,7 @@ class ServerlessEnterprisePlugin {
       'login:login': this.route('login:login').bind(this), // eslint-disable-line
       'logout:logout': this.route('logout:logout').bind(this), // eslint-disable-line
       'generate-event:generate-event': this.route('generate-event:generate-event').bind(this), // eslint-disable-line
+      'test:test': this.route('test:test').bind(this), // eslint-disable-line
     }
   }
 
@@ -247,6 +264,9 @@ class ServerlessEnterprisePlugin {
           break
         case 'generate-event:generate-event':
           await generate(self)
+          break
+        case 'test:test':
+          await test(self)
           break
       }
     }
