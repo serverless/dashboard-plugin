@@ -23,9 +23,14 @@ appUid: '${ctx.sls.service.appUid}',
 tenantUid: '${ctx.sls.service.tenantUid}',
 serviceName: '${ctx.sls.service.service}',
 stageName: '${ctx.provider.getStage()}'})
-module.exports.handler = serverlessSDK.handler(require('./${fn.entryOrig}.js').${
-    fn.handlerOrig
-  }, { functionName: '${fn.name}', timeout: ${fn.timeout}})`
+const handlerWrapperArgs = { functionName: '${fn.name}', timeout: ${fn.timeout}}
+try {
+  const userHandler = require('./${fn.entryOrig}.js')
+  module.exports.handler = serverlessSDK.handler(userHandler.${fn.handlerOrig}, handlerWrapperArgs)
+} catch (error) {
+  module.exports.handler = serverlessSDK.handler(() => { throw error }, handlerWrapperArgs)
+}
+`
 
   // Create new handlers
   fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
