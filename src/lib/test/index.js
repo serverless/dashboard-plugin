@@ -1,15 +1,17 @@
-import { entries, find, isEqual, values } from 'lodash'
+import { entries, find, isEqual } from 'lodash'
 import fetch from 'isomorphic-fetch'
+import fse from 'fs-extra'
 import chalk from 'chalk'
+import yaml from 'js-yaml'
 
 class TestError extends Error {
-  constructor(field, expected, recieved, resp) {
+  constructor(field, expected, recieved, resp, body) {
     super('Test failed, expected: ${expected}, recieved: ${recieved}')
-    Object.assign(this, { field, expected, recieved, resp })
+    Object.assign(this, { field, expected, recieved, resp, body })
   }
 }
 
-const runTest = async (evt, testSpec, testName, method, baseApiUrl) => {
+const runTest = async (testSpec, path, method, baseApiUrl) => {
   let body
   const headers = {}
   let queryString = ''
@@ -28,29 +30,27 @@ const runTest = async (evt, testSpec, testName, method, baseApiUrl) => {
   if (testSpec.request.headers) {
     Object.assign(headers, testSpec.request.headers)
   }
-  process.stdout.write(`  running - ${testName}`)
-  const resp = await fetch(`${baseApiUrl}/${evt.http.path}?${queryString}`, {
+  const resp = await fetch(`${baseApiUrl}/${path}?${queryString}`, {
     method,
     body,
     headers
   })
-  const respCopy = resp.clone() // so that we can re-use .text() if errors occur
+  const respBody = await resp.text()
   if (testSpec.response === true && resp.status !== 200) {
-    throw new TestError('status', 200, resp.status, respCopy)
+    throw new TestError('status', 200, resp.status, resp, respBody)
   } else if (testSpec.response) {
     if (testSpec.response.status && resp.status !== testSpec.response.status) {
-      throw new TestError('status', testSpec.response.status, resp.status, respCopy)
+      throw new TestError('status', testSpec.response.status, resp.status, resp, respBody)
     }
     if (testSpec.response.body) {
       if (typeof testSpec.response.body === 'string') {
-        const text = await resp.text()
-        if (text !== testSpec.response.body) {
-          throw new TestError('body', testSpec.response.body, text, respCopy)
+        if (respBody !== testSpec.response.body) {
+          throw new TestError('body', testSpec.response.body, respBody, resp, respBody)
         }
       } else {
-        const json = await resp.json()
+        const json = JSON.parse(respBody)
         if (!isEqual(json, testSpec.response.body)) {
-          throw new TestError('body', testSpec.response.body, json, respCopy)
+          throw new TestError('body', testSpec.response.body, json, resp, respBody)
         }
       }
     }
@@ -58,6 +58,20 @@ const runTest = async (evt, testSpec, testName, method, baseApiUrl) => {
 }
 
 export const test = async (ctx) => {
+  if (!fse.exists('serverless.test.yml')) {
+    ctx.sls.cli.log(`No serverless.test.yml file found`, `Serverless Enterprise`)
+    return
+  }
+  let tests = yaml.safeLoad(await fse.readFile('serverless.test.yml'))
+
+  const { options } = ctx.sls.processedInput
+  if (options.function) {
+    tests = tests.filter(({ endpoint }) => endpoint.function === options.function)
+  }
+  if (options.test) {
+    tests = tests.filter(({ name }) => name === options.test)
+  }
+
   const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
     StackName: ctx.provider.naming.getStackName()
   })
@@ -81,22 +95,20 @@ export const test = async (ctx) => {
   const errors = []
   let numTests = 0
 
-  for (const func of values(ctx.sls.service.functions || {})) {
-    for (const evt of func.events) {
-      if (Object.keys(evt)[0] === 'http') {
-        for (const testSpec of evt.http.tests || []) {
-          const method = testSpec.method || evt.http.method
-          const testName = `${method.toUpperCase()} ${evt.http.path} - ${testSpec.name}`
-          try {
-            numTests += 1
-            await runTest(evt, testSpec, testName, method, baseApiUrl)
-            process.stdout.write(`\r   ${chalk.green('passed')} - ${testName}\n`)
-          } catch (error) {
-            errors.push({ testSpec, error })
-            process.stdout.write(`\r   ${chalk.red('failed')} - ${testName}\n`)
-          }
-        }
-      }
+  const funcs = ctx.sls.service.functions || {}
+  for (const testSpec of tests || []) {
+    const method =
+      testSpec.endpoint.method || funcs[testSpec.endpoint.function].events[0].http.method
+    const path = testSpec.endpoint.path || funcs[testSpec.endpoint.function].events[0].http.path
+    const testName = `${method.toUpperCase()} ${path} - ${testSpec.name}`
+    try {
+      numTests += 1
+      process.stdout.write(`  running - ${testName}`)
+      await runTest(testSpec, path, method, baseApiUrl)
+      process.stdout.write(`\r   ${chalk.green('passed')} - ${testName}\n`)
+    } catch (error) {
+      errors.push({ testSpec, error })
+      process.stdout.write(`\r   ${chalk.red('failed')} - ${testName}\n`)
     }
   }
   process.stdout.write('\n')
@@ -107,7 +119,6 @@ export const test = async (ctx) => {
 
     for (let i = 0; i < errors.length; i++) {
       const { error, testSpec } = errors[i]
-      const body = await error.resp.text()
       const { headers, status } = error.resp
       process.stdout.write(`   ${i + 1}) ${chalk.red(`Failed -  ${testSpec.name}`)}\n`)
       const info = `      status: ${status}
@@ -116,7 +127,7 @@ export const test = async (ctx) => {
       .map(([key, value]) => `    ${key}: ${value}`)
       .join('\n')
       .replace(/\n/g, '\n    ')}
-      body: ${body}`
+      body: ${error.body}`
       process.stdout.write(chalk.grey(info))
 
       const expectedAndRecieved = `
