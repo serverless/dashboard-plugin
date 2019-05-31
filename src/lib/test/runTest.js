@@ -1,4 +1,4 @@
-import { entries, isEqual } from 'lodash'
+import { entries, isEqual, pick } from 'lodash'
 import fetch from 'isomorphic-fetch'
 import { TestError } from './errors'
 
@@ -27,8 +27,11 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
     headers
   })
   const respBody = await resp.text()
-  if (testSpec.response.headers && !isEqual(testSpec.response.headers, resp.headers._headers)) {
-    throw new TestError('headers', testSpec.response.headers, resp.headers._headers, resp, respBody)
+  if (testSpec.response.headers) {
+    const pickedHeaders = pick(resp.headers._headers, Object.keys(testSpec.response.headers))
+    if (!isEqual(testSpec.response.headers, pickedHeaders)) {
+      throw new TestError('headers', testSpec.response.headers, pickedHeaders, resp, respBody)
+    }
   } else if (testSpec.response === true && resp.status !== 200) {
     throw new TestError('status', 200, resp.status, resp, respBody)
   } else if (testSpec.response) {

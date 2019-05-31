@@ -14,7 +14,7 @@ jest.mock('isomorphic-fetch', () =>
       return Promise.resolve({
         status: 200,
         text: jest.fn().mockReturnValue(Promise.resolve('foobar')),
-        headers: { _headers: { Foo: 'bar' } }
+        headers: { _headers: { Foo: 'bar', Bla: 'bla' } }
       })
     }
     return Promise.resolve({
