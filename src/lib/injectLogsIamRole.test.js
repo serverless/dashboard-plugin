@@ -85,4 +85,25 @@ describe('injectLogsIamRole', () => {
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')
     expect(getMetadata).toBeCalledWith('token')
   })
+
+  it('does not add IAM role when no log groups', async () => {
+    const compiledCloudFormationTemplate = {
+      Resources: {},
+      Outputs: {}
+    }
+    const ctx = {
+      sls: {
+        service: {
+          tenant: 'tenant',
+          tenantUid: 'UID',
+          provider: { compiledCloudFormationTemplate }
+        }
+      }
+    }
+    await injectLogsIamRole(ctx)
+    expect(compiledCloudFormationTemplate).toEqual({
+      Resources: {},
+      Outputs: {}
+    })
+  })
 })
