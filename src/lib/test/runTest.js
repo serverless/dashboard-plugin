@@ -15,7 +15,7 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
     }
   } else if (testSpec.request.form) {
     queryString = entries(testSpec.request.form)
-      .map((key, value) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&')
   }
   if (testSpec.request.headers) {
@@ -27,7 +27,9 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
     headers
   })
   const respBody = await resp.text()
-  if (testSpec.response === true && resp.status !== 200) {
+  if (testSpec.response.headers && !isEqual(testSpec.response.headers, resp.headers._headers)) {
+    throw new TestError('headers', testSpec.response.headers, resp.headers._headers, resp, respBody)
+  } else if (testSpec.response === true && resp.status !== 200) {
     throw new TestError('status', 200, resp.status, resp, respBody)
   } else if (testSpec.response) {
     if (testSpec.response.status && resp.status !== testSpec.response.status) {

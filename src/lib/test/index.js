@@ -29,8 +29,7 @@ export const test = async (ctx) => {
       !OutputKey.endsWith('Websocket') &&
       OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
   )
-  const apiId = apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
-  const baseApiUrl = `https://${apiId}.execute-api.${ctx.provider.getRegion()}.amazonaws.com/${ctx.provider.getStage()}`
+  const baseApiUrl = apigResource.OutputValue
 
   ctx.sls.cli.log(
     `Test Results:
