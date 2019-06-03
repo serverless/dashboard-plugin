@@ -34,6 +34,7 @@ custom:
         path: hello
         method: post
   noEvents: []
+  testSecret: ${secrets:test}
 
 provider:
   name: aws
