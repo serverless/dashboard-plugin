@@ -1,12 +1,14 @@
 import { npm, sls } from './commands'
 
+const SERVERLESS_PLATFORM_STAGE = process.env.SERVERLESS_PLATFORM_STAGE || 'dev'
+
 beforeAll(() => npm(['install']))
 
 describe('integration', () => {
   it('deploys with no extra options, warns on cfn role', () => {
     const proc = sls(['deploy'], {
       stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE: 'qa' }
+      env: { ...process.env, SERVERLESS_PLATFORM_STAGE }
     })
     expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
@@ -17,7 +19,7 @@ describe('integration', () => {
   it('deploys blocks deploy on illegal stage name', () => {
     const proc = sls(['deploy', '-s', 'illegal-stage-name'], {
       stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE: 'qa' }
+      env: { ...process.env, SERVERLESS_PLATFORM_STAGE }
     })
     expect(proc.status).toEqual(1)
     const stdout = proc.stdout.toString()
@@ -30,7 +32,7 @@ describe('integration', () => {
   it('deploys blocks deploy on disallowed region', () => {
     const proc = sls(['deploy', '-r', 'us-west-1'], {
       stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE: 'qa' }
+      env: { ...process.env, SERVERLESS_PLATFORM_STAGE }
     })
     expect(proc.status).toEqual(1)
     const stdout = proc.stdout.toString()
@@ -41,7 +43,7 @@ describe('integration', () => {
   it('deploys warns when using a bad IAM role', () => {
     const proc = sls(['deploy'], {
       stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE: 'qa', IAM_ROLE: 'badIamRole' }
+      env: { ...process.env, SERVERLESS_PLATFORM_STAGE, IAM_ROLE: 'badIamRole' }
     })
     expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
@@ -56,7 +58,7 @@ describe('integration', () => {
       stdio: 'pipe',
       env: {
         ...process.env,
-        SERVERLESS_PLATFORM_STAGE: 'qa',
+        SERVERLESS_PLATFORM_STAGE,
         ENV_OPT: '-----BEGIN RSA PRIVATE KEY-----'
       }
     })
@@ -71,7 +73,7 @@ describe('integration', () => {
   it('deploys warns about dlq when not using an HTTP event', () => {
     const proc = sls(['deploy'], {
       stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE: 'qa', EVENTS: 'noEvents' }
+      env: { ...process.env, SERVERLESS_PLATFORM_STAGE, EVENTS: 'noEvents' }
     })
     expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
