@@ -291,4 +291,21 @@ describe('runTest', () => {
       body: undefined
     })
   })
+
+  it('can pass with a minimal config', async () => {
+    runTest(
+      {
+        name: 'foobar',
+        response: true
+      },
+      'json',
+      'post',
+      'https://example.com'
+    )
+    expect(fetch).toBeCalledWith('https://example.com/json?', {
+      method: 'post',
+      headers: {},
+      body: undefined
+    })
+  })
 })

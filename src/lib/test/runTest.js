@@ -6,19 +6,19 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
   let body
   const headers = {}
   let queryString = ''
-  if (testSpec.request.body) {
+  if (testSpec.request && testSpec.request.body) {
     if (typeof testSpec.request.body === 'string') {
       ;({ body } = testSpec.request)
     } else {
       body = JSON.stringify(testSpec.request.body)
       headers['Content-Type'] = 'application/json'
     }
-  } else if (testSpec.request.form) {
+  } else if (testSpec.request && testSpec.request.form) {
     queryString = entries(testSpec.request.form)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&')
   }
-  if (testSpec.request.headers) {
+  if (testSpec.request && testSpec.request.headers) {
     Object.assign(headers, testSpec.request.headers)
   }
   const resp = await fetch(`${baseApiUrl}/${path}?${queryString}`, {
