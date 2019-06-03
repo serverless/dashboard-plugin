@@ -10,10 +10,10 @@ describe('integration', () => {
       stdio: 'pipe',
       env: { ...process.env, SERVERLESS_PLATFORM_STAGE }
     })
-    expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('warned - require-cfn-role')
     expect(stdout).toMatch('Warned - no cfnRole set')
+    expect(proc.status).toEqual(0)
   })
 
   it('deploys blocks deploy on illegal stage name', () => {
@@ -21,12 +21,12 @@ describe('integration', () => {
       stdio: 'pipe',
       env: { ...process.env, SERVERLESS_PLATFORM_STAGE }
     })
-    expect(proc.status).toEqual(1)
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('failed - allowed-stages')
     expect(stdout).toMatch(
       'Failed - Stage name "illegal-stage-name" not in list of permitted names: ["dev","qa","prod"]'
     )
+    expect(proc.status).toEqual(1)
   })
 
   it('deploys blocks deploy on disallowed region', () => {
@@ -34,10 +34,10 @@ describe('integration', () => {
       stdio: 'pipe',
       env: { ...process.env, SERVERLESS_PLATFORM_STAGE }
     })
-    expect(proc.status).toEqual(1)
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('failed - allowed-regions')
     expect(stdout).toMatch('Failed - ')
+    expect(proc.status).toEqual(1)
   })
 
   it('deploys warns when using a bad IAM role', () => {
@@ -45,12 +45,12 @@ describe('integration', () => {
       stdio: 'pipe',
       env: { ...process.env, SERVERLESS_PLATFORM_STAGE, IAM_ROLE: 'badIamRole' }
     })
-    expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('warned - no-wild-iam-role-statements')
     expect(stdout).toMatch(
       `Warned - iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
     )
+    expect(proc.status).toEqual(0)
   })
 
   it('deploys warns when using a env var', () => {
@@ -62,12 +62,12 @@ describe('integration', () => {
         ENV_OPT: '-----BEGIN RSA PRIVATE KEY-----'
       }
     })
-    expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('warned - no-secret-env-vars')
     expect(stdout).toMatch(
       `Warned - Environment variable variable1 on function 'hello' looks like it contains a secret value`
     )
+    expect(proc.status).toEqual(0)
   })
 
   it('deploys warns about dlq when not using an HTTP event', () => {
@@ -75,11 +75,11 @@ describe('integration', () => {
       stdio: 'pipe',
       env: { ...process.env, SERVERLESS_PLATFORM_STAGE, EVENTS: 'noEvents' }
     })
-    expect(proc.status).toEqual(0)
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('warned - require-dlq')
     expect(stdout).toMatch(
       `Warned - Function \"hello\" doesn't have a Dead Letter Queue configured.`
     )
+    expect(proc.status).toEqual(0)
   })
 })
