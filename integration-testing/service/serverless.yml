@@ -19,8 +19,6 @@ service: service
 # Check out our docs for more details
 frameworkVersion: ">=1.37.1"
 
-plugins:
-  - '@serverless/enterprise-plugin'
 
 custom:
   defaultIamRole: []
