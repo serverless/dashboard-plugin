@@ -14,7 +14,7 @@ describe('integration', () => {
       cwd
     })
     const stdout = proc.stdout.toString()
-    expect(stdout).toMatch(/^testSecretValue$/m)
+    expect(stdout).toMatch('testSecretValue\n\n')
     expect(proc.status).toEqual(0)
   })
 })
