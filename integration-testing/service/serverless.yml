@@ -19,6 +19,8 @@ service: service
 # Check out our docs for more details
 frameworkVersion: ">=1.37.1"
 
+outputs:
+  outputVariable: outputValue
 
 custom:
   defaultIamRole: []
