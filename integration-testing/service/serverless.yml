@@ -19,8 +19,8 @@ service: service
 # Check out our docs for more details
 frameworkVersion: ">=1.37.1"
 
-plugins:
-  - '@serverless/enterprise-plugin'
+outputs:
+  outputVariable: outputValue
 
 custom:
   defaultIamRole: []
@@ -34,11 +34,11 @@ custom:
         path: hello
         method: post
   noEvents: []
+  testSecret: ${secrets:test}
 
 provider:
   name: aws
   runtime: nodejs8.10
-  credentials: ${secrets:slsDevAcct}
 
 # you can overwrite defaults here
 #  stage: dev
