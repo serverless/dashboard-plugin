@@ -8,9 +8,7 @@ module.exports = function requiredStackTagsPolicy(policy, service, requiredStack
     } else if (!stackTags[key].match(requiredStackTags[key])) {
       failed = true
       policy.fail(
-        `Required stack tag ${key} value ${stackTags[key]} does not match RegExp: ${
-          requiredStackTags[key]
-        }`
+        `Required stack tag ${key} value ${stackTags[key]} does not match RegExp: ${requiredStackTags[key]}`
       )
     }
   }
