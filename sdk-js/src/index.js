@@ -52,9 +52,7 @@ class ServerlessSDK {
 
     if (self.$.config.debug) {
       console.log(
-        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${
-          os.EOL
-        }${config}...`
+        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`
       )
     }
 
