@@ -10,6 +10,10 @@ jest.mock('@serverless/platform-sdk', () => ({
   })
 }))
 
+afterEach(() => {
+  getStateVariable.mockClear()
+})
+
 describe('variables - hookIntoVariableGetter', () => {
   const getValueFromSource = jest.fn().mockReturnValue('frameworkVariableValue')
   const ctx = {
@@ -77,6 +81,50 @@ describe('variables - hookIntoVariableGetter', () => {
       region: 'region',
       stage: 'stage'
     })
+    restore()
+    expect(ctx.sls.variables.getValueFromSource).toEqual(getValueFromSource)
+  })
+
+  it('overrides the default variable getter and doesnt break during logout command', async () => {
+    const restore = hookIntoVariableGetter(
+      {
+        ...ctx,
+        sls: {
+          ...ctx.sls,
+          processedInput: { commands: ['logout'] }
+        }
+      },
+      {},
+      'accessKey'
+    )
+    expect(ctx.sls.variables.getValueFromSource).not.toEqual(getValueFromSource)
+    let value = await ctx.sls.variables.getValueFromSource('secrets:foobar')
+    expect(value).toEqual({})
+    value = await ctx.sls.variables.getValueFromSource('state:service.name')
+    expect(value).toEqual({})
+    expect(getStateVariable).toHaveBeenCalledTimes(0)
+    restore()
+    expect(ctx.sls.variables.getValueFromSource).toEqual(getValueFromSource)
+  })
+
+  it('overrides the default variable getter and doesnt break during login command', async () => {
+    const restore = hookIntoVariableGetter(
+      {
+        ...ctx,
+        sls: {
+          ...ctx.sls,
+          processedInput: { commands: ['login'] }
+        }
+      },
+      {},
+      'accessKey'
+    )
+    expect(ctx.sls.variables.getValueFromSource).not.toEqual(getValueFromSource)
+    let value = await ctx.sls.variables.getValueFromSource('secrets:foobar')
+    expect(value).toEqual({})
+    value = await ctx.sls.variables.getValueFromSource('state:service.name')
+    expect(value).toEqual({})
+    expect(getStateVariable).toHaveBeenCalledTimes(0)
     restore()
     expect(ctx.sls.variables.getValueFromSource).toEqual(getValueFromSource)
   })
