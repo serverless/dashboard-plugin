@@ -38,7 +38,8 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
         respBody
       )
     }
-  } else if (testSpec.response === true && resp.status !== 200) {
+  }
+  if (testSpec.response === true && resp.status !== 200) {
     throw new TestError('status', 200, resp.status, resp, respBody)
   } else if (testSpec.response) {
     if (testSpec.response.status && resp.status !== testSpec.response.status) {

@@ -200,6 +200,26 @@ describe('runTest', () => {
     })
   })
 
+  it('can pass a headers & then fail body check', async () => {
+    await expect(
+      runTest(
+        {
+          name: 'foobar',
+          request: {},
+          response: { headers: { Foo: 'bar' }, body: 'foo' }
+        },
+        'text',
+        'post',
+        'https://example.com'
+      )
+    ).rejects.toThrow(new TestError('body', 'foo', 'foobar'))
+    expect(fetch).toBeCalledWith('https://example.com/text?', {
+      method: 'post',
+      headers: {},
+      body: undefined
+    })
+  })
+
   it('can fail a headers check', async () => {
     await expect(
       runTest(
