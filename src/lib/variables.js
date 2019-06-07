@@ -7,7 +7,10 @@ export const hookIntoVariableGetter = (ctx, secrets, accessKey) => {
   ctx.sls.variables.getValueFromSource = async (variableString) => {
     if (variableString.startsWith(`secrets:`)) {
       ctx.state.secretsUsed.add(variableString.substring(8))
-      if (ctx.sls.processedInput.commands[0] === 'login') {
+      if (
+        ctx.sls.processedInput.commands[0] === 'login' ||
+        ctx.sls.processedInput.commands[0] === 'logout'
+      ) {
         return {}
       }
       if (!secrets[variableString.split(`secrets:`)[1]]) {
@@ -15,7 +18,10 @@ export const hookIntoVariableGetter = (ctx, secrets, accessKey) => {
       }
       return secrets[variableString.split(`secrets:`)[1]]
     } else if (variableString.startsWith(`state:`)) {
-      if (ctx.sls.processedInput.commands[0] === 'login') {
+      if (
+        ctx.sls.processedInput.commands[0] === 'login' ||
+        ctx.sls.processedInput.commands[0] === 'logout'
+      ) {
         return {}
       }
       const service = variableString.substring(6).split('.', 1)[0]
