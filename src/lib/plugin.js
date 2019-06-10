@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { configureFetchDefaults, getLoggedInUser, urls } from '@serverless/platform-sdk'
+import { configureFetchDefaults, getLoggedInUser, openBrowser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
 // import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
 import awsLambdaLogsCollection from './awsLambdaLogsCollection'
@@ -17,6 +17,7 @@ import { hookIntoVariableGetter } from './variables'
 import { generate, eventDict } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
 import { test } from './test'
+import { getDashboardUrl } from './dashboard'
 
 /*
  * Serverless Enterprise Plugin
@@ -137,6 +138,11 @@ class ServerlessEnterprisePlugin {
           }
         },
         enterprise: true
+      },
+      dashboard: {
+        usage: 'Open the Serverless Enterprise dashboard',
+        lifecycleEvents: ['dashboard'],
+        enterprise: true
       }
     }
 
@@ -166,6 +172,7 @@ class ServerlessEnterprisePlugin {
       'logout:logout': this.route('logout:logout').bind(this), // eslint-disable-line
       'generate-event:generate-event': this.route('generate-event:generate-event').bind(this), // eslint-disable-line
       'test:test': this.route('test:test').bind(this), // eslint-disable-line
+      'dashboard:dashboard': this.route('dashboard:dashboard').bind(this), // eslint-disable-line
     }
   }
 
@@ -214,14 +221,15 @@ class ServerlessEnterprisePlugin {
           await getCredentials(self)
           break
         case 'after:info:info':
-          let dashboardUrl = urls.frontendUrl
-          dashboardUrl += `tenants/${self.sls.service.tenant}/`
-          dashboardUrl += `applications/${self.sls.service.app}/`
-          dashboardUrl += `services/${self.sls.service.service}/`
-          dashboardUrl += `stage/${self.provider.getStage()}/`
-          dashboardUrl += `region/${self.provider.getRegion()}`
           // eslint-disable-next-line no-console
-          console.log(chalk.yellow('dashboard:'), dashboardUrl)
+          console.log(
+            chalk.yellow(
+              `Run "serverless dashboard" to open the dashboard or visit ${getDashboardUrl(self)}`
+            )
+          )
+          break
+        case 'dashboard:dashboard':
+          openBrowser(getDashboardUrl(self))
           break
         case 'before:logs:logs':
           await getCredentials(self)
