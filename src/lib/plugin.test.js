@@ -100,7 +100,8 @@ describe('plugin', () => {
       'login:login',
       'logout:logout',
       'generate-event:generate-event',
-      'test:test'
+      'test:test',
+      'dashboard:dashboard'
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)
@@ -211,8 +212,9 @@ describe('plugin', () => {
     await instance.route('after:info:info')()
     // eslint-disable-next-line no-console
     expect(console.log).toBeCalledWith(
-      chalk.yellow('dashboard:'),
-      'https://dashboard/tenants/tenant/applications/app/services/service/stage/stage/region/region'
+      chalk.yellow(
+        'Run "serverless dashboard" to open the dashboard or visit https://dashboard/tenants/tenant/applications/app/services/service/stage/stage/region/region'
+      )
     )
   })
 })
