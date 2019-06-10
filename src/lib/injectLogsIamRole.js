@@ -1,5 +1,5 @@
 import { getAccessKeyForTenant, getMetadata } from '@serverless/platform-sdk'
-import { entries } from 'lodash'
+import { entries, values } from 'lodash'
 
 export default async function(ctx) {
   if (
@@ -9,6 +9,16 @@ export default async function(ctx) {
   ) {
     return
   }
+
+  if (
+    values(ctx.sls.service.provider.compiledCloudFormationTemplate.Resources).filter(
+      ({ Type }) => Type === 'AWS::Logs::LogGroup'
+    ).length === 0
+  ) {
+    // no log groups
+    return
+  }
+
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 
   const { awsAccountId } = await getMetadata(accessKey)
