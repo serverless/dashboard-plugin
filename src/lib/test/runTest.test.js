@@ -7,18 +7,21 @@ jest.mock('isomorphic-fetch', () =>
     if (url.endsWith('/json?')) {
       return Promise.resolve({
         status: 200,
+        ok: true,
         text: jest.fn().mockReturnValue(Promise.resolve(JSON.stringify({ foo: 'bar' }))),
         headers: { _headers: { Foo: 'bar' } }
       })
     } else if (url.endsWith('/text?') || url.endsWith('/text?foo=bar')) {
       return Promise.resolve({
         status: 200,
+        ok: true,
         text: jest.fn().mockReturnValue(Promise.resolve('foobar')),
         headers: { _headers: { Foo: 'bar', Bla: 'bla' } }
       })
     }
     return Promise.resolve({
       status: 400,
+      ok: false,
       text: jest.fn().mockReturnValue(Promise.resolve),
       headers: { _headers: {} }
     })
