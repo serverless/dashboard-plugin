@@ -9,7 +9,7 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
   let queryString = ''
   if (testSpec.request && testSpec.request.body) {
     if (typeof testSpec.request.body === 'string') {
-      ;({ body } = testSpec.request)
+      body = testSpec.request.body // eslint-disable-line prefer-destructuring
     } else {
       body = JSON.stringify(testSpec.request.body)
       headers['Content-Type'] = 'application/json'
