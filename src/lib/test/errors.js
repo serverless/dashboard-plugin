@@ -1,8 +1,8 @@
 export class TestError extends Error {
-  constructor(field, expected, recieved, resp, body) {
+  constructor(field, expected, received, resp, body) {
     super(
-      `Test failed, expected: ${JSON.stringify(expected)}, recieved: ${JSON.stringify(recieved)}`
+      `Test failed, expected: ${JSON.stringify(expected)}, received: ${JSON.stringify(received)}`
     )
-    Object.assign(this, { field, expected, recieved, resp, body })
+    Object.assign(this, { field, expected, received, resp, body })
   }
 }

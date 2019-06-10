@@ -77,18 +77,18 @@ export const test = async (ctx) => {
       body: ${error.body}`
       process.stdout.write(chalk.grey(info))
 
-      const expectedAndRecieved = `
+      const expectedAndReceived = `
       expected: ${error.field} = ${
         typeof error.expected === 'object'
           ? JSON.stringify(error.expected, null, 2).replace(/\n/g, '\n      ')
           : error.expected
       }
-      recieved: ${error.field} = ${
-        typeof error.recieved === 'object'
-          ? JSON.stringify(error.recieved, null, 2).replace(/\n/g, '\n      ')
-          : error.recieved
+      received: ${error.field} = ${
+        typeof error.received === 'object'
+          ? JSON.stringify(error.received, null, 2).replace(/\n/g, '\n      ')
+          : error.received
       }\n\n`
-      process.stdout.write('\n' + chalk.white(expectedAndRecieved))
+      process.stdout.write('\n' + chalk.white(expectedAndReceived))
     }
   }
 
