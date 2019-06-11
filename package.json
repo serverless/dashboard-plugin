@@ -13,7 +13,8 @@
     "lint": "if [ -z \"$CI\" ]; then eslint src integration-testing/*.js --fix --cache; else eslint src integration-testing/*.js; fi",
     "lint:staged": "lint-staged",
     "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
-    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'"
+    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'",
+    "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
