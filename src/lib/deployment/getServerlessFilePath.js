@@ -10,7 +10,16 @@ const fileExists = async (filename) => {
   }
 }
 
-export default async function getServerlessFilePath(servicePath) {
+export default async function getServerlessFilePath(filename, servicePath) {
+  if (filename) {
+    const filePath = path.join(servicePath, filename)
+    const customExists = await fileExists(filePath)
+    if (!customExists) {
+      throw new Error('Could not find serverless service definition file.')
+    }
+    return filePath
+  }
+
   const ymlFilePath = path.join(servicePath, 'serverless.yml')
   const yamlFilePath = path.join(servicePath, 'serverless.yaml')
   const jsonFilePath = path.join(servicePath, 'serverless.json')
