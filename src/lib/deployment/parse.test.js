@@ -47,6 +47,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly w/ no plugins', async () => {
     const serverless = {
+      processedInput: { options: {} },
       version: frameworkVersion,
       config: { servicePath: '.' },
       service: {
@@ -160,6 +161,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly w/ simple plugin list', async () => {
     const serverless = {
+      processedInput: { options: {} },
       version: frameworkVersion,
       config: { servicePath: '.' },
       service: {
@@ -274,6 +276,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly w/ plugin object', async () => {
     const serverless = {
+      processedInput: { options: {} },
       version: frameworkVersion,
       config: { servicePath: '.' },
       service: {
@@ -388,6 +391,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly with zeroconf alexaSkill', async () => {
     const serverless = {
+      processedInput: { options: {} },
       version: frameworkVersion,
       config: { servicePath: '.' },
       service: {
@@ -490,6 +494,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly with websocket', async () => {
     const serverless = {
+      processedInput: { options: {} },
       version: frameworkVersion,
       config: { servicePath: '.' },
       service: {
@@ -600,6 +605,7 @@ describe('parseDeploymentData', () => {
 
   it('creates a deployment object correctly without http events', async () => {
     const serverless = {
+      processedInput: { options: {} },
       version: frameworkVersion,
       config: { servicePath: '.' },
       service: {
