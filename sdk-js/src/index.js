@@ -52,7 +52,9 @@ class ServerlessSDK {
 
     if (self.$.config.debug) {
       console.log(
-        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`
+        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${
+          os.EOL
+        }${config}...`
       )
     }
 
@@ -166,7 +168,6 @@ class ServerlessSDK {
           trans.set('event.custom.httpPath', event.requestContext.resourcePath)
           trans.set('event.custom.httpMethod', event.requestContext.httpMethod)
           trans.set('event.custom.xTraceId', event.headers['X-Amzn-Trace-Id'])
-          trans.set('event.custom.xForwardedFor', event.headers['X-Forwarded-For'])
           trans.set('event.custom.userAgent', event.headers['User-Agent'])
         }
         trans.set('event.custom.stage', meta.stageName)
