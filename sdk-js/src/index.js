@@ -1,10 +1,18 @@
 'use strict';
 
 /*
- * Serverless SDK
+ * Spans and Monkey Patching
  */
+const EventEmitter = require('events')
+const spanEmitter = new EventEmitter()
+
+require('./lib/spanHooks/hookAwsSdk')(spanEmitter)
+require('./lib/spanHooks/hookHttp')(spanEmitter)
 
 const spanEmitter = require('./lib/proxyAwsSdk');
+/*
+ * Serverless SDK
+ */
 
 const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
