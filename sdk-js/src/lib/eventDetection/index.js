@@ -1,5 +1,6 @@
 const alexaSkill = require('./eventTypes/alexaSkill')
 const apiGateway = require('./eventTypes/apiGateway')
+const customAuthorizer = require('./eventTypes/customAuthorizer')
 const cloudFront = require('./eventTypes/cloudFront')
 const firehose = require('./eventTypes/firehose')
 const kinesis = require('./eventTypes/kinesis')
@@ -11,6 +12,8 @@ const sqs = require('./eventTypes/sqs')
 
 const detectEventType = (event) =>
   alexaSkill(event) ||
+  // Custom authorizer must come before apiGateway because they share similar keys.
+  customAuthorizer(event) ||
   apiGateway(event) ||
   cloudFront(event) ||
   firehose(event) ||
