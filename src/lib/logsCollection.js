@@ -30,7 +30,7 @@ export default async (ctx) => {
 
   // Gather possible targets
   const logGroups = pickResourceType(template, 'AWS::Logs::LogGroup')
-  if (logGroups.length == 0) {
+  if (logGroups.length === 0) {
     return
   }
 
