@@ -30,12 +30,16 @@ module.exports = function requireGlobalVpcPolicy(
     if (!VpcConfig || !VpcConfig.SecurityGroupIds || !VpcConfig.SubnetIds) {
       failed = true
       policy.fail(
-        `Function "${logicalFuncNamesToConfigFuncName[funcName]}" doesn't satisfy global VPC requirement.`
+        `Function "${
+          logicalFuncNamesToConfigFuncName[funcName]
+        }" doesn't satisfy global VPC requirement.`
       )
     } else if (VpcConfig.SubnetIds.length < minNumSubnets) {
       failed = true
       policy.fail(
-        `Function "${logicalFuncNamesToConfigFuncName[funcName]}" doesn't satisfy the global VPC requirement of at least ${minNumSubnets} subnets.`
+        `Function "${
+          logicalFuncNamesToConfigFuncName[funcName]
+        }" doesn't satisfy the global VPC requirement of at least ${minNumSubnets} subnets.`
       )
     }
   }

@@ -17,6 +17,7 @@ import { generate, eventDict } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
 import { test } from './test'
 import { getDashboardUrl } from './dashboard'
+import setApiGatewayAccessLogFormat from './setApiGatewayAccessLogFormat'
 
 /*
  * Serverless Enterprise Plugin
@@ -190,6 +191,7 @@ class ServerlessEnterprisePlugin {
           )
           await wrap(self)
           await injectLogsIamRole(self)
+          await setApiGatewayAccessLogFormat(self)
           break
         case 'after:package:createDeploymentArtifacts':
           await wrapClean(self)
@@ -202,7 +204,6 @@ class ServerlessEnterprisePlugin {
           break
         case 'before:aws:package:finalize:saveServiceState':
           await getCredentials(self)
-          // await awsApiGatewayLogsCollection(self)
           await logsCollection(self)
           break
         case 'before:deploy:deploy':

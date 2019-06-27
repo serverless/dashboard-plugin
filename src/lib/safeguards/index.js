@@ -121,7 +121,9 @@ async function runPolicies(ctx) {
     await policy.function(policyHandle, service, policy.safeguardConfig)
     if (!result.approved && !result.failed) {
       ctx.sls.cli.log(
-        `Safeguard Policy "${policy.title}" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`,
+        `Safeguard Policy "${
+          policy.title
+        }" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`,
         `Serverless Enterprise`
       )
     }

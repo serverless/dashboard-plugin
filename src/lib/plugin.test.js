@@ -10,6 +10,7 @@ import { saveDeployment } from './deployment'
 import { generate } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
 import injectLogsIamRole from './injectLogsIamRole'
+import setApiGatewayAccessLogFormat from './setApiGatewayAccessLogFormat'
 import _ from 'lodash'
 
 afterAll(() => jest.restoreAllMocks())
@@ -70,6 +71,7 @@ jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 jest.mock('./generateEvent', () => ({ eventDict: {}, generate: jest.fn() }))
 jest.mock('./injectLogsIamRole', () => jest.fn())
 jest.mock('./deployProfile', () => ({ configureDeployProfile: jest.fn() }))
+jest.mock('./setApiGatewayAccessLogFormat', () => jest.fn())
 
 describe('plugin', () => {
   it('constructs and sets hooks', () => {
@@ -121,6 +123,7 @@ describe('plugin', () => {
     await instance.route('before:package:createDeploymentArtifacts')()
     expect(wrap).toBeCalledWith(instance)
     expect(injectLogsIamRole).toBeCalledWith(instance)
+    expect(setApiGatewayAccessLogFormat).toBeCalledWith(instance)
   })
 
   it('routes after:package:createDeploymentArtifacts hook correctly', async () => {
