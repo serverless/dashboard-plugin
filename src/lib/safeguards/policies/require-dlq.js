@@ -37,9 +37,7 @@ module.exports = function dlqPolicy(policy, service) {
     if (events.length === 0 || eventIntersection.size > 0) {
       failed = true
       policy.fail(
-        `Function "${
-          logicalFuncNamesToConfigFuncName[funcName]
-        }" doesn't have a Dead Letter Queue configured.`
+        `Function "${logicalFuncNamesToConfigFuncName[funcName]}" doesn't have a Dead Letter Queue configured.`
       )
     }
   }
