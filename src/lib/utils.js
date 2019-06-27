@@ -16,4 +16,7 @@ function pickResourceType(template, resourcesType) {
   return resources
 }
 
-export { upperFirst, pickResourceType }
+const API_GATEWAY_FILTER_PATTERN = '"SLS_ACCESS_LOG"'
+const LAMBDA_FILTER_PATTERN = '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"'
+
+export { upperFirst, pickResourceType, API_GATEWAY_FILTER_PATTERN, LAMBDA_FILTER_PATTERN }

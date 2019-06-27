@@ -1,8 +1,7 @@
 import chalk from 'chalk'
 import ServerlessEnterprisePlugin from './plugin'
 import getCredentials from './credentials'
-import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
-import awsLambdaLogsCollection from './awsLambdaLogsCollection'
+import logsCollection from './logsCollection'
 import wrap from './wrap'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
@@ -64,8 +63,7 @@ jest.mock('./appUids', () =>
 jest.mock('./wrap', () => jest.fn())
 jest.mock('./wrapClean', () => jest.fn())
 jest.mock('./safeguards', () => jest.fn())
-jest.mock('./awsApiGatewayLogsCollection', () => jest.fn())
-jest.mock('./awsLambdaLogsCollection', () => jest.fn())
+jest.mock('./logsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
 jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
@@ -184,9 +182,7 @@ describe('plugin', () => {
     const instance = new ServerlessEnterprisePlugin(sls)
     await instance.route('before:aws:package:finalize:saveServiceState')()
     expect(getCredentials).toBeCalledWith(instance)
-    // expect(awsApiGatewayLogsCollection).toBeCalledWith(instance)
-    expect(awsApiGatewayLogsCollection).toHaveBeenCalledTimes(0)
-    expect(awsLambdaLogsCollection).toBeCalledWith(instance)
+    expect(logsCollection).toBeCalledWith(instance)
   })
 
   it('routes before:deploy:deploy', async () => {

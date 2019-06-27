@@ -1,8 +1,7 @@
 import chalk from 'chalk'
 import { configureFetchDefaults, getLoggedInUser, openBrowser } from '@serverless/platform-sdk'
 import errorHandler from './errorHandler'
-// import awsApiGatewayLogsCollection from './awsApiGatewayLogsCollection'
-import awsLambdaLogsCollection from './awsLambdaLogsCollection'
+import logsCollection from './logsCollection'
 import login from './login'
 import logout from './logout'
 import wrap from './wrap'
@@ -204,7 +203,7 @@ class ServerlessEnterprisePlugin {
         case 'before:aws:package:finalize:saveServiceState':
           await getCredentials(self)
           // await awsApiGatewayLogsCollection(self)
-          await awsLambdaLogsCollection(self)
+          await logsCollection(self)
           break
         case 'before:deploy:deploy':
           this.enterprise = {

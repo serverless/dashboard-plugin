@@ -1,11 +1,15 @@
 /*
- * Lambda Logs Collection
- * - Collects `SERVERLESS PLATFORM |||` from lambda logs
- * - Optionally collects all logs (defaults to always for now)
- * - Capturing billing details (?)
+ * Logs Collection
+ * - Collects `SERVERLESS PLATFORM || REPORT` from lambda logs
+ * - Collects `sls-access-logs` from API Gateway access logs
  */
 
-import { pickResourceType, upperFirst } from './utils'
+import {
+  pickResourceType,
+  upperFirst,
+  API_GATEWAY_FILTER_PATTERN,
+  LAMBDA_FILTER_PATTERN
+} from './utils'
 
 import { getAccessKeyForTenant, getLogDestination } from '@serverless/platform-sdk'
 
@@ -25,8 +29,8 @@ export default async (ctx) => {
   const template = ctx.sls.service.provider.compiledCloudFormationTemplate
 
   // Gather possible targets
-  const lambdaLogGroups = pickResourceType(template, 'AWS::Logs::LogGroup')
-  if (lambdaLogGroups.length == 0) {
+  const logGroups = pickResourceType(template, 'AWS::Logs::LogGroup')
+  if (logGroups.length === 0) {
     return
   }
 
@@ -57,16 +61,21 @@ export default async (ctx) => {
   }
 
   // For each log group, set up subscription
-  for (const lambdaLogGroupIndex in lambdaLogGroups) {
-    const lambdaLogGroupKey = lambdaLogGroups[lambdaLogGroupIndex].key
+  for (const logGroupIndex in logGroups) {
+    const logGroupKey = logGroups[logGroupIndex].key
+    const logGroupName = logGroups[logGroupIndex].resource.Properties.LogGroupName
 
-    template.Resources[`CloudWatchLogsSubscriptionFilter${upperFirst(lambdaLogGroupKey)}`] = {
+    const filterPattern = logGroupName.startsWith('/aws/api-gateway/')
+      ? API_GATEWAY_FILTER_PATTERN
+      : LAMBDA_FILTER_PATTERN
+
+    template.Resources[`CloudWatchLogsSubscriptionFilter${upperFirst(logGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
       Properties: {
         DestinationArn: destinationArn,
-        FilterPattern: '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"',
+        FilterPattern: filterPattern,
         LogGroupName: {
-          Ref: lambdaLogGroupKey
+          Ref: logGroupKey
         }
       }
     }
