@@ -18,5 +18,5 @@ export default (ctx) => {
   ) {
     ctx.sls.service.provider.logs.restApi = {}
   }
-  ctx.sls.service.provider.logs.restApi.format = API_GATEWAY_LOG_FORMAT
+  ctx.sls.service.provider.logs.restApi.format = JSON.stringify(API_GATEWAY_LOG_FORMAT)
 }

@@ -9,7 +9,7 @@ describe('setApiGatewayAccessLogFormat', () => {
         provider: {
           logs: {
             restApi: {
-              format: API_GATEWAY_LOG_FORMAT
+              format: JSON.stringify(API_GATEWAY_LOG_FORMAT)
             }
           }
         }
