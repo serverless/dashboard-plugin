@@ -19,6 +19,7 @@ function pickResourceType(template, resourcesType) {
 const API_GATEWAY_FILTER_PATTERN = '"SLS_ACCESS_LOG"'
 const LAMBDA_FILTER_PATTERN = '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"'
 const API_GATEWAY_LOG_FORMAT = {
+  requestTime: '$context.requestTime',
   requestId: '$context.requestId',
   apiId: '$context.apiId',
   resourceId: '$context.resourceId',
