@@ -157,6 +157,64 @@ const cloudFront = {
   ]
 }
 
+const customAuthorizerToken = {
+  type: 'TOKEN',
+  authorizationToken: 'allow',
+  methodArn: 'arn:aws:execute-api:us-west-2:123456789012:ymy8tbxw7b/*/GET/'
+}
+
+const customAuthorizerRequest = {
+  type: 'REQUEST',
+  methodArn: 'arn:aws:execute-api:us-east-1:123456789012:s4x3opwd6i/test/GET/request',
+  resource: '/request',
+  path: '/request',
+  httpMethod: 'GET',
+  headers: {
+    'X-AMZ-Date': '20170718T062915Z',
+    Accept: '*/*',
+    HeaderAuth1: 'headerValue1',
+    'CloudFront-Viewer-Country': 'US',
+    'CloudFront-Forwarded-Proto': 'https',
+    'CloudFront-Is-Tablet-Viewer': 'false',
+    'CloudFront-Is-Mobile-Viewer': 'false',
+    'User-Agent': '...',
+    'X-Forwarded-Proto': 'https',
+    'CloudFront-Is-SmartTV-Viewer': 'false',
+    Host: '....execute-api.us-east-1.amazonaws.com',
+    'Accept-Encoding': 'gzip, deflate',
+    'X-Forwarded-Port': '443',
+    'X-Amzn-Trace-Id': '...',
+    Via: '...cloudfront.net (CloudFront)',
+    'X-Amz-Cf-Id': '...',
+    'X-Forwarded-For': '..., ...',
+    'Postman-Token': '...',
+    'cache-control': 'no-cache',
+    'CloudFront-Is-Desktop-Viewer': 'true',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  queryStringParameters: {
+    QueryString1: 'queryValue1'
+  },
+  pathParameters: {},
+  stageVariables: {
+    StageVar1: 'stageValue1'
+  },
+  requestContext: {
+    path: '/request',
+    accountId: '123456789012',
+    resourceId: '05c7jb',
+    stage: 'test',
+    requestId: '...',
+    identity: {
+      apiKey: '...',
+      sourceIp: '...'
+    },
+    resourcePath: '/request',
+    httpMethod: 'GET',
+    apiId: 's4x3opwd6i'
+  }
+}
+
 const firehose = {
   invocationId: 'invoked123',
   deliveryStreamArn: 'aws:lambda:events',
@@ -368,6 +426,14 @@ describe('eventDetection', () => {
 
   it('identifies cloudFront', () => {
     expect(detectEventType(cloudFront)).toEqual('aws.cloudfront')
+  })
+
+  it('identifies token custom authorizers', () => {
+    expect(detectEventType(customAuthorizerToken)).toEqual('aws.apigateway.authorizer')
+  })
+
+  it('identifies request custom authorizers', () => {
+    expect(detectEventType(customAuthorizerRequest)).toEqual('aws.apigateway.authorizer')
   })
 
   it('identifies firehose', () => {

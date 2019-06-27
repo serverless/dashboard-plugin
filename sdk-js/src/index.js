@@ -169,6 +169,9 @@ class ServerlessSDK {
           trans.set('event.custom.httpMethod', event.requestContext.httpMethod)
           trans.set('event.custom.xTraceId', event.headers['X-Amzn-Trace-Id'])
           trans.set('event.custom.userAgent', event.headers['User-Agent'])
+
+          // For APIGW access logs
+          trans.$.schema.transactionId = event.requestContext.requestId
         }
         trans.set('event.custom.stage', meta.stageName)
 
