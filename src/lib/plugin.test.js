@@ -110,10 +110,7 @@ describe('plugin', () => {
     delete slsClone.service.tenant
     const instance = new ServerlessEnterprisePlugin(slsClone) // eslint-disable-line
     expect(slsClone.getProvider).toBeCalledWith('aws')
-    expect(slsClone.cli.log).toBeCalledWith(
-      'Warning: The Enterprise Plugin requires a "tenant" property in your "serverless.yml" and will not work without it.',
-      'Serverless Enterprise'
-    )
+    expect(sls.cli.log).toHaveBeenCalledTimes(0)
   })
 
   it('routes before:package:createDeploymentArtifacts hook correctly', async () => {
