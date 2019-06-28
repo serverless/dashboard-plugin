@@ -18,5 +18,29 @@ function pickResourceType(template, resourcesType) {
 
 const API_GATEWAY_FILTER_PATTERN = '"SLS_ACCESS_LOG"'
 const LAMBDA_FILTER_PATTERN = '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"'
+const API_GATEWAY_LOG_FORMAT = {
+  requestTime: '$context.requestTime',
+  requestId: '$context.requestId',
+  apiId: '$context.apiId',
+  resourceId: '$context.resourceId',
+  resourcePath: '$context.resourcePath',
+  path: '$context.path',
+  httpMethod: '$context.httpMethod',
+  status: '$context.status',
+  authLatency: '$context.authorizer.integrationLatency',
+  integrationLatency: '$context.integrationLatency',
+  integrationStatus: '$context.integrationStatus',
+  responseLatency: '$context.responseLatency',
+  responseLength: '$context.responseLength',
+  errorMessage: '$context.error.message',
+  format: 'SLS_ACCESS_LOG',
+  version: '1.0.0'
+}
 
-export { upperFirst, pickResourceType, API_GATEWAY_FILTER_PATTERN, LAMBDA_FILTER_PATTERN }
+export {
+  upperFirst,
+  pickResourceType,
+  API_GATEWAY_FILTER_PATTERN,
+  LAMBDA_FILTER_PATTERN,
+  API_GATEWAY_LOG_FORMAT
+}
