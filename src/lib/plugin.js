@@ -68,12 +68,6 @@ class ServerlessEnterprisePlugin {
         throw new Error(errorMessage) // eslint-disable-line
     }
     if (currentCommand !== 'login' && currentCommand !== 'logout' && missing.length > 0) {
-      sls.cli.log(
-        `Warning: The Enterprise Plugin requires a ${missing
-          .map((opt) => `"${opt}"`)
-          .join(', ')} property in your "serverless.yml" and will not work without it.`,
-        'Serverless Enterprise'
-      )
       // replace the default hook with a message about configuring sls enterprise
       this.hooks = {
         'after:aws:deploy:finalize:cleanup': () =>
