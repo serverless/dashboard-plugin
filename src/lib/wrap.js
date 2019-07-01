@@ -21,6 +21,7 @@ tenantId: '${ctx.sls.service.tenant}',
 applicationName: '${ctx.sls.service.app}',
 appUid: '${ctx.sls.service.appUid}',
 tenantUid: '${ctx.sls.service.tenantUid}',
+deploymentUid: '${ctx.deploymentUid}',
 serviceName: '${ctx.sls.service.service}',
 stageName: '${ctx.provider.getStage()}'})
 const handlerWrapperArgs = { functionName: '${fn.name}', timeout: ${fn.timeout}}
