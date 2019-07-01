@@ -105,7 +105,6 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
-            timeout: null,
             tags: {},
             vpc: {
               securityGroupIds: [],
@@ -220,7 +219,6 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
-            timeout: null,
             tags: {},
             vpc: {
               securityGroupIds: [],
@@ -335,7 +333,6 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
-            timeout: null,
             tags: {},
             vpc: {
               securityGroupIds: [],
@@ -449,7 +446,6 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
-            timeout: null,
             tags: {},
             vpc: {
               securityGroupIds: [],
@@ -552,7 +548,6 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
-            timeout: null,
             tags: {},
             vpc: {
               securityGroupIds: [],
@@ -658,7 +653,6 @@ describe('parseDeploymentData', () => {
             onError: undefined,
             role: undefined,
             runtime: undefined,
-            timeout: null,
             tags: {},
             vpc: {
               securityGroupIds: [],
