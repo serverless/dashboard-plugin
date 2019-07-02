@@ -1,7 +1,5 @@
 language: node_js
 
-sudo: false
-
 env:
   global:
     # SERVERLESS_ACCESS_KEY
