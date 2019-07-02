@@ -2,7 +2,7 @@ module.exports = {
   coverageDirectory: './coverage/',
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testPathIgnorePatterns: ['/dist', '/node_modules'],
   testEnvironment: 'node',
   setupFiles: ['<rootDir>/src/runtime.js']
 }
