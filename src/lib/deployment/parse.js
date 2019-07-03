@@ -52,6 +52,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       serviceName: service.service,
       stageName: ctx.provider.getStage(),
       regionName: ctx.provider.getRegion(),
+      deploymentUid: ctx.deploymentUid,
       logsRoleArn,
       archived,
       status,

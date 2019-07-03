@@ -26,6 +26,7 @@ class ServerlessSDK {
     this.$.tenantId = obj.tenantId || null
     this.$.appUid = obj.appUid || null
     this.$.tenantUid = obj.tenantUid || null
+    this.$.deploymentUid = obj.deploymentUid || null
     this.$.applicationName = obj.applicationName || null
     this.$.serviceName = obj.serviceName || null
     this.$.stageName = obj.stageName || null
@@ -52,9 +53,7 @@ class ServerlessSDK {
 
     if (self.$.config.debug) {
       console.log(
-        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${
-          os.EOL
-        }${config}...`
+        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`
       )
     }
 
@@ -74,6 +73,7 @@ class ServerlessSDK {
     meta.applicationName = meta.applicationName || (this.$.applicationName || null)
     meta.appUid = meta.appUid || (this.$.appUid || null)
     meta.tenantUid = meta.tenantUid || (this.$.tenantUid || null)
+    meta.deploymentUid = meta.deploymentUid || (this.$.deploymentUid || null)
     meta.serviceName = meta.serviceName || (this.$.serviceName || null)
     meta.stageName = meta.stageName || (this.$.stageName || null)
     meta.functionName = config.functionName
@@ -123,6 +123,7 @@ class ServerlessSDK {
           applicationName: meta.applicationName,
           appUid: meta.appUid,
           tenantUid: meta.tenantUid,
+          deploymentUid: meta.deploymentUid,
           serviceName: meta.serviceName,
           stageName: meta.stageName,
           functionName: meta.functionName,

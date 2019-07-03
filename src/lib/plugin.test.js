@@ -6,7 +6,7 @@ import wrap from './wrap'
 import wrapClean from './wrapClean'
 import runPolicies from './safeguards'
 import removeDestination from './removeDestination'
-import { saveDeployment } from './deployment'
+import { saveDeployment, createAndSetDeploymentUid } from './deployment'
 import { generate } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
 import injectLogsIamRole from './injectLogsIamRole'
@@ -66,7 +66,10 @@ jest.mock('./wrapClean', () => jest.fn())
 jest.mock('./safeguards', () => jest.fn())
 jest.mock('./logsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
-jest.mock('./deployment', () => ({ saveDeployment: jest.fn() }))
+jest.mock('./deployment', () => ({
+  saveDeployment: jest.fn(),
+  createAndSetDeploymentUid: jest.fn()
+}))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 jest.mock('./generateEvent', () => ({ eventDict: {}, generate: jest.fn() }))
 jest.mock('./injectLogsIamRole', () => jest.fn())
@@ -121,6 +124,7 @@ describe('plugin', () => {
     expect(wrap).toBeCalledWith(instance)
     expect(injectLogsIamRole).toBeCalledWith(instance)
     expect(setApiGatewayAccessLogFormat).toBeCalledWith(instance)
+    expect(createAndSetDeploymentUid).toBeCalledWith(instance)
   })
 
   it('routes after:package:createDeploymentArtifacts hook correctly', async () => {

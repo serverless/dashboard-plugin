@@ -11,7 +11,7 @@ import runPolicies from './safeguards'
 import getCredentials from './credentials'
 import getAppUids from './appUids'
 import removeDestination from './removeDestination'
-import { saveDeployment } from './deployment'
+import { saveDeployment, createAndSetDeploymentUid } from './deployment'
 import { hookIntoVariableGetter } from './variables'
 import { generate, eventDict } from './generateEvent'
 import { configureDeployProfile } from './deployProfile'
@@ -183,6 +183,7 @@ class ServerlessEnterprisePlugin {
             self.sls.service,
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
           )
+          createAndSetDeploymentUid(self)
           await wrap(self)
           await injectLogsIamRole(self)
           await setApiGatewayAccessLogFormat(self)
@@ -191,6 +192,7 @@ class ServerlessEnterprisePlugin {
           await wrapClean(self)
           break
         case 'before:deploy:function:packageFunction':
+          createAndSetDeploymentUid(self)
           await wrap(self)
           break
         case 'after:deploy:function:packageFunction':

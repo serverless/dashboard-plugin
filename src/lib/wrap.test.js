@@ -29,6 +29,7 @@ describe('wrap - wrap', () => {
     const log = jest.fn()
 
     const ctx = {
+      deploymentUid: 'deploymentUid',
       state: {},
       provider: { getStage: jest.fn().mockReturnValue('dev') },
       sls: {
@@ -89,6 +90,7 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
+deploymentUid: 'deploymentUid',
 serviceName: 'service',
 stageName: 'dev'})
 const handlerWrapperArgs = { functionName: 'service-dev-func', timeout: 6}
@@ -106,6 +108,7 @@ try {
     const log = jest.fn()
 
     const ctx = {
+      deploymentUid: 'deploymentUid',
       state: {},
       provider: { getStage: jest.fn().mockReturnValue('dev') },
       sls: {
@@ -160,6 +163,7 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
+deploymentUid: 'deploymentUid',
 serviceName: 'service',
 stageName: 'dev'})
 const handlerWrapperArgs = { functionName: 'service-dev-func', timeout: 6}
@@ -181,6 +185,7 @@ try {
     const log = jest.fn()
 
     const ctx = {
+      deploymentUid: 'deploymentUid',
       state: {},
       provider: { getStage: jest.fn().mockReturnValue('dev') },
       sls: {
@@ -245,6 +250,7 @@ tenantId: 'tenant',
 applicationName: 'app',
 appUid: 'appUid',
 tenantUid: 'tenantUid',
+deploymentUid: 'deploymentUid',
 serviceName: 'service',
 stageName: 'dev'})
 const handlerWrapperArgs = { functionName: 'service-dev-func', timeout: 6}
