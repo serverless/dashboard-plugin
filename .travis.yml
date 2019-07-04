@@ -6,72 +6,126 @@ git:
   #   the last merge commit that is to be tested
   depth: 10
 
-env:
-  global:
-    # SERVERLESS_ACCESS_KEY
-    secure: WAwePU+QdsesOqOiXwE+7QQj3tzB8uwZDW1ZGQoOCK3aFKr/ByOJX3bSAqIUAJc44O1YyP/7tSY5K7WNU/1+12tMmQDbw64SFdWYZT0k0qIkQMXcXlmSMb+VimjXQGTl3IWJMbv4hMofCr5X80/hoCbasTg85+TueXwgqi2ItrGJ0rP/W3/TTx0zyLWQWXBP2Fbj4SeErg1sXP/kB4c4aS1wyocJ+ReSW4e/FKvMJS28wdCSKSOLZ0BPkaPaTYtreJAaJCedK4kffh+jm8RaZ6ocODcziEzeSQiSbspjM2tuHyd6L1kuWpAAw+lELFZ6N1kwTUWRcqNOqIdv09fv80tNAUjHeGIhsIUHJDmiB7MIDVV4FI/hgyD9BmJVisCSMB5NrMTKeJsOXUZyEIBMZpUvunSsopSY9E1RZI8N8Nn9tmL687Z0Ff6IJnMvej6eD98sdLSaQyhtJlRGAbaOBK9gKwDftgeIdgjA5eUAQVYQ67N+Bq1OCJ1MaJWvEK2hbU7xIQTAvwgApdoX7x0uKeOYs6lM46CdDDplhgpaSOI+2fg1EfellRwOBC6E6OCR9jMt5e+hULuLFqHY17L0n8wTTDTGhd5SFgnglkI6he53PbB1zmN8IUgSGe3E//q3MZ/CWcxo3JElzAvJj0Qc/uJIBZOmA/9YmP3u+Crq+4Q=
+cache:
+  directories:
+    - $HOME/.npm
+    - node_modules
+    - sdk-js/node_modules
 
-matrix:
-  include:
-    - node_js: 6
-    - node_js: 8
-    - node_js: '10.15'
+branches:
+  only:
+    - master # Do not build PR branches
+    - /^v\d+\.\d+\.\d+$/ # Ensure to build release tags
 
+# Ensure to install dependencies at their latest versions
 install:
-  - npm install -g npm codecov
-  # allows for bumping sdk version before matching sdk version is released
-  - node ./scripts/updatePreReleaseDependency.js
-  - npm install
-  - pushd sdk-js && npm install && popd
+  # Note: with `npm update` there seems no way to update all project dependency groups in one run
+  - npm update --no-save # Updates just dependencies
+  # Note: npm documents --dev option for dev dependencies update, but it's only --save-dev that works
+  - npm update --save-dev --no-save # Updates just devDependencies
+  - cd sdk-js
+  - npm update --no-save
+  - npm update --save-dev --no-save
+  - cd ..
+
+before_script:
+  # Fail build right after first script fails. Travis doesn't ensure that: https://github.com/travis-ci/travis-ci/issues/1066
+  # More info on below line: https://www.davidpashley.com/articles/writing-robust-shell-scripts/#idm5413512
+  - set -e
 
 script:
-  - npm run lint
-  - pushd sdk-js && npm run lint && popd
-  - npm run test
-  - 'if [ z$TRAVIS_NODE_VERSION == z10.15 ] && [ z$SERVERLESS_ACCESS_KEY != z ]; then npm run integration-test ; else echo skipping node $TRAVIS_NODE_VERSION ; fi'
-  - pushd sdk-js && npm run test && popd
-  - codecov
-  - npm run build
+  - npm test
+  - cd sdk-js
+  - npm test
+  - cd ..
 
+# Ensure to fail build if deploy fails, Travis doesn't ensure that: https://github.com/travis-ci/travis-ci/issues/921
 before_deploy:
-  - git checkout package.json
+  - set -e
+  - npm run build
   - node ./scripts/updatePreReleaseVersion.js
-  - '[[ "$TRAVIS_TAG" =~ beta ]] || [[ -z "$TRAVIS_TAG" ]] && node ./scripts/updatePreReleaseDependency.js || true'
+  # Remove eventual old npm logs (needed for deploy status check)
+  - rm -rf ~/.npm/_logs
+after_deploy:
+  - |
+    # npm creates log only on failure
+    if [ -d ~/.npm/_logs ]; then
+      # Undocumented way to force Travis build to fail
+      travis_terminate 1
+    fi
 
-deploy:
-  # production releases
-  - provider: npm
-    email: services@serverless.com
-    skip_cleanup: true
-    tag: latest
-    on:
-      node: 10.15
-      tags: true
-      condition: '! "$TRAVIS_TAG" =~ beta'
-      repo: serverless/enterprise-plugin
-    api_key:
-      secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
-  # tagged prereleases
-  - provider: npm
-    email: services@serverless.com
-    skip_cleanup: true
-    tag: next
-    on:
-      node: 10.15
-      tags: true
-      condition: '"$TRAVIS_TAG" =~ beta'
-      repo: serverless/enterprise-plugin
-    api_key:
-      secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
-  # automatic prereleases
-  - provider: npm
-    email: services@serverless.com
-    skip_cleanup: true
-    tag: next
-    on:
-      node: 10.15
-      tags: false
-      branch: master
-      repo: serverless/enterprise-plugin
-    api_key:
-      secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
+stages:
+  - name: Test
+  - name: Integration Test
+    if: branch = master AND type = push
+  - name: Deploy
+    if: (branch = master AND type = push) OR tag =~ ^v\d+\.\d+\.\d+$
+
+jobs:
+  include:
+    # In most cases it's best to configure one job per platform & Node.js version combination
+    # (job boot & setup takes ca 1 minute, one task run usually lasts seconds)
+
+    - name: 'Lint, Unit Tests - Linux - Node.js v12'
+      node_js: 12
+      script:
+        - npm run lint
+        - cd sdk-js
+        - npm run lint
+        - cd ..
+        - npm test
+        - cd sdk-js
+        - npm test
+        - cd ..
+
+    - name: 'Unit Tests, Coverage - Linux - Node.js v10'
+      node_js: 10
+      before_install:
+        - npm install -g npm codecov
+      script:
+        - npm test
+        - cd sdk-js
+        - npm test
+        - cd ..
+        - codecov
+
+    - name: 'Unit Tests - Linux - Node.js v8'
+      node_js: 8
+
+    - name: 'Unit Tests - Linux - Node.js v6'
+      node_js: 6
+
+    - stage: Integration Test
+      name: 'Integration Tests - Linux - Node.js v12'
+      node_js: 12
+      env:
+        # SERVERLESS_ACCESS_KEY
+        - secure: WAwePU+QdsesOqOiXwE+7QQj3tzB8uwZDW1ZGQoOCK3aFKr/ByOJX3bSAqIUAJc44O1YyP/7tSY5K7WNU/1+12tMmQDbw64SFdWYZT0k0qIkQMXcXlmSMb+VimjXQGTl3IWJMbv4hMofCr5X80/hoCbasTg85+TueXwgqi2ItrGJ0rP/W3/TTx0zyLWQWXBP2Fbj4SeErg1sXP/kB4c4aS1wyocJ+ReSW4e/FKvMJS28wdCSKSOLZ0BPkaPaTYtreJAaJCedK4kffh+jm8RaZ6ocODcziEzeSQiSbspjM2tuHyd6L1kuWpAAw+lELFZ6N1kwTUWRcqNOqIdv09fv80tNAUjHeGIhsIUHJDmiB7MIDVV4FI/hgyD9BmJVisCSMB5NrMTKeJsOXUZyEIBMZpUvunSsopSY9E1RZI8N8Nn9tmL687Z0Ff6IJnMvej6eD98sdLSaQyhtJlRGAbaOBK9gKwDftgeIdgjA5eUAQVYQ67N+Bq1OCJ1MaJWvEK2hbU7xIQTAvwgApdoX7x0uKeOYs6lM46CdDDplhgpaSOI+2fg1EfellRwOBC6E6OCR9jMt5e+hULuLFqHY17L0n8wTTDTGhd5SFgnglkI6he53PbB1zmN8IUgSGe3E//q3MZ/CWcxo3JElzAvJj0Qc/uJIBZOmA/9YmP3u+Crq+4Q=
+      script:
+        - npm run integration-test
+
+    # Production releases
+    - stage: Deploy
+      name: Production release
+      if: tag =~ ^v\d+\.\d+\.\d+$
+      node_js: 12
+      script: skip
+      deploy:
+        provider: npm
+        email: services@serverless.com
+        on:
+          tags: true
+        api_key:
+          secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
+
+    # Pre-releases
+    - stage: Deploy
+      name: Pre-release
+      if: branch = master
+      node_js: 12
+      before_install: node ./scripts/updatePreReleaseDependency.js
+      deploy:
+        provider: npm
+        email: services@serverless.com
+        api_key:
+          secure: Le1nHuG1/67k89s+DNC+laOAZLHLqviDBi9j8hXNH4qIGkEgJw5aXc621q/Vo3eObavEV9P3zV9/b8Fry9WDzXiq046zYhP7IdNkgmQTh/rKyyw6fJNM8Nqp79Hvoe3B/zpHExDlHAT0OoZog0MG57PGQER5v9B/QGwMhjmT5ABLXvukjPS1Huo8YGFZy7hvK70Rfz9EDVRXmolXA8//tmIeqNkfuCLcIbJL0RA7K/kMXeaQ5ppm2JtvyU8z6kvwI1D8S30Wc62iagBIxfqh0hO1Rsf6Q8Lbvd1VXJsGM/96INPCBdcMzrvcyorzDAhcTts3ucXP7OAMlzONultO/6Z71yxvwOPnm33+bUTYvL/l1xBxDIaWsO6S/g27PJfOza66ZYHNV+vDsVANMj8GASQij+kswWuLbHciXVHBaL4i0QGkXSz3lIPUySGc99WUAreZZDk21LYS2jFbpMJDNe+/vLzqfNGcO9hMuq66RHdUlgD3YTFimQIWSYwibWDLelUUsHGe5JOB8zjRPBA9KuWDK8ilBGgzGtcugAlGUuKl1eBs5QQeA8MPtIiTVWAzdID7boCzmLFyTp51layCkICUKH3Zn3zkmhjp3h62lfGuT2tyAfmFUGK+KUMlb4Sw8z93KEG2n+ZFZSpbKgCqMwe3cF3pK/2Yr1csY/GHAgs=
