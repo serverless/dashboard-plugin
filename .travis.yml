@@ -17,6 +17,10 @@ branches:
     - master # Do not build PR branches
     - /^v\d+\.\d+\.\d+$/ # Ensure to build release tags
 
+env:
+  global:
+    - FORCE_COLOR=1 # Ensure colored output (color support is not detected in some cases)
+
 # Ensure to install dependencies at their latest versions
 install:
   # Note: with `npm update` there seems no way to update all project dependency groups in one run
