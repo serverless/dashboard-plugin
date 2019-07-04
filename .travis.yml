@@ -24,8 +24,7 @@ install:
   # Note: npm documents --dev option for dev dependencies update, but it's only --save-dev that works
   - npm update --save-dev --no-save # Updates just devDependencies
   - cd sdk-js
-  - npm update --no-save
-  - npm update --save-dev --no-save
+  - npm install # On publish it's bundled with deps, therefore we rely on `package-lock.json`
   - cd ..
 
 before_script:
