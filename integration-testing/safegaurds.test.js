@@ -13,6 +13,10 @@ describe('integration', () => {
     const stdout = proc.stdout.toString()
     expect(stdout).toMatch('warned - require-cfn-role')
     expect(stdout).toMatch('Warned - no cfnRole set')
+    if (proc.status) {
+      process.stderr.write(proc.stdout)
+      process.stderr.write(proc.stderr)
+    }
     expect(proc.status).toEqual(0)
   })
 
@@ -50,6 +54,10 @@ describe('integration', () => {
     expect(stdout).toMatch(
       `Warned - iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
     )
+    if (proc.status) {
+      process.stderr.write(proc.stdout)
+      process.stderr.write(proc.stderr)
+    }
     expect(proc.status).toEqual(0)
   })
 
@@ -67,6 +75,10 @@ describe('integration', () => {
     expect(stdout).toMatch(
       `Warned - Environment variable variable1 on function 'hello' looks like it contains a secret value`
     )
+    if (proc.status) {
+      process.stderr.write(proc.stdout)
+      process.stderr.write(proc.stderr)
+    }
     expect(proc.status).toEqual(0)
   })
 
@@ -80,6 +92,10 @@ describe('integration', () => {
     expect(stdout).toMatch(
       `Warned - Function \"hello\" doesn't have a Dead Letter Queue configured.`
     )
+    if (proc.status) {
+      process.stderr.write(proc.stdout)
+      process.stderr.write(proc.stderr)
+    }
     expect(proc.status).toEqual(0)
   })
 })
