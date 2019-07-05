@@ -1,6 +1,6 @@
-import logsCollection from './logsCollection'
-import { LAMBDA_FILTER_PATTERN, API_GATEWAY_FILTER_PATTERN } from './utils'
-import { getLogDestination } from '@serverless/platform-sdk'
+const logsCollection = require('./logsCollection')
+const { LAMBDA_FILTER_PATTERN, API_GATEWAY_FILTER_PATTERN } = require('./utils')
+const { getLogDestination } = require('@serverless/platform-sdk')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getLogDestination: jest.fn().mockReturnValue(Promise.resolve({ destinationArn: 'arn:logdest' })),

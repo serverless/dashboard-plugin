@@ -1,7 +1,7 @@
-import _ from 'lodash'
-import { getStateVariable } from '@serverless/platform-sdk'
+const _ = require('lodash')
+const { getStateVariable } = require('@serverless/platform-sdk')
 
-export const hookIntoVariableGetter = (ctx, secrets, accessKey) => {
+module.exports.hookIntoVariableGetter = (ctx, secrets, accessKey) => {
   const { getValueFromSource } = ctx.sls.variables
 
   ctx.sls.variables.getValueFromSource = async (variableString) => {

@@ -1,4 +1,4 @@
-import { values } from 'lodash'
+const { values } = require('lodash')
 
 module.exports = function noWildIamPolicy(policy, service) {
   let failed = false

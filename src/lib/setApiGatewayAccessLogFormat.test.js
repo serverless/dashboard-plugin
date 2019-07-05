@@ -1,5 +1,5 @@
-import setApiGatewayAccessLogFormat from './setApiGatewayAccessLogFormat'
-import { API_GATEWAY_LOG_FORMAT } from './utils'
+const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat')
+const { API_GATEWAY_LOG_FORMAT } = require('./utils')
 
 describe('setApiGatewayAccessLogFormat', () => {
   let ctx

@@ -1,4 +1,4 @@
-import restrictedDeployTimesPolicy from './restricted-deploy-times'
+const restrictedDeployTimesPolicy = require('./restricted-deploy-times')
 
 describe('restrictedDeployTimesPolicy', () => {
   const dateDotNow = Date.now

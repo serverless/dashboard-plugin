@@ -1,4 +1,4 @@
-import objectSubsetEquals from './objectSubsetEquals'
+const objectSubsetEquals = require('./objectSubsetEquals')
 
 describe('objectSubsetEquals', () => {
   it('correctly compares equal primitives', () => {

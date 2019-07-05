@@ -1,11 +1,11 @@
-import { entries, find } from 'lodash'
-import fse from 'fs-extra'
-import chalk from 'chalk'
-import yaml from 'js-yaml'
+const { entries, find } = require('lodash')
+const fse = require('fs-extra')
+const chalk = require('chalk')
+const yaml = require('js-yaml')
 
-import runTest from './runTest'
+const runTest = require('./runTest')
 
-export const test = async (ctx) => {
+module.exports.test = async (ctx) => {
   if (!fse.exists('serverless.test.yml')) {
     ctx.sls.cli.log(`No serverless.test.yml file found`, `Serverless Enterprise`)
     return

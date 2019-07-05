@@ -1,4 +1,4 @@
-import frameworkVersionPolicy from './framework-version'
+const frameworkVersionPolicy = require('./framework-version')
 
 describe('frameworkVersionPolicy', () => {
   let policy

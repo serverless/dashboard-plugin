@@ -1,5 +1,5 @@
-import sdk from '@serverless/platform-sdk'
-import login from './login'
+const sdk = require('@serverless/platform-sdk')
+const login = require('./login')
 
 jest.mock('@serverless/platform-sdk', () => ({
   login: jest

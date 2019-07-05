@@ -1,7 +1,7 @@
-import fs from 'fs-extra'
-import wrap from './wrap'
-import { addTree, writeZip } from './zipTree'
-import JSZip from 'jszip'
+const fs = require('fs-extra')
+const wrap = require('./wrap')
+const { addTree, writeZip } = require('./zipTree')
+const JSZip = require('jszip')
 
 afterEach(() => jest.clearAllMocks())
 jest.mock('jszip', () => ({

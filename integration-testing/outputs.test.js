@@ -1,5 +1,5 @@
-import stripAnsi from 'strip-ansi'
-import setup from './setup'
+const stripAnsi = require('strip-ansi')
+const setup = require('./setup')
 
 let sls1, sls2, teardown
 

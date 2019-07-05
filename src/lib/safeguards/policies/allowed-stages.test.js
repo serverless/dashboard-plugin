@@ -1,4 +1,4 @@
-import allowedStagePolicy from './allowed-stages'
+const allowedStagePolicy = require('./allowed-stages')
 
 describe('allowedStagePolicy', () => {
   let policy

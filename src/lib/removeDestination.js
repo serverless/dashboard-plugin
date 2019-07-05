@@ -1,6 +1,6 @@
-import { getAccessKeyForTenant, removeLogDestination } from '@serverless/platform-sdk'
+const { getAccessKeyForTenant, removeLogDestination } = require('@serverless/platform-sdk')
 
-export default async (ctx) => {
+module.exports = async (ctx) => {
   if (
     !ctx.sls.service.custom ||
     !ctx.sls.service.custom.enterprise ||

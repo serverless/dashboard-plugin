@@ -1,4 +1,4 @@
-import allowedRegionsPolicy from './allowed-regions'
+const allowedRegionsPolicy = require('./allowed-regions')
 
 describe('allowedRegionsPolicy', () => {
   let policy

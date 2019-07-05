@@ -1,4 +1,4 @@
-import noSecretEnvVarsPolicy from './no-secret-env-vars'
+const noSecretEnvVarsPolicy = require('./no-secret-env-vars')
 
 describe('noSecretEnvVarsPolicy', () => {
   let policy

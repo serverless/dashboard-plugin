@@ -1,23 +1,23 @@
-import chalk from 'chalk'
-import { configureFetchDefaults, getLoggedInUser, openBrowser } from '@serverless/platform-sdk'
-import errorHandler from './errorHandler'
-import logsCollection from './logsCollection'
-import login from './login'
-import logout from './logout'
-import wrap from './wrap'
-import injectLogsIamRole from './injectLogsIamRole'
-import wrapClean from './wrapClean'
-import runPolicies from './safeguards'
-import getCredentials from './credentials'
-import getAppUids from './appUids'
-import removeDestination from './removeDestination'
-import { saveDeployment, createAndSetDeploymentUid } from './deployment'
-import { hookIntoVariableGetter } from './variables'
-import { generate, eventDict } from './generateEvent'
-import { configureDeployProfile } from './deployProfile'
-import { test } from './test'
-import { getDashboardUrl } from './dashboard'
-import setApiGatewayAccessLogFormat from './setApiGatewayAccessLogFormat'
+const chalk = require('chalk')
+const { configureFetchDefaults, getLoggedInUser, openBrowser } = require('@serverless/platform-sdk')
+const errorHandler = require('./errorHandler')
+const logsCollection = require('./logsCollection')
+const login = require('./login')
+const logout = require('./logout')
+const wrap = require('./wrap')
+const injectLogsIamRole = require('./injectLogsIamRole')
+const wrapClean = require('./wrapClean')
+const runPolicies = require('./safeguards')
+const getCredentials = require('./credentials')
+const getAppUids = require('./appUids')
+const removeDestination = require('./removeDestination')
+const { saveDeployment, createAndSetDeploymentUid } = require('./deployment')
+const { hookIntoVariableGetter } = require('./variables')
+const { generate, eventDict } = require('./generateEvent')
+const { configureDeployProfile } = require('./deployProfile')
+const { test } = require('./test')
+const { getDashboardUrl } = require('./dashboard')
+const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat')
 
 /*
  * Serverless Enterprise Plugin
@@ -290,4 +290,4 @@ class ServerlessEnterprisePlugin {
   }
 }
 
-export default ServerlessEnterprisePlugin
+module.exports = ServerlessEnterprisePlugin

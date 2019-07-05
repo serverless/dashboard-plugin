@@ -1,11 +1,19 @@
-import path from 'path'
-import os from 'os'
-import crypto from 'crypto'
-import { copy, ensureDir, ensureSymlink, readFile, remove, writeFile, writeJson } from 'fs-extra'
-import spawn from 'child-process-ext/spawn'
-import fetch from 'node-fetch'
-import tar from 'tar'
-import { memoize } from 'lodash'
+const path = require('path')
+const os = require('os')
+const crypto = require('crypto')
+const {
+  copy,
+  ensureDir,
+  ensureSymlink,
+  readFile,
+  remove,
+  writeFile,
+  writeJson
+} = require('fs-extra')
+const spawn = require('child-process-ext/spawn')
+const fetch = require('node-fetch')
+const tar = require('tar')
+const { memoize } = require('lodash')
 
 const tmpDir = os.tmpdir()
 
@@ -49,7 +57,7 @@ const retrieveServerless = memoize(async () => {
   return path.join(serverlessTmpDir, 'bin/serverless')
 })
 
-export default async function(templateName) {
+module.exports = async function(templateName) {
   const randomPostfix = crypto.randomBytes(2).toString('hex')
   const serviceTmpDir = path.join(tmpDir, `serverless-enterprise-plugin-test-${randomPostfix}`)
 

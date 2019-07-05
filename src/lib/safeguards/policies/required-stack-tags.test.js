@@ -1,4 +1,4 @@
-import requiredStackTagsPolicy from './required-stack-tags'
+const requiredStackTagsPolicy = require('./required-stack-tags')
 
 describe('requiredStackTagsPolicy', () => {
   let policy

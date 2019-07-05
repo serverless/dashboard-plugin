@@ -1,4 +1,4 @@
-import allowedRuntimesPolicy from './allowed-runtimes'
+const allowedRuntimesPolicy = require('./allowed-runtimes')
 
 describe('allowedRuntimesPolicy', () => {
   let policy

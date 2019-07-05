@@ -1,5 +1,5 @@
-import appUids from './appUids'
-import { getApp } from '@serverless/platform-sdk'
+const appUids = require('./appUids')
+const { getApp } = require('@serverless/platform-sdk')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getApp: jest.fn().mockReturnValue(Promise.resolve({ appUid: 'AUID', tenantUid: 'TUID' }))

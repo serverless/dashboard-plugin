@@ -1,4 +1,4 @@
-import javascriptPolicy from './javascript'
+const javascriptPolicy = require('./javascript')
 
 const serviceData = { declaration: { provider: { stage: 'dev' } } }
 

@@ -1,7 +1,7 @@
-import { getAccessKeyForTenant, getMetadata } from '@serverless/platform-sdk'
-import { entries, values } from 'lodash'
+const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk')
+const { entries, values } = require('lodash')
 
-export default async function(ctx) {
+module.exports = async function(ctx) {
   if (
     ctx.sls.service.custom &&
     ctx.sls.service.custom.enterprise &&

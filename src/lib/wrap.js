@@ -4,17 +4,17 @@
  * - Wraps your function handlers with the ServerlessSDK
  */
 
-import fs from 'fs-extra'
-import path from 'path'
-import _ from 'lodash'
-import JSZip from 'jszip'
-import { addTree, writeZip } from './zipTree'
+const fs = require('fs-extra')
+const path = require('path')
+const _ = require('lodash')
+const JSZip = require('jszip')
+const { addTree, writeZip } = require('./zipTree')
 
 /*
  * Wrap Node.js Functions
  */
 
-export const wrapNodeJs = (fn, ctx) => {
+const wrapNodeJs = (fn, ctx) => {
   const newHandlerCode = `var serverlessSDK = require('./serverless-sdk/index.js')
 serverlessSDK = new serverlessSDK({
 tenantId: '${ctx.sls.service.tenant}',
@@ -37,7 +37,7 @@ try {
   fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
 }
 
-export default async (ctx) => {
+module.exports = async (ctx) => {
   // Check if we support the provider
   if (ctx.sls.service.provider.name !== 'aws') {
     ctx.sls.cli.log(
@@ -158,3 +158,5 @@ export default async (ctx) => {
     ctx.sls.service.package.include.push('serverless-sdk/**')
   }
 }
+
+module.exports.wrapNodeJs = wrapNodeJs

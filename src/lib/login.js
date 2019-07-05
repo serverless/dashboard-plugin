@@ -1,6 +1,6 @@
-import { login } from '@serverless/platform-sdk'
+const { login } = require('@serverless/platform-sdk')
 
-export default async function(ctx) {
+module.exports = async function(ctx) {
   ctx.sls.cli.log('Logging you in via your default browser...', 'Serverless Enterprise')
   // Include a "tenant" in "login()"...
   // This will create a new accessKey for that tenant on every login.

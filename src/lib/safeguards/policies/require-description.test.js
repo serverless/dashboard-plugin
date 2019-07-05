@@ -1,4 +1,4 @@
-import requireDescriptionPolicy from './require-description'
+const requireDescriptionPolicy = require('./require-description')
 
 describe('requireDescriptionPolicy', () => {
   let policy

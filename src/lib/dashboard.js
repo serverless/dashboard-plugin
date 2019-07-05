@@ -1,6 +1,6 @@
-import { urls } from '@serverless/platform-sdk'
+const { urls } = require('@serverless/platform-sdk')
 
-export const getDashboardUrl = (ctx) => {
+module.exports.getDashboardUrl = (ctx) => {
   let dashboardUrl = urls.frontendUrl
   dashboardUrl += `tenants/${ctx.sls.service.tenant}/`
   dashboardUrl += `applications/${ctx.sls.service.app}/`

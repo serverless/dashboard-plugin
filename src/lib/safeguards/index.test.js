@@ -1,7 +1,8 @@
-import { cloneDeep } from 'lodash'
-import chalk from 'chalk'
-import runPolicies, { loadPolicy } from './'
-import { getSafeguards } from '@serverless/platform-sdk'
+const { cloneDeep } = require('lodash')
+const chalk = require('chalk')
+const runPolicies = require('./')
+const { getSafeguards } = require('@serverless/platform-sdk')
+const { loadPolicy } = runPolicies
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('access-key')),

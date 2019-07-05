@@ -1,4 +1,4 @@
-import forbidS3HttpAccessPolicy from './forbid-s3-http-access'
+const forbidS3HttpAccessPolicy = require('./forbid-s3-http-access')
 
 describe('forbidS3HttpAccessPolicy', () => {
   let policy

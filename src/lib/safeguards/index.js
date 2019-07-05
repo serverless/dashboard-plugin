@@ -1,11 +1,11 @@
-import { readdir, readFile } from 'fs-extra'
-import yml from 'yamljs'
-import path from 'path'
-import { get, fromPairs, cloneDeep, omit } from 'lodash'
-import chalk from 'chalk'
+const { readdir, readFile } = require('fs-extra')
+const yml = require('yamljs')
+const path = require('path')
+const { get, fromPairs, cloneDeep, omit } = require('lodash')
+const chalk = require('chalk')
 
 // NOTE: not using path.join because it strips off the leading
-export const loadPolicy = (policyPath, safeguardName) =>
+const loadPolicy = (policyPath, safeguardName) =>
   require(`${policyPath || `./policies`}/${safeguardName}`)
 
 async function runPolicies(ctx) {
@@ -165,4 +165,5 @@ async function runPolicies(ctx) {
   ctx.sls.cli.log(summary, `\nServerless Enterprise`)
 }
 
-export default runPolicies
+module.exports = runPolicies
+module.exports.loadPolicy = loadPolicy

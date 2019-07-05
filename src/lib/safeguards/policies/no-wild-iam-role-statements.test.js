@@ -1,4 +1,4 @@
-import noWildIamPolicy from './no-wild-iam-role-statements'
+const noWildIamPolicy = require('./no-wild-iam-role-statements')
 
 describe('noWildIamPolicy', () => {
   let policy

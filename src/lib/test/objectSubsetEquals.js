@@ -1,4 +1,4 @@
-import { entries } from 'lodash'
+const { entries } = require('lodash')
 
 const objectSubsetEquals = (subsetObj, obj) => {
   if (typeof subsetObj === 'object') {
@@ -23,4 +23,4 @@ const objectSubsetEquals = (subsetObj, obj) => {
   return subsetObj === obj
 }
 
-export default objectSubsetEquals
+module.exports = objectSubsetEquals

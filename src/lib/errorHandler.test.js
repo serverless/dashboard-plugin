@@ -1,5 +1,5 @@
-import errorHandler from './errorHandler'
-import { parseDeploymentData } from './deployment'
+const errorHandler = require('./errorHandler')
+const { parseDeploymentData } = require('./deployment')
 
 jest.mock('./deployment', () => ({
   parseDeploymentData: jest

@@ -1,6 +1,6 @@
 const { API_GATEWAY_LOG_FORMAT } = require('./utils.js')
 
-export default (ctx) => {
+module.exports = (ctx) => {
   if (
     ctx.sls.service.custom &&
     ctx.sls.service.custom.enterprise &&

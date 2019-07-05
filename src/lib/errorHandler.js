@@ -2,10 +2,10 @@
  * Error Handler
  */
 
-import serializeError from './serializeError'
-import { parseDeploymentData } from './deployment'
+const serializeError = require('./serializeError')
+const { parseDeploymentData } = require('./deployment')
 
-export default function(ctx) {
+module.exports = function(ctx) {
   return async function(error, id) { // eslint-disable-line
     /*
      * Error: Failed Deployment
