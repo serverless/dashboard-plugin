@@ -7,13 +7,8 @@ module.exports = {
     jest: true,
     node: true
   },
-  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true
-    }
   },
   rules: {
     'array-bracket-spacing': [
