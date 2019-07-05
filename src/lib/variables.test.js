@@ -1,3 +1,5 @@
+'use strict';
+
 const { hookIntoVariableGetter } = require('./variables')
 const { getStateVariable } = require('@serverless/platform-sdk')
 

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function requireCfnRolePolicy(policy, service) {
   if (!service.declaration.provider.cfnRole) {
     policy.fail('no cfnRole set')

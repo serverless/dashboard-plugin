@@ -1,3 +1,5 @@
+'use strict';
+
 const chalk = require('chalk')
 const ServerlessEnterprisePlugin = require('./plugin')
 const getCredentials = require('./credentials')

@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Archive Service
  */

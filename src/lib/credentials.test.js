@@ -1,3 +1,5 @@
+'use strict';
+
 const getCredentialsLocal = require('./credentials')
 const { getCredentials, getAccessKeyForTenant } = require('@serverless/platform-sdk')
 

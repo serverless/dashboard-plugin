@@ -1,3 +1,5 @@
+'use strict';
+
 const requireDescriptionPolicy = require('./require-description')
 
 describe('requireDescriptionPolicy', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 const chalk = require('chalk')
 const runTest = require('./runTest')
 const { test: testFunc } = require('./')

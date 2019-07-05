@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function allowedRuntimesPolicy(policy, service, allowedRuntimes) {
   let failed = false
   for (const fnName in service.declaration.functions || {}) {

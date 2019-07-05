@@ -1,3 +1,5 @@
+'use strict';
+
 const { urls } = require('@serverless/platform-sdk')
 
 module.exports.getDashboardUrl = (ctx) => {

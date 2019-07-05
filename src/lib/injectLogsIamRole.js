@@ -1,3 +1,5 @@
+'use strict';
+
 const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk')
 const { entries, values } = require('lodash')
 

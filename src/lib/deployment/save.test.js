@@ -1,3 +1,5 @@
+'use strict';
+
 const parseDeploymentData = require('./parse')
 const saveDeployment = require('./save')
 

@@ -1,3 +1,5 @@
+'use strict';
+
 const appUids = require('./appUids')
 const { getApp } = require('@serverless/platform-sdk')
 

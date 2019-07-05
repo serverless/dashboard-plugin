@@ -1,3 +1,5 @@
+'use strict';
+
 const requiredStackTagsPolicy = require('./required-stack-tags')
 
 describe('requiredStackTagsPolicy', () => {

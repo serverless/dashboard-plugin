@@ -1,3 +1,5 @@
+'use strict';
+
 require('./runtime')
 const { version } = require('@serverless/platform-sdk/package.json')
 

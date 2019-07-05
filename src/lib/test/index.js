@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries, find } = require('lodash')
 const fse = require('fs-extra')
 const chalk = require('chalk')

@@ -1,3 +1,5 @@
+'use strict';
+
 const { values } = require('lodash')
 
 module.exports = function noWildIamPolicy(policy, service) {

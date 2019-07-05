@@ -1,3 +1,5 @@
+'use strict';
+
 if (!global.regeneratorRuntime) {
   // eslint-disable-next-line global-require
   global.regeneratorRuntime = require('regenerator-runtime')

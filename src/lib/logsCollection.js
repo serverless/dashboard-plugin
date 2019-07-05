@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Logs Collection
  * - Collects `SERVERLESS PLATFORM || REPORT` from lambda logs

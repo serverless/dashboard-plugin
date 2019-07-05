@@ -1,3 +1,5 @@
+'use strict';
+
 const sdk = require('@serverless/platform-sdk')
 const login = require('./login')
 

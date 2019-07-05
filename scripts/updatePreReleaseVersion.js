@@ -1,3 +1,5 @@
+'use strict';
+
 // This is only for use in CI to set the version number in package.json
 // for publishing prerelease versions to npm
 

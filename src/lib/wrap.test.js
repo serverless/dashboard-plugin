@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs-extra')
 const wrap = require('./wrap')
 const { addTree, writeZip } = require('./zipTree')

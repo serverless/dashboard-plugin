@@ -1,3 +1,5 @@
+'use strict';
+
 const getServerlessFilePath = require('./getServerlessFilePath')
 const fs = require('fs-extra')
 

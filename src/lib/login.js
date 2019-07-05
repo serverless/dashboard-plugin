@@ -1,3 +1,5 @@
+'use strict';
+
 const { login } = require('@serverless/platform-sdk')
 
 module.exports = async function(ctx) {

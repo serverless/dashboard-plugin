@@ -1,3 +1,5 @@
+'use strict';
+
 const vm = require('vm')
 const { entries, fromPairs } = require('lodash')
 

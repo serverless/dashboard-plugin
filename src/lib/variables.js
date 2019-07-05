@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash')
 const { getStateVariable } = require('@serverless/platform-sdk')
 

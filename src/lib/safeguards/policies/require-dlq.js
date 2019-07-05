@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries, fromPairs } = require('lodash')
 
 const asyncEvents = new Set([

@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Save Deployment
  * - This uses the new deployment data model.

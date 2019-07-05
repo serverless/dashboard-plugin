@@ -1,3 +1,5 @@
+'use strict';
+
 const javascriptPolicy = require('./javascript')
 
 const serviceData = { declaration: { provider: { stage: 'dev' } } }

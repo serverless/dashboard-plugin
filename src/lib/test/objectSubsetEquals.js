@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries } = require('lodash')
 
 const objectSubsetEquals = (subsetObj, obj) => {

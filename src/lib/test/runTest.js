@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries } = require('lodash')
 const fetch = require('isomorphic-fetch')
 const { TestError } = require('./errors')

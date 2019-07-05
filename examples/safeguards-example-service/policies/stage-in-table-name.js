@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function tableNamePolicy(policy, service) {
   const stage = service.compiled['serverless-state.json'].service.provider.stage
 

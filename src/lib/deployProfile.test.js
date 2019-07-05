@@ -1,3 +1,5 @@
+'use strict';
+
 const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk')
 const { hookIntoVariableGetter } = require('./variables')
 const { configureDeployProfile } = require('./deployProfile')

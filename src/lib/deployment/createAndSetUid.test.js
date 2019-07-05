@@ -1,3 +1,5 @@
+'use strict';
+
 const createAndSetDeploymentUid = require('./createAndSetUid')
 
 describe('createAndSetDeploymentUid', () => {

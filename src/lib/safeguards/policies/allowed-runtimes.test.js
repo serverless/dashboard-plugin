@@ -1,3 +1,5 @@
+'use strict';
+
 const allowedRuntimesPolicy = require('./allowed-runtimes')
 
 describe('allowedRuntimesPolicy', () => {

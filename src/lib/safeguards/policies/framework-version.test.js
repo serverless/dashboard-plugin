@@ -1,3 +1,5 @@
+'use strict';
+
 const frameworkVersionPolicy = require('./framework-version')
 
 describe('frameworkVersionPolicy', () => {

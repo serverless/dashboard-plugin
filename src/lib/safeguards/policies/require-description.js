@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries, fromPairs } = require('lodash')
 
 module.exports = function requireDescriptionPolicy(policy, service, options) {

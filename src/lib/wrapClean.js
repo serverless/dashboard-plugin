@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Wrap Clean
  * - Cleans up files create during wrapping

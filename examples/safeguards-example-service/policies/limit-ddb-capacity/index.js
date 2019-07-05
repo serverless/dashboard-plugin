@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function capacityPolicy(policy, service, options) {
   const limits = {
     readCapacityMax: 1,

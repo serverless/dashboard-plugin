@@ -1,3 +1,5 @@
+'use strict';
+
 const objectSubsetEquals = require('./objectSubsetEquals')
 
 describe('objectSubsetEquals', () => {

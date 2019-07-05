@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Wrap
  * - Bundles the ServerlessSDK into your functions

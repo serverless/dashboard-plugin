@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function requiredStackTagsPolicy(policy, service, requiredStackTags) {
   let failed = false
   const stackTags = service.declaration.provider.stackTags || {}

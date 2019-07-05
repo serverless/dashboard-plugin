@@ -1,3 +1,5 @@
+'use strict';
+
 const { getApp } = require('@serverless/platform-sdk')
 
 module.exports = async function(tenantName, appName) {

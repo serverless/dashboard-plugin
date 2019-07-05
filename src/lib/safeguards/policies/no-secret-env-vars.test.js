@@ -1,3 +1,5 @@
+'use strict';
+
 const noSecretEnvVarsPolicy = require('./no-secret-env-vars')
 
 describe('noSecretEnvVarsPolicy', () => {

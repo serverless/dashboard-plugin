@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function corsPolicy(policy, service) {
   const functions = service.compiled['serverless-state.json'].service.functions
 

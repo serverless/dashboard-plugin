@@ -1,3 +1,5 @@
+'use strict';
+
 const stripAnsi = require('strip-ansi')
 const setup = require('./setup')
 

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports.TestError = class TestError extends Error {
   constructor(field, expected, received, resp, body) {
     super(

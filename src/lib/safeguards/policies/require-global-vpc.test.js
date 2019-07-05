@@ -1,3 +1,5 @@
+'use strict';
+
 const requireGlobalVpcPolicy = require('./require-global-vpc')
 
 describe('requireGlobalVpcPolicy', () => {

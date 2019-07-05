@@ -1,3 +1,5 @@
+'use strict';
+
 const requireCfnRolePolicy = require('./require-cfn-role')
 
 describe('requireCfnRolePolicy', () => {

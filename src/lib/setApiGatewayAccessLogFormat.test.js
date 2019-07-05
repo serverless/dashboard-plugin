@@ -1,3 +1,5 @@
+'use strict';
+
 const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat')
 const { API_GATEWAY_LOG_FORMAT } = require('./utils')
 

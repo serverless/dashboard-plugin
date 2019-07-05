@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function allowedRegionsPolicy(policy, service, options) {
   const region = service.provider.getRegion()
   if (!options.includes(region)) {

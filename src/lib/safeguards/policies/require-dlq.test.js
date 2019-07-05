@@ -1,3 +1,5 @@
+'use strict';
+
 const requireDlq = require('./require-dlq')
 
 describe('requireDlq', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function allowedStagePolicy(policy, service, options) {
   const stageName = service.provider.getStage()
   if (typeof options === 'string') {

@@ -1,3 +1,5 @@
+'use strict';
+
 describe('index', () => {
   test('registers regeneratorRuntime', () => {
     jest.resetModules()

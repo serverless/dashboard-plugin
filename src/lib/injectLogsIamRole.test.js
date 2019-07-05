@@ -1,3 +1,5 @@
+'use strict';
+
 const injectLogsIamRole = require('./injectLogsIamRole')
 const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk')
 

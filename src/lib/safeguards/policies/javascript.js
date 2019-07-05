@@ -1,3 +1,5 @@
+'use strict';
+
 const jsonataQuery = require('jsonata')
 const vm = require('vm')
 

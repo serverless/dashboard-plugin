@@ -1,3 +1,5 @@
+'use strict';
+
 const { API_GATEWAY_LOG_FORMAT } = require('./utils.js')
 
 module.exports = (ctx) => {

@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries } = require('lodash')
 
 module.exports = function forbidS3HttpAccessPolicy(policy, service) {

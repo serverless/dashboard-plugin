@@ -1,3 +1,5 @@
+'use strict';
+
 const { upperFirst, pickResourceType } = require('./utils')
 
 describe('utils - upperFirst', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 const allowedFunctionNamesPolicy = require('./allowed-function-names')
 
 describe('allowedFunctionNamesPolicy', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 const errorHandler = require('./errorHandler')
 const { parseDeploymentData } = require('./deployment')
 

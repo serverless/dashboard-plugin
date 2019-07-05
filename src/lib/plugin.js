@@ -1,3 +1,5 @@
+'use strict';
+
 const chalk = require('chalk')
 const { configureFetchDefaults, getLoggedInUser, openBrowser } = require('@serverless/platform-sdk')
 const errorHandler = require('./errorHandler')

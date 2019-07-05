@@ -1,3 +1,5 @@
+'use strict';
+
 const createEvent = require('@serverless/event-mocks').default
 const zlib = require('zlib')
 

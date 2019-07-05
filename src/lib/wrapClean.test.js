@@ -1,3 +1,5 @@
+'use strict';
+
 const wrapClean = require('./wrapClean')
 const fs = require('fs-extra')
 

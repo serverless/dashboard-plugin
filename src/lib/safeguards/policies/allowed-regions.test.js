@@ -1,3 +1,5 @@
+'use strict';
+
 const allowedRegionsPolicy = require('./allowed-regions')
 
 describe('allowedRegionsPolicy', () => {

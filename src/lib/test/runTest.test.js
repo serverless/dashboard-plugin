@@ -1,3 +1,5 @@
+'use strict';
+
 const fetch = require('isomorphic-fetch')
 const runTest = require('./runTest')
 const { TestError } = require('./errors')

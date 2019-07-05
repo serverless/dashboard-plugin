@@ -1,3 +1,5 @@
+'use strict';
+
 const { getAccessKeyForTenant, removeLogDestination } = require('@serverless/platform-sdk')
 const removeDestination = require('./removeDestination')
 

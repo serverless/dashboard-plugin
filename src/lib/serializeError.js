@@ -1,3 +1,5 @@
+'use strict';
+
 // coppied from https://github.com/sindresorhus/serialize-error/blob/master/index.js and converted
 // to use _.entries instead of Object.entries. and linted for our standards
 

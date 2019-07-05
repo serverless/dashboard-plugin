@@ -1,3 +1,5 @@
+'use strict';
+
 const allowedStagePolicy = require('./allowed-stages')
 
 describe('allowedStagePolicy', () => {

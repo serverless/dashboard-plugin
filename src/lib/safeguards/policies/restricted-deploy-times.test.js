@@ -1,3 +1,5 @@
+'use strict';
+
 const restrictedDeployTimesPolicy = require('./restricted-deploy-times')
 
 describe('restrictedDeployTimesPolicy', () => {

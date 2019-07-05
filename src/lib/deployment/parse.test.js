@@ -1,3 +1,5 @@
+'use strict';
+
 const { version: pluginVersion } = require('../../../package.json')
 const { version: sdkVersion } = require('@serverless/platform-sdk/package.json')
 const parseDeploymentData = require('./parse')

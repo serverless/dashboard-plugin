@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash')
 const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk')
 const { hookIntoVariableGetter } = require('./variables')

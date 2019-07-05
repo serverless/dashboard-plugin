@@ -1,3 +1,5 @@
+'use strict';
+
 const { cloneDeep } = require('lodash')
 const chalk = require('chalk')
 const runPolicies = require('./')

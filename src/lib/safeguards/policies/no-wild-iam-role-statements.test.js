@@ -1,3 +1,5 @@
+'use strict';
+
 const noWildIamPolicy = require('./no-wild-iam-role-statements')
 
 describe('noWildIamPolicy', () => {

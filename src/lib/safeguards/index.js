@@ -1,3 +1,5 @@
+'use strict';
+
 const { readdir, readFile } = require('fs-extra')
 const yml = require('yamljs')
 const path = require('path')

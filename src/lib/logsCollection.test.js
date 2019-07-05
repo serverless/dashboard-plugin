@@ -1,3 +1,5 @@
+'use strict';
+
 const logsCollection = require('./logsCollection')
 const { LAMBDA_FILTER_PATTERN, API_GATEWAY_FILTER_PATTERN } = require('./utils')
 const { getLogDestination } = require('@serverless/platform-sdk')

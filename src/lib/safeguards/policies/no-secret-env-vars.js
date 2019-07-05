@@ -1,3 +1,5 @@
+'use strict';
+
 const { entries, fromPairs, values } = require('lodash')
 
 // from https://github.com/dxa4481/truffleHogRegexes/blob/master/truffleHogRegexes/regexes.json

@@ -1,3 +1,5 @@
+'use strict';
+
 // mostly copied from https://github.com/UnitedIncome/serverless-python-requirements/blob/master/lib/zipTree.js
 // modified to use native promises and fs-extra's promise support and use import/export
 const fs = require('fs-extra')
