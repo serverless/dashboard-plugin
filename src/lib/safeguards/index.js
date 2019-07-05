@@ -141,18 +141,17 @@ async function runPolicies(ctx) {
   )(`${warned} warnings`)}, ${chalk.red(`${failed} errors`)}`
 
   if (markedPolicies.length !== 0) {
+    const resolveMessage = res => {
+      if (!res.failed) return 'Finished inconclusively. Deployment halted.'
+      if (res.policy.enforcementLevel === 'error') return chalk.red(`Failed - ${res.message}`)
+      return chalk.keyword('orange')(`Warned - ${res.message}`)
+    }
     const details =
       `\n   ${chalk.yellow('Details --------------------------------------------------')}\n\n${ 
       markedPolicies
         .map(
           (res, i) =>
-            `   ${i + 1}) ${
-              !res.failed
-                ? 'Finished inconclusively. Deployment halted.'
-                : res.policy.enforcementLevel == 'error'
-                ? chalk.red(`Failed - ${res.message}`)
-                : chalk.keyword('orange')(`Warned - ${res.message}`)
-            }
+            `   ${i + 1}) ${resolveMessage(res)}
       ${chalk.grey(`details: ${res.policy.function.docs}`)}
       ${res.policy.description}`
         )

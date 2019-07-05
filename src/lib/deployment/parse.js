@@ -76,7 +76,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
      * Add this deployment's functions...
      */
 
-    for (const fnName in service.functions) {
+    for (const fnName of Object.keys(service.functions)) {
       const fn = service.functions[fnName]
       const deployedFunctionName =
         fn.name || `${service.service}-${ctx.provider.getStage()}-${fnName}`

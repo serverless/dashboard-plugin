@@ -3,7 +3,7 @@
 module.exports = function requiredStackTagsPolicy(policy, service, requiredStackTags) {
   let failed = false
   const stackTags = service.declaration.provider.stackTags || {}
-  for (const key in requiredStackTags) {
+  for (const key of Object.keys(requiredStackTags)) {
     if (!(key in stackTags)) {
       failed = true
       policy.fail(`Required stack tag ${key} not set`)

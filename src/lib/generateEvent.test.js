@@ -378,10 +378,8 @@ describe('generating events', () => {
     const body = 'log data to be gzipped then base64 encoded'
     const zippedBody = await new Promise((res, rej) => {
       zlib.gzip(body, (error, result) => {
-        if (error) {
-          return rej(error)
-        }
-        res(result)
+        if (error) rej(error)
+        else res(result)
       })
     })
     const encodedBody = Buffer.from(zippedBody).toString('base64')

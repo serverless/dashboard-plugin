@@ -4,7 +4,7 @@ const { getCredentials, getAccessKeyForTenant } = require('@serverless/platform-
 
 module.exports = async function(ctx) {
   if (!process.env.SLS_CLOUD_ACCESS) {
-    return Promise.resolve()
+    return
   }
 
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)

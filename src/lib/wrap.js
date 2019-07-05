@@ -52,7 +52,7 @@ module.exports = async (ctx) => {
    */
   const { functions } = ctx.sls.service
   ctx.state.functions = {}
-  for (const func in functions) {
+  for (const func of Object.keys(functions)) {
     const runtime = functions[func].runtime
       ? functions[func].runtime
       : ctx.sls.service.provider.runtime
@@ -107,7 +107,7 @@ module.exports = async (ctx) => {
   fs.copySync(pathSdk, pathSdkDest)
 
   // Prepare & Copy Function Handlers
-  for (const fn in ctx.state.functions) {
+  for (const fn of Object.keys(ctx.state.functions)) {
     const func = ctx.state.functions[fn]
 
     if (!func.runtime.includes('nodejs')) {

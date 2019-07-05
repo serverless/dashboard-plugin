@@ -63,7 +63,7 @@ module.exports = async (ctx) => {
   }
 
   // For each log group, set up subscription
-  for (const logGroupIndex in logGroups) {
+  for (const logGroupIndex of Object.keys(logGroups)) {
     const logGroupKey = logGroups[logGroupIndex].key
     const logGroupName = logGroups[logGroupIndex].resource.Properties.LogGroupName
 

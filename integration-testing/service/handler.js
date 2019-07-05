@@ -1,10 +1,6 @@
 'use strict';
 
-module.exports.hello = async (event, context) => {
-  let body;
-  if (event.body) {
-    body = JSON.parse(body);
-  }
+module.exports.hello = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify({

@@ -30,7 +30,7 @@ module.exports = function forbidS3HttpAccessPolicy(policy, service) {
         (bucketPolicy.PolicyDocument.Statement[0].Resource &&
         bucketPolicy.PolicyDocument.Statement[0].Resource['Fn::Join']
           ? bucketPolicy.PolicyDocument.Statement[0].Resource['Fn::Join'].length === 2 &&
-            bucketPolicy.PolicyDocument.Statement[0].Resource['Fn::Join'][0] == '' &&
+            bucketPolicy.PolicyDocument.Statement[0].Resource['Fn::Join'][0] === '' &&
             bucketPolicy.PolicyDocument.Statement[0].Resource['Fn::Join'][1].length === 3 &&
             bucketPolicy.PolicyDocument.Statement[0].Resource['Fn::Join'][1][0] ===
               'arn:aws:s3:::' &&

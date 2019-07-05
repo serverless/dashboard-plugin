@@ -14,7 +14,7 @@ module.exports = async (ctx) => {
     fs.removeSync(ctx.state.pathAssets)
   }
 
-  for (const func in ctx.state.functions) {
+  for (const func of Object.keys(ctx.state.functions)) {
     const fn = ctx.state.functions[func]
 
     let file

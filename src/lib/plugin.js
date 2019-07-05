@@ -274,6 +274,7 @@ class ServerlessEnterprisePlugin {
         case 'test:test':
           await test(self)
           break
+        default:
       }
     }
   }

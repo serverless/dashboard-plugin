@@ -2,7 +2,7 @@
 
 module.exports = function allowedRuntimesPolicy(policy, service, allowedRuntimes) {
   let failed = false
-  for (const fnName in service.declaration.functions || {}) {
+  for (const fnName of Object.keys(service.declaration.functions)) {
     if (
       !allowedRuntimes.includes(
         service.declaration.functions[fnName].runtime || service.declaration.provider.runtime

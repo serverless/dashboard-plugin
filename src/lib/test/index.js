@@ -70,6 +70,7 @@ module.exports.test = async (ctx) => {
       const { error, testSpec } = errors[i]
       const { headers, status } = error.resp
       process.stdout.write(`   ${i + 1}) ${chalk.red(`Failed -  ${testSpec.name}`)}\n`)
+      /* eslint-disable no-underscore-dangle */
       const info = `      status: ${status}
       headers:
     ${entries(headers._headers)
@@ -77,6 +78,7 @@ module.exports.test = async (ctx) => {
       .join('\n')
       .replace(/\n/g, '\n    ')}
       body: ${error.body}`
+      /* eslint-enable */
       process.stdout.write(chalk.grey(info))
 
       const expectedAndReceived = `

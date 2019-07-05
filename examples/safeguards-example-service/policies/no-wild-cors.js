@@ -4,7 +4,8 @@ module.exports = function corsPolicy(policy, service) {
   const functions = service.compiled['serverless-state.json'].service.functions
 
   if (!functions) {
-    return policy.approve()
+    policy.approve()
+    return
   }
 
   Object.entries(functions).forEach(([functionName, functionConfig]) => {

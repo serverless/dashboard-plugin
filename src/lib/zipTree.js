@@ -41,7 +41,7 @@ module.exports.writeZip = (zip, targetPath) =>
   new Promise((resolve) =>
     zip
       .generateNodeStream({
-        platform: process.platform == 'win32' ? 'dos' : 'unix',
+        platform: process.platform === 'win32' ? 'dos' : 'unix',
         compression: 'deflate',
         compressionOptions: {
           level: 9,

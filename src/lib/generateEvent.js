@@ -3,6 +3,8 @@
 const createEvent = require('@serverless/event-mocks').default
 const zlib = require('zlib')
 
+const hasOwnProperty = Object.prototype.hasOwnProperty
+
 function recordWrapper(event) {
   return {
     Records: [event],
@@ -10,18 +12,18 @@ function recordWrapper(event) {
 }
 
 function encodeBody(body) {
-  if (body) {
-    return Buffer.from(body).toString('base64')
-  }
+  if (!body) return body;
+  return Buffer.from(body).toString('base64')
 }
 
 async function gzipBody(body) {
   return new Promise((res, rej) => {
     zlib.gzip(body, (error, result) => {
       if (error) {
-        return rej(error)
+        rej(error)
+      } else {
+        res(result)
       }
-      res(result)
     })
   })
 }
@@ -32,7 +34,6 @@ function parsedBody(body) {
 
 const eventDict = {
   'aws:apiGateway': (body) => ({ body }),
-  'aws:websocket': (body) => ({ body }),
   'aws:sns': (body) => recordWrapper({ Sns: { Message: body } }),
   'aws:sqs': (body) => recordWrapper({ body }),
   'aws:dynamo': (body) => recordWrapper({ dynamodb: body }),
@@ -53,7 +54,7 @@ const eventDict = {
 }
 
 async function wrapEvent(eventType, body) {
-  if (eventDict.hasOwnProperty(eventType)) {
+  if (hasOwnProperty.call(eventDict, eventType)) {
     return createEvent(eventType, await eventDict[eventType](body))
   }
 

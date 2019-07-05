@@ -16,9 +16,8 @@ beforeAll(
 )
 
 afterAll(() => {
-  if (teardown) {
-    return teardown()
-  }
+  if (teardown) return teardown()
+  return null
 })
 
 describe('integration', () => {

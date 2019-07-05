@@ -8,7 +8,7 @@ const objectSubsetEquals = (subsetObj, obj) => {
       if (subsetObj.length !== obj.length) {
         return false
       }
-      for (const i in subsetObj) {
+      for (const i of Object.keys(subsetObj)) {
         if (!objectSubsetEquals(subsetObj[i], obj[i])) {
           return false
         }

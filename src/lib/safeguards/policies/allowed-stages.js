@@ -9,7 +9,7 @@ module.exports = function allowedStagePolicy(policy, service, options) {
       policy.approve()
     }
   } else {
-    for (const i in options) {
+    for (const i of Object.keys(options)) {
       if (options[i] === stageName) {
         policy.approve()
         return

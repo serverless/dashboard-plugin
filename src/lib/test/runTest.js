@@ -31,6 +31,7 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
   })
   const respBody = await resp.text()
   if (testSpec.response.headers) {
+    /* eslint-disable no-underscore-dangle */
     if (!objectSubsetEquals(testSpec.response.headers, resp.headers._headers)) {
       throw new TestError(
         'headers',
@@ -40,6 +41,7 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
         respBody
       )
     }
+    /* eslint-enable */
   }
   if (testSpec.response === true && !resp.ok) {
     throw new TestError('status', 200, resp.status, resp, respBody)

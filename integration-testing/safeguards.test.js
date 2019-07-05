@@ -10,9 +10,8 @@ jest.setTimeout(1000 * 60 * 3)
 beforeAll(async () => ({ sls, teardown } = await setup('service')))
 
 afterAll(() => {
-  if (teardown) {
-    return teardown()
-  }
+  if (teardown) return teardown()
+  return null
 })
 
 describe('integration', () => {
@@ -71,7 +70,7 @@ describe('integration', () => {
     const stdout = stripAnsi(String(proc.stdoutBuffer))
     expect(stdout).toMatch('warned - require-dlq')
     expect(stdout).toMatch(
-      'Warned - Function \"hello\" doesn\'t have a Dead Letter Queue configured.'
+      'Warned - Function "hello" doesn\'t have a Dead Letter Queue configured.'
     )
   })
 })
