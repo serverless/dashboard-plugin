@@ -5,7 +5,7 @@ const fileExists = async (filename) => {
   try {
     const stat = await fs.lstat(filename)
     return stat.isFile()
-  } catch {
+  } catch (error) {
     return false
   }
 }
