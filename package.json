@@ -40,11 +40,10 @@
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
+    "@serverless/eslint-config": "^1.0.0",
     "child-process-ext": "^2.0.0",
-    "eslint": "^5.8.0",
-    "eslint-config-prettier": "^3.1.0",
+    "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-prettier": "^3.0.0",
     "jest": "^24.8.0",
     "jest-circus": "^24.8.0",
     "lint-staged": "^8.1.5",
@@ -53,6 +52,47 @@
     "strip-ansi": "^5.2.0",
     "tar": "^4.4.10"
   },
+  "eslintConfig": {
+    "extends": "@serverless/eslint-config/node",
+    "root": true,
+    "parserOptions": {
+      "ecmaVersion": 2018
+    },
+    "rules": {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.test.js",
+            "**/scripts/**",
+            "**/integration-testing/**",
+            "prettier.config.js"
+          ]
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "integration-testing/**"
+        ],
+        "rules": {
+          "no-console": [
+            "error",
+            {
+              "allow": [
+                "info"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "eslintIgnore": [
+    "dist",
+    "sdk-js"
+  ],
   "author": "",
   "license": "Apache-2.0",
   "lint-staged": {
