@@ -16,7 +16,7 @@ module.exports = async function(ctx) {
     app: ctx.sls.service.app,
     provider: ctx.sls.service.provider.name,
     region: ctx.sls.service.provider.region,
-    accessKey
+    accessKey,
   }
 
   return archiveService(data)

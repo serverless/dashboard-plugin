@@ -31,16 +31,16 @@ module.exports = async function(ctx) {
           {
             Effect: 'Allow',
             Principal: {
-              AWS: `arn:aws:iam::${awsAccountId}:root`
+              AWS: `arn:aws:iam::${awsAccountId}:root`,
             },
             Action: 'sts:AssumeRole',
             Condition: {
               StringEquals: {
-                'sts:ExternalId': `ServerlessEnterprise-${ctx.sls.service.tenantUid}`
-              }
-            }
-          }
-        ]
+                'sts:ExternalId': `ServerlessEnterprise-${ctx.sls.service.tenantUid}`,
+              },
+            },
+          },
+        ],
       },
       Policies: [
         {
@@ -54,18 +54,18 @@ module.exports = async function(ctx) {
                 Resource: entries(ctx.sls.service.provider.compiledCloudFormationTemplate.Resources)
                   .filter(([, { Type }]) => Type === 'AWS::Logs::LogGroup')
                   .map(([logicalId]) => ({
-                    'Fn::GetAtt': [logicalId, 'Arn']
-                  }))
-              }
-            ]
-          }
-        }
-      ]
-    }
+                    'Fn::GetAtt': [logicalId, 'Arn'],
+                  })),
+              },
+            ],
+          },
+        },
+      ],
+    },
   }
   ctx.sls.service.provider.compiledCloudFormationTemplate.Outputs.EnterpriseLogAccessIamRole = {
     Value: {
-      'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn']
-    }
+      'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn'],
+    },
   }
 }

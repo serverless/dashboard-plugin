@@ -8,9 +8,9 @@ jest.mock('@serverless/platform-sdk', () => ({
     Promise.resolve({
       secretValues: [{ secretName: 'name', secretProperties: { value: 'value' } }],
       safeguardsPolicies: [{ policy: 'name' }],
-      providerCredentials: { secretValue: { accessKeyId: 'id', secretAccessKey: 'secret' } }
+      providerCredentials: { secretValue: { accessKeyId: 'id', secretAccessKey: 'secret' } },
     })
-  )
+  ),
 }))
 
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
@@ -22,8 +22,8 @@ describe('configureDeployProfile', () => {
     const ctx = {
       provider: { getStage, getRegion },
       sls: {
-        service: { app: 'app', tenant: 'tenant', service: 'service', provider: { name: 'aws' } }
-      }
+        service: { app: 'app', tenant: 'tenant', service: 'service', provider: { name: 'aws' } },
+      },
     }
     await configureDeployProfile(ctx)
     expect(ctx.safeguards).toEqual([{ policy: 'name' }])
@@ -33,13 +33,13 @@ describe('configureDeployProfile', () => {
       app: 'app',
       tenant: 'tenant',
       service: 'service',
-      stage: 'stage'
+      stage: 'stage',
     })
     expect(hookIntoVariableGetter).toBeCalledWith(ctx, { name: 'value' }, 'accessKey')
     expect(ctx.provider.cachedCredentials).toEqual({
       accessKeyId: 'id',
       secretAccessKey: 'secret',
-      region: 'region'
+      region: 'region',
     })
   })
 })

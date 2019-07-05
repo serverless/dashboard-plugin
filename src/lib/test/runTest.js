@@ -25,7 +25,7 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
   const resp = await fetch(`${baseApiUrl}/${path}?${queryString}`, {
     method,
     body,
-    headers
+    headers,
   })
   const respBody = await resp.text()
   if (testSpec.response.headers) {

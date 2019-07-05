@@ -75,13 +75,13 @@ module.exports = async (ctx) => {
 
     ctx.state.functions[func] = {
       key: func,
-      name: name,
-      runtime: runtime,
-      timeout: timeout,
+      name,
+      runtime,
+      timeout,
       entryOrig: entry,
       handlerOrig: handler,
       entryNew: `s-${func}`,
-      handlerNew: `handler`
+      handlerNew: 'handler',
     }
   }
 
@@ -105,7 +105,7 @@ module.exports = async (ctx) => {
   fs.copySync(pathSdk, pathSdkDest)
 
   // Prepare & Copy Function Handlers
-  for (var fn in ctx.state.functions) {
+  for (const fn in ctx.state.functions) {
     const func = ctx.state.functions[fn]
 
     if (!func.runtime.includes('nodejs')) {

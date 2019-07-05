@@ -10,8 +10,8 @@ module.exports = function requireGlobalVpcPolicy(
     declaration: { functions },
     provider: { naming },
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
@@ -21,8 +21,8 @@ module.exports = function requireGlobalVpcPolicy(
     funcName,
     {
       Properties: { VpcConfig },
-      Type
-    }
+      Type,
+    },
   ] of entries(Resources)) {
     if (Type !== 'AWS::Lambda::Function') {
       continue

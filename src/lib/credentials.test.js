@@ -6,8 +6,8 @@ jest.mock('@serverless/platform-sdk', () => ({
   getCredentials: jest.fn().mockReturnValue({
     accessKeyId: 'accessKeyId',
     secretAccessKey: 'secretAccessKey',
-    sessionToken: 'sessionToken'
-  })
+    sessionToken: 'sessionToken',
+  }),
 }))
 
 afterAll(() => jest.restoreAllMocks())
@@ -24,11 +24,11 @@ describe('credentials', () => {
         service: {
           app: 'app',
           tenant: 'tenant',
-          getServiceName
+          getServiceName,
         },
-        cli: { log }
+        cli: { log },
       },
-      provider: { getStage }
+      provider: { getStage },
     }
     await getCredentialsLocal(ctx)
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')
@@ -38,7 +38,7 @@ describe('credentials', () => {
       app: 'app',
       tenant: 'tenant',
       service: 'service',
-      accessKey: 'ACCESS_KEY'
+      accessKey: 'ACCESS_KEY',
     })
     expect(log).toBeCalledWith('Cloud credentials set from Serverless Platform.')
     expect(process.env.AWS_ACCESS_KEY_ID).toEqual('accessKeyId')

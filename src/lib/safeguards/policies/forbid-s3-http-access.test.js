@@ -10,10 +10,10 @@ describe('forbidS3HttpAccessPolicy', () => {
       compiled: { 'cloudformation-template-update-stack.json': { Resources: {} } },
       declaration: {
         functions: {
-          func: {}
-        }
+          func: {},
+        },
       },
-      provider: { naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` } }
+      provider: { naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` } },
     }
   })
 
@@ -22,14 +22,14 @@ describe('forbidS3HttpAccessPolicy', () => {
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
-      Properties: {}
+      Properties: {},
     }
     service.compiled[
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucketPolicy = {
       Type: 'AWS::S3::BucketPolicy',
       Properties: {
-        Bucket: { Ref: 'ServerlessDeploymentBucket' }
+        Bucket: { Ref: 'ServerlessDeploymentBucket' },
       },
       PolicyDocument: {
         Statement: [
@@ -38,16 +38,16 @@ describe('forbidS3HttpAccessPolicy', () => {
             Effect: 'Deny',
             Principal: '*',
             Resource: {
-              'Fn::Join': ['', ['arn:aws:s3:::', { Ref: 'ServerlessDeploymentBucket' }, '/*']]
+              'Fn::Join': ['', ['arn:aws:s3:::', { Ref: 'ServerlessDeploymentBucket' }, '/*']],
             },
             Condition: {
               Bool: {
-                'aws:SecureTransport': false
-              }
-            }
-          }
-        ]
-      }
+                'aws:SecureTransport': false,
+              },
+            },
+          },
+        ],
+      },
     }
     forbidS3HttpAccessPolicy(policy, service)
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -59,14 +59,14 @@ describe('forbidS3HttpAccessPolicy', () => {
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
-      Properties: { Name: 'foobar' }
+      Properties: { Name: 'foobar' },
     }
     service.compiled[
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucketPolicy = {
       Type: 'AWS::S3::BucketPolicy',
       Properties: {
-        Bucket: { Ref: 'ServerlessDeploymentBucket' }
+        Bucket: { Ref: 'ServerlessDeploymentBucket' },
       },
       PolicyDocument: {
         Statement: [
@@ -77,12 +77,12 @@ describe('forbidS3HttpAccessPolicy', () => {
             Resource: 'arn:aws:s3:::foobar/*',
             Condition: {
               Bool: {
-                'aws:SecureTransport': false
-              }
-            }
-          }
-        ]
-      }
+                'aws:SecureTransport': false,
+              },
+            },
+          },
+        ],
+      },
     }
     forbidS3HttpAccessPolicy(policy, service)
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -94,14 +94,14 @@ describe('forbidS3HttpAccessPolicy', () => {
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
-      Properties: { Name: 'foobar' }
+      Properties: { Name: 'foobar' },
     }
     service.compiled[
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucketPolicy = {
       Type: 'AWS::S3::BucketPolicy',
       Properties: {
-        Bucket: 'foobar'
+        Bucket: 'foobar',
       },
       PolicyDocument: {
         Statement: [
@@ -112,12 +112,12 @@ describe('forbidS3HttpAccessPolicy', () => {
             Resource: 'arn:aws:s3:::foobar/*',
             Condition: {
               Bool: {
-                'aws:SecureTransport': false
-              }
-            }
-          }
-        ]
-      }
+                'aws:SecureTransport': false,
+              },
+            },
+          },
+        ],
+      },
     }
     forbidS3HttpAccessPolicy(policy, service)
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -129,13 +129,13 @@ describe('forbidS3HttpAccessPolicy', () => {
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
-      Properties: {}
+      Properties: {},
     }
     forbidS3HttpAccessPolicy(policy, service)
 
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith(
-      `Bucket "ServerlessDeploymentBucket" doesn't have a BucketPolicy forbidding unsecure HTTP access.`
+      'Bucket "ServerlessDeploymentBucket" doesn\'t have a BucketPolicy forbidding unsecure HTTP access.'
     )
   })
 })

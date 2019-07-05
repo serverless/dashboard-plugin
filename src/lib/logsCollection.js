@@ -8,7 +8,7 @@ const {
   pickResourceType,
   upperFirst,
   API_GATEWAY_FILTER_PATTERN,
-  LAMBDA_FILTER_PATTERN
+  LAMBDA_FILTER_PATTERN,
 } = require('./utils')
 
 const { getAccessKeyForTenant, getLogDestination } = require('@serverless/platform-sdk')
@@ -43,7 +43,7 @@ module.exports = async (ctx) => {
     serviceName: ctx.sls.service.getServiceName(),
     stageName: ctx.provider.getStage(),
     regionName: ctx.provider.getRegion(),
-    accountId: Account
+    accountId: Account,
   }
 
   let destinationArn
@@ -75,9 +75,9 @@ module.exports = async (ctx) => {
         DestinationArn: destinationArn,
         FilterPattern: filterPattern,
         LogGroupName: {
-          Ref: logGroupKey
-        }
-      }
+          Ref: logGroupKey,
+        },
+      },
     }
   }
 }

@@ -37,7 +37,7 @@ class ServerlessEnterprisePlugin {
         sls.cli.log(
           'Run `serverless login` and deploy again to explore, monitor, secure your serverless project for free.',
           'Serverless Enterprise'
-        )
+        ),
     }
 
     // Check if Enterprise is configured
@@ -62,7 +62,7 @@ class ServerlessEnterprisePlugin {
       if (missing.includes('tenant') && missing.includes('app')) {
         return // user isn't trying to use SFE
       }
-      const errorMessage = `You are not currently logged in. To log in, use: $ serverless login`
+      const errorMessage = 'You are not currently logged in. To log in, use: $ serverless login'
         console.log('') // eslint-disable-line
         sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
         throw new Error(errorMessage) // eslint-disable-line
@@ -78,7 +78,7 @@ class ServerlessEnterprisePlugin {
                 ', '
               )} properties and deploy again to explore, monitor, secure your serverless project for free.`,
             'Serverless Enterprise'
-          )
+          ),
       }
       return
     }
@@ -95,12 +95,12 @@ class ServerlessEnterprisePlugin {
       login: {
         usage: 'Login or sign up for Serverless Enterprise',
         lifecycleEvents: ['login'],
-        enterprise: true
+        enterprise: true,
       },
       logout: {
         usage: 'Logout from Serverless Enterprise',
         lifecycleEvents: ['logout'],
-        enterprise: true
+        enterprise: true,
       },
       'generate-event': {
         usage: 'Generate event',
@@ -109,35 +109,35 @@ class ServerlessEnterprisePlugin {
           type: {
             usage: `Specify event type. ${Object.keys(eventDict).join(', ')} are supported.`,
             shortcut: 't',
-            required: true
+            required: true,
           },
           body: {
-            usage: `Specify the body for the message, request, or stream event.`,
-            shortcut: 'b'
-          }
+            usage: 'Specify the body for the message, request, or stream event.',
+            shortcut: 'b',
+          },
         },
-        enterprise: true
+        enterprise: true,
       },
       test: {
         usage: 'Run HTTP tests',
         lifecycleEvents: ['test'],
         options: {
-          ['function']: {
-            usage: `Specify the function to test`,
-            shortcut: 'f'
+          'function': {
+            usage: 'Specify the function to test',
+            shortcut: 'f',
           },
           test: {
-            usage: `Specify a specific test to run`,
-            shortcut: 't'
-          }
+            usage: 'Specify a specific test to run',
+            shortcut: 't',
+          },
         },
-        enterprise: true
+        enterprise: true,
       },
       dashboard: {
         usage: 'Open the Serverless Enterprise dashboard',
         lifecycleEvents: ['dashboard'],
-        enterprise: true
-      }
+        enterprise: true,
+      },
     }
 
     // Set Plugin hooks for all Enteprise Plugin features here
@@ -204,7 +204,7 @@ class ServerlessEnterprisePlugin {
           break
         case 'before:deploy:deploy':
           this.enterprise = {
-            errorHandler: errorHandler(this) // V.1 calls this when it crashes
+            errorHandler: errorHandler(this), // V.1 calls this when it crashes
           }
           await runPolicies(self)
           break
@@ -247,7 +247,7 @@ class ServerlessEnterprisePlugin {
         case 'before:invoke:local:invoke':
           Object.assign(self.sls.service, {
             appUid: '000000000000000000',
-            tenantUid: '000000000000000000'
+            tenantUid: '000000000000000000',
           })
           await wrap(self)
           break

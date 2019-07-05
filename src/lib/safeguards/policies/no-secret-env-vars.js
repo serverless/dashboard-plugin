@@ -29,7 +29,7 @@ const truffleHogRegexes = {
   ),
   'Google (GCP) Service-account': new RegExp('"type": "service_account"'),
   'Twilio API Key': new RegExp('SK[a-z0-9]{32}'),
-  'Password in URL': new RegExp('[a-zA-Z]{3,10}://[^/\\s:@]{3,20}:[^/\\s:@]{3,20}@.{1,100}["\'\\s]')
+  'Password in URL': new RegExp('[a-zA-Z]{3,10}://[^/\\s:@]{3,20}:[^/\\s:@]{3,20}@.{1,100}["\'\\s]'),
 }
 function isSecret(string) {
   for (const regex of values(truffleHogRegexes)) {
@@ -46,8 +46,8 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
     declaration: { functions },
     provider: { naming },
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])

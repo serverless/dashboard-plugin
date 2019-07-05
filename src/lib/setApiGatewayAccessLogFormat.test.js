@@ -9,20 +9,20 @@ describe('setApiGatewayAccessLogFormat', () => {
         provider: {
           logs: {
             restApi: {
-              format: JSON.stringify(API_GATEWAY_LOG_FORMAT)
-            }
-          }
-        }
-      }
-    }
+              format: JSON.stringify(API_GATEWAY_LOG_FORMAT),
+            },
+          },
+        },
+      },
+    },
   }
   beforeEach(() => {
     ctx = {
       sls: {
         service: {
-          provider: {}
-        }
-      }
+          provider: {},
+        },
+      },
     }
   })
   it('does not touch the ctx if APIGW log collection is off', async () => {

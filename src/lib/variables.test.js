@@ -7,7 +7,7 @@ jest.mock('@serverless/platform-sdk', () => ({
       return Promise.resolve({ value: { subkey: 'seeeeeccrreeeetttt' } })
     }
     return Promise.resolve({ value: 'simple seeeeeccrreeeetttt' })
-  })
+  }),
 }))
 
 afterEach(() => {
@@ -21,18 +21,18 @@ describe('variables - hookIntoVariableGetter', () => {
       service: {
         app: 'app',
         service: 'service',
-        tenant: 'tenant'
+        tenant: 'tenant',
       },
       variables: { getValueFromSource },
       processedInput: {
-        commands: []
-      }
+        commands: [],
+      },
     },
     provider: {
       getStage: jest.fn().mockReturnValue('stage'),
-      getRegion: jest.fn().mockReturnValue('region')
+      getRegion: jest.fn().mockReturnValue('region'),
     },
-    state: { secretsUsed: new Set() }
+    state: { secretsUsed: new Set() },
   }
 
   afterAll(() => {
@@ -61,7 +61,7 @@ describe('variables - hookIntoVariableGetter', () => {
       app: 'app',
       tenant: 'tenant',
       region: 'region',
-      stage: 'stage'
+      stage: 'stage',
     })
     restore()
     expect(ctx.sls.variables.getValueFromSource).toEqual(getValueFromSource)
@@ -79,7 +79,7 @@ describe('variables - hookIntoVariableGetter', () => {
       app: 'app',
       tenant: 'tenant',
       region: 'region',
-      stage: 'stage'
+      stage: 'stage',
     })
     restore()
     expect(ctx.sls.variables.getValueFromSource).toEqual(getValueFromSource)
@@ -91,8 +91,8 @@ describe('variables - hookIntoVariableGetter', () => {
         ...ctx,
         sls: {
           ...ctx.sls,
-          processedInput: { commands: ['logout'] }
-        }
+          processedInput: { commands: ['logout'] },
+        },
       },
       {},
       'accessKey'
@@ -113,8 +113,8 @@ describe('variables - hookIntoVariableGetter', () => {
         ...ctx,
         sls: {
           ...ctx.sls,
-          processedInput: { commands: ['login'] }
-        }
+          processedInput: { commands: ['login'] },
+        },
       },
       {},
       'accessKey'

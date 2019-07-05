@@ -4,7 +4,7 @@ const saveDeployment = require('./save')
 jest.mock('./parse', () =>
   jest.fn().mockReturnValue(
     Promise.resolve({
-      save: jest.fn().mockReturnValue({ dashboardUrl: 'https://dashboard.serverless.com/foo' })
+      save: jest.fn().mockReturnValue({ dashboardUrl: 'https://dashboard.serverless.com/foo' }),
     })
   )
 )
@@ -26,7 +26,7 @@ describe('saveDeployment', () => {
     expect(parseDeploymentData).toBeCalledWith(ctx, undefined, undefined, false)
     expect((await parseDeploymentData()).save).toHaveBeenCalledTimes(1)
     expect(log).toBeCalledWith(
-      `Successfully published your service to the Enterprise Dashboard: https://dashboard.serverless.com/foo`,
+      'Successfully published your service to the Enterprise Dashboard: https://dashboard.serverless.com/foo',
       'Serverless Enterprise'
     )
   })

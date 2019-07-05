@@ -7,13 +7,13 @@ afterEach(() => jest.clearAllMocks())
 jest.mock('jszip', () => ({
   loadAsync: jest.fn().mockReturnValue(
     Promise.resolve({
-      file: jest.fn()
+      file: jest.fn(),
     })
-  )
+  ),
 }))
 jest.mock('./zipTree', () => ({
   addTree: jest.fn().mockReturnValue(Promise.resolve()),
-  writeZip: jest.fn().mockReturnValue(Promise.resolve())
+  writeZip: jest.fn().mockReturnValue(Promise.resolve()),
 }))
 jest.mock('fs-extra', () => ({
   writeFileSync: jest.fn(),
@@ -21,7 +21,7 @@ jest.mock('fs-extra', () => ({
   removeSync: jest.fn(),
   ensureDirSync: jest.fn(),
   copySync: jest.fn(),
-  readFile: jest.fn().mockReturnValue(Promise.resolve('zipcontents'))
+  readFile: jest.fn().mockReturnValue(Promise.resolve('zipcontents')),
 }))
 
 describe('wrap - wrap', () => {
@@ -44,16 +44,16 @@ describe('wrap - wrap', () => {
           functions: {
             dunc: {
               runtime: 'python3.6',
-              handler: 'handlerFile.handlerFunc'
+              handler: 'handlerFile.handlerFunc',
             },
             func: {
               runtime: 'nodejs8.10',
-              handler: 'handlerFile.handlerFunc'
-            }
-          }
+              handler: 'handlerFile.handlerFunc',
+            },
+          },
         },
-        cli: { log }
-      }
+        cli: { log },
+      },
     }
     await wrap(ctx)
 
@@ -67,18 +67,18 @@ describe('wrap - wrap', () => {
         key: 'func',
         name: 'service-dev-func',
         timeout: 6,
-        runtime: 'nodejs8.10'
-      }
+        runtime: 'nodejs8.10',
+      },
     })
     expect(ctx.sls.service.functions).toEqual({
       dunc: {
         runtime: 'python3.6',
-        handler: 'handlerFile.handlerFunc'
+        handler: 'handlerFile.handlerFunc',
       },
       func: {
         runtime: 'nodejs8.10',
-        handler: 's-func.handler'
-      }
+        handler: 's-func.handler',
+      },
     })
     expect(ctx.sls.service.package).toEqual({ include: ['s-*.js', 'serverless-sdk/**'] })
     expect(fs.writeFileSync).toHaveBeenCalledTimes(1)
@@ -124,12 +124,12 @@ try {
             func: {
               runtime: 'nodejs8.10',
               handler: 'handlerFile.handlerFunc',
-              package: { artifact: 'bundle.zip' }
-            }
-          }
+              package: { artifact: 'bundle.zip' },
+            },
+          },
         },
-        cli: { log }
-      }
+        cli: { log },
+      },
     }
     await wrap(ctx)
 
@@ -143,15 +143,15 @@ try {
         key: 'func',
         name: 'service-dev-func',
         timeout: 6,
-        runtime: 'nodejs8.10'
-      }
+        runtime: 'nodejs8.10',
+      },
     })
     expect(ctx.sls.service.functions).toEqual({
       func: {
         runtime: 'nodejs8.10',
         handler: 's-func.handler',
-        package: { artifact: 'bundle.zip' }
-      }
+        package: { artifact: 'bundle.zip' },
+      },
     })
     expect(ctx.sls.service.package).toEqual({ include: ['s-*.js', 'serverless-sdk/**'] })
     expect(fs.writeFileSync).toHaveBeenCalledTimes(1)
@@ -201,16 +201,16 @@ try {
           functions: {
             dunc: {
               runtime: 'python3.6',
-              handler: 'handlerFile.handlerFunc'
+              handler: 'handlerFile.handlerFunc',
             },
             func: {
               runtime: 'nodejs8.10',
-              handler: 'handlerFile.handlerFunc'
-            }
-          }
+              handler: 'handlerFile.handlerFunc',
+            },
+          },
         },
-        cli: { log }
-      }
+        cli: { log },
+      },
     }
     await wrap(ctx)
 
@@ -224,21 +224,21 @@ try {
         key: 'func',
         name: 'service-dev-func',
         timeout: 6,
-        runtime: 'nodejs8.10'
-      }
+        runtime: 'nodejs8.10',
+      },
     })
     expect(ctx.sls.service.functions).toEqual({
       dunc: {
         runtime: 'python3.6',
-        handler: 'handlerFile.handlerFunc'
+        handler: 'handlerFile.handlerFunc',
       },
       func: {
         runtime: 'nodejs8.10',
         handler: 's-func.handler',
         package: {
-          include: ['s-func.js', 'serverless-sdk/**']
-        }
-      }
+          include: ['s-func.js', 'serverless-sdk/**'],
+        },
+      },
     })
     expect(ctx.sls.service.package).toEqual({ individually: true })
     expect(fs.writeFileSync).toHaveBeenCalledTimes(1)

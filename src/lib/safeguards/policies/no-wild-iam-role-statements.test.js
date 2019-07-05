@@ -19,13 +19,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:getObject'],
-                  Resource: ['foobar']
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: ['foobar'],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -42,13 +42,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:getObject'],
-                  Resource: [{ Ref: 'foobar' }]
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: [{ Ref: 'foobar' }],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -65,13 +65,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:getObject'],
-                  Resource: { Ref: 'foobar' }
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: { Ref: 'foobar' },
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -88,13 +88,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:*'],
-                  Resource: ['foobar']
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: ['foobar'],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(0)
@@ -113,13 +113,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['*'],
-                  Resource: ['foobar']
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: ['foobar'],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(0)
@@ -138,13 +138,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:getObject'],
-                  Resource: ['*']
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: ['*'],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(0)
@@ -163,13 +163,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:getObject'],
-                  Resource: [{ 'Fn::Join': ['', ['*']] }]
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: [{ 'Fn::Join': ['', ['*']] }],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
     noWildIamPolicy(policy, { compiled })
     expect(policy.approve).toHaveBeenCalledTimes(0)
@@ -188,13 +188,13 @@ describe('noWildIamPolicy', () => {
               Statement: [
                 {
                   Action: ['s3:getObject'],
-                  Resource: [{ 'Fn::Sub': ['*'] }]
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  Resource: [{ 'Fn::Sub': ['*'] }],
+                },
+              ],
+            },
+          },
+        ],
+      },
     }
 
     noWildIamPolicy(policy, { compiled })

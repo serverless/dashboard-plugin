@@ -10,12 +10,12 @@ describe('allowedFunctionNamesPolicy', () => {
       compiled: { 'cloudformation-template-update-stack.json': { Resources: {} } },
       declaration: {
         serviceObject: { name: 'serviceName' },
-        functions: { func: {} }
+        functions: { func: {} },
       },
       provider: {
         naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` },
-        getStage: () => 'stage'
-      }
+        getStage: () => 'stage',
+      },
     }
   })
 
@@ -23,8 +23,8 @@ describe('allowedFunctionNamesPolicy', () => {
     service.compiled['cloudformation-template-update-stack.json'].Resources.funcLambda = {
       Type: 'AWS::IAM::Function',
       Properties: {
-        FunctionName: 'serviceName-stage-func'
-      }
+        FunctionName: 'serviceName-stage-func',
+      },
     }
     allowedFunctionNamesPolicy(policy, service, '${SERVICE}-${STAGE}-${FUNCTION}')
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -35,14 +35,14 @@ describe('allowedFunctionNamesPolicy', () => {
     service.compiled['cloudformation-template-update-stack.json'].Resources.funcLambda = {
       Type: 'AWS::Lambda::Function',
       Properties: {
-        FunctionName: 'func'
-      }
+        FunctionName: 'func',
+      },
     }
     allowedFunctionNamesPolicy(policy, service, '${SERVICE}-${STAGE}-${FUNCTION}')
 
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith(
-      `Function "func" doesn't match RegExp /^serviceName-stage-func$/.`
+      'Function "func" doesn\'t match RegExp /^serviceName-stage-func$/.'
     )
   })
 
@@ -50,14 +50,14 @@ describe('allowedFunctionNamesPolicy', () => {
     service.compiled['cloudformation-template-update-stack.json'].Resources.funcLambda = {
       Type: 'AWS::Lambda::Function',
       Properties: {
-        FunctionName: 'serviceName-stage-funcsafasfdsf'
-      }
+        FunctionName: 'serviceName-stage-funcsafasfdsf',
+      },
     }
     allowedFunctionNamesPolicy(policy, service, '${SERVICE}-${STAGE}-${FUNCTION}')
 
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith(
-      `Function "func" doesn't match RegExp /^serviceName-stage-func$/.`
+      'Function "func" doesn\'t match RegExp /^serviceName-stage-func$/.'
     )
   })
 
@@ -65,8 +65,8 @@ describe('allowedFunctionNamesPolicy', () => {
     service.compiled['cloudformation-template-update-stack.json'].Resources.funcLambda = {
       Type: 'AWS::IAM::Function',
       Properties: {
-        FunctionName: 'serviceName-stage-funcsafasfdsf'
-      }
+        FunctionName: 'serviceName-stage-funcsafasfdsf',
+      },
     }
     allowedFunctionNamesPolicy(policy, service, '${SERVICE}-${STAGE}-${FUNCTION}.*')
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -77,8 +77,8 @@ describe('allowedFunctionNamesPolicy', () => {
     service.compiled['cloudformation-template-update-stack.json'].Resources.funcLambda = {
       Type: 'AWS::IAM::Function',
       Properties: {
-        FunctionName: 'serviceName-stage-asfdasfsafkjahdguosndfl'
-      }
+        FunctionName: 'serviceName-stage-asfdasfsafkjahdguosndfl',
+      },
     }
     allowedFunctionNamesPolicy(policy, service, '${SERVICE}-${STAGE}-.+')
     expect(policy.approve).toHaveBeenCalledTimes(1)

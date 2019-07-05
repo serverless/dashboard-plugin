@@ -4,8 +4,8 @@ module.exports = function forbidS3HttpAccessPolicy(policy, service) {
   let failed = false
   const {
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
 
   const buckets = new Map(entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::Bucket'))

@@ -7,7 +7,7 @@ const runTest = require('./runTest')
 
 module.exports.test = async (ctx) => {
   if (!fse.exists('serverless.test.yml')) {
-    ctx.sls.cli.log(`No serverless.test.yml file found`, `Serverless Enterprise`)
+    ctx.sls.cli.log('No serverless.test.yml file found', 'Serverless Enterprise')
     return
   }
   let tests = yaml.safeLoad(await fse.readFile('serverless.test.yml'))
@@ -21,7 +21,7 @@ module.exports.test = async (ctx) => {
   }
 
   const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
-    StackName: ctx.provider.naming.getStackName()
+    StackName: ctx.provider.naming.getStackName(),
   })
   const apigResource = find(
     cfnStack.Stacks[0].Outputs,
@@ -36,7 +36,7 @@ module.exports.test = async (ctx) => {
 
    Summary --------------------------------------------------
 `,
-    `Serverless Enterprise`
+    'Serverless Enterprise'
   )
 
   const errors = []
@@ -88,7 +88,7 @@ module.exports.test = async (ctx) => {
           ? JSON.stringify(error.received, null, 2).replace(/\n/g, '\n      ')
           : error.received
       }\n\n`
-      process.stdout.write('\n' + chalk.white(expectedAndReceived))
+      process.stdout.write(`\n${  chalk.white(expectedAndReceived)}`)
     }
   }
 

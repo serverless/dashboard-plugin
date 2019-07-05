@@ -5,10 +5,10 @@ jest.mock('@serverless/platform-sdk', () => ({
   login: jest
     .fn()
     .mockImplementation((tenant) =>
-      tenant === 'signup'
+      (tenant === 'signup'
         ? Promise.reject('Complete sign-up before logging in.')
-        : Promise.resolve()
-    )
+        : Promise.resolve())
+    ),
 }))
 
 describe('login', () => {

@@ -8,7 +8,7 @@ const {
   readFile,
   remove,
   writeFile,
-  writeJson
+  writeJson,
 } = require('fs-extra')
 const spawn = require('child-process-ext/spawn')
 const fetch = require('node-fetch')
@@ -70,7 +70,7 @@ module.exports = async function(templateName) {
       const slsYamlString = await readFile(slsYamlPath, 'utf8')
       return writeFile(slsYamlPath, slsYamlString.replace('CHANGEME', serviceName))
     }),
-    retrieveServerless()
+    retrieveServerless(),
   ])
 
   console.info('... (done)')
@@ -85,8 +85,8 @@ module.exports = async function(templateName) {
         SERVERLESS_PLATFORM_STAGE,
         FORCE_COLOR: '1',
         SLS_DEBUG: '*',
-        ...options.env
-      }
+        ...options.env,
+      },
     })
     if (childDeferred.stdout) {
       childDeferred.stdout.on('data', (data) => console.info(String(data)))
@@ -101,6 +101,6 @@ module.exports = async function(templateName) {
     teardown: async () => {
       await sls(['remove'])
       return remove(serviceTmpDir)
-    }
+    },
   }
 }

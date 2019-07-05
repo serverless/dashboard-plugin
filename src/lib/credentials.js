@@ -13,7 +13,7 @@ module.exports = async function(ctx) {
     command: ctx.sls.processedInput.commands[0],
     app: ctx.sls.service.app,
     tenant: ctx.sls.service.tenant,
-    service: ctx.sls.service.getServiceName()
+    service: ctx.sls.service.getServiceName(),
   })
   process.env.AWS_ACCESS_KEY_ID = accessKeyId
   process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey

@@ -13,7 +13,7 @@ describe('javascriptPolicy', () => {
     javascriptPolicy(
       policy,
       serviceData,
-      JSON.stringify(`jsonata("declaration.provider[stage='dev']")`)
+      JSON.stringify('jsonata("declaration.provider[stage=\'dev\']")')
     )
     expect(policy.approve).toHaveBeenCalledTimes(1)
     expect(policy.fail).toHaveBeenCalledTimes(0)
@@ -23,7 +23,7 @@ describe('javascriptPolicy', () => {
     javascriptPolicy(
       policy,
       serviceData,
-      JSON.stringify(`jsonata("declaration.provider[stage in ['dev','stage']]")`)
+      JSON.stringify('jsonata("declaration.provider[stage in [\'dev\',\'stage\']]")')
     )
     expect(policy.approve).toHaveBeenCalledTimes(1)
     expect(policy.fail).toHaveBeenCalledTimes(0)
@@ -44,7 +44,7 @@ describe('javascriptPolicy', () => {
     javascriptPolicy(
       policy,
       serviceData,
-      JSON.stringify(`jsonata("declaration.provider[stage='prod']")`)
+      JSON.stringify('jsonata("declaration.provider[stage=\'prod\']")')
     )
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith('Must comply with all of the configured queries.')
@@ -57,21 +57,21 @@ describe('javascriptPolicy', () => {
   })
 
   it('allows javascript statements', () => {
-    const rules = JSON.stringify(`5==5`)
+    const rules = JSON.stringify('5==5')
     javascriptPolicy(policy, serviceData, rules)
     expect(policy.approve).toHaveBeenCalledTimes(1)
     expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('allows javascript statements with services', () => {
-    const rules = JSON.stringify(`declaration.provider.stage == "dev"`)
+    const rules = JSON.stringify('declaration.provider.stage == "dev"')
     javascriptPolicy(policy, serviceData, rules)
     expect(policy.approve).toHaveBeenCalledTimes(1)
     expect(policy.fail).toHaveBeenCalledTimes(0)
   })
 
   it('forbids failed javascript statements', () => {
-    const rules = JSON.stringify(`declaration.provider.stage == "prod"`)
+    const rules = JSON.stringify('declaration.provider.stage == "prod"')
     javascriptPolicy(policy, serviceData, rules)
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toHaveBeenCalledTimes(1)

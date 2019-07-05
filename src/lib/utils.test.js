@@ -19,15 +19,15 @@ describe('utils - pickResourceType', () => {
         {
           Resources: {
             FooBar1: {
-              Type: 'AWS::FooBar'
+              Type: 'AWS::FooBar',
             },
             FooBar2: {
-              Type: 'AWS::FooBar'
+              Type: 'AWS::FooBar',
             },
             FooBaz: {
-              Type: 'AWS::FooBaz'
-            }
-          }
+              Type: 'AWS::FooBaz',
+            },
+          },
         },
         'AWS::FooBar'
       )
@@ -35,15 +35,15 @@ describe('utils - pickResourceType', () => {
       {
         key: 'FooBar1',
         resource: {
-          Type: 'AWS::FooBar'
-        }
+          Type: 'AWS::FooBar',
+        },
       },
       {
         key: 'FooBar2',
         resource: {
-          Type: 'AWS::FooBar'
-        }
-      }
+          Type: 'AWS::FooBar',
+        },
+      },
     ])
   })
 })

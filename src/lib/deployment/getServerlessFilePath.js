@@ -29,7 +29,7 @@ module.exports = async function getServerlessFilePath(filename, servicePath) {
     fileExists(jsonFilePath),
     fileExists(ymlFilePath),
     fileExists(yamlFilePath),
-    fileExists(jsFilePath)
+    fileExists(jsFilePath),
   ])
   if (yml) {
     return ymlFilePath

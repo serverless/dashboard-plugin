@@ -2,7 +2,7 @@ const getServerlessFilePath = require('./getServerlessFilePath')
 const fs = require('fs-extra')
 
 jest.mock('fs-extra', () => ({
-  lstat: jest.fn().mockReturnValue(Promise.resolve({ isFile: jest.fn().mockReturnValue(true) }))
+  lstat: jest.fn().mockReturnValue(Promise.resolve({ isFile: jest.fn().mockReturnValue(true) })),
 }))
 
 describe('getServerlessFilePath', () => {

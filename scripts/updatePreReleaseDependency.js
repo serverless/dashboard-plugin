@@ -7,4 +7,4 @@ const { writeFileSync, readFileSync } = require('fs')
 const packageJson = JSON.parse(readFileSync('package.json').toString())
 
 packageJson.dependencies['@serverless/platform-sdk'] = 'next'
-writeFileSync('package.json', JSON.stringify(packageJson, null, 2) + '\n')
+writeFileSync('package.json', `${JSON.stringify(packageJson, null, 2)  }\n`)

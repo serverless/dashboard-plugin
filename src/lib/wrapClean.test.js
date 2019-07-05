@@ -3,7 +3,7 @@ const fs = require('fs-extra')
 
 jest.mock('fs-extra', () => ({
   pathExistsSync: jest.fn().mockReturnValue(true),
-  removeSync: jest.fn()
+  removeSync: jest.fn(),
 }))
 
 afterAll(() => jest.restoreAllMocks())
@@ -17,10 +17,10 @@ describe('wrapClean', () => {
         functions: {
           func: {
             runtime: 'nodejs8.10',
-            entryNew: 's-func'
-          }
-        }
-      }
+            entryNew: 's-func',
+          },
+        },
+      },
     })
 
     expect(fs.pathExistsSync).toHaveBeenCalledTimes(2)

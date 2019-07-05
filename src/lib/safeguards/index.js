@@ -6,7 +6,7 @@ const chalk = require('chalk')
 
 // NOTE: not using path.join because it strips off the leading
 const loadPolicy = (policyPath, safeguardName) =>
-  require(`${policyPath || `./policies`}/${safeguardName}`)
+  require(`${policyPath || './policies'}/${safeguardName}`)
 
 async function runPolicies(ctx) {
   const basePath = ctx.sls.config.servicePath
@@ -35,31 +35,31 @@ async function runPolicies(ctx) {
       safeguardConfig,
       policyPath: localPoliciesPath,
       enforcementLevel: 'error',
-      title: `Local policy: ${safeguardName}`
+      title: `Local policy: ${safeguardName}`,
     }
   })
 
   const policyConfigs = [
     ...localPolicies,
-    ...ctx.safeguards // fetched during asyncInit in deployment profile
+    ...ctx.safeguards, // fetched during asyncInit in deployment profile
   ]
 
   if (policyConfigs.length === 0) {
     return
   }
 
-  ctx.sls.cli.log(`Safeguards Processing...`, `Serverless Enterprise`)
+  ctx.sls.cli.log('Safeguards Processing...', 'Serverless Enterprise')
 
   const policies = policyConfigs.map((policy) => ({
     ...policy,
-    function: loadPolicy(policy.policyPath, policy.safeguardName)
+    function: loadPolicy(policy.policyPath, policy.safeguardName),
   }))
 
   const service = {
     compiled: {},
     declaration: cloneDeep(omit(ctx.sls.service, ['serverless'])),
     provider: ctx.provider,
-    frameworkVersion: ctx.sls.version
+    frameworkVersion: ctx.sls.version,
   }
 
   const artifactsPath = path.join(basePath, '.serverless')
@@ -77,7 +77,7 @@ async function runPolicies(ctx) {
         } catch (error) {
           ctx.sls.cli.log(
             `(Safeguards) Failed to parse file ${filename} in the artifacts directory.`,
-            `Serverless Enterprise`
+            'Serverless Enterprise'
           )
           throw error
         }
@@ -89,7 +89,7 @@ async function runPolicies(ctx) {
 
    Summary --------------------------------------------------
 `,
-    `Serverless Enterprise`
+    'Serverless Enterprise'
   )
 
   service.compiled = fromPairs(jsonYamlArtifacts)
@@ -99,7 +99,7 @@ async function runPolicies(ctx) {
     const result = {
       approved: false,
       failed: false,
-      policy
+      policy,
     }
     const approve = () => {
       result.approved = true
@@ -122,7 +122,7 @@ async function runPolicies(ctx) {
     if (!result.approved && !result.failed) {
       ctx.sls.cli.log(
         `Safeguard Policy "${policy.title}" finished running, but did not explicitly approve the deployment. This is likely a problem in the policy itself. If this problem persists, contact the policy author.`,
-        `Serverless Enterprise`
+        'Serverless Enterprise'
       )
     }
     return result
@@ -140,7 +140,7 @@ async function runPolicies(ctx) {
 
   if (markedPolicies.length !== 0) {
     const details =
-      `\n   ${chalk.yellow('Details --------------------------------------------------')}\n\n` +
+      `\n   ${chalk.yellow('Details --------------------------------------------------')}\n\n${ 
       markedPolicies
         .map(
           (res, i) =>
@@ -154,15 +154,15 @@ async function runPolicies(ctx) {
       ${chalk.grey(`details: ${res.policy.function.docs}`)}
       ${res.policy.description}`
         )
-        .join('\n\n\n')
+        .join('\n\n\n')}`
 
     process.stdout.write(`${details}\n\n`)
     if (!markedPolicies.every((res) => res.approved || res.policy.enforcementLevel === 'warning')) {
-      ctx.sls.cli.log(summary, `\nServerless Enterprise`)
+      ctx.sls.cli.log(summary, '\nServerless Enterprise')
       throw new Error('Deployment blocked by Serverless Enterprise Safeguards')
     }
   }
-  ctx.sls.cli.log(summary, `\nServerless Enterprise`)
+  ctx.sls.cli.log(summary, '\nServerless Enterprise')
 }
 
 module.exports = runPolicies

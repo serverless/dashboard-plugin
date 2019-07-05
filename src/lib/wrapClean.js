@@ -17,7 +17,7 @@ module.exports = async (ctx) => {
 
     let file
     if (fn.runtime.includes('node')) {
-      file = fn.entryNew + '.js'
+      file = `${fn.entryNew  }.js`
     }
 
     const filePath = path.join(ctx.sls.config.servicePath, file)

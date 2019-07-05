@@ -15,8 +15,8 @@ module.exports = function allowedFunctionNamesPolicy(policy, service, options) {
     declaration: { functions },
     provider: { naming },
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
@@ -29,7 +29,7 @@ module.exports = function allowedFunctionNamesPolicy(policy, service, options) {
     const templateContext = {
       SERVICE: service.declaration.serviceObject.name,
       STAGE: service.provider.getStage(),
-      FUNCTION: logicalFuncNamesToConfigFuncName[funcName]
+      FUNCTION: logicalFuncNamesToConfigFuncName[funcName],
     }
     const regexp = templateStringToRegExp(options, templateContext)
     if (!Properties.FunctionName.match(regexp)) {

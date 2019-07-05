@@ -21,23 +21,23 @@ afterAll(() => jest.restoreAllMocks())
 const sls = {
   getProvider: jest.fn().mockReturnValue({
     getStage: jest.fn().mockReturnValue('stage'),
-    getRegion: jest.fn().mockReturnValue('region')
+    getRegion: jest.fn().mockReturnValue('region'),
   }),
   service: {
     service: 'service',
     app: 'app',
     tenant: 'tenant',
-    provider: {}
+    provider: {},
   },
   cli: {
-    log: jest.fn()
+    log: jest.fn(),
   },
   processedInput: {
     commands: [],
     options: {
-      type: 'sqs'
-    }
-  }
+      type: 'sqs',
+    },
+  },
 }
 
 jest.spyOn(global.console, 'log')
@@ -47,14 +47,14 @@ jest.mock('@serverless/platform-sdk', () => ({
   configureFetchDefaults: jest.fn(),
   getLoggedInUser: jest.fn().mockReturnValue({
     accessKeys: {
-      tenant: '12345'
+      tenant: '12345',
     },
-    idToken: 'ID'
+    idToken: 'ID',
   }),
   getAccessKeyForTenant: jest.fn().mockReturnValue('123456'),
   archiveService: jest.fn().mockImplementation(() => Promise.resolve()),
   getMetadata: jest.fn().mockReturnValue(Promise.resolve('token')),
-  urls: { frontendUrl: 'https://dashboard/' }
+  urls: { frontendUrl: 'https://dashboard/' },
 }))
 
 jest.mock('./credentials', () => jest.fn())
@@ -68,7 +68,7 @@ jest.mock('./logsCollection', () => jest.fn())
 jest.mock('./removeDestination', () => jest.fn())
 jest.mock('./deployment', () => ({
   saveDeployment: jest.fn(),
-  createAndSetDeploymentUid: jest.fn()
+  createAndSetDeploymentUid: jest.fn(),
 }))
 jest.mock('./variables', () => ({ hookIntoVariableGetter: jest.fn() }))
 jest.mock('./generateEvent', () => ({ eventDict: {}, generate: jest.fn() }))
@@ -104,7 +104,7 @@ describe('plugin', () => {
       'logout:logout',
       'generate-event:generate-event',
       'test:test',
-      'dashboard:dashboard'
+      'dashboard:dashboard',
     ])
     expect(sls.getProvider).toBeCalledWith('aws')
     expect(sls.cli.log).toHaveBeenCalledTimes(0)

@@ -1,7 +1,7 @@
 const stripAnsi = require('strip-ansi')
 const setup = require('./setup')
 
-let sls, teardown
+let sls; let teardown
 
 jest.setTimeout(1000 * 60 * 3)
 
@@ -51,7 +51,7 @@ describe('integration', () => {
     const stdout = stripAnsi(String(proc.stdoutBuffer))
     expect(stdout).toMatch('warned - no-wild-iam-role-statements')
     expect(stdout).toMatch(
-      `Warned - iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
+      'Warned - iamRoleStatement granting Resource=\'*\'. Wildcard resources in iamRoleStatements are not permitted.'
     )
   })
 
@@ -60,7 +60,7 @@ describe('integration', () => {
     const stdout = stripAnsi(String(proc.stdoutBuffer))
     expect(stdout).toMatch('warned - no-secret-env-vars')
     expect(stdout).toMatch(
-      `Warned - Environment variable variable1 on function 'hello' looks like it contains a secret value`
+      'Warned - Environment variable variable1 on function \'hello\' looks like it contains a secret value'
     )
   })
 
@@ -69,7 +69,7 @@ describe('integration', () => {
     const stdout = stripAnsi(String(proc.stdoutBuffer))
     expect(stdout).toMatch('warned - require-dlq')
     expect(stdout).toMatch(
-      `Warned - Function \"hello\" doesn't have a Dead Letter Queue configured.`
+      'Warned - Function \"hello\" doesn\'t have a Dead Letter Queue configured.'
     )
   })
 })

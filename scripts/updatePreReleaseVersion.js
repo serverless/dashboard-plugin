@@ -22,4 +22,4 @@ if (packageJson.version === version && !process.env.TRAVIS_TAG) {
   process.exit(1)
 }
 packageJson.version = version
-writeFileSync('package.json', JSON.stringify(packageJson, null, 2) + '\n')
+writeFileSync('package.json', `${JSON.stringify(packageJson, null, 2)  }\n`)

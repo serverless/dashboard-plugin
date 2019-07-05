@@ -9,21 +9,21 @@ jest.mock('isomorphic-fetch', () =>
         status: 200,
         ok: true,
         text: jest.fn().mockReturnValue(Promise.resolve(JSON.stringify({ foo: 'bar' }))),
-        headers: { _headers: { Foo: 'bar' } }
+        headers: { _headers: { Foo: 'bar' } },
       })
     } else if (url.endsWith('/text?') || url.endsWith('/text?foo=bar')) {
       return Promise.resolve({
         status: 200,
         ok: true,
         text: jest.fn().mockReturnValue(Promise.resolve('foobar')),
-        headers: { _headers: { Foo: 'bar', Bla: 'bla' } }
+        headers: { _headers: { Foo: 'bar', Bla: 'bla' } },
       })
     }
     return Promise.resolve({
       status: 400,
       ok: false,
       text: jest.fn().mockReturnValue(Promise.resolve),
-      headers: { _headers: {} }
+      headers: { _headers: {} },
     })
   })
 )
@@ -36,7 +36,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: {},
-        response: { body: { foo: 'bar' } }
+        response: { body: { foo: 'bar' } },
       },
       'json',
       'post',
@@ -45,7 +45,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/json?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -55,7 +55,7 @@ describe('runTest', () => {
         {
           name: 'foobar',
           request: {},
-          response: { body: { foo: 'baz' } }
+          response: { body: { foo: 'baz' } },
         },
         'json',
         'post',
@@ -65,7 +65,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/json?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -75,8 +75,8 @@ describe('runTest', () => {
         name: 'foobar',
         request: {},
         response: {
-          body: 'foobar'
-        }
+          body: 'foobar',
+        },
       },
       'text',
       'post',
@@ -85,7 +85,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -95,7 +95,7 @@ describe('runTest', () => {
         {
           name: 'foobar',
           request: {},
-          response: { body: 'blah' }
+          response: { body: 'blah' },
         },
         'text',
         'post',
@@ -105,7 +105,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -114,7 +114,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: {},
-        response: true
+        response: true,
       },
       'text',
       'post',
@@ -123,7 +123,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -133,7 +133,7 @@ describe('runTest', () => {
         {
           name: 'foobar',
           request: {},
-          response: true
+          response: true,
         },
         'error',
         'post',
@@ -143,7 +143,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/error?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -152,7 +152,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: {},
-        response: { status: 200 }
+        response: { status: 200 },
       },
       'text',
       'post',
@@ -161,7 +161,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -171,7 +171,7 @@ describe('runTest', () => {
         {
           name: 'foobar',
           request: {},
-          response: { status: 200 }
+          response: { status: 200 },
         },
         'error',
         'post',
@@ -181,7 +181,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/error?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -190,7 +190,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: {},
-        response: { headers: { Foo: 'bar' } }
+        response: { headers: { Foo: 'bar' } },
       },
       'text',
       'post',
@@ -199,7 +199,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -209,7 +209,7 @@ describe('runTest', () => {
         {
           name: 'foobar',
           request: {},
-          response: { headers: { Foo: 'bar' }, body: 'foo' }
+          response: { headers: { Foo: 'bar' }, body: 'foo' },
         },
         'text',
         'post',
@@ -219,7 +219,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -229,7 +229,7 @@ describe('runTest', () => {
         {
           name: 'foobar',
           request: {},
-          response: { headers: { Foo: 'bar' } }
+          response: { headers: { Foo: 'bar' } },
         },
         'error',
         'post',
@@ -239,7 +239,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/error?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -248,7 +248,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: { headers: { Foo: 'bar' } },
-        response: true
+        response: true,
       },
       'text',
       'post',
@@ -257,7 +257,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: { Foo: 'bar' },
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -266,7 +266,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: { body: { foo: 'bar' } },
-        response: true
+        response: true,
       },
       'text',
       'post',
@@ -275,7 +275,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
-      body: '{"foo":"bar"}'
+      body: '{"foo":"bar"}',
     })
   })
 
@@ -284,7 +284,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: { body: 'foobar' },
-        response: true
+        response: true,
       },
       'text',
       'post',
@@ -293,7 +293,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?', {
       method: 'post',
       headers: {},
-      body: 'foobar'
+      body: 'foobar',
     })
   })
 
@@ -302,7 +302,7 @@ describe('runTest', () => {
       {
         name: 'foobar',
         request: { form: { foo: 'bar' } },
-        response: true
+        response: true,
       },
       'text',
       'post',
@@ -311,7 +311,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/text?foo=bar', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 
@@ -319,7 +319,7 @@ describe('runTest', () => {
     runTest(
       {
         name: 'foobar',
-        response: true
+        response: true,
       },
       'json',
       'post',
@@ -328,7 +328,7 @@ describe('runTest', () => {
     expect(fetch).toBeCalledWith('https://example.com/json?', {
       method: 'post',
       headers: {},
-      body: undefined
+      body: undefined,
     })
   })
 })

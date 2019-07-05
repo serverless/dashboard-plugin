@@ -4,7 +4,7 @@ const { getLogDestination } = require('@serverless/platform-sdk')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getLogDestination: jest.fn().mockReturnValue(Promise.resolve({ destinationArn: 'arn:logdest' })),
-  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey'))
+  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey')),
 }))
 
 afterAll(() => jest.restoreAllMocks())
@@ -32,25 +32,25 @@ describe('logsCollection', () => {
                 lambdaLogs: {
                   Type: 'AWS::Logs::LogGroup',
                   Properties: {
-                    LogGroupName: '/aws/lambda/service-name-dev-func'
-                  }
+                    LogGroupName: '/aws/lambda/service-name-dev-func',
+                  },
                 },
                 apiGatewayLogs: {
                   Type: 'AWS::Logs::LogGroup',
                   Properties: {
-                    LogGroupName: '/aws/api-gateway/service-name-dev'
-                  }
-                }
-              }
-            }
-          }
-        }
+                    LogGroupName: '/aws/api-gateway/service-name-dev',
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       provider: {
         request,
         getStage,
-        getRegion
-      }
+        getRegion,
+      },
     }
     const that = { serverless: { classes: { Error } } }
     await logsCollection.bind(that)(ctx)
@@ -65,21 +65,21 @@ describe('logsCollection', () => {
       stageName: 'dev',
       serviceName: 'serviceName',
       regionName: 'us-east-1',
-      accountId: 'ACCOUNT_ID'
+      accountId: 'ACCOUNT_ID',
     })
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Resources: {
         lambdaLogs: {
           Type: 'AWS::Logs::LogGroup',
           Properties: {
-            LogGroupName: '/aws/lambda/service-name-dev-func'
-          }
+            LogGroupName: '/aws/lambda/service-name-dev-func',
+          },
         },
         apiGatewayLogs: {
           Type: 'AWS::Logs::LogGroup',
           Properties: {
-            LogGroupName: '/aws/api-gateway/service-name-dev'
-          }
+            LogGroupName: '/aws/api-gateway/service-name-dev',
+          },
         },
         CloudWatchLogsSubscriptionFilterLambdaLogs: {
           Type: 'AWS::Logs::SubscriptionFilter',
@@ -88,9 +88,9 @@ describe('logsCollection', () => {
 
             FilterPattern: LAMBDA_FILTER_PATTERN,
             LogGroupName: {
-              Ref: 'lambdaLogs'
-            }
-          }
+              Ref: 'lambdaLogs',
+            },
+          },
         },
         CloudWatchLogsSubscriptionFilterApiGatewayLogs: {
           Type: 'AWS::Logs::SubscriptionFilter',
@@ -98,11 +98,11 @@ describe('logsCollection', () => {
             DestinationArn: 'arn:logdest',
             FilterPattern: API_GATEWAY_FILTER_PATTERN,
             LogGroupName: {
-              Ref: 'apiGatewayLogs'
-            }
-          }
-        }
-      }
+              Ref: 'apiGatewayLogs',
+            },
+          },
+        },
+      },
     })
   })
 })

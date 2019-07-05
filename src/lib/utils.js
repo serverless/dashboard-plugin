@@ -9,7 +9,7 @@ function pickResourceType(template, resourcesType) {
     if (resource.Type === resourcesType) {
       resources.push({
         key,
-        resource
+        resource,
       })
     }
   }
@@ -34,7 +34,7 @@ const API_GATEWAY_LOG_FORMAT = {
   responseLength: '$context.responseLength',
   errorMessage: '$context.error.message',
   format: 'SLS_ACCESS_LOG',
-  version: '1.0.0'
+  version: '1.0.0',
 }
 
 module.exports = {
@@ -42,5 +42,5 @@ module.exports = {
   pickResourceType,
   API_GATEWAY_FILTER_PATTERN,
   LAMBDA_FILTER_PATTERN,
-  API_GATEWAY_LOG_FORMAT
+  API_GATEWAY_LOG_FORMAT,
 }

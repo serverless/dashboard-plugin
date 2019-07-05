@@ -3,7 +3,7 @@ const zlib = require('zlib')
 
 function recordWrapper(event) {
   return {
-    Records: [event]
+    Records: [event],
   }
 }
 
@@ -15,7 +15,7 @@ function encodeBody(body) {
 
 async function gzipBody(body) {
   return new Promise((res, rej) => {
-    zlib.gzip(body, function(error, result) {
+    zlib.gzip(body, (error, result) => {
       if (error) {
         return rej(error)
       }
@@ -29,17 +29,17 @@ function parsedBody(body) {
 }
 
 const eventDict = {
-  'aws:apiGateway': (body) => ({ body: body }),
-  'aws:websocket': (body) => ({ body: body }),
+  'aws:apiGateway': (body) => ({ body }),
+  'aws:websocket': (body) => ({ body }),
   'aws:sns': (body) => recordWrapper({ Sns: { Message: body } }),
-  'aws:sqs': (body) => recordWrapper({ body: body }),
+  'aws:sqs': (body) => recordWrapper({ body }),
   'aws:dynamo': (body) => recordWrapper({ dynamodb: body }),
   'aws:kinesis': (body) =>
     recordWrapper({
-      kinesis: { data: encodeBody(body) }
+      kinesis: { data: encodeBody(body) },
     }),
   'aws:cloudWatchLog': async (body) => ({
-    awslogs: { data: encodeBody(await gzipBody(body)) }
+    awslogs: { data: encodeBody(await gzipBody(body)) },
   }),
   'aws:s3': () => ({}),
   'aws:alexaSmartHome': (body) => parsedBody(body),
@@ -47,7 +47,7 @@ const eventDict = {
   'aws:cloudWatch': (body) => parsedBody(body),
   'aws:iot': (body) => parsedBody(body),
   'aws:cognitoUserPool': (body) => parsedBody(body),
-  'aws:websocket': (body) => ({ body: body })
+  'aws:websocket': (body) => ({ body }),
 }
 
 async function wrapEvent(eventType, body) {
@@ -68,5 +68,5 @@ const generate = async function(ctx) {
 
 module.exports = {
   generate,
-  eventDict
+  eventDict,
 }

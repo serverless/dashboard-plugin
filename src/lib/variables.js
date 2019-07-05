@@ -5,7 +5,7 @@ module.exports.hookIntoVariableGetter = (ctx, secrets, accessKey) => {
   const { getValueFromSource } = ctx.sls.variables
 
   ctx.sls.variables.getValueFromSource = async (variableString) => {
-    if (variableString.startsWith(`secrets:`)) {
+    if (variableString.startsWith('secrets:')) {
       ctx.state.secretsUsed.add(variableString.substring(8))
       if (
         ctx.sls.processedInput.commands[0] === 'login' ||
@@ -13,11 +13,11 @@ module.exports.hookIntoVariableGetter = (ctx, secrets, accessKey) => {
       ) {
         return {}
       }
-      if (!secrets[variableString.split(`secrets:`)[1]]) {
+      if (!secrets[variableString.split('secrets:')[1]]) {
         throw new Error(`$\{${variableString}} not defined`)
       }
-      return secrets[variableString.split(`secrets:`)[1]]
-    } else if (variableString.startsWith(`state:`)) {
+      return secrets[variableString.split('secrets:')[1]]
+    } else if (variableString.startsWith('state:')) {
       if (
         ctx.sls.processedInput.commands[0] === 'login' ||
         ctx.sls.processedInput.commands[0] === 'logout'
@@ -35,7 +35,7 @@ module.exports.hookIntoVariableGetter = (ctx, secrets, accessKey) => {
         app: ctx.sls.service.app,
         tenant: ctx.sls.service.tenant,
         stage: ctx.provider.getStage(),
-        region: ctx.provider.getRegion()
+        region: ctx.provider.getRegion(),
       })
       if (subkey) {
         return _.get(value, subkey)

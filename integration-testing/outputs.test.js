@@ -1,7 +1,7 @@
 const stripAnsi = require('strip-ansi')
 const setup = require('./setup')
 
-let sls1, sls2, teardown
+let sls1; let sls2; let teardown
 
 jest.setTimeout(1000 * 60 * 3)
 
@@ -9,7 +9,7 @@ beforeAll(
   async () =>
     ([{ sls: sls1, teardown }, { sls: sls2 }] = await Promise.all([
       setup('service'),
-      setup('service2')
+      setup('service2'),
     ]))
 )
 

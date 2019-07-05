@@ -2,7 +2,7 @@ module.exports = function capacityPolicy(policy, service, options) {
   const limits = {
     readCapacityMax: 1,
     writeCapacityMax: 1,
-    ...options
+    ...options,
   }
 
   const template = service.compiled['cloudformation-template-update-stack.json']

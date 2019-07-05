@@ -10,10 +10,10 @@ describe('requireGlobalVpcPolicy', () => {
       compiled: { 'cloudformation-template-update-stack.json': { Resources: {} } },
       declaration: {
         functions: {
-          func: {}
-        }
+          func: {},
+        },
       },
-      provider: { naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` } }
+      provider: { naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` } },
     }
   })
 
@@ -23,9 +23,9 @@ describe('requireGlobalVpcPolicy', () => {
       Properties: {
         VpcConfig: {
           SecurityGroupIds: ['foobar'],
-          SubnetIds: ['baz', 'bar']
-        }
-      }
+          SubnetIds: ['baz', 'bar'],
+        },
+      },
     }
     requireGlobalVpcPolicy(policy, service)
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -38,9 +38,9 @@ describe('requireGlobalVpcPolicy', () => {
       Properties: {
         VpcConfig: {
           SecurityGroupIds: ['foobar'],
-          SubnetIds: ['baz']
-        }
-      }
+          SubnetIds: ['baz'],
+        },
+      },
     }
     requireGlobalVpcPolicy(policy, service, { minNumSubnets: 1 })
     expect(policy.approve).toHaveBeenCalledTimes(1)
@@ -50,12 +50,12 @@ describe('requireGlobalVpcPolicy', () => {
   it('blocks functions without VPC config and using the default config', () => {
     service.compiled['cloudformation-template-update-stack.json'].Resources.funcLambda = {
       Type: 'AWS::Lambda::Function',
-      Properties: {}
+      Properties: {},
     }
     requireGlobalVpcPolicy(policy, service)
 
     expect(policy.approve).toHaveBeenCalledTimes(0)
-    expect(policy.fail).toBeCalledWith(`Function "func" doesn't satisfy global VPC requirement.`)
+    expect(policy.fail).toBeCalledWith('Function "func" doesn\'t satisfy global VPC requirement.')
   })
 
   it('blocks functions VPC config containing 1 subnet id and and using the default config', () => {
@@ -64,15 +64,15 @@ describe('requireGlobalVpcPolicy', () => {
       Properties: {
         VpcConfig: {
           SecurityGroupIds: ['foobar'],
-          SubnetIds: ['baz']
-        }
-      }
+          SubnetIds: ['baz'],
+        },
+      },
     }
     requireGlobalVpcPolicy(policy, service)
 
     expect(policy.approve).toHaveBeenCalledTimes(0)
     expect(policy.fail).toBeCalledWith(
-      `Function "func" doesn't satisfy the global VPC requirement of at least 2 subnets.`
+      'Function "func" doesn\'t satisfy the global VPC requirement of at least 2 subnets.'
     )
   })
 })

@@ -42,8 +42,8 @@ module.exports.writeZip = (zip, targetPath) =>
         platform: process.platform == 'win32' ? 'dos' : 'unix',
         compression: 'deflate',
         compressionOptions: {
-          level: 9
-        }
+          level: 9,
+        },
       })
       .pipe(fs.createWriteStream(targetPath))
       .on('finish', resolve)

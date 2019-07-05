@@ -3,7 +3,7 @@ const removeDestination = require('./removeDestination')
 
 jest.mock('@serverless/platform-sdk', () => ({
   removeLogDestination: jest.fn(),
-  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey'))
+  getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey')),
 }))
 afterAll(() => jest.restoreAllMocks())
 
@@ -19,10 +19,10 @@ describe('removeDestination', () => {
           appUid: 'UID',
           tenant: 'tenant',
           getServiceName,
-          custom: { enterprise: { collectLambdaLogs: true } }
-        }
+          custom: { enterprise: { collectLambdaLogs: true } },
+        },
       },
-      provider: { getStage, getRegion }
+      provider: { getStage, getRegion },
     })
 
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')
@@ -31,7 +31,7 @@ describe('removeDestination', () => {
       serviceName: 'service',
       stageName: 'stage',
       regionName: 'region',
-      accessKey: 'accessKey'
+      accessKey: 'accessKey',
     })
   })
 })

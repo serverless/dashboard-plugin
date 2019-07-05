@@ -3,7 +3,7 @@ const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('token')),
-  getMetadata: jest.fn().mockReturnValue(Promise.resolve({ awsAccountId: '111111' }))
+  getMetadata: jest.fn().mockReturnValue(Promise.resolve({ awsAccountId: '111111' })),
 }))
 
 describe('injectLogsIamRole', () => {
@@ -11,18 +11,18 @@ describe('injectLogsIamRole', () => {
     const compiledCloudFormationTemplate = {
       Resources: {
         Foo: { Type: 'AWS::Logs::LogGroup' },
-        Bar: { Type: 'AWS::Logs::LogGroup' }
+        Bar: { Type: 'AWS::Logs::LogGroup' },
       },
-      Outputs: {}
+      Outputs: {},
     }
     const ctx = {
       sls: {
         service: {
           tenant: 'tenant',
           tenantUid: 'UID',
-          provider: { compiledCloudFormationTemplate }
-        }
-      }
+          provider: { compiledCloudFormationTemplate },
+        },
+      },
     }
     await injectLogsIamRole(ctx)
     expect(compiledCloudFormationTemplate).toEqual({
@@ -38,16 +38,16 @@ describe('injectLogsIamRole', () => {
                 {
                   Effect: 'Allow',
                   Principal: {
-                    AWS: `arn:aws:iam::111111:root`
+                    AWS: 'arn:aws:iam::111111:root',
                   },
                   Action: 'sts:AssumeRole',
                   Condition: {
                     StringEquals: {
-                      'sts:ExternalId': `ServerlessEnterprise-UID`
-                    }
-                  }
-                }
-              ]
+                      'sts:ExternalId': 'ServerlessEnterprise-UID',
+                    },
+                  },
+                },
+              ],
             },
             Policies: [
               {
@@ -60,27 +60,27 @@ describe('injectLogsIamRole', () => {
                       Action: ['logs:FilterLogEvents'],
                       Resource: [
                         {
-                          'Fn::GetAtt': ['Foo', 'Arn']
+                          'Fn::GetAtt': ['Foo', 'Arn'],
                         },
                         {
-                          'Fn::GetAtt': ['Bar', 'Arn']
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }
+                          'Fn::GetAtt': ['Bar', 'Arn'],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
       },
       Outputs: {
         EnterpriseLogAccessIamRole: {
           Value: {
-            'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn']
-          }
-        }
-      }
+            'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn'],
+          },
+        },
+      },
     })
     expect(getAccessKeyForTenant).toBeCalledWith('tenant')
     expect(getMetadata).toBeCalledWith('token')
@@ -89,21 +89,21 @@ describe('injectLogsIamRole', () => {
   it('does not add IAM role when no log groups', async () => {
     const compiledCloudFormationTemplate = {
       Resources: {},
-      Outputs: {}
+      Outputs: {},
     }
     const ctx = {
       sls: {
         service: {
           tenant: 'tenant',
           tenantUid: 'UID',
-          provider: { compiledCloudFormationTemplate }
-        }
-      }
+          provider: { compiledCloudFormationTemplate },
+        },
+      },
     }
     await injectLogsIamRole(ctx)
     expect(compiledCloudFormationTemplate).toEqual({
       Resources: {},
-      Outputs: {}
+      Outputs: {},
     })
   })
 })

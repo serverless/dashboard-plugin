@@ -6,8 +6,8 @@ module.exports = function requireDescriptionPolicy(policy, service, options) {
     declaration: { functions },
     provider: { naming },
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])

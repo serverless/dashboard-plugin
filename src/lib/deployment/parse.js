@@ -30,7 +30,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
 
   if (!archived) {
     const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
-      StackName: ctx.provider.naming.getStackName()
+      StackName: ctx.provider.naming.getStackName(),
     })
 
     // get log access role info
@@ -58,7 +58,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       status,
       provider: {
         type: 'aws',
-        aws: { accountId }
+        aws: { accountId },
         // environment: Object.keys(service.provider.environment || {})
       },
       layers: service.layers || {},
@@ -67,7 +67,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       safeguards: ctx.state.safeguardsResults,
       secrets: Array.from(ctx.state.secretsUsed),
       outputs: service.outputs,
-      error
+      error,
     })
 
     /*
@@ -98,8 +98,8 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
           tags: fn.tags || {},
           vpc: fn.vpc || {},
           layers: fn.layers || [],
-          name: fn.name || fnName
-        }
+          name: fn.name || fnName,
+        },
       })
 
       /*
@@ -127,7 +127,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
               method: sub.http.method,
               cors: sub.http.cors,
               integration: sub.http.integration,
-              restApiId: apiId
+              restApiId: apiId,
             }
           } else if (sub[type] instanceof Object) {
             Object.assign(subDetails, sub[type])
@@ -163,7 +163,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       archived,
       status,
       secrets: Array.from(ctx.state.secretsUsed),
-      error
+      error,
     })
   }
 

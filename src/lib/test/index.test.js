@@ -22,11 +22,11 @@ jest.mock('fs-extra', () => ({
           name: 'foobar',
           endpoint: { function: 'blah', path: 'blah', method: 'post' },
           response: { body: 'foobar' },
-          request: { headers: { Foo: 'bar' } }
-        }
+          request: { headers: { Foo: 'bar' } },
+        },
       ])
     )
-  )
+  ),
 }))
 jest.mock('./runTest', () => jest.fn().mockReturnValue(Promise.resolve()))
 
@@ -36,19 +36,19 @@ describe('test', () => {
       sls: {
         processedInput: { options: {} },
         cli: { log: jest.fn() },
-        service: { functions: [] }
+        service: { functions: [] },
       },
       provider: {
         naming: {
           getServiceEndpointRegex: jest.fn().mockReturnValue('http'),
-          getStackName: jest.fn().mockReturnValue('stack')
+          getStackName: jest.fn().mockReturnValue('stack'),
         },
         request: jest.fn().mockReturnValue(
           Promise.resolve({
-            Stacks: [{ Outputs: [{ OutputKey: 'http', OutputValue: 'https://example.com' }] }]
+            Stacks: [{ Outputs: [{ OutputKey: 'http', OutputValue: 'https://example.com' }] }],
           })
-        )
-      }
+        ),
+      },
     }
     await testFunc(ctx)
     expect(runTest).toBeCalledWith(
@@ -56,7 +56,7 @@ describe('test', () => {
         name: 'foobar',
         endpoint: { function: 'blah', path: 'blah', method: 'post' },
         response: { body: 'foobar' },
-        request: { headers: { Foo: 'bar' } }
+        request: { headers: { Foo: 'bar' } },
       },
       'blah',
       'post',
@@ -68,17 +68,17 @@ describe('test', () => {
 
    Summary --------------------------------------------------
 `,
-        'Serverless Enterprise'
+        'Serverless Enterprise',
       ],
       [
         `Test Summary: ${chalk.green('1 passed')}, ${chalk.red('0 failed')}`,
-        'Serverless Enterprise'
-      ]
+        'Serverless Enterprise',
+      ],
     ])
     expect(process.stdout.write.mock.calls).toEqual([
       ['  running - POST blah - foobar'],
       [`\r   ${chalk.green('passed')} - POST blah - foobar\n`],
-      [`\n`]
+      ['\n'],
     ])
   })
 })

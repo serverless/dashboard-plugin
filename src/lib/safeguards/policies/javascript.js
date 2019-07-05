@@ -15,7 +15,7 @@ const execStatement = (service, statement) => {
 
   const sandbox = {
     jsonata,
-    ...service
+    ...service,
   }
 
   vm.createContext(sandbox)

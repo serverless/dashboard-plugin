@@ -4,8 +4,8 @@ module.exports = function noWildIamPolicy(policy, service) {
   let failed = false
   const {
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
 
   for (const { Type, Properties } of values(Resources)) {
@@ -23,7 +23,7 @@ module.exports = function noWildIamPolicy(policy, service) {
           if (action === '*') {
             failed = true
             policy.fail(
-              `iamRoleStatement granting Action='*'. Wildcard actions in iamRoleStatements are not permitted.`
+              'iamRoleStatement granting Action=\'*\'. Wildcard actions in iamRoleStatements are not permitted.'
             )
           }
           if (action.split(':')[1] === '*') {
@@ -39,7 +39,7 @@ module.exports = function noWildIamPolicy(policy, service) {
             if ('Fn::Join' in rawResource) {
               resourceStr = rawResource['Fn::Join'][1].join(rawResource['Fn::Join'][0])
             } else if ('Fn::Sub' in rawResource) {
-              if (typeof rawResource['Fn::Sub'] == 'string') {
+              if (typeof rawResource['Fn::Sub'] === 'string') {
                 resourceStr = rawResource['Fn::Sub'].replace(/\$\{[^$]*\}/g, 'variable')
               } else {
                 resourceStr = rawResource['Fn::Sub'][0].replace(/\$\{[^$]*\}/g, 'variable')
@@ -49,7 +49,7 @@ module.exports = function noWildIamPolicy(policy, service) {
           if (resourceStr === '*') {
             failed = true
             policy.fail(
-              `iamRoleStatement granting Resource='*'. Wildcard resources in iamRoleStatements are not permitted.`
+              'iamRoleStatement granting Resource=\'*\'. Wildcard resources in iamRoleStatements are not permitted.'
             )
           } else if (typeof resourceStr === 'string') {
             const [, , arnService, , , resourceType, resource] = resourceStr.split(':')

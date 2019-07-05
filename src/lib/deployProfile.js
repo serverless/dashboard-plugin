@@ -7,7 +7,7 @@ module.exports.configureDeployProfile = async (ctx) => {
   const deploymentProfile = await getDeployProfile({
     accessKey,
     stage: ctx.provider.getStage(),
-    ..._.pick(ctx.sls.service, ['tenant', 'app', 'service'])
+    ..._.pick(ctx.sls.service, ['tenant', 'app', 'service']),
   })
   if (deploymentProfile.providerCredentials) {
     ctx.provider.cachedCredentials = deploymentProfile.providerCredentials.secretValue
@@ -19,7 +19,7 @@ module.exports.configureDeployProfile = async (ctx) => {
     _.fromPairs(
       deploymentProfile.secretValues.map(({ secretName, secretProperties: { value } }) => [
         secretName,
-        value
+        value,
       ])
     ),
     accessKey

@@ -8,7 +8,7 @@ const asyncEvents = new Set([
   'cloudwatchEvent',
   'cloudwatchLog',
   'cognitoUserPool',
-  'alexaSmartHome'
+  'alexaSmartHome',
 ])
 module.exports = function dlqPolicy(policy, service) {
   let failed = false
@@ -16,8 +16,8 @@ module.exports = function dlqPolicy(policy, service) {
     declaration: { functions },
     provider: { naming },
     compiled: {
-      'cloudformation-template-update-stack.json': { Resources }
-    }
+      'cloudformation-template-update-stack.json': { Resources },
+    },
   } = service
   const logicalFuncNamesToConfigFuncName = fromPairs(
     Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])

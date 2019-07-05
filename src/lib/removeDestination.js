@@ -15,7 +15,7 @@ module.exports = async (ctx) => {
     tenantUid: ctx.sls.service.tenantUid,
     serviceName: ctx.sls.service.getServiceName(),
     stageName: ctx.provider.getStage(),
-    regionName: ctx.provider.getRegion()
+    regionName: ctx.provider.getRegion(),
   }
 
   await removeLogDestination(destinationOpts)
