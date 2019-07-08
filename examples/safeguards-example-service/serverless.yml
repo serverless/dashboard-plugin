@@ -2,8 +2,7 @@ service: safeguards-example-service
 app: plugin-test
 tenant: dschep
 
-plugins:
-  - '@serverless/enterprise-plugin'
+frameworkVersion: ">=1.45.1"
 
 provider:
   name: aws
