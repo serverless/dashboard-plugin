@@ -13,11 +13,11 @@
 
 tenant: integration
 app: integration
-service: service
+service: CHANGEME
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: ">=1.37.1"
+frameworkVersion: '>=1.37.1'
 
 outputs:
   outputVariable: outputValue
@@ -25,9 +25,9 @@ outputs:
 custom:
   defaultIamRole: []
   badIamRole:
-    - Effect: "Allow"
+    - Effect: 'Allow'
       Action:
-        - "s3:PutObject"
+        - 's3:PutObject'
       Resource: '*'
   httpEvents:
     - http:
@@ -40,27 +40,27 @@ provider:
   name: aws
   runtime: nodejs8.10
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  #  stage: dev
+  #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
+  # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements: ${self:custom.${env:IAM_ROLE, 'defaultIamRole'}}
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+  #    - Effect: "Allow"
+  #      Action:
+  #        - "s3:ListBucket"
+  #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+  #    - Effect: "Allow"
+  #      Action:
+  #        - "s3:PutObject"
+  #      Resource:
+  #        Fn::Join:
+  #          - ""
+  #          - - "arn:aws:s3:::"
+  #            - "Ref" : "ServerlessDeploymentBucket"
+  #            - "/*"
 
-# you can define service wide environment variables here
+  # you can define service wide environment variables here
   environment:
     variable1: ${env:ENV_OPT, 'value1'}
 
@@ -76,9 +76,8 @@ provider:
 functions:
   hello:
     handler: handler.hello
-    
-    events: ${self:custom.${env:EVENTS, 'httpEvents'}}
 
+    events: ${self:custom.${env:EVENTS, 'httpEvents'}}
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

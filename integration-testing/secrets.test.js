@@ -1,20 +1,17 @@
-import path from 'path'
-import { npm, sls } from './commands'
+import stripAnsi from 'strip-ansi'
+import setup from './setup'
 
-const SERVERLESS_PLATFORM_STAGE = process.env.SERVERLESS_PLATFORM_STAGE || 'dev'
-const cwd = path.join(__dirname, 'service2')
+let sls
 
-beforeAll(() => npm(['install']))
+jest.setTimeout(1000 * 60 * 3)
+
+beforeAll(async () => ({ sls } = await setup('service2')))
 
 describe('integration', () => {
-  it('print contains the secret in the deploy profile', () => {
-    const proc = sls(['print', '--path', 'custom.testSecret'], {
-      stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE },
-      cwd
-    })
-    const stdout = proc.stdout.toString()
+  it('print contains the secret in the deploy profile', async () => {
+    const stdout = stripAnsi(
+      String((await sls(['print', '--path', 'custom.testSecret'])).stdoutBuffer)
+    )
     expect(stdout).toMatch('testSecretValue\n\n')
-    expect(proc.status).toEqual(0)
   })
 })

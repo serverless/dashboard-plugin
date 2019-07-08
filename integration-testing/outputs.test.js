@@ -1,26 +1,31 @@
-import path from 'path'
-import { npm, sls } from './commands'
+import stripAnsi from 'strip-ansi'
+import setup from './setup'
 
-const SERVERLESS_PLATFORM_STAGE = process.env.SERVERLESS_PLATFORM_STAGE || 'dev'
+let sls1, sls2, teardown
 
-beforeAll(() => npm(['install']))
+jest.setTimeout(1000 * 60 * 3)
+
+beforeAll(
+  async () =>
+    ([{ sls: sls1, teardown }, { sls: sls2 }] = await Promise.all([
+      setup('service'),
+      setup('service2')
+    ]))
+)
+
+afterAll(() => {
+  if (teardown) {
+    return teardown()
+  }
+})
 
 describe('integration', () => {
-  it('can publish and consume outputs', () => {
-    const deployProc = sls(['deploy'], {
-      stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE },
-      cwd: path.join(__dirname, 'service')
-    })
-    expect(deployProc.status).toEqual(0)
+  it('can publish and consume outputs', async () => {
+    await sls1(['deploy'])
 
-    const printProc = sls(['print', '--path', 'custom.testOutput'], {
-      stdio: 'pipe',
-      env: { ...process.env, SERVERLESS_PLATFORM_STAGE },
-      cwd: path.join(__dirname, 'service2')
-    })
-    const printStdout = printProc.stdout.toString()
+    const printStdout = stripAnsi(
+      String((await sls2(['print', '--path', 'custom.testOutput'])).stdoutBuffer)
+    )
     expect(printStdout).toMatch('outputValue\n\n')
-    expect(printProc.status).toEqual(0)
   })
 })
