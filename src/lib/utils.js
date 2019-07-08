@@ -1,8 +1,3 @@
-import simpleGit from 'simple-git'
-import BbPromise from 'bluebird'
-
-const git = BbPromise.promisifyAll(simpleGit())
-
 function upperFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
@@ -43,7 +38,6 @@ const API_GATEWAY_LOG_FORMAT = {
 }
 
 export {
-  git,
   upperFirst,
   pickResourceType,
   API_GATEWAY_FILTER_PATTERN,

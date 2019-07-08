@@ -10,32 +10,28 @@ jest.mock('./getServerlessFilePath', () =>
 jest.mock('fs-extra', () => ({
   readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
 }))
-jest.mock('../utils', () => ({
-  git: {
-    checkIsRepoAsync: jest.fn().mockReturnValue(Promise.resolve(true)),
-    getRemotesAsync: jest
-      .fn()
-      .mockReturnValue(
-        Promise.resolve([{ name: 'origin', refs: { fetch: 'http://example.com' } }])
-      ),
-    branchAsync: jest.fn().mockReturnValue(Promise.resolve({ current: 'master' })),
-    rawAsync: jest.fn().mockImplementation(async (args) => {
-      if (args[0] === 'show') {
-        if (args[1] === '--format=%H') {
-          return 'DEADBEEF'
-        } else if (args[1] === '--format=%B') {
-          return 'commit message'
-        } else if (args[1] === '--format=%ae') {
-          return 'user@example.com'
-        }
-      } else if (args[0] === 'config') {
-        return 'origin'
-      } else if (args[0] === 'rev-parse') {
-        return ''
+jest.mock('simple-git/promise', () => () => ({
+  checkIsRepo: jest.fn().mockReturnValue(Promise.resolve(true)),
+  getRemotes: jest
+    .fn()
+    .mockReturnValue(Promise.resolve([{ name: 'origin', refs: { fetch: 'http://example.com' } }])),
+  branch: jest.fn().mockReturnValue(Promise.resolve({ current: 'master' })),
+  raw: jest.fn().mockImplementation(async (args) => {
+    if (args[0] === 'show') {
+      if (args[1] === '--format=%H') {
+        return 'DEADBEEF'
+      } else if (args[1] === '--format=%B') {
+        return 'commit message'
+      } else if (args[1] === '--format=%ae') {
+        return 'user@example.com'
       }
-      throw new Error('unknown raw invocation')
-    })
-  }
+    } else if (args[0] === 'config') {
+      return 'origin'
+    } else if (args[0] === 'rev-parse') {
+      return ''
+    }
+    throw new Error('unknown raw invocation')
+  })
 }))
 
 describe('parseDeploymentData', () => {
