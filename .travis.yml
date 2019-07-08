@@ -131,6 +131,7 @@ jobs:
       before_install: node ./scripts/updatePreReleaseDependency.js
       deploy:
         provider: npm
+        tag: next # this is the NPM tag, not git tag.
         skip_cleanup: true
         email: services@serverless.com
         api_key:
