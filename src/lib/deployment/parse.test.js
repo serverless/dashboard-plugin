@@ -10,6 +10,33 @@ jest.mock('./getServerlessFilePath', () =>
 jest.mock('fs-extra', () => ({
   readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
 }))
+jest.mock('../utils', () => ({
+  git: {
+    checkIsRepoAsync: jest.fn().mockReturnValue(Promise.resolve(true)),
+    getRemotesAsync: jest
+      .fn()
+      .mockReturnValue(
+        Promise.resolve([{ name: 'origin', refs: { fetch: 'http://example.com' } }])
+      ),
+    branchAsync: jest.fn().mockReturnValue(Promise.resolve({ current: 'master' })),
+    rawAsync: jest.fn().mockImplementation((args) => {
+      if (args[0] === 'show') {
+        if (args[1] === '--format=%H') {
+          return Promise.resolve('DEADBEEF')
+        } else if (args[1] === '--format=%B') {
+          return Promise.resolve('commit message')
+        } else if (args[1] === '--format=%ae') {
+          return Promise.resolve('user@example.com')
+        }
+      } else if (args[0] === 'config') {
+        return Promise.resolve('origin')
+      } else if (args[0] === 'rev-parse') {
+        return Promise.resolve('')
+      }
+      return Promise.reject()
+    })
+  }
+}))
 
 describe('parseDeploymentData', () => {
   let getAccountId
@@ -152,6 +179,15 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
+      vcsInfo: {
+        branch: 'master',
+        commitId: 'DEADBEEF',
+        commitMessage: 'commit message',
+        committerEmail: 'user@example.com',
+        originUrl: 'http://example.com',
+        repoPath: '',
+        type: 'git'
+      },
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion
@@ -266,6 +302,15 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
+      vcsInfo: {
+        branch: 'master',
+        commitId: 'DEADBEEF',
+        commitMessage: 'commit message',
+        committerEmail: 'user@example.com',
+        originUrl: 'http://example.com',
+        repoPath: '',
+        type: 'git'
+      },
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion
@@ -380,6 +425,15 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
+      vcsInfo: {
+        branch: 'master',
+        commitId: 'DEADBEEF',
+        commitMessage: 'commit message',
+        committerEmail: 'user@example.com',
+        originUrl: 'http://example.com',
+        repoPath: '',
+        type: 'git'
+      },
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion
@@ -482,6 +536,15 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
+      vcsInfo: {
+        branch: 'master',
+        commitId: 'DEADBEEF',
+        commitMessage: 'commit message',
+        committerEmail: 'user@example.com',
+        originUrl: 'http://example.com',
+        repoPath: '',
+        type: 'git'
+      },
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion
@@ -592,6 +655,15 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
+      vcsInfo: {
+        branch: 'master',
+        commitId: 'DEADBEEF',
+        commitMessage: 'commit message',
+        committerEmail: 'user@example.com',
+        originUrl: 'http://example.com',
+        repoPath: '',
+        type: 'git'
+      },
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion
@@ -683,6 +755,15 @@ describe('parseDeploymentData', () => {
       subscriptions: [],
       tenantName: 'tenant',
       tenantUid: 'txxx',
+      vcsInfo: {
+        branch: 'master',
+        commitId: 'DEADBEEF',
+        commitMessage: 'commit message',
+        committerEmail: 'user@example.com',
+        originUrl: 'http://example.com',
+        repoPath: '',
+        type: 'git'
+      },
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion

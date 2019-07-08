@@ -7,6 +7,7 @@ import fs from 'fs-extra'
 import _ from 'lodash'
 import SDK from '@serverless/platform-sdk'
 import getServerlessFilePath from './getServerlessFilePath'
+import { git } from '../utils'
 import { version as packageJsonVersion } from '../../../package.json'
 
 /*
@@ -69,6 +70,32 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       outputs: service.outputs,
       error
     })
+
+    const vcsInfo = { type: null }
+    // Add VCS info
+    try {
+      const isGit = await git.checkIsRepoAsync()
+      if (isGit) {
+        vcsInfo.type = 'git'
+      }
+    } catch {
+      // pass
+    }
+    if (vcsInfo.type === 'git') {
+      const branch = await git.branchAsync()
+      let origin = await git.rawAsync(['config', `branch.${branch.current}.remote`])
+      if (origin) {
+        origin = origin.trim()
+        const remotes = await git.getRemotesAsync()
+        vcsInfo.originUrl = remotes.filter(({ name }) => name === origin)[0].refs.fetch
+      }
+      vcsInfo.branch = branch.current
+      vcsInfo.commitId = (await git.rawAsync(['show', '--format=%H', branch.current])).trim()
+      vcsInfo.commitMessage = (await git.rawAsync(['show', '--format=%B', branch.current])).trim()
+      vcsInfo.committerEmail = (await git.rawAsync(['show', '--format=%ae', branch.current])).trim()
+      vcsInfo.repoPath = (await git.rawAsync(['rev-parse', '--show-prefix'])).trim()
+    }
+    deployment.set({ vcsInfo })
 
     /*
      * Add this deployment's functions...
