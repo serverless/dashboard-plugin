@@ -65,5 +65,14 @@ module.exports = {
     'spaced-comment': 'error',
     strict: ['error', 'never'],
     'prettier/prettier': 'error'
-  }
+  },
+  overrides: [
+    {
+      files: ['integration-testing/**'],
+      rules: {
+        // console.info allowed to report on long going tasks or valuable debug information
+        'no-console': ['error', { allow: ['info'] }]
+      }
+    }
+  ]
 }

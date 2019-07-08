@@ -36,7 +36,7 @@ describe('variables - hookIntoVariableGetter', () => {
   }
 
   afterAll(() => {
-    getValueFromSource.resetMock()
+    getValueFromSource.mockClear()
   })
 
   it('overrides the default variable getter and can use secrets vars', async () => {

@@ -13,11 +13,11 @@
 
 tenant: integration
 app: integration
-service: service2
+service: CHANGEME
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: ">=1.37.1"
+frameworkVersion: '>=1.37.1'
 provider:
   name: aws
   runtime: nodejs8.10
