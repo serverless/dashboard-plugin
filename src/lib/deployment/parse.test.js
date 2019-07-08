@@ -19,21 +19,21 @@ jest.mock('../utils', () => ({
         Promise.resolve([{ name: 'origin', refs: { fetch: 'http://example.com' } }])
       ),
     branchAsync: jest.fn().mockReturnValue(Promise.resolve({ current: 'master' })),
-    rawAsync: jest.fn().mockImplementation((args) => {
+    rawAsync: jest.fn().mockImplementation(async (args) => {
       if (args[0] === 'show') {
         if (args[1] === '--format=%H') {
-          return Promise.resolve('DEADBEEF')
+          return 'DEADBEEF'
         } else if (args[1] === '--format=%B') {
-          return Promise.resolve('commit message')
+          return 'commit message'
         } else if (args[1] === '--format=%ae') {
-          return Promise.resolve('user@example.com')
+          return 'user@example.com'
         }
       } else if (args[0] === 'config') {
-        return Promise.resolve('origin')
+        return 'origin'
       } else if (args[0] === 'rev-parse') {
-        return Promise.resolve('')
+        return ''
       }
-      return Promise.reject()
+      throw new Error('unknown raw invocation')
     })
   }
 }))
