@@ -2,12 +2,11 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: './coverage/',
-  setupFiles: ['<rootDir>/src/runtime.js'],
+  setupFilesAfterEnv: ['<rootDir>/src/runtime.js'],
   testEnvironment: 'node',
   testPathIgnorePatterns: ['/dist', '/node_modules', '/sdk-js'],
   // Switching to cirus, as it's less buggy than default runner:
   // https://github.com/facebook/jest/issues/6692
   // https://github.com/facebook/jest/issues/6695
-  // https://github.com/facebook/jest/issues/8659
   testRunner: 'jest-circus/runner'
 }
