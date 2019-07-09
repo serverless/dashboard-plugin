@@ -87,7 +87,7 @@ class SDK(object):
                         "context_line": frame[3],
                         "post_context": [],
                     }
-                    for frame in stack_frames
+                    for frame in reversed(stack_frames)
                 ]
             )
             error_data["errorExceptionType"] = exc_type.__name__
