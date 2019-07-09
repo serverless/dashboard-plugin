@@ -9,7 +9,7 @@ describe('Transaction', () => {
       tenantUid: 'tenantUid',
       serviceName: 'serviceName',
       stageName: 'stageName',
-      computeType: 'computeType'
+      computeType: 'computeType',
     })
     expect(firstTransaction.$.schema.compute.isColdStart).toEqual(true)
     expect(firstTransaction.$.schema.compute.instanceInvocationCount).toEqual(1)
@@ -20,7 +20,7 @@ describe('Transaction', () => {
       tenantUid: 'tenantUid',
       serviceName: 'serviceName',
       stageName: 'stageName',
-      computeType: 'computeType'
+      computeType: 'computeType',
     })
     expect(secondTransaction.$.schema.compute.isColdStart).toEqual(false)
     expect(secondTransaction.$.schema.compute.instanceInvocationCount).toEqual(2)

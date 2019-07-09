@@ -20,7 +20,7 @@ requireHook(['aws-sdk'], (awsSdk) => {
       })
       // Send the request as usual
       return _send.apply(_thisRequest, _args)
-    }
+    },
   })
 
   return awsSdk

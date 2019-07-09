@@ -1,10 +1,10 @@
-var util = require('util')
-var afterAll = require('after-all-results')
-var stackman = require('stackman')()
+const util = require('util')
+const afterAll = require('after-all-results')
+const stackman = require('stackman')()
 
 exports._MAX_HTTP_BODY_CHARS = 2048 // expose for testing purposes
 
-var mysqlErrorMsg = /(ER_[A-Z_]+): /
+const mysqlErrorMsg = /(ER_[A-Z_]+): /
 
 // Default `culprit` to the top of the stack or the highest non `library_frame`
 // frame if such exists
@@ -14,8 +14,8 @@ function getCulprit(frames) {
   }
 
   let { filename } = frames[0]
-  var fnName = frames[0].function
-  for (var n = 0; n < frames.length; n++) {
+  let fnName = frames[0].function
+  for (let n = 0; n < frames.length; n++) {
     if (!frames[n].library_frame) {
       ;({ filename } = frames[n])
       fnName = frames[n].function
@@ -23,18 +23,18 @@ function getCulprit(frames) {
     }
   }
 
-  return filename ? fnName + ' (' + filename + ')' : fnName
+  return filename ? `${fnName  } (${  filename  })` : fnName
 }
 
 function getModule(frames) {
   if (frames.length === 0) {
     return
   }
-  var frame = frames[0]
+  const frame = frames[0]
   if (!frame.library_frame) {
     return
   }
-  var match = frame.filename.match(/node_modules\/([^/]*)/)
+  const match = frame.filename.match(/node_modules\/([^/]*)/)
   if (!match) {
     return
   }
@@ -42,7 +42,7 @@ function getModule(frames) {
 }
 
 exports.parseMessage = function(msg) {
-  var error = { log: {} }
+  const error = { log: {} }
 
   if (typeof msg === 'string') {
     error.log.message = msg
@@ -64,17 +64,17 @@ exports.parseMessage = function(msg) {
 }
 
 exports.parseError = function(err, agent, cb) {
-  stackman.callsites(err, function(_err, callsites) {
+  stackman.callsites(err, (_err, callsites) => {
     if (_err) {
       //   agent.logger.debug('error while getting error callsites: %s', _err.message)
     }
 
-    var errorMsg = String(err.message)
-    var error = {
+    const errorMsg = String(err.message)
+    const error = {
       exception: {
         message: errorMsg,
-        type: String(err.name)
-      }
+        type: String(err.name),
+      },
     }
 
     if ('code' in err) {
@@ -83,13 +83,13 @@ exports.parseError = function(err, agent, cb) {
       // To provide better grouping of mysql errors that happens after the async
       // boundery, we modify to exception type to include the custom mysql error
       // type (e.g. ER_PARSE_ERROR)
-      var match = errorMsg.match(mysqlErrorMsg)
+      const match = errorMsg.match(mysqlErrorMsg)
       if (match) {
         error.exception.code = match[1]
       }
     }
 
-    var props = stackman.properties(err)
+    const props = stackman.properties(err)
     if (props.code) {
       delete props.code
     } // we already have it directly on the exception
@@ -97,7 +97,7 @@ exports.parseError = function(err, agent, cb) {
       error.exception.attributes = props
     }
 
-    var next = afterAll(function(_, frames) {
+    const next = afterAll((_, frames) => {
       // As of now, parseCallsite suppresses errors internally, but even if
       // they were passed on, we would want to suppress them here anyway
 
@@ -106,8 +106,8 @@ exports.parseError = function(err, agent, cb) {
       frames = frames.filter((frame) => frame.post_context && frame.pre_context)
 
       if (frames) {
-        var culprit = getCulprit(frames)
-        var module = getModule(frames)
+        const culprit = getCulprit(frames)
+        const module = getModule(frames)
         if (culprit) {
           error.culprit = culprit
         } // TODO: consider moving culprit to exception
@@ -121,7 +121,7 @@ exports.parseError = function(err, agent, cb) {
     })
 
     if (callsites) {
-      callsites.forEach(function(callsite) {
+      callsites.forEach((callsite) => {
         exports.parseCallsite(callsite, true, null, next())
       })
     }
@@ -129,12 +129,12 @@ exports.parseError = function(err, agent, cb) {
 }
 
 exports.parseCallsite = function(callsite, isError, agent, cb) {
-  var filename = callsite.getFileName()
-  var frame = {
+  const filename = callsite.getFileName()
+  const frame = {
     filename: callsite.getRelativeFileName() || '',
     lineno: callsite.getLineNumber(),
     function: callsite.getFunctionNameSanitized(),
-    library_frame: !callsite.isApp()
+    library_frame: !callsite.isApp(),
   }
   if (!Number.isFinite(frame.lineno)) {
     frame.lineno = 0
@@ -143,13 +143,13 @@ exports.parseCallsite = function(callsite, isError, agent, cb) {
     frame.abs_path = filename
   }
 
-  var lines = 5
+  const lines = 5
   if (lines === 0 || callsite.isNode()) {
     setImmediate(cb, null, frame)
     return
   }
 
-  callsite.sourceContext(lines, function(err, context) {
+  callsite.sourceContext(lines, (err, context) => {
     if (err) {
       console.debug('error while getting callsite source context: %s', err.message)
     } else {
@@ -177,12 +177,12 @@ module.exports.captureAwsRequestSpan = function(resp) {
         service: awsService,
         operation: resp.request.operation,
         requestId: resp.requestId,
-        errorCode: (resp.error && resp.error.code) || null
-      }
+        errorCode: (resp.error && resp.error.code) || null,
+      },
     },
     startTime: resp.request.startTime.toISOString(),
     endTime: endTime.toISOString(),
-    duration: endTime.getTime() - resp.request.startTime.getTime()
+    duration: endTime.getTime() - resp.request.startTime.getTime(),
   }
 
   return spanDetails

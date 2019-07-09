@@ -27,7 +27,7 @@ const nanosecondnow = () => {
 
 // Schemas
 const schemas = {
-  transactionFunction: require('./schemas/transaction-function.json')
+  transactionFunction: require('./schemas/transaction-function.json'),
 }
 
 /*
@@ -75,7 +75,7 @@ class Transaction {
       schema: null,
       eTransaction: null,
       duration: nanosecondnow(), // start transaction timer
-      spans: []
+      spans: [],
     }
 
     /*
@@ -154,7 +154,7 @@ class Transaction {
     // Includes error name and message separated by these characters: !$
     // Back-end components rely on this format so don't change it without consulting others
     let id = error.name || 'Unknown'
-    id = error.message ? id + '!$' + error.message.toString().substring(0, 200) : id
+    id = error.message ? `${id  }!$${  error.message.toString().substring(0, 200)}` : id
     this.set('error.id', id)
     // Log
     console.log('')
@@ -225,7 +225,7 @@ class Transaction {
       span.spanContext = {
         traceId: tags.computeCustomAwsRequestId,
         spanId: this.$.schema.transactionId,
-        xTraceId: tags.computeCustomXTraceId
+        xTraceId: tags.computeCustomXTraceId,
       }
       span.tags = tags
       envelope.payload = span

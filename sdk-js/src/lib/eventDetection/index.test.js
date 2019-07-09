@@ -15,14 +15,14 @@ const alexaSkill = {
       STATE: '_TRIVIAMODE',
       score: 0,
       questions: [16, 20, 29, 2, 19],
-      currentQuestionIndex: 0
+      currentQuestionIndex: 0,
     },
     user: {
-      userId: 'amzn1.ask.account.[unique-value-here]'
+      userId: 'amzn1.ask.account.[unique-value-here]',
     },
     application: {
-      applicationId: 'amzn1.ask.skill.[unique-value-here]'
-    }
+      applicationId: 'amzn1.ask.skill.[unique-value-here]',
+    },
   },
   version: '1.0',
   request: {
@@ -34,38 +34,38 @@ const alexaSkill = {
       slots: {
         Item: {
           name: 'Item',
-          value: 'snowball'
-        }
+          value: 'snowball',
+        },
       },
-      name: 'AnswerIntent'
-    }
+      name: 'AnswerIntent',
+    },
   },
   context: {
     AudioPlayer: {
       playerActivity: 'IDLE',
       token: 'audioplayer-token',
-      offsetInMilliseconds: 0
+      offsetInMilliseconds: 0,
     },
     System: {
       device: {
         supportedInterfaces: {
-          AudioPlayer: {}
-        }
+          AudioPlayer: {},
+        },
       },
       application: {
-        applicationId: 'amzn1.ask.skill.[unique-value-here]'
+        applicationId: 'amzn1.ask.skill.[unique-value-here]',
       },
       user: {
         userId: 'amzn1.ask.account.[unique-value-here]',
         accessToken: 'Atza|AAAAAAAA',
         permissions: {
-          consentToken: 'ZZZZZZZ'
-        }
+          consentToken: 'ZZZZZZZ',
+        },
       },
       apiEndpoint: 'https://api.amazonalexa.com',
-      apiAccessToken: 'AxThk'
-    }
-  }
+      apiAccessToken: 'AxThk',
+    },
+  },
 }
 
 const apiGateway = {
@@ -88,10 +88,10 @@ const apiGateway = {
     'X-Amz-Cf-Id': 'nBsWBOrSHMgnaROZJK1wGCZ9PcRcSpq_oSXZNQwQ10OTZL4cimZo3g==',
     'X-Forwarded-For': '192.168.100.1, 192.168.1.1',
     'X-Forwarded-Port': '443',
-    'X-Forwarded-Proto': 'https'
+    'X-Forwarded-Proto': 'https',
   },
   pathParameters: {
-    proxy: 'hello'
+    proxy: 'hello',
   },
   requestContext: {
     accountId: '123456789012',
@@ -110,20 +110,20 @@ const apiGateway = {
       userArn: '',
       userAgent:
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36 OPR/39.0.2256.48',
-      user: ''
+      user: '',
     },
     resourcePath: '/{proxy+}',
     httpMethod: 'GET',
-    apiId: 'wt6mne2s9k'
+    apiId: 'wt6mne2s9k',
   },
   resource: '/{proxy+}',
   httpMethod: 'GET',
   queryStringParameters: {
-    name: 'me'
+    name: 'me',
   },
   stageVariables: {
-    stageVarName: 'stageVarValue'
-  }
+    stageVarName: 'stageVarValue',
+  },
 }
 
 const cloudFront = {
@@ -131,7 +131,7 @@ const cloudFront = {
     {
       cf: {
         config: {
-          distributionId: 'EDFDVBD6EXAMPLE'
+          distributionId: 'EDFDVBD6EXAMPLE',
         },
         request: {
           clientIp: '2001:0db8:85a3:0:0:8a2e:0370:7334',
@@ -141,26 +141,26 @@ const cloudFront = {
             host: [
               {
                 key: 'Host',
-                value: 'd111111abcdef8.cloudfront.net'
-              }
+                value: 'd111111abcdef8.cloudfront.net',
+              },
             ],
             'user-agent': [
               {
                 key: 'User-Agent',
-                value: 'curl/7.51.0'
-              }
-            ]
-          }
-        }
-      }
-    }
-  ]
+                value: 'curl/7.51.0',
+              },
+            ],
+          },
+        },
+      },
+    },
+  ],
 }
 
 const customAuthorizerToken = {
   type: 'TOKEN',
   authorizationToken: 'allow',
-  methodArn: 'arn:aws:execute-api:us-west-2:123456789012:ymy8tbxw7b/*/GET/'
+  methodArn: 'arn:aws:execute-api:us-west-2:123456789012:ymy8tbxw7b/*/GET/',
 }
 
 const customAuthorizerRequest = {
@@ -190,14 +190,14 @@ const customAuthorizerRequest = {
     'Postman-Token': '...',
     'cache-control': 'no-cache',
     'CloudFront-Is-Desktop-Viewer': 'true',
-    'Content-Type': 'application/x-www-form-urlencoded'
+    'Content-Type': 'application/x-www-form-urlencoded',
   },
   queryStringParameters: {
-    QueryString1: 'queryValue1'
+    QueryString1: 'queryValue1',
   },
   pathParameters: {},
   stageVariables: {
-    StageVar1: 'stageValue1'
+    StageVar1: 'stageValue1',
   },
   requestContext: {
     path: '/request',
@@ -207,12 +207,12 @@ const customAuthorizerRequest = {
     requestId: '...',
     identity: {
       apiKey: '...',
-      sourceIp: '...'
+      sourceIp: '...',
     },
     resourcePath: '/request',
     httpMethod: 'GET',
-    apiId: 's4x3opwd6i'
-  }
+    apiId: 's4x3opwd6i',
+  },
 }
 
 const firehose = {
@@ -229,8 +229,8 @@ const firehose = {
         partitionKey: '4d1ad2b9-24f8-4b9d-a088-76e9947c317a',
         approximateArrivalTimestamp: '2012-04-23T18:25:43.511Z',
         sequenceNumber: '49546986683135544286507457936321625675700192471156785154',
-        subsequenceNumber: ''
-      }
+        subsequenceNumber: '',
+      },
     },
     {
       data: 'SGVsbG8gV29ybGQ=',
@@ -241,10 +241,10 @@ const firehose = {
         partitionKey: '4d1ad2b9-24f8-4b9d-a088-76e9947c318a',
         approximateArrivalTimestamp: '2012-04-23T19:25:43.511Z',
         sequenceNumber: '49546986683135544286507457936321625675700192471156785155',
-        subsequenceNumber: ''
-      }
-    }
-  ]
+        subsequenceNumber: '',
+      },
+    },
+  ],
 }
 
 const kinesis = {
@@ -256,15 +256,15 @@ const kinesis = {
         partitionKey: 'partitionKey-3',
         data: 'SGVsbG8sIHRoaXMgaXMgYSB0ZXN0IDEyMy4=',
         kinesisSchemaVersion: '1.0',
-        sequenceNumber: '49545115243490985018280067714973144582180062593244200961'
+        sequenceNumber: '49545115243490985018280067714973144582180062593244200961',
       },
       invokeIdentityArn: 'invoked-by-arn',
       eventName: 'aws:kinesis:record',
       eventSourceARN: 'event-source-arn',
       eventSource: 'aws:kinesis',
-      awsRegion: 'us-east-1'
-    }
-  ]
+      awsRegion: 'us-east-1',
+    },
+  ],
 }
 
 const s3 = {
@@ -276,14 +276,14 @@ const s3 = {
       eventTime: '1970-01-01T00:00:00.000Z',
       eventName: 'event-type',
       userIdentity: {
-        principalId: 'Amazon-customer-ID-of-the-user-who-caused-the-event'
+        principalId: 'Amazon-customer-ID-of-the-user-who-caused-the-event',
       },
       requestParameters: {
-        sourceIPAddress: 'ip-address-where-request-came-from'
+        sourceIPAddress: 'ip-address-where-request-came-from',
       },
       responseElements: {
         'x-amz-request-id': 'Amazon S3 generated request ID',
-        'x-amz-id-2': 'Amazon S3 host that processed the request'
+        'x-amz-id-2': 'Amazon S3 host that processed the request',
       },
       s3: {
         s3SchemaVersion: '1.0',
@@ -291,9 +291,9 @@ const s3 = {
         bucket: {
           name: 'bucket-name',
           ownerIdentity: {
-            principalId: 'Amazon-customer-ID-of-the-bucket-owner'
+            principalId: 'Amazon-customer-ID-of-the-bucket-owner',
           },
-          arn: 'bucket-ARN'
+          arn: 'bucket-ARN',
         },
         object: {
           key: 'object-key',
@@ -301,11 +301,11 @@ const s3 = {
           eTag: 'object eTag',
           versionId: 'object version if bucket is versioning-enabled, otherwise null',
           sequencer:
-            'a string representation of a hexadecimal value used to determine event sequence, only used with PUTs and DELETEs'
-        }
-      }
-    }
-  ]
+            'a string representation of a hexadecimal value used to determine event sequence, only used with PUTs and DELETEs',
+        },
+      },
+    },
+  ],
 }
 
 const scheduled = {
@@ -316,7 +316,7 @@ const scheduled = {
   source: 'aws.events',
   time: '1970-01-01T00:00:00Z',
   id: 'cdc73f9d-aea9-11e3-9d5a-835b769c0d9c',
-  resources: ['arn:aws:events:us-east-1:123456789012:rule/my-schedule']
+  resources: ['arn:aws:events:us-east-1:123456789012:rule/my-schedule'],
 }
 
 const slsIntegrationLambda = {
@@ -325,7 +325,7 @@ const slsIntegrationLambda = {
   principalId: '1234',
   stage: 'dev',
   cognitoPoolClaims: {
-    sub: ''
+    sub: '',
   },
   enhancedAuthContext: {},
   headers: {
@@ -347,7 +347,7 @@ const slsIntegrationLambda = {
     'X-Amzn-Trace-Id': 'Root=1-5970ef3e249c0321b2eef14aa513ae',
     'X-Forwarded-For': '94.117.120.169, 116.132.62.73',
     'X-Forwarded-Port': '443',
-    'X-Forwarded-Proto': 'https'
+    'X-Forwarded-Proto': 'https',
   },
   query: {},
   path: {},
@@ -364,9 +364,9 @@ const slsIntegrationLambda = {
     userArn: '',
     userAgent:
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
-    user: ''
+    user: '',
   },
-  stageVariables: {}
+  stageVariables: {},
 }
 
 const sns = {
@@ -388,10 +388,10 @@ const sns = {
           'https://sns.us-west-2.amazonaws.com/SimpleNotificationService-b95095beb82e8f6a046b3aafc7f4149a.pem',
         UnsubscribeUrl:
           'https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&eifjccgihujihfhrchunfnglreichbrcljrnlvtbeked',
-        Subject: 'This is a test subject'
-      }
-    }
-  ]
+        Subject: 'This is a test subject',
+      },
+    },
+  ],
 }
 
 const sqs = {
@@ -408,11 +408,11 @@ const sqs = {
         ApproximateFirstReceiveTimestamp: '1523232000001',
         SenderId: '123456789012',
         ApproximateReceiveCount: '1',
-        SentTimestamp: '1523232000000'
+        SentTimestamp: '1523232000000',
       },
-      messageAttributes: {}
-    }
-  ]
+      messageAttributes: {},
+    },
+  ],
 }
 
 describe('eventDetection', () => {

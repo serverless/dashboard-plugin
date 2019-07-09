@@ -97,7 +97,7 @@ class ServerlessSDK {
 
     if (meta.computeType === 'aws.lambda') {
       if (self.$.config.debug) {
-        console.log(`ServerlessSDK: Handler: Loading AWS Lambda handler...`)
+        console.log('ServerlessSDK: Handler: Loading AWS Lambda handler...')
       }
 
       return (event, context, callback) => {
@@ -129,7 +129,7 @@ class ServerlessSDK {
           functionName: meta.functionName,
           timeout: meta.timeout,
           computeType: meta.computeType,
-          eventType
+          eventType,
         })
 
         // Capture Compute Data: aws.lambda
@@ -186,7 +186,7 @@ class ServerlessSDK {
         const wrappedCallback = (error, res) => {
           try {
             if (self.$.config.debug) {
-              console.log(`ServerlessSDK: Handler: AWS Lambda wrapped callback executed...`)
+              console.log('ServerlessSDK: Handler: AWS Lambda wrapped callback executed...')
             }
 
             const cb = () => {
@@ -229,7 +229,7 @@ class ServerlessSDK {
         }
 
         // If promise was returned, handle it
-        if (result && typeof result.then == 'function') {
+        if (result && typeof result.then === 'function') {
           result
             .then((data) => {
               // In a AWS Lambda 'async' handler, an error can be returned directly

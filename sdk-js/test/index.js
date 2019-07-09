@@ -87,110 +87,119 @@ const serverless = new ServerlessSDK({
   stageName: 'dev',
 })
 
-let callback = serverless.handler(require('./handler.js').callback,
+const callback = serverless.handler(require('./handler.js').callback,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 callback(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let callbackError = serverless.handler(require('./handler.js').callbackError,
+const callbackError = serverless.handler(require('./handler.js').callbackError,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 callbackError(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let promise = serverless.handler(require('./handler.js').promise,
+const promise = serverless.handler(require('./handler.js').promise,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 promise(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let promiseError = serverless.handler(require('./handler.js').promiseError,
+const promiseError = serverless.handler(require('./handler.js').promiseError,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 promiseError(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let async = serverless.handler(require('./handler.js').async,
+const async = serverless.handler(require('./handler.js').async,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 async(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let asyncError = serverless.handler(require('./handler.js').asyncError,
+const asyncError = serverless.handler(require('./handler.js').asyncError,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 asyncError(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let contextDone = serverless.handler(require('./handler.js').contextDone,
+const contextDone = serverless.handler(require('./handler.js').contextDone,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 contextDone(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let contextSucceed = serverless.handler(require('./handler.js').contextSucceed,
+const contextSucceed = serverless.handler(require('./handler.js').contextSucceed,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 contextSucceed(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
 
-let contextFail = serverless.handler(require('./handler.js').contextFail,
+const contextFail = serverless.handler(require('./handler.js').contextFail,
   {
     functionName: 'webapp-users-dev-getUser',
-    computeType: 'aws.lambda'
+    computeType: 'aws.lambda',
   }
 )
+
 contextFail(
   testEvent,
   {},
-  (error, result) => { console.log("result:", error, result) }
+  (error, result) => { console.log('result:', error, result) }
 )
