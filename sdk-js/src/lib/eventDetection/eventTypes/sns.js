@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.sns'
 
 module.exports = function eventType(event = {}) {

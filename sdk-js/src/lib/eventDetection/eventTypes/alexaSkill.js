@@ -1,3 +1,5 @@
+'use strict';
+
 const { get } = require('lodash')
 
 const type = 'aws.alexaskill'

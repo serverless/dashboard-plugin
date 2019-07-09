@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.firehose'
 
 module.exports = function eventType(event = {}) {

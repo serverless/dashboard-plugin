@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.scheduled'
 
 module.exports = function eventType(event = {}) {

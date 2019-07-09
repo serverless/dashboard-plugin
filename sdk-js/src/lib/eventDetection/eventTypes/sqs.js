@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.sqs'
 
 module.exports = function eventType(event = {}) {

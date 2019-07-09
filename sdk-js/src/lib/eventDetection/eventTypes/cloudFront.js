@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.cloudfront'
 
 module.exports = function eventType(event = {}) {

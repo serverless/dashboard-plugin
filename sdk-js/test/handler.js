@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports.callback = (evt, ctx, cb) => {
   return cb(null, 'success')
 }

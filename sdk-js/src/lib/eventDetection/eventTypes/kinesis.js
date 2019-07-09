@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.kinesis'
 
 module.exports = function eventType(event = {}) {

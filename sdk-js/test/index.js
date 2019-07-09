@@ -1,3 +1,5 @@
+'use strict';
+
 const testEvent = {
   resource: '/users',
   path: '/users',

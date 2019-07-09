@@ -1,3 +1,5 @@
+'use strict';
+
 const EventEmitter = require('events')
 const requireHook = require('require-in-the-middle')
 const { captureAwsRequestSpan } = require('./parsers')

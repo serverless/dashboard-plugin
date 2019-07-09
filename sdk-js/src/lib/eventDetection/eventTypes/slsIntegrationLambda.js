@@ -1,3 +1,5 @@
+'use strict';
+
 const { get } = require('lodash')
 
 /* This module supports the "lambda" type integration

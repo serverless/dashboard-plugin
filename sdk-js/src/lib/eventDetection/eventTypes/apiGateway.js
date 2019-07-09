@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.apigateway.http'
 
 module.exports = function eventType(event) {

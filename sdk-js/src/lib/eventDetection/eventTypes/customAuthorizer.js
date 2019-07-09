@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.apigateway.authorizer'
 
 module.exports = function eventType(event) {

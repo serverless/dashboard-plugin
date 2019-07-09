@@ -1,3 +1,5 @@
+'use strict';
+
 const util = require('util')
 const afterAll = require('after-all-results')
 const stackman = require('stackman')()

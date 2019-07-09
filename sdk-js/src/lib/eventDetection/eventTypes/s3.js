@@ -1,3 +1,5 @@
+'use strict';
+
 const type = 'aws.s3'
 
 module.exports = function eventType(event = {}) {
