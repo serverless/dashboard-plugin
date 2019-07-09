@@ -3,6 +3,7 @@ import os
 import platform
 import sys
 import time
+import traceback
 import uuid
 from datetime import datetime
 from contextlib import contextmanager
@@ -58,11 +59,37 @@ class SDK(object):
     def transaction(self, context, function_name, timeout):
         start = time.time()
         start_isoformat = datetime.utcnow().isoformat() + "Z"
-        error = None
+        error_data = {
+            "errorCulprit": None,
+            "errorExceptionMessage": None,
+            "errorExceptionStacktrace": None,
+            "errorExceptionType": None,
+            "errorId": None,
+        }
         try:
             yield
-        except Exception as e:
-            error = e
+        except Exception:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            stack_frames = traceback.extract_tb(exc_traceback)
+            error_data["errorCulprit"] = f"{stack_frames[0][2]} ({stack_frames[0][0]})"
+            error_data["errorExceptionMessage"] = str(exc_value)
+            error_data["errorExceptionStacktrace"] = json.dumps(
+                [
+                    {
+                        "filename": frame[0],
+                        "lineno": frame[1],
+                        "function": frame[2],
+                        "library_frame": False,
+                        "abs_path": os.path.abspath(frame[0]),
+                        "pre_context": [],
+                        "context_line": frame[3],
+                        "post_context": [],
+                    }
+                    for frame in stack_frames
+                ]
+            )
+            error_data["errorExceptionType"] = exc_type.__name__
+            error_data["errorId"] = f"{exc_type.__name__}!?{str(exc_value)[:200]}"
         finally:
             if os.path.exists("/proc/meminfo"):
                 meminfo = {
@@ -77,6 +104,7 @@ class SDK(object):
             end_isoformat = datetime.utcnow().isoformat() + "Z"
             span_id = str(uuid.uuid4())
             tags = {
+                **error_data,
                 "appUid": self.app_uid,
                 "applicationName": self.application_name,
                 "computeContainerUptime": (time.time() - module_start_time) * 1000,
@@ -118,11 +146,6 @@ class SDK(object):
                 "computeRegion": os.environ.get("AWS_REGION"),
                 "computeRuntime": f"aws.lambda.python.{sys.version.split(' ')[0]}",
                 "computeType": "aws.lambda",
-                "errorCulprit": None,
-                "errorExceptionMessage": None if error is None else str(error),
-                "errorExceptionStacktrace": None,
-                "errorExceptionType": None if error is None else type(error),
-                "errorId": None,
                 "eventCustomStage": "dev",
                 "eventSource": None,
                 "eventTimestamp": start_isoformat,
@@ -163,5 +186,5 @@ class SDK(object):
                 "type": "transaction",
             }
             print(
-                f"{end_isoformat}\t{context.aws_request_id}\tSERVERLESS_ENTERPRISE {json.dumps(transaction_data)}"
+                f"SERVERLESS_ENTERPRISE {json.dumps(transaction_data)}"
             )
