@@ -71,7 +71,9 @@ class SDK(object):
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             stack_frames = traceback.extract_tb(exc_traceback)
-            error_data["errorCulprit"] = f"{stack_frames[0][2]} ({stack_frames[0][0]})"
+            error_data[
+                "errorCulprit"
+            ] = f"{stack_frames[-1][2]} ({stack_frames[-1][0]})"
             error_data["errorExceptionMessage"] = str(exc_value)
             error_data["errorExceptionStacktrace"] = json.dumps(
                 [
@@ -112,8 +114,12 @@ class SDK(object):
                 "computeCustomAwsRequestId": context.aws_request_id,
                 "computeCustomEnvArch": platform.architecture()[0],
                 "computeCustomEnvCpus": None,  # TODO '[{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":2200,"nice":0,"sys":2300,"idle":8511300,"irq":0}},{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":1200,"nice":0,"sys":1700,"idle":8513400,"irq":0}}]',
-                "computeCustomEnvMemoryFree": meminfo.get("MemFree") * 1024 if meminfo else None,
-                "computeCustomEnvMemoryTotal": meminfo.get("MemTotal") * 1024 if meminfo else None,
+                "computeCustomEnvMemoryFree": meminfo.get("MemFree") * 1024
+                if meminfo
+                else None,
+                "computeCustomEnvMemoryTotal": meminfo.get("MemTotal") * 1024
+                if meminfo
+                else None,
                 "computeCustomEnvPlatform": sys.platform,
                 "computeCustomFunctionName": os.environ.get("AWS_LAMBDA_FUNCTION_NAME"),
                 "computeCustomFunctionVersion": os.environ.get(
@@ -163,6 +169,7 @@ class SDK(object):
                 "transactionId": span_id,
             }
             transaction_data = {
+                "type": "error" if error_data["errorId"] else "transaction",
                 "origin": "sls-agent",
                 "payload": {
                     "duration": (time.time() - start) * 1000,
@@ -183,8 +190,5 @@ class SDK(object):
                 "requestId": context.aws_request_id,
                 "schemaVersion": "0.0",
                 "timestamp": end_isoformat,
-                "type": "transaction",
             }
-            print(
-                f"SERVERLESS_ENTERPRISE {json.dumps(transaction_data)}"
-            )
+            print(f"SERVERLESS_ENTERPRISE {json.dumps(transaction_data)}")
