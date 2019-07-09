@@ -112,8 +112,8 @@ class SDK(object):
                 "computeCustomAwsRequestId": context.aws_request_id,
                 "computeCustomEnvArch": platform.architecture()[0],
                 "computeCustomEnvCpus": None,  # TODO '[{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":2200,"nice":0,"sys":2300,"idle":8511300,"irq":0}},{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":1200,"nice":0,"sys":1700,"idle":8513400,"irq":0}}]',
-                "computeCustomEnvMemoryFree": meminfo.get("MemFree") * 1024,
-                "computeCustomEnvMemoryTotal": meminfo.get("MemTotal") * 1024,
+                "computeCustomEnvMemoryFree": meminfo.get("MemFree") * 1024 if meminfo else None,
+                "computeCustomEnvMemoryTotal": meminfo.get("MemTotal") * 1024 if meminfo else None,
                 "computeCustomEnvPlatform": sys.platform,
                 "computeCustomFunctionName": os.environ.get("AWS_LAMBDA_FUNCTION_NAME"),
                 "computeCustomFunctionVersion": os.environ.get(
