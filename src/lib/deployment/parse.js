@@ -73,31 +73,31 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       error
     })
 
-    const vcsInfo = { type: null }
+    const vcs = { type: null }
     // Add VCS info
     try {
       const isGit = await git.checkIsRepo()
       if (isGit) {
-        vcsInfo.type = 'git'
+        vcs.type = 'git'
       }
     } catch {
       // pass
     }
-    if (vcsInfo.type === 'git') {
+    if (vcs.type === 'git') {
       const branch = await git.branch()
       let origin = await git.raw(['config', `branch.${branch.current}.remote`])
       if (origin) {
         origin = origin.trim()
         const remotes = await git.getRemotes()
-        vcsInfo.originUrl = remotes.filter(({ name }) => name === origin)[0].refs.fetch
+        vcs.originUrl = remotes.filter(({ name }) => name === origin)[0].refs.fetch
       }
-      vcsInfo.branch = branch.current
-      vcsInfo.commitId = (await git.raw(['show', '--format=%H', branch.current])).trim()
-      vcsInfo.commitMessage = (await git.raw(['show', '--format=%B', branch.current])).trim()
-      vcsInfo.committerEmail = (await git.raw(['show', '--format=%ae', branch.current])).trim()
-      vcsInfo.repoPath = (await git.raw(['rev-parse', '--show-prefix'])).trim()
+      vcs.branch = branch.current
+      vcs.commit = (await git.raw(['show', '--format=%H', branch.current])).trim()
+      vcs.commitMessage = (await git.raw(['show', '--format=%B', branch.current])).trim()
+      vcs.committerEmail = (await git.raw(['show', '--format=%ae', branch.current])).trim()
+      vcs.relativePath = (await git.raw(['rev-parse', '--show-prefix'])).trim()
     }
-    deployment.set({ vcsInfo })
+    deployment.set({ vcs })
 
     /*
      * Add this deployment's functions...

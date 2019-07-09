@@ -175,13 +175,13 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      vcsInfo: {
+      vcs: {
         branch: 'master',
-        commitId: 'DEADBEEF',
+        commit: 'DEADBEEF',
         commitMessage: 'commit message',
         committerEmail: 'user@example.com',
         originUrl: 'http://example.com',
-        repoPath: '',
+        relativePath: '',
         type: 'git'
       },
       versionEnterprisePlugin: pluginVersion,
@@ -298,13 +298,13 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      vcsInfo: {
+      vcs: {
         branch: 'master',
-        commitId: 'DEADBEEF',
+        commit: 'DEADBEEF',
         commitMessage: 'commit message',
         committerEmail: 'user@example.com',
         originUrl: 'http://example.com',
-        repoPath: '',
+        relativePath: '',
         type: 'git'
       },
       versionEnterprisePlugin: pluginVersion,
@@ -421,13 +421,13 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      vcsInfo: {
+      vcs: {
         branch: 'master',
-        commitId: 'DEADBEEF',
+        commit: 'DEADBEEF',
         commitMessage: 'commit message',
         committerEmail: 'user@example.com',
         originUrl: 'http://example.com',
-        repoPath: '',
+        relativePath: '',
         type: 'git'
       },
       versionEnterprisePlugin: pluginVersion,
@@ -532,13 +532,13 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      vcsInfo: {
+      vcs: {
         branch: 'master',
-        commitId: 'DEADBEEF',
+        commit: 'DEADBEEF',
         commitMessage: 'commit message',
         committerEmail: 'user@example.com',
         originUrl: 'http://example.com',
-        repoPath: '',
+        relativePath: '',
         type: 'git'
       },
       versionEnterprisePlugin: pluginVersion,
@@ -651,13 +651,13 @@ describe('parseDeploymentData', () => {
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      vcsInfo: {
+      vcs: {
         branch: 'master',
-        commitId: 'DEADBEEF',
+        commit: 'DEADBEEF',
         commitMessage: 'commit message',
         committerEmail: 'user@example.com',
         originUrl: 'http://example.com',
-        repoPath: '',
+        relativePath: '',
         type: 'git'
       },
       versionEnterprisePlugin: pluginVersion,
@@ -751,13 +751,13 @@ describe('parseDeploymentData', () => {
       subscriptions: [],
       tenantName: 'tenant',
       tenantUid: 'txxx',
-      vcsInfo: {
+      vcs: {
         branch: 'master',
-        commitId: 'DEADBEEF',
+        commit: 'DEADBEEF',
         commitMessage: 'commit message',
         committerEmail: 'user@example.com',
         originUrl: 'http://example.com',
-        repoPath: '',
+        relativePath: '',
         type: 'git'
       },
       versionEnterprisePlugin: pluginVersion,
