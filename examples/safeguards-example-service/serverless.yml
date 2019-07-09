@@ -1,6 +1,6 @@
 service: safeguards-example-service
 app: plugin-test
-tenant: dschep
+org: dschep
 
 frameworkVersion: ">=1.45.1"
 
