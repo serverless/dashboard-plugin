@@ -99,7 +99,7 @@ const callback = serverless.handler(require('./handler.js').callback,
 callback(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const callbackError = serverless.handler(require('./handler.js').callbackError,
@@ -112,7 +112,7 @@ const callbackError = serverless.handler(require('./handler.js').callbackError,
 callbackError(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const promise = serverless.handler(require('./handler.js').promise,
@@ -125,7 +125,7 @@ const promise = serverless.handler(require('./handler.js').promise,
 promise(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const promiseError = serverless.handler(require('./handler.js').promiseError,
@@ -138,7 +138,7 @@ const promiseError = serverless.handler(require('./handler.js').promiseError,
 promiseError(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const async = serverless.handler(require('./handler.js').async,
@@ -151,7 +151,7 @@ const async = serverless.handler(require('./handler.js').async,
 async(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const asyncError = serverless.handler(require('./handler.js').asyncError,
@@ -164,7 +164,7 @@ const asyncError = serverless.handler(require('./handler.js').asyncError,
 asyncError(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const contextDone = serverless.handler(require('./handler.js').contextDone,
@@ -177,7 +177,7 @@ const contextDone = serverless.handler(require('./handler.js').contextDone,
 contextDone(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const contextSucceed = serverless.handler(require('./handler.js').contextSucceed,
@@ -190,7 +190,7 @@ const contextSucceed = serverless.handler(require('./handler.js').contextSucceed
 contextSucceed(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )
 
 const contextFail = serverless.handler(require('./handler.js').contextFail,
@@ -203,5 +203,5 @@ const contextFail = serverless.handler(require('./handler.js').contextFail,
 contextFail(
   testEvent,
   {},
-  (error, result) => { console.log('result:', error, result) }
+  (error, result) => { console.info('result:', error, result) }
 )

@@ -159,11 +159,11 @@ class Transaction {
     id = error.message ? `${id  }!$${  error.message.toString().substring(0, 200)}` : id
     this.set('error.id', id)
     // Log
-    console.log('')
+    console.info('')
     console.error(error)
 
     parseError(error, null, (res, errorStack) => {
-      console.log(
+      console.info(
         `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
       )
       this.set('error.culprit', errorStack.culprit)
@@ -233,7 +233,7 @@ class Transaction {
       envelope.payload = span
       envelope.payload.spans = this.$.spans
 
-      console.log('SERVERLESS_ENTERPRISE', JSON.stringify(envelope))
+      console.info('SERVERLESS_ENTERPRISE', JSON.stringify(envelope))
       this.processed = true
     }
   }

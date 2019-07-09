@@ -54,7 +54,7 @@ class ServerlessSDK {
     config = config || {}
 
     if (self.$.config.debug) {
-      console.log(
+      console.info(
         `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`
       )
     }
@@ -99,12 +99,12 @@ class ServerlessSDK {
 
     if (meta.computeType === 'aws.lambda') {
       if (self.$.config.debug) {
-        console.log('ServerlessSDK: Handler: Loading AWS Lambda handler...')
+        console.info('ServerlessSDK: Handler: Loading AWS Lambda handler...')
       }
 
       return (event, context, callback) => {
         if (self.$.config.debug) {
-          console.log(
+          console.info(
             `ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`
           )
         }
@@ -188,7 +188,7 @@ class ServerlessSDK {
         const wrappedCallback = (error, res) => {
           try {
             if (self.$.config.debug) {
-              console.log('ServerlessSDK: Handler: AWS Lambda wrapped callback executed...')
+              console.info('ServerlessSDK: Handler: AWS Lambda wrapped callback executed...')
             }
 
             const cb = () => {
