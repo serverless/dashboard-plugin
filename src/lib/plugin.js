@@ -12,6 +12,7 @@ const login = require('./login');
 const logout = require('./logout');
 const wrap = require('./wrap');
 const injectLogsIamRole = require('./injectLogsIamRole');
+const injectOutputOutputs = require('./injectOutputOutputs');
 const wrapClean = require('./wrapClean');
 const runPolicies = require('./safeguards');
 const getCredentials = require('./credentials');
@@ -208,6 +209,7 @@ class ServerlessEnterprisePlugin {
           createAndSetDeploymentUid(self);
           await wrap(self);
           await injectLogsIamRole(self);
+          await injectOutputOutputs(self);
           await setApiGatewayAccessLogFormat(self);
           break;
         case 'after:package:createDeploymentArtifacts':
