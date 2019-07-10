@@ -11,7 +11,7 @@ module.exports = async function(ctx) {
           Description: `SFE output "${outputKey}"`,
           Value: outputValue,
         };
-        ctx.sls.service.outputs[outputKey] = `CFN!?${outputKey}`;
+        ctx.sls.service.outputs[outputKey] = `CFN!?SFEOutput${outputKey}`;
       }
     }
   }

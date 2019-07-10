@@ -70,7 +70,7 @@ describe('parseDeploymentData', () => {
             events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }],
           },
         },
-        outputs: { foo: 'bar', apig: 'CFN!?apig' },
+        outputs: { foo: 'bar', apig: 'CFN!?SFEOutputapig' },
       },
     };
     const provider = {
