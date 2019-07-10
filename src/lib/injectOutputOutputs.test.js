@@ -1,13 +1,36 @@
 'use strict';
 
 const injectOutputOutputs = require('./injectOutputOutputs');
-
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('token')),
   getMetadata: jest.fn().mockReturnValue(Promise.resolve({ awsAccountId: '111111' })),
 }));
 
 describe('injectOutputOutputs', () => {
+  it('adds cfn output for sfe output using Fn::Join', async () => {
+    const ctx = {
+      sls: {
+        service: {
+          outputs: {
+            foo: 'bar',
+            iamRole: { 'Fn::Join': ['', ['a', 'b']] },
+          },
+          provider: { compiledCloudFormationTemplate: { Outputs: {} } },
+        },
+      },
+    };
+    await injectOutputOutputs(ctx);
+    expect(ctx.sls.service.outputs).toEqual({ foo: 'bar', iamRole: 'CFN!?SFEOutputiamRole' });
+    expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
+      Outputs: {
+        SFEOutputiamRole: {
+          Description: `SFE output "iamRole"`,
+          Value: { 'Fn::Join': ['', ['a', 'b']] },
+        },
+      },
+    });
+  });
+
   it('adds cfn output for sfe output using Fn::GetAtt', async () => {
     const ctx = {
       sls: {
@@ -24,7 +47,7 @@ describe('injectOutputOutputs', () => {
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Outputs: {
         SFEOutputiamRole: {
-          Description: 'SFE output "iamRole"',
+          Description: `SFE output "iamRole"`,
           Value: { 'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'] },
         },
       },
@@ -48,7 +71,7 @@ describe('injectOutputOutputs', () => {
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Outputs: {
         SFEOutputapig: {
-          Description: 'SFE output "apig"',
+          Description: `SFE output "apig"`,
           Value: { Ref: 'ApiGatewayRestId' },
         },
       },
