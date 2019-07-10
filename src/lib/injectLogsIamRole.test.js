@@ -1,5 +1,5 @@
-import injectLogsIamRole from './injectLogsIamRole'
-import { getAccessKeyForTenant, getMetadata } from '@serverless/platform-sdk'
+const injectLogsIamRole = require('./injectLogsIamRole')
+const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('token')),

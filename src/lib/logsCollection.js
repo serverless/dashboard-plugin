@@ -4,16 +4,16 @@
  * - Collects `sls-access-logs` from API Gateway access logs
  */
 
-import {
+const {
   pickResourceType,
   upperFirst,
   API_GATEWAY_FILTER_PATTERN,
   LAMBDA_FILTER_PATTERN
-} from './utils'
+} = require('./utils')
 
-import { getAccessKeyForTenant, getLogDestination } from '@serverless/platform-sdk'
+const { getAccessKeyForTenant, getLogDestination } = require('@serverless/platform-sdk')
 
-export default async (ctx) => {
+module.exports = async (ctx) => {
   if (
     ctx.sls.service.custom &&
     ctx.sls.service.custom.enterprise &&

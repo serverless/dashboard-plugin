@@ -37,7 +37,7 @@ const API_GATEWAY_LOG_FORMAT = {
   version: '1.0.0'
 }
 
-export {
+module.exports = {
   upperFirst,
   pickResourceType,
   API_GATEWAY_FILTER_PATTERN,

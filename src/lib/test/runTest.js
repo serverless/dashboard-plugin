@@ -1,7 +1,7 @@
-import { entries } from 'lodash'
-import fetch from 'isomorphic-fetch'
-import { TestError } from './errors'
-import objectSubsetEquals from './objectSubsetEquals'
+const { entries } = require('lodash')
+const fetch = require('isomorphic-fetch')
+const { TestError } = require('./errors')
+const objectSubsetEquals = require('./objectSubsetEquals')
 
 const runTest = async (testSpec, path, method, baseApiUrl) => {
   let body
@@ -60,4 +60,4 @@ const runTest = async (testSpec, path, method, baseApiUrl) => {
   }
 }
 
-export default runTest
+module.exports = runTest

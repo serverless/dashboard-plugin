@@ -1,4 +1,4 @@
-import allowedFunctionNamesPolicy from './allowed-function-names'
+const allowedFunctionNamesPolicy = require('./allowed-function-names')
 
 describe('allowedFunctionNamesPolicy', () => {
   let policy

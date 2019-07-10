@@ -2,9 +2,9 @@
  * Archive Service
  */
 
-import { archiveService, getAccessKeyForTenant } from '@serverless/platform-sdk'
+const { archiveService, getAccessKeyForTenant } = require('@serverless/platform-sdk')
 
-export default async function(ctx) {
+module.exports = async function(ctx) {
   // Defaults
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
 

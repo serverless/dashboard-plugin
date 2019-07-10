@@ -1,5 +1,5 @@
-import parseDeploymentData from './parse'
-import saveDeployment from './save'
+const parseDeploymentData = require('./parse')
+const saveDeployment = require('./save')
 
 jest.mock('./parse', () =>
   jest.fn().mockReturnValue(

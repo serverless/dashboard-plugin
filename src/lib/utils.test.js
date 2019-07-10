@@ -1,4 +1,4 @@
-import { upperFirst, pickResourceType } from './utils'
+const { upperFirst, pickResourceType } = require('./utils')
 
 describe('utils - upperFirst', () => {
   it('capitalizes the first letter if all lowercase', () => {

@@ -1,6 +1,6 @@
-import { version as pluginVersion } from '../../../package.json'
-import { version as sdkVersion } from '@serverless/platform-sdk/package.json'
-import parseDeploymentData from './parse'
+const { version: pluginVersion } = require('../../../package.json')
+const { version: sdkVersion } = require('@serverless/platform-sdk/package.json')
+const parseDeploymentData = require('./parse')
 
 const frameworkVersion = '1.38.0'
 

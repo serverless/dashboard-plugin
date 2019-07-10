@@ -1,5 +1,5 @@
-import getServerlessFilePath from './getServerlessFilePath'
-import fs from 'fs-extra'
+const getServerlessFilePath = require('./getServerlessFilePath')
+const fs = require('fs-extra')
 
 jest.mock('fs-extra', () => ({
   lstat: jest.fn().mockReturnValue(Promise.resolve({ isFile: jest.fn().mockReturnValue(true) }))

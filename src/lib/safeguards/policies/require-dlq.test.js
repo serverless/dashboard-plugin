@@ -1,4 +1,4 @@
-import requireDlq from './require-dlq'
+const requireDlq = require('./require-dlq')
 
 describe('requireDlq', () => {
   let policy

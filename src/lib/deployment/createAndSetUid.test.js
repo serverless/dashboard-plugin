@@ -1,4 +1,4 @@
-import createAndSetDeploymentUid from './createAndSetUid'
+const createAndSetDeploymentUid = require('./createAndSetUid')
 
 describe('createAndSetDeploymentUid', () => {
   it('generates a random id and sets it on the contxt', () => {

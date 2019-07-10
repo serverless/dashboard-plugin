@@ -1,8 +1,8 @@
-import _ from 'lodash'
-import { getAccessKeyForTenant, getDeployProfile } from '@serverless/platform-sdk'
-import { hookIntoVariableGetter } from './variables'
+const _ = require('lodash')
+const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk')
+const { hookIntoVariableGetter } = require('./variables')
 
-export const configureDeployProfile = async (ctx) => {
+module.exports.configureDeployProfile = async (ctx) => {
   const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
   const deploymentProfile = await getDeployProfile({
     accessKey,

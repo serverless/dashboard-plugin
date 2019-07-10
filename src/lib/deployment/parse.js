@@ -3,11 +3,11 @@
  * - This uses the new deployment data model.
  */
 
-import fs from 'fs-extra'
-import _ from 'lodash'
-import SDK from '@serverless/platform-sdk'
-import getServerlessFilePath from './getServerlessFilePath'
-import { version as packageJsonVersion } from '../../../package.json'
+const fs = require('fs-extra')
+const _ = require('lodash')
+const SDK = require('@serverless/platform-sdk')
+const getServerlessFilePath = require('./getServerlessFilePath')
+const { version: packageJsonVersion } = require('../../../package.json')
 
 /*
  * Parse Deployment Data
@@ -170,4 +170,4 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
   return deployment
 }
 
-export default parseDeploymentData
+module.exports = parseDeploymentData

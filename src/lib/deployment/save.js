@@ -3,9 +3,9 @@
  * - This uses the new deployment data model.
  */
 
-import parseDeploymentData from './parse'
+const parseDeploymentData = require('./parse')
 
-export default async function(ctx, archived = false) {
+module.exports = async function(ctx, archived = false) {
   ctx.sls.cli.log('Publishing service to the Enterprise Dashboard...', 'Serverless Enterprise')
 
   const deployment = await parseDeploymentData(ctx, undefined, undefined, archived)

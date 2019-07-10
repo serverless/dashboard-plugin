@@ -1,4 +1,4 @@
-import requireGlobalVpcPolicy from './require-global-vpc'
+const requireGlobalVpcPolicy = require('./require-global-vpc')
 
 describe('requireGlobalVpcPolicy', () => {
   let policy

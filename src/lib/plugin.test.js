@@ -1,17 +1,17 @@
-import chalk from 'chalk'
-import ServerlessEnterprisePlugin from './plugin'
-import getCredentials from './credentials'
-import logsCollection from './logsCollection'
-import wrap from './wrap'
-import wrapClean from './wrapClean'
-import runPolicies from './safeguards'
-import removeDestination from './removeDestination'
-import { saveDeployment, createAndSetDeploymentUid } from './deployment'
-import { generate } from './generateEvent'
-import { configureDeployProfile } from './deployProfile'
-import injectLogsIamRole from './injectLogsIamRole'
-import setApiGatewayAccessLogFormat from './setApiGatewayAccessLogFormat'
-import _ from 'lodash'
+const chalk = require('chalk')
+const ServerlessEnterprisePlugin = require('./plugin')
+const getCredentials = require('./credentials')
+const logsCollection = require('./logsCollection')
+const wrap = require('./wrap')
+const wrapClean = require('./wrapClean')
+const runPolicies = require('./safeguards')
+const removeDestination = require('./removeDestination')
+const { saveDeployment, createAndSetDeploymentUid } = require('./deployment')
+const { generate } = require('./generateEvent')
+const { configureDeployProfile } = require('./deployProfile')
+const injectLogsIamRole = require('./injectLogsIamRole')
+const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat')
+const _ = require('lodash')
 
 afterAll(() => jest.restoreAllMocks())
 

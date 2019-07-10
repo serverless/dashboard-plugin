@@ -1,6 +1,6 @@
-import fetch from 'isomorphic-fetch'
-import runTest from './runTest'
-import { TestError } from './errors'
+const fetch = require('isomorphic-fetch')
+const runTest = require('./runTest')
+const { TestError } = require('./errors')
 
 jest.mock('isomorphic-fetch', () =>
   jest.fn().mockImplementation((url) => {

@@ -1,5 +1,5 @@
-import { hookIntoVariableGetter } from './variables'
-import { getStateVariable } from '@serverless/platform-sdk'
+const { hookIntoVariableGetter } = require('./variables')
+const { getStateVariable } = require('@serverless/platform-sdk')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getStateVariable: jest.fn().mockImplementation(({ outputName }) => {

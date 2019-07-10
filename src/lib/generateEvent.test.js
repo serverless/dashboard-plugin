@@ -1,5 +1,5 @@
-import { generate } from './generateEvent'
-import zlib from 'zlib'
+const { generate } = require('./generateEvent')
+const zlib = require('zlib')
 
 describe('generating events', () => {
   afterEach(() => {

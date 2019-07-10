@@ -1,4 +1,6 @@
-export { default as parseDeploymentData } from './parse'
-export { default as saveDeployment } from './save'
-export { default as getServerlessFilePath } from './getServerlessFilePath'
-export { default as createAndSetDeploymentUid } from './createAndSetUid'
+module.exports = {
+  parseDeploymentData: require('./parse'),
+  saveDeployment: require('./save'),
+  getServerlessFilePath: require('./getServerlessFilePath'),
+  createAndSetDeploymentUid: require('./createAndSetUid')
+}

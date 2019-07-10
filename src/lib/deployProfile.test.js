@@ -1,6 +1,6 @@
-import { getAccessKeyForTenant, getDeployProfile } from '@serverless/platform-sdk'
-import { hookIntoVariableGetter } from './variables'
-import { configureDeployProfile } from './deployProfile'
+const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk')
+const { hookIntoVariableGetter } = require('./variables')
+const { configureDeployProfile } = require('./deployProfile')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey')),

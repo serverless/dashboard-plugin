@@ -1,5 +1,5 @@
-import getCredentialsLocal from './credentials'
-import { getCredentials, getAccessKeyForTenant } from '@serverless/platform-sdk'
+const getCredentialsLocal = require('./credentials')
+const { getCredentials, getAccessKeyForTenant } = require('@serverless/platform-sdk')
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('ACCESS_KEY')),

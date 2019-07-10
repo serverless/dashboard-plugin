@@ -1,5 +1,5 @@
-import wrapClean from './wrapClean'
-import fs from 'fs-extra'
+const wrapClean = require('./wrapClean')
+const fs = require('fs-extra')
 
 jest.mock('fs-extra', () => ({
   pathExistsSync: jest.fn().mockReturnValue(true),

@@ -1,6 +1,6 @@
-import { getCredentials, getAccessKeyForTenant } from '@serverless/platform-sdk'
+const { getCredentials, getAccessKeyForTenant } = require('@serverless/platform-sdk')
 
-export default async function(ctx) {
+module.exports = async function(ctx) {
   if (!process.env.SLS_CLOUD_ACCESS) {
     return Promise.resolve()
   }

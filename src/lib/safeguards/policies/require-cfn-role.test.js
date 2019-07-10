@@ -1,4 +1,4 @@
-import requireCfnRolePolicy from './require-cfn-role'
+const requireCfnRolePolicy = require('./require-cfn-role')
 
 describe('requireCfnRolePolicy', () => {
   let policy

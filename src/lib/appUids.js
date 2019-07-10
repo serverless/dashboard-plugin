@@ -1,6 +1,6 @@
-import { getApp } from '@serverless/platform-sdk'
+const { getApp } = require('@serverless/platform-sdk')
 
-export default async function(tenantName, appName) {
+module.exports = async function(tenantName, appName) {
   const app = await getApp({
     tenant: tenantName,
     app: appName

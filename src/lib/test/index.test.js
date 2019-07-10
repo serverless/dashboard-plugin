@@ -1,6 +1,6 @@
-import chalk from 'chalk'
-import runTest from './runTest'
-import { test as testFunc } from './'
+const chalk = require('chalk')
+const runTest = require('./runTest')
+const { test: testFunc } = require('./')
 
 const realStdoutWrite = process.stdout.write
 

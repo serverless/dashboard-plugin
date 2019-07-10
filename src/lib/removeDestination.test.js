@@ -1,5 +1,5 @@
-import { getAccessKeyForTenant, removeLogDestination } from '@serverless/platform-sdk'
-import removeDestination from './removeDestination'
+const { getAccessKeyForTenant, removeLogDestination } = require('@serverless/platform-sdk')
+const removeDestination = require('./removeDestination')
 
 jest.mock('@serverless/platform-sdk', () => ({
   removeLogDestination: jest.fn(),

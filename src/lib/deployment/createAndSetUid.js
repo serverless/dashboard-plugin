@@ -1,7 +1,7 @@
-import uuid from 'uuid'
+const uuid = require('uuid')
 
 const createAndSetDeploymentUid = (ctx) => {
   ctx.deploymentUid = uuid.v4()
 }
 
-export default createAndSetDeploymentUid
+module.exports = createAndSetDeploymentUid

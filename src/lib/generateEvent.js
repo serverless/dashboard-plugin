@@ -1,5 +1,5 @@
-import createEvent from '@serverless/event-mocks'
-import zlib from 'zlib'
+const createEvent = require('@serverless/event-mocks').default
+const zlib = require('zlib')
 
 function recordWrapper(event) {
   return {
@@ -28,7 +28,7 @@ function parsedBody(body) {
   return JSON.parse(body)
 }
 
-export const eventDict = {
+const eventDict = {
   'aws:apiGateway': (body) => ({ body: body }),
   'aws:websocket': (body) => ({ body: body }),
   'aws:sns': (body) => recordWrapper({ Sns: { Message: body } }),
@@ -58,7 +58,7 @@ async function wrapEvent(eventType, body) {
   throw new Error('Invalid event specified.')
 }
 
-export async function generate(ctx) {
+const generate = async function(ctx) {
   const { options } = ctx.sls.processedInput
   const body = options.body === undefined ? '{}' : options.body
   const event = await wrapEvent(options.type, body)
