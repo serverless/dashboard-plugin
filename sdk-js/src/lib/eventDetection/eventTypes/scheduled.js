@@ -1,7 +1,7 @@
 'use strict';
 
-const type = 'aws.scheduled'
+const type = 'aws.scheduled';
 
 module.exports = function eventType(event = {}) {
-  return event.source === 'aws.events' ? type : false
-}
+  return event.source === 'aws.events' ? type : false;
+};

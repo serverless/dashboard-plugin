@@ -1,8 +1,8 @@
 'use strict';
 
-const { get } = require('lodash')
+const { get } = require('lodash');
 
-const type = 'aws.alexaskill'
+const type = 'aws.alexaskill';
 
 module.exports = function eventType(e = {}) {
   return get(e, 'session.attributes') &&
@@ -10,5 +10,5 @@ module.exports = function eventType(e = {}) {
     get(e, 'context.System') &&
     get(e, 'request.requestId')
     ? type
-    : false
-}
+    : false;
+};

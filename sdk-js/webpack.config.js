@@ -1,6 +1,6 @@
 'use strict';
 
-const path = require('path')
+const path = require('path');
 
 module.exports = {
   target: 'node',
@@ -13,4 +13,4 @@ module.exports = {
     filename: 'index.js',
     libraryTarget: 'umd',
   },
-}
+};

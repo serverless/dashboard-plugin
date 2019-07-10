@@ -1,6 +1,6 @@
 'use strict';
 
-const detectEventType = require('./')
+const detectEventType = require('./');
 
 const alexaSkill = {
   session: {
@@ -68,12 +68,12 @@ const alexaSkill = {
       apiAccessToken: 'AxThk',
     },
   },
-}
+};
 
 const apiGateway = {
   path: '/test/hello',
   headers: {
-    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Encoding': 'gzip, deflate, lzma, sdch, br',
     'Accept-Language': 'en-US,en;q=0.8',
     'CloudFront-Forwarded-Proto': 'https',
@@ -82,11 +82,11 @@ const apiGateway = {
     'CloudFront-Is-SmartTV-Viewer': 'false',
     'CloudFront-Is-Tablet-Viewer': 'false',
     'CloudFront-Viewer-Country': 'US',
-    Host: 'wt6mne2s9k.execute-api.us-west-2.amazonaws.com',
+    'Host': 'wt6mne2s9k.execute-api.us-west-2.amazonaws.com',
     'Upgrade-Insecure-Requests': '1',
     'User-Agent':
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36 OPR/39.0.2256.48',
-    Via: '1.1 fb7cca60f0ecd82ce07790c9c5eef16c.cloudfront.net (CloudFront)',
+    'Via': '1.1 fb7cca60f0ecd82ce07790c9c5eef16c.cloudfront.net (CloudFront)',
     'X-Amz-Cf-Id': 'nBsWBOrSHMgnaROZJK1wGCZ9PcRcSpq_oSXZNQwQ10OTZL4cimZo3g==',
     'X-Forwarded-For': '192.168.100.1, 192.168.1.1',
     'X-Forwarded-Port': '443',
@@ -126,7 +126,7 @@ const apiGateway = {
   stageVariables: {
     stageVarName: 'stageVarValue',
   },
-}
+};
 
 const cloudFront = {
   Records: [
@@ -140,7 +140,7 @@ const cloudFront = {
           method: 'GET',
           uri: '/picture.jpg',
           headers: {
-            host: [
+            'host': [
               {
                 key: 'Host',
                 value: 'd111111abcdef8.cloudfront.net',
@@ -157,13 +157,13 @@ const cloudFront = {
       },
     },
   ],
-}
+};
 
 const customAuthorizerToken = {
   type: 'TOKEN',
   authorizationToken: 'allow',
   methodArn: 'arn:aws:execute-api:us-west-2:123456789012:ymy8tbxw7b/*/GET/',
-}
+};
 
 const customAuthorizerRequest = {
   type: 'REQUEST',
@@ -173,8 +173,8 @@ const customAuthorizerRequest = {
   httpMethod: 'GET',
   headers: {
     'X-AMZ-Date': '20170718T062915Z',
-    Accept: '*/*',
-    HeaderAuth1: 'headerValue1',
+    'Accept': '*/*',
+    'HeaderAuth1': 'headerValue1',
     'CloudFront-Viewer-Country': 'US',
     'CloudFront-Forwarded-Proto': 'https',
     'CloudFront-Is-Tablet-Viewer': 'false',
@@ -182,11 +182,11 @@ const customAuthorizerRequest = {
     'User-Agent': '...',
     'X-Forwarded-Proto': 'https',
     'CloudFront-Is-SmartTV-Viewer': 'false',
-    Host: '....execute-api.us-east-1.amazonaws.com',
+    'Host': '....execute-api.us-east-1.amazonaws.com',
     'Accept-Encoding': 'gzip, deflate',
     'X-Forwarded-Port': '443',
     'X-Amzn-Trace-Id': '...',
-    Via: '...cloudfront.net (CloudFront)',
+    'Via': '...cloudfront.net (CloudFront)',
     'X-Amz-Cf-Id': '...',
     'X-Forwarded-For': '..., ...',
     'Postman-Token': '...',
@@ -215,7 +215,7 @@ const customAuthorizerRequest = {
     httpMethod: 'GET',
     apiId: 's4x3opwd6i',
   },
-}
+};
 
 const firehose = {
   invocationId: 'invoked123',
@@ -247,7 +247,7 @@ const firehose = {
       },
     },
   ],
-}
+};
 
 const kinesis = {
   Records: [
@@ -267,7 +267,7 @@ const kinesis = {
       awsRegion: 'us-east-1',
     },
   ],
-}
+};
 
 const s3 = {
   Records: [
@@ -308,18 +308,18 @@ const s3 = {
       },
     },
   ],
-}
+};
 
 const scheduled = {
-  account: '123456789012',
-  region: 'us-east-1',
-  detail: {},
+  'account': '123456789012',
+  'region': 'us-east-1',
+  'detail': {},
   'detail-type': 'Scheduled Event',
-  source: 'aws.events',
-  time: '1970-01-01T00:00:00Z',
-  id: 'cdc73f9d-aea9-11e3-9d5a-835b769c0d9c',
-  resources: ['arn:aws:events:us-east-1:123456789012:rule/my-schedule'],
-}
+  'source': 'aws.events',
+  'time': '1970-01-01T00:00:00Z',
+  'id': 'cdc73f9d-aea9-11e3-9d5a-835b769c0d9c',
+  'resources': ['arn:aws:events:us-east-1:123456789012:rule/my-schedule'],
+};
 
 const slsIntegrationLambda = {
   body: {},
@@ -331,7 +331,8 @@ const slsIntegrationLambda = {
   },
   enhancedAuthContext: {},
   headers: {
-    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept':
+      'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'en-GB,en-US;q=0.8,en;q=0.6,zh-CN;q=0.4',
     'CloudFront-Forwarded-Proto': 'https',
@@ -340,11 +341,11 @@ const slsIntegrationLambda = {
     'CloudFront-Is-SmartTV-Viewer': 'false',
     'CloudFront-Is-Tablet-Viewer': 'false',
     'CloudFront-Viewer-Country': 'GB',
-    Host: 'ec5ycylws8.execute-api.us-east-1.amazonaws.com',
+    'Host': 'ec5ycylws8.execute-api.us-east-1.amazonaws.com',
     'upgrade-insecure-requests': '1',
     'User-Agent':
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
-    Via: '2.0 f165ce34daf8c0da182681179e863c24.cloudfront.net (CloudFront)',
+    'Via': '2.0 f165ce34daf8c0da182681179e863c24.cloudfront.net (CloudFront)',
     'X-Amz-Cf-Id': 'l06CAg2QsrALeQcLAUSxGXbm8lgMoMIhR2AjKa4AiKuaVnnGsOFy5g==',
     'X-Amzn-Trace-Id': 'Root=1-5970ef3e249c0321b2eef14aa513ae',
     'X-Forwarded-For': '94.117.120.169, 116.132.62.73',
@@ -369,7 +370,7 @@ const slsIntegrationLambda = {
     user: '',
   },
   stageVariables: {},
-}
+};
 
 const sns = {
   Records: [
@@ -394,7 +395,7 @@ const sns = {
       },
     },
   ],
-}
+};
 
 const sqs = {
   Records: [
@@ -415,58 +416,58 @@ const sqs = {
       messageAttributes: {},
     },
   ],
-}
+};
 
 describe('eventDetection', () => {
   it('identifies alexaSkill', () => {
-    expect(detectEventType(alexaSkill)).toEqual('aws.alexaskill')
-  })
+    expect(detectEventType(alexaSkill)).toEqual('aws.alexaskill');
+  });
 
   it('identifies apiGateway', () => {
-    expect(detectEventType(apiGateway)).toEqual('aws.apigateway.http')
-  })
+    expect(detectEventType(apiGateway)).toEqual('aws.apigateway.http');
+  });
 
   it('identifies cloudFront', () => {
-    expect(detectEventType(cloudFront)).toEqual('aws.cloudfront')
-  })
+    expect(detectEventType(cloudFront)).toEqual('aws.cloudfront');
+  });
 
   it('identifies token custom authorizers', () => {
-    expect(detectEventType(customAuthorizerToken)).toEqual('aws.apigateway.authorizer')
-  })
+    expect(detectEventType(customAuthorizerToken)).toEqual('aws.apigateway.authorizer');
+  });
 
   it('identifies request custom authorizers', () => {
-    expect(detectEventType(customAuthorizerRequest)).toEqual('aws.apigateway.authorizer')
-  })
+    expect(detectEventType(customAuthorizerRequest)).toEqual('aws.apigateway.authorizer');
+  });
 
   it('identifies firehose', () => {
-    expect(detectEventType(firehose)).toEqual('aws.firehose')
-  })
+    expect(detectEventType(firehose)).toEqual('aws.firehose');
+  });
 
   it('identifies kinesis', () => {
-    expect(detectEventType(kinesis)).toEqual('aws.kinesis')
-  })
+    expect(detectEventType(kinesis)).toEqual('aws.kinesis');
+  });
 
   it('identifies s3', () => {
-    expect(detectEventType(s3)).toEqual('aws.s3')
-  })
+    expect(detectEventType(s3)).toEqual('aws.s3');
+  });
 
   it('identifies scheduled', () => {
-    expect(detectEventType(scheduled)).toEqual('aws.scheduled')
-  })
+    expect(detectEventType(scheduled)).toEqual('aws.scheduled');
+  });
 
   it('identifies slsIntegrationLambda', () => {
-    expect(detectEventType(slsIntegrationLambda)).toEqual('aws.apigateway.http')
-  })
+    expect(detectEventType(slsIntegrationLambda)).toEqual('aws.apigateway.http');
+  });
 
   it('identifies sns', () => {
-    expect(detectEventType(sns)).toEqual('aws.sns')
-  })
+    expect(detectEventType(sns)).toEqual('aws.sns');
+  });
 
   it('identifies sqs', () => {
-    expect(detectEventType(sqs)).toEqual('aws.sqs')
-  })
+    expect(detectEventType(sqs)).toEqual('aws.sqs');
+  });
 
   it('does not identify an empty object', () => {
-    expect(detectEventType({})).toEqual(null)
-  })
-})
+    expect(detectEventType({})).toEqual(null);
+  });
+});
