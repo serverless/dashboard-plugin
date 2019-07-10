@@ -48,7 +48,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       if (outputValue.startsWith('CFN!?')) {
         const cfnOutput = _.find(
           cfnStack.Stacks[0].Outputs,
-          ({ OutputKey }) => OutputKey === `SFEOutput${outputKey}`
+          ({ OutputKey }) => OutputKey === `SFEOutput${outputValue.slice(5)}`
         );
         outputs[outputKey] = cfnOutput.OutputValue;
       }
