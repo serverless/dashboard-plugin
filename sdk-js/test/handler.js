@@ -8,38 +8,38 @@ module.exports.callbackError = (evt, ctx, cb) => {
   return cb('error', null)
 }
 
-module.exports.contextDone = (evt, ctx, cb) => {
+module.exports.contextDone = (evt, ctx) => {
   return ctx.done(null, 'success')
 }
 
-module.exports.contextSucceed = (evt, ctx, cb) => {
+module.exports.contextSucceed = (evt, ctx) => {
   return ctx.succeed('success')
 }
 
-module.exports.contextFail = (evt, ctx, cb) => {
+module.exports.contextFail = (evt, ctx) => {
   return ctx.fail('error')
 }
 
-module.exports.promise = (evt) => {
-  return new Promise((resolve, reject) => {
+module.exports.promise = () => {
+  return new Promise(resolve => {
     resolve('success')
   })
 }
 
-module.exports.promiseError = (evt) => {
-  return new Promise((resolve, reject) => {
+module.exports.promiseError = () => {
+  return new Promise(() => {
     throw new Error('This is an error')
   })
 }
 
-module.exports.async = async (evt) => {
-  return new Promise((resolve, reject) => {
+module.exports.async = async () => {
+  return new Promise(resolve => {
     resolve('success')
   })
 }
 
-module.exports.asyncError = async (evt) => {
-  return new Promise((resolve, reject) => {
+module.exports.asyncError = async () => {
+  return new Promise(() => {
     throw new Error('This is an error')
   })
 }

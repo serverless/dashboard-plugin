@@ -144,7 +144,8 @@ class ServerlessSDK {
         trans.set('compute.custom.region', process.env.AWS_REGION)
         trans.set('compute.custom.memorySize', process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE)
         trans.set('compute.custom.invokeId', context.invokeId)
-        trans.set('compute.custom.awsRequestId', context.awsRequestId)
+				trans.set('compute.custom.awsRequestId', context.awsRequestId)
+				// eslint-disable-next-line no-underscore-dangle
         trans.set('compute.custom.xTraceId', process.env._X_AMZN_TRACE_ID)
         trans.set('compute.custom.logGroupName', process.env.AWS_LAMBDA_LOG_GROUP_NAME)
         trans.set('compute.custom.logStreamName', process.env.AWS_LAMBDA_LOG_STREAM_NAME)

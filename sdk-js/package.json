@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "after-all-results": "^2.0.0",
+    "flat": "^4.1.0",
     "lodash": "^4.17.11",
     "require-in-the-middle": "^4.0.0",
     "stackman": "^3.0.2",
@@ -35,7 +36,16 @@
       "ecmaVersion": 2018
     },
     "rules": {
-      "no-console": ["error", { "allow": ["info"] }]
+      "no-console": [
+        "error",
+        {
+          "allow": [
+            "debug",
+            "error",
+            "info"
+          ]
+        }
+      ]
     }
   },
   "eslintIgnore": [
