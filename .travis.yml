@@ -69,7 +69,23 @@ jobs:
     # In most cases it's best to configure one job per platform & Node.js version combination
     # (job boot & setup takes ca 1 minute, one task run usually lasts seconds)
 
+    - name: 'Prettier check updated, Lint updated, Unit Tests - Node.js v12'
+      if: type = pull_request
+      node_js: 12
+      script:
+        - npm run prettier-check:updated
+        - npm run lint:updated
+        - cd sdk-js
+        - npm run prettier-check:updated
+        - npm run lint:updated
+        - cd ..
+        - npm test
+        - cd sdk-js
+        - npm test
+        - cd ..
+
     - name: 'Lint, Unit Tests - Node.js v12'
+      if: type != pull_request
       node_js: 12
       script:
         - npm run lint
