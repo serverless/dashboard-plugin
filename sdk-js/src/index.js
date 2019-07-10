@@ -194,6 +194,7 @@ class ServerlessSDK {
          * - TODO: Inspect outgoing HTTP status codes
          */
 
+        let capturedError = null
         const wrappedCallback = (error, res) => {
           try {
             if (self.$.config.debug) {
@@ -204,8 +205,11 @@ class ServerlessSDK {
               return callback.call(functionContext, error || null, res || null);
             };
 
-            if (error) {
-              return trans.error(error, cb);
+            if (error || capturedError) {
+              if (capturedError) {
+                return trans.error(capturedError, false, cb);
+              }
+              return trans.error(error, true, cb);
             }
             return trans.end(cb);
           } finally {
@@ -222,6 +226,10 @@ class ServerlessSDK {
         context.fail = err => {
           return wrappedCallback(err, null);
         };
+        context.captureError = (err) => {
+          capturedError = err;
+        };
+        ServerlessSDK._captureError = context.captureError;
 
         // Set up span listener
         spanEmitter.on('span', span => {
@@ -259,6 +267,10 @@ class ServerlessSDK {
     throw new Error(
       `ServerlessSDK: Invalid Functions-as-a-Service compute type "${meta.computeType}"`
     );
+  }
+
+  static captureError(error) {
+    ServerlessSDK._captureError(error);
   }
 }
 
