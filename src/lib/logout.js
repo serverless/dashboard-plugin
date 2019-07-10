@@ -1,8 +1,13 @@
-import { logout } from '@serverless/platform-sdk'
+'use strict';
 
-export default async function(ctx) {
+const { logout } = require('@serverless/platform-sdk');
+
+module.exports = async function(ctx) {
   return logout().then(() => {
-    ctx.sls.cli.log('You sucessfully logged out of Serverless Enterprise.', 'Serverless Enterprise')
-    process.exit(0)
-  })
-}
+    ctx.sls.cli.log(
+      'You sucessfully logged out of Serverless Enterprise.',
+      'Serverless Enterprise'
+    );
+    process.exit(0);
+  });
+};

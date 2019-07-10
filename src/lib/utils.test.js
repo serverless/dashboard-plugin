@@ -1,16 +1,18 @@
-import { upperFirst, pickResourceType } from './utils'
+'use strict';
+
+const { upperFirst, pickResourceType } = require('./utils');
 
 describe('utils - upperFirst', () => {
   it('capitalizes the first letter if all lowercase', () => {
-    expect(upperFirst('foobar')).toEqual('Foobar')
-  })
+    expect(upperFirst('foobar')).toEqual('Foobar');
+  });
   it('capitalizes the first letter if camelCase', () => {
-    expect(upperFirst('fooBar')).toEqual('FooBar')
-  })
+    expect(upperFirst('fooBar')).toEqual('FooBar');
+  });
   it('is a no-op if alreay capitalized', () => {
-    expect(upperFirst('FooBar')).toEqual('FooBar')
-  })
-})
+    expect(upperFirst('FooBar')).toEqual('FooBar');
+  });
+});
 
 describe('utils - pickResourceType', () => {
   it('picks the right resource', () => {
@@ -19,15 +21,15 @@ describe('utils - pickResourceType', () => {
         {
           Resources: {
             FooBar1: {
-              Type: 'AWS::FooBar'
+              Type: 'AWS::FooBar',
             },
             FooBar2: {
-              Type: 'AWS::FooBar'
+              Type: 'AWS::FooBar',
             },
             FooBaz: {
-              Type: 'AWS::FooBaz'
-            }
-          }
+              Type: 'AWS::FooBaz',
+            },
+          },
         },
         'AWS::FooBar'
       )
@@ -35,15 +37,15 @@ describe('utils - pickResourceType', () => {
       {
         key: 'FooBar1',
         resource: {
-          Type: 'AWS::FooBar'
-        }
+          Type: 'AWS::FooBar',
+        },
       },
       {
         key: 'FooBar2',
         resource: {
-          Type: 'AWS::FooBar'
-        }
-      }
-    ])
-  })
-})
+          Type: 'AWS::FooBar',
+        },
+      },
+    ]);
+  });
+});

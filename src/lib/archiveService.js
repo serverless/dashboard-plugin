@@ -1,14 +1,16 @@
+'use strict';
+
 /*
  * Archive Service
  */
 
-import { archiveService, getAccessKeyForTenant } from '@serverless/platform-sdk'
+const { archiveService, getAccessKeyForTenant } = require('@serverless/platform-sdk');
 
-export default async function(ctx) {
+module.exports = async function(ctx) {
   // Defaults
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant);
 
-  ctx.sls.cli.log('Archiving this service in the Enterprise Dashboard...', 'Serverless Enterprise')
+  ctx.sls.cli.log('Archiving this service in the Enterprise Dashboard...', 'Serverless Enterprise');
 
   const data = {
     name: ctx.sls.service.service,
@@ -16,21 +18,21 @@ export default async function(ctx) {
     app: ctx.sls.service.app,
     provider: ctx.sls.service.provider.name,
     region: ctx.sls.service.provider.region,
-    accessKey
-  }
+    accessKey,
+  };
 
   return archiveService(data)
     .then(() => {
       ctx.sls.cli.log(
         'Successfully archived this service in the Enterprise Dashboard...',
         'Serverless Enterprise'
-      )
+      );
     })
-    .catch((err) => {
+    .catch(err => {
       ctx.sls.cli.log(
         'Failed to archive this service in the Enterprise Dashboard...',
         'Serverless Enterprise'
-      )
-      throw new Error(err)
-    })
-}
+      );
+      throw new Error(err);
+    });
+};

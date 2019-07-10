@@ -1,7 +1,9 @@
+'use strict';
+
 // mostly copied from https://github.com/UnitedIncome/serverless-python-requirements/blob/master/lib/zipTree.js
 // modified to use native promises and fs-extra's promise support and use import/export
-import fs from 'fs-extra'
-import path from 'path'
+const fs = require('fs-extra');
+const path = require('path');
 
 /**
  * Add a directory recursively to a zip file. Files in src will be added to the top folder of zip.
@@ -9,25 +11,25 @@ import path from 'path'
  * @param {string} src the source folder.
  * @return {Promise} a promise offering the original JSZip object.
  */
-export async function addTree(zip, src) {
-  const srcN = path.normalize(src)
+module.exports.addTree = async function self(zip, src) {
+  const srcN = path.normalize(src);
 
-  const contents = await fs.readdir(srcN)
+  const contents = await fs.readdir(srcN);
   await Promise.all(
-    contents.map((name) => {
-      const srcPath = path.join(srcN, name)
+    contents.map(name => {
+      const srcPath = path.join(srcN, name);
 
-      return fs.stat(srcPath).then((stat) => {
+      return fs.stat(srcPath).then(stat => {
         if (stat.isDirectory()) {
-          return addTree(zip.folder(name), srcPath)
+          return self(zip.folder(name), srcPath);
         }
-        const opts = { date: 0, unixPermissions: stat.mode }
-        return fs.readFile(srcPath).then((data) => zip.file(srcPath, data, opts))
-      })
+        const opts = { date: 0, unixPermissions: stat.mode };
+        return fs.readFile(srcPath).then(data => zip.file(srcPath, data, opts));
+      });
     })
-  )
-  return zip // Original zip for chaining.
-}
+  );
+  return zip; // Original zip for chaining.
+};
 
 /**
  * Write zip contents to a file.
@@ -35,16 +37,16 @@ export async function addTree(zip, src) {
  * @param {string} targetPath path to write the zip file to.
  * @return {Promise} a promise resolving to null.
  */
-export const writeZip = (zip, targetPath) =>
-  new Promise((resolve) =>
+module.exports.writeZip = (zip, targetPath) =>
+  new Promise(resolve =>
     zip
       .generateNodeStream({
-        platform: process.platform == 'win32' ? 'dos' : 'unix',
+        platform: process.platform === 'win32' ? 'dos' : 'unix',
         compression: 'deflate',
         compressionOptions: {
-          level: 9
-        }
+          level: 9,
+        },
       })
       .pipe(fs.createWriteStream(targetPath))
       .on('finish', resolve)
-  )
+  );

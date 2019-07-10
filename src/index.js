@@ -1,5 +1,8 @@
-require('./runtime')
-const { version } = require('@serverless/platform-sdk/package.json')
+'use strict';
 
-module.exports = require('./lib/plugin').default
-module.exports.sdkVersion = version
+require('./runtime');
+const { version } = require('@serverless/platform-sdk/package.json');
+
+module.exports = require('./lib/plugin');
+
+module.exports.sdkVersion = version;

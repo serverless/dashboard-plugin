@@ -1,22 +1,24 @@
+'use strict';
+
 module.exports = function allowedRuntimesPolicy(policy, service, allowedRuntimes) {
-  let failed = false
-  for (const fnName in service.declaration.functions || {}) {
+  let failed = false;
+  for (const fnName of Object.keys(service.declaration.functions)) {
     if (
       !allowedRuntimes.includes(
         service.declaration.functions[fnName].runtime || service.declaration.provider.runtime
       )
     ) {
-      failed = true
+      failed = true;
       policy.fail(
         `Runtime of function ${fnName} not in list of permitted runtimes: ${JSON.stringify(
           allowedRuntimes
         )}`
-      )
+      );
     }
   }
   if (!failed) {
-    policy.approve()
+    policy.approve();
   }
-}
+};
 
-module.exports.docs = 'https://git.io/fjfkx'
+module.exports.docs = 'https://git.io/fjfkx';

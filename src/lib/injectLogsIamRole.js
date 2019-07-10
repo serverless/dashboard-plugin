@@ -1,13 +1,15 @@
-import { getAccessKeyForTenant, getMetadata } from '@serverless/platform-sdk'
-import { entries, values } from 'lodash'
+'use strict';
 
-export default async function(ctx) {
+const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk');
+const { entries, values } = require('lodash');
+
+module.exports = async function(ctx) {
   if (
     ctx.sls.service.custom &&
     ctx.sls.service.custom.enterprise &&
     ctx.sls.service.custom.enterprise.collectLambdaLogs === false
   ) {
-    return
+    return;
   }
 
   if (
@@ -16,12 +18,12 @@ export default async function(ctx) {
     ).length === 0
   ) {
     // no log groups
-    return
+    return;
   }
 
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant);
 
-  const { awsAccountId } = await getMetadata(accessKey)
+  const { awsAccountId } = await getMetadata(accessKey);
   ctx.sls.service.provider.compiledCloudFormationTemplate.Resources.EnterpriseLogAccessIamRole = {
     Type: 'AWS::IAM::Role',
     Properties: {
@@ -31,16 +33,16 @@ export default async function(ctx) {
           {
             Effect: 'Allow',
             Principal: {
-              AWS: `arn:aws:iam::${awsAccountId}:root`
+              AWS: `arn:aws:iam::${awsAccountId}:root`,
             },
             Action: 'sts:AssumeRole',
             Condition: {
               StringEquals: {
-                'sts:ExternalId': `ServerlessEnterprise-${ctx.sls.service.tenantUid}`
-              }
-            }
-          }
-        ]
+                'sts:ExternalId': `ServerlessEnterprise-${ctx.sls.service.tenantUid}`,
+              },
+            },
+          },
+        ],
       },
       Policies: [
         {
@@ -54,18 +56,18 @@ export default async function(ctx) {
                 Resource: entries(ctx.sls.service.provider.compiledCloudFormationTemplate.Resources)
                   .filter(([, { Type }]) => Type === 'AWS::Logs::LogGroup')
                   .map(([logicalId]) => ({
-                    'Fn::GetAtt': [logicalId, 'Arn']
-                  }))
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
+                    'Fn::GetAtt': [logicalId, 'Arn'],
+                  })),
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
   ctx.sls.service.provider.compiledCloudFormationTemplate.Outputs.EnterpriseLogAccessIamRole = {
     Value: {
-      'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn']
-    }
-  }
-}
+      'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn'],
+    },
+  };
+};

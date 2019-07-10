@@ -8,12 +8,17 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "./scripts/build.sh",
-    "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
-    "webpack": "webpack",
-    "lint": "if [ -z \"$CI\" ]; then eslint src integration-testing/*.js --fix --cache; else eslint src integration-testing/*.js; fi",
+    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'",
+    "lint": "eslint --cache .",
     "lint:staged": "lint-staged",
+    "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",
+    "prettier-check": "prettier -c --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c --ignore-path .eslintignore",
+    "prettify": "prettier --write --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write --ignore-path .eslintignore",
     "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
-    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'"
+    "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
+    "webpack": "webpack"
   },
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
@@ -39,26 +44,56 @@
   "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
-    "@babel/node": "^7.0.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
-    "@babel/register": "^7.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "@serverless/eslint-config": "^1.0.1",
     "child-process-ext": "^2.0.0",
-    "eslint": "^5.8.0",
-    "eslint-config-prettier": "^3.1.0",
+    "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-prettier": "^3.0.0",
+    "git-list-updated": "^1.2.0",
     "jest": "^24.8.0",
     "jest-circus": "^24.8.0",
     "lint-staged": "^8.1.5",
     "pre-commit": "^1.2.2",
-    "prettier": "^1.14.3",
+    "prettier": "^1.18.2",
     "strip-ansi": "^5.2.0",
-    "tar": "^4.4.10",
-    "webpack": "4.24.0"
+    "tar": "^4.4.10"
+  },
+  "eslintConfig": {
+    "extends": "@serverless/eslint-config/node",
+    "root": true,
+    "parserOptions": {
+      "ecmaVersion": 2018
+    },
+    "rules": {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.test.js",
+            "**/scripts/**",
+            "**/integration-testing/**",
+            "prettier.config.js"
+          ]
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "integration-testing/**"
+        ],
+        "rules": {
+          "no-console": [
+            "error",
+            {
+              "allow": [
+                "info"
+              ]
+            }
+          ]
+        }
+      }
+    ]
   },
   "author": "",
   "license": "Apache-2.0",

@@ -1,19 +1,21 @@
+'use strict';
+
 /*
  * Logs Collection
  * - Collects `SERVERLESS PLATFORM || REPORT` from lambda logs
  * - Collects `sls-access-logs` from API Gateway access logs
  */
 
-import {
+const {
   pickResourceType,
   upperFirst,
   API_GATEWAY_FILTER_PATTERN,
-  LAMBDA_FILTER_PATTERN
-} from './utils'
+  LAMBDA_FILTER_PATTERN,
+} = require('./utils');
 
-import { getAccessKeyForTenant, getLogDestination } from '@serverless/platform-sdk'
+const { getAccessKeyForTenant, getLogDestination } = require('@serverless/platform-sdk');
 
-export default async (ctx) => {
+module.exports = async ctx => {
   if (
     ctx.sls.service.custom &&
     ctx.sls.service.custom.enterprise &&
@@ -22,20 +24,20 @@ export default async (ctx) => {
     ctx.sls.cli.log(
       'Info: This plugin is not configured to collect AWS Lambda Logs.',
       'Serverless Enterprise'
-    )
-    return
+    );
+    return;
   }
 
-  const template = ctx.sls.service.provider.compiledCloudFormationTemplate
+  const template = ctx.sls.service.provider.compiledCloudFormationTemplate;
 
   // Gather possible targets
-  const logGroups = pickResourceType(template, 'AWS::Logs::LogGroup')
+  const logGroups = pickResourceType(template, 'AWS::Logs::LogGroup');
   if (logGroups.length === 0) {
-    return
+    return;
   }
 
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
-  const { Account } = await ctx.provider.request('STS', 'getCallerIdentity', {})
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant);
+  const { Account } = await ctx.provider.request('STS', 'getCallerIdentity', {});
   const destinationOpts = {
     accessKey,
     appUid: ctx.sls.service.appUid,
@@ -43,31 +45,31 @@ export default async (ctx) => {
     serviceName: ctx.sls.service.getServiceName(),
     stageName: ctx.provider.getStage(),
     regionName: ctx.provider.getRegion(),
-    accountId: Account
-  }
+    accountId: Account,
+  };
 
-  let destinationArn
+  let destinationArn;
 
   try {
-    ;({ destinationArn } = await getLogDestination(destinationOpts))
+    ({ destinationArn } = await getLogDestination(destinationOpts));
   } catch (e) {
     if (e.message && e.message.includes('not supported in region')) {
       ctx.sls.cli.log(
         `Warning: Lambda log collection is not supported in ${ctx.provider.getRegion()}`
-      )
-      return
+      );
+      return;
     }
-    throw new Error(e.message)
+    throw new Error(e.message);
   }
 
   // For each log group, set up subscription
-  for (const logGroupIndex in logGroups) {
-    const logGroupKey = logGroups[logGroupIndex].key
-    const logGroupName = logGroups[logGroupIndex].resource.Properties.LogGroupName
+  for (const logGroupIndex of Object.keys(logGroups)) {
+    const logGroupKey = logGroups[logGroupIndex].key;
+    const logGroupName = logGroups[logGroupIndex].resource.Properties.LogGroupName;
 
     const filterPattern = logGroupName.startsWith('/aws/api-gateway/')
       ? API_GATEWAY_FILTER_PATTERN
-      : LAMBDA_FILTER_PATTERN
+      : LAMBDA_FILTER_PATTERN;
 
     template.Resources[`CloudWatchLogsSubscriptionFilter${upperFirst(logGroupKey)}`] = {
       Type: 'AWS::Logs::SubscriptionFilter',
@@ -75,9 +77,9 @@ export default async (ctx) => {
         DestinationArn: destinationArn,
         FilterPattern: filterPattern,
         LogGroupName: {
-          Ref: logGroupKey
-        }
-      }
-    }
+          Ref: logGroupKey,
+        },
+      },
+    };
   }
-}
+};

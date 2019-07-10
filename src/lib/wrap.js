@@ -1,20 +1,22 @@
+'use strict';
+
 /*
  * Wrap
  * - Bundles the ServerlessSDK into your functions
  * - Wraps your function handlers with the ServerlessSDK
  */
 
-import fs from 'fs-extra'
-import path from 'path'
-import _ from 'lodash'
-import JSZip from 'jszip'
-import { addTree, writeZip } from './zipTree'
+const fs = require('fs-extra');
+const path = require('path');
+const _ = require('lodash');
+const JSZip = require('jszip');
+const { addTree, writeZip } = require('./zipTree');
 
 /*
  * Wrap Node.js Functions
  */
 
-export const wrapNodeJs = (fn, ctx) => {
+const wrapNodeJs = (fn, ctx) => {
   const newHandlerCode = `var serverlessSDK = require('./serverless-sdk/index.js')
 serverlessSDK = new serverlessSDK({
 tenantId: '${ctx.sls.service.tenant}',
@@ -31,102 +33,102 @@ try {
 } catch (error) {
   module.exports.handler = serverlessSDK.handler(() => { throw error }, handlerWrapperArgs)
 }
-`
+`;
 
   // Create new handlers
-  fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode)
-}
+  fs.writeFileSync(path.join(ctx.sls.config.servicePath, `${fn.entryNew}.js`), newHandlerCode);
+};
 
-export default async (ctx) => {
+module.exports = async ctx => {
   // Check if we support the provider
   if (ctx.sls.service.provider.name !== 'aws') {
     ctx.sls.cli.log(
       'Warning: The Serverless Platform Plugin does not current support this provider.'
-    )
+    );
   }
 
   /*
    * Prepare Functions
    */
-  const { functions } = ctx.sls.service
-  ctx.state.functions = {}
-  for (const func in functions) {
+  const { functions } = ctx.sls.service;
+  ctx.state.functions = {};
+  for (const func of Object.keys(functions)) {
     const runtime = functions[func].runtime
       ? functions[func].runtime
-      : ctx.sls.service.provider.runtime
+      : ctx.sls.service.provider.runtime;
     if (!runtime.includes('nodejs')) {
-      continue
+      continue;
     }
 
     // the default is 6s: https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/
-    const timeout = functions[func].timeout ? functions[func].timeout : 6
+    const timeout = functions[func].timeout ? functions[func].timeout : 6;
 
     // Process name
-    let name
+    let name;
     if (functions[func].name) {
-      ;({ name } = functions[func])
+      ({ name } = functions[func]);
     } else {
-      name = `${ctx.sls.service.service}-${ctx.sls.service.provider.stage}-${func}`
+      name = `${ctx.sls.service.service}-${ctx.sls.service.provider.stage}-${func}`;
     }
 
     // Process handler
-    const entry = functions[func].handler.split('.')[0]
-    const handler = functions[func].handler.split('.')[1]
+    const entry = functions[func].handler.split('.')[0];
+    const handler = functions[func].handler.split('.')[1];
 
     ctx.state.functions[func] = {
       key: func,
-      name: name,
-      runtime: runtime,
-      timeout: timeout,
+      name,
+      runtime,
+      timeout,
       entryOrig: entry,
       handlerOrig: handler,
       entryNew: `s-${func}`,
-      handlerNew: `handler`
-    }
+      handlerNew: 'handler',
+    };
   }
 
   /*
    * Wrap Functions
    */
 
-  ctx.state.pathAssets = path.join(ctx.sls.config.servicePath, 'serverless-sdk')
+  ctx.state.pathAssets = path.join(ctx.sls.config.servicePath, 'serverless-sdk');
 
   // Clear existing handler dir
   if (fs.pathExistsSync(ctx.state.pathAssets)) {
-    fs.removeSync(ctx.state.pathAssets)
+    fs.removeSync(ctx.state.pathAssets);
   }
 
   // Create new handler dir
-  fs.ensureDirSync(ctx.state.pathAssets)
+  fs.ensureDirSync(ctx.state.pathAssets);
 
   // Copy SDK
-  const pathSdk = path.resolve(__dirname, '../../sdk-js/dist/index.js')
-  const pathSdkDest = path.join(ctx.state.pathAssets, './index.js')
-  fs.copySync(pathSdk, pathSdkDest)
+  const pathSdk = path.resolve(__dirname, '../../sdk-js/dist/index.js');
+  const pathSdkDest = path.join(ctx.state.pathAssets, './index.js');
+  fs.copySync(pathSdk, pathSdkDest);
 
   // Prepare & Copy Function Handlers
-  for (var fn in ctx.state.functions) {
-    const func = ctx.state.functions[fn]
+  for (const fn of Object.keys(ctx.state.functions)) {
+    const func = ctx.state.functions[fn];
 
     if (!func.runtime.includes('nodejs')) {
-      return
+      return;
     }
 
     // Add the Serverless SDK wrapper around the function
-    wrapNodeJs(func, ctx)
+    wrapNodeJs(func, ctx);
 
     // Re-assign the handler to point to the wrapper
-    ctx.sls.service.functions[fn].handler = `${func.entryNew}.${func.handlerNew}`
+    ctx.sls.service.functions[fn].handler = `${func.entryNew}.${func.handlerNew}`;
 
     if (_.get(ctx.sls.service.functions[fn], 'package.artifact')) {
-      const zipData = await fs.readFile(ctx.sls.service.functions[fn].package.artifact)
-      const zip = await JSZip.loadAsync(zipData)
+      const zipData = await fs.readFile(ctx.sls.service.functions[fn].package.artifact);
+      const zip = await JSZip.loadAsync(zipData);
       const wrapperData = await fs.readFile(
         path.join(ctx.sls.config.servicePath, `${func.entryNew}.js`)
-      )
-      zip.file(`${func.entryNew}.js`, wrapperData)
-      await addTree(zip, 'serverless-sdk')
-      await writeZip(zip, ctx.sls.service.functions[fn].package.artifact)
+      );
+      zip.file(`${func.entryNew}.js`, wrapperData);
+      await addTree(zip, 'serverless-sdk');
+      await writeZip(zip, ctx.sls.service.functions[fn].package.artifact);
     } else if (
       _.get(
         ctx.sls.service.functions[fn],
@@ -136,25 +138,27 @@ export default async (ctx) => {
     ) {
       // add include directives for handler file & sdk lib
       if (ctx.sls.service.functions[fn].package === undefined) {
-        ctx.sls.service.functions[fn].package = {}
+        ctx.sls.service.functions[fn].package = {};
       }
       if (ctx.sls.service.functions[fn].package.include === undefined) {
-        ctx.sls.service.functions[fn].package.include = []
+        ctx.sls.service.functions[fn].package.include = [];
       }
-      ctx.sls.service.functions[fn].package.include.push(`${func.entryNew}.js`)
-      ctx.sls.service.functions[fn].package.include.push('serverless-sdk/**')
+      ctx.sls.service.functions[fn].package.include.push(`${func.entryNew}.js`);
+      ctx.sls.service.functions[fn].package.include.push('serverless-sdk/**');
     }
   }
 
   // add include directives for handler file & sdk lib
   if (!_.get(ctx.sls.service, 'package.individually', false)) {
     if (ctx.sls.service.package === undefined) {
-      ctx.sls.service.package = {}
+      ctx.sls.service.package = {};
     }
     if (ctx.sls.service.package.include === undefined) {
-      ctx.sls.service.package.include = []
+      ctx.sls.service.package.include = [];
     }
-    ctx.sls.service.package.include.push('s-*.js')
-    ctx.sls.service.package.include.push('serverless-sdk/**')
+    ctx.sls.service.package.include.push('s-*.js');
+    ctx.sls.service.package.include.push('serverless-sdk/**');
   }
-}
+};
+
+module.exports.wrapNodeJs = wrapNodeJs;
