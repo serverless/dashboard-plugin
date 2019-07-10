@@ -7,6 +7,7 @@
     "build": "NODE_ENV=production npm run folder && npm run webpack",
     "folder": "rm -rf dist && mkdir dist",
     "lint": "eslint --cache .",
+    "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",
     "test": "jest src",
     "webpack": "webpack"
   },
@@ -24,6 +25,7 @@
     "@serverless/eslint-config": "^1.0.1",
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.18.0",
+    "git-list-updated": "^1.2.0",
     "jest": "^24.7.1",
     "prettier": "^1.14.3",
     "webpack": "^4.30.0",

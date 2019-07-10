@@ -11,6 +11,7 @@
     "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'",
     "lint": "eslint --cache .",
     "lint:staged": "lint-staged",
+    "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",
     "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack"
@@ -44,6 +45,7 @@
     "child-process-ext": "^2.0.0",
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.14.0",
+    "git-list-updated": "^1.2.0",
     "jest": "^24.8.0",
     "jest-circus": "^24.8.0",
     "lint-staged": "^8.1.5",
