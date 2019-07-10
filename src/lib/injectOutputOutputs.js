@@ -1,6 +1,6 @@
 'use strict';
 
-const { entries, values } = require('lodash');
+const { entries } = require('lodash');
 
 module.exports = async function(ctx) {
   for (const [outputKey, outputValue] of entries(ctx.sls.service.outputs || {})) {
