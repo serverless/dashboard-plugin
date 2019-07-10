@@ -91,10 +91,6 @@
       }
     ]
   },
-  "eslintIgnore": [
-    "dist",
-    "sdk-js"
-  ],
   "author": "",
   "license": "Apache-2.0",
   "lint-staged": {
