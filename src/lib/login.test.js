@@ -4,13 +4,11 @@ const sdk = require('@serverless/platform-sdk');
 const login = require('./login');
 
 jest.mock('@serverless/platform-sdk', () => ({
-  login: jest
-    .fn()
-    .mockImplementation(tenant =>
-      tenant === 'signup'
-        ? Promise.reject('Complete sign-up before logging in.')
-        : Promise.resolve()
-    ),
+  login: jest.fn().mockImplementation(tenant => {
+    return tenant === 'signup'
+      ? Promise.reject('Complete sign-up before logging in.')
+      : Promise.resolve();
+  }),
 }));
 
 describe('login', () => {

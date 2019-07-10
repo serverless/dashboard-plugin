@@ -8,8 +8,7 @@ const serializeError = require('./serializeError');
 const { parseDeploymentData } = require('./deployment');
 
 module.exports = function(ctx) {
-  return async function(error, id) {
-    // eslint-disable-line
+  return async function(error) {
     /*
      * Error: Failed Deployment
      * - Handle failed deployments
