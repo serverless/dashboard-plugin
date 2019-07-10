@@ -14,8 +14,7 @@ describe('injectOutputOutputs', () => {
         service: {
           outputs: {
             foo: 'bar',
-            iamRole: { 'Fn::GetAtt': [ 'IamRoleLambdaExecution', 'Arn' ],
-            },
+            iamRole: { 'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'] },
           },
           provider: { compiledCloudFormationTemplate: { Outputs: {} } },
         },
@@ -26,7 +25,7 @@ describe('injectOutputOutputs', () => {
       Outputs: {
         SFEOutputiamRole: {
           Description: 'SFE output "iamRole"',
-          Value: { 'Fn::GetAtt': [ 'IamRoleLambdaExecution', 'Arn' ] },
+          Value: { 'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'] },
         },
       },
     });
