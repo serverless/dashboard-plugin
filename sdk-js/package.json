@@ -6,9 +6,9 @@
   "scripts": {
     "build": "NODE_ENV=production npm run folder && npm run webpack",
     "folder": "rm -rf dist && mkdir dist",
-    "webpack": "webpack",
     "lint": "eslint --cache .",
-    "test": "jest src"
+    "test": "jest src",
+    "webpack": "webpack"
   },
   "author": "",
   "license": "ISC",

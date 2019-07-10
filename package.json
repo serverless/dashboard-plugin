@@ -8,12 +8,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "./scripts/build.sh",
-    "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
-    "webpack": "webpack",
+    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'",
     "lint": "eslint --cache .",
     "lint:staged": "lint-staged",
     "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
-    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'"
+    "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
+    "webpack": "webpack"
   },
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
