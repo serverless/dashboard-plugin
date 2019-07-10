@@ -1,26 +1,26 @@
 'use strict';
 
-const { version: pluginVersion } = require('../../../package.json')
-const { version: sdkVersion } = require('@serverless/platform-sdk/package.json')
-const parseDeploymentData = require('./parse')
+const { version: pluginVersion } = require('../../../package.json');
+const { version: sdkVersion } = require('@serverless/platform-sdk/package.json');
+const parseDeploymentData = require('./parse');
 
-const frameworkVersion = '1.38.0'
+const frameworkVersion = '1.38.0';
 
 jest.mock('./getServerlessFilePath', () =>
   jest.fn().mockReturnValue(Promise.resolve('serverless.yml'))
-)
+);
 jest.mock('fs-extra', () => ({
   readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar')),
-}))
+}));
 
 describe('parseDeploymentData', () => {
-  let getAccountId
-  let request
-  let getStackName
-  let getServiceEndpointRegex
+  let getAccountId;
+  let request;
+  let getStackName;
+  let getServiceEndpointRegex;
 
   beforeEach(() => {
-    getAccountId = jest.fn().mockReturnValue('account-id')
+    getAccountId = jest.fn().mockReturnValue('account-id');
     request = jest.fn().mockReturnValue(
       Promise.resolve({
         Stacks: [
@@ -42,10 +42,10 @@ describe('parseDeploymentData', () => {
           },
         ],
       })
-    )
-    getStackName = jest.fn().mockReturnValue('stackname')
-    getServiceEndpointRegex = jest.fn().mockReturnValue('apig')
-  })
+    );
+    getStackName = jest.fn().mockReturnValue('stackname');
+    getServiceEndpointRegex = jest.fn().mockReturnValue('apig');
+  });
 
   it('creates a deployment object correctly w/ no plugins', async () => {
     const serverless = {
@@ -68,7 +68,7 @@ describe('parseDeploymentData', () => {
         },
         outputs: { foo: 'bar' },
       },
-    }
+    };
     const provider = {
       getAccountId,
       request,
@@ -78,13 +78,13 @@ describe('parseDeploymentData', () => {
       },
       getStage: jest.fn().mockReturnValue('dev'),
       getRegion: jest.fn().mockReturnValue('us-est-1'),
-    }
+    };
     const state = {
       safeguardsResults: [],
       secretsUsed: new Set(['secret']),
-    }
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -157,8 +157,8 @@ describe('parseDeploymentData', () => {
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion,
-    })
-  })
+    });
+  });
 
   it('creates a deployment object correctly w/ simple plugin list', async () => {
     const serverless = {
@@ -182,7 +182,7 @@ describe('parseDeploymentData', () => {
         },
         outputs: { foo: 'bar' },
       },
-    }
+    };
     const provider = {
       getAccountId,
       request,
@@ -192,13 +192,13 @@ describe('parseDeploymentData', () => {
       },
       getStage: jest.fn().mockReturnValue('dev'),
       getRegion: jest.fn().mockReturnValue('us-est-1'),
-    }
+    };
     const state = {
       safeguardsResults: [],
       secretsUsed: new Set(['secret']),
-    }
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -271,8 +271,8 @@ describe('parseDeploymentData', () => {
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion,
-    })
-  })
+    });
+  });
 
   it('creates a deployment object correctly w/ plugin object', async () => {
     const serverless = {
@@ -296,7 +296,7 @@ describe('parseDeploymentData', () => {
         },
         outputs: { foo: 'bar' },
       },
-    }
+    };
     const provider = {
       getAccountId,
       request,
@@ -306,13 +306,13 @@ describe('parseDeploymentData', () => {
       },
       getStage: jest.fn().mockReturnValue('dev'),
       getRegion: jest.fn().mockReturnValue('us-est-1'),
-    }
+    };
     const state = {
       safeguardsResults: [],
       secretsUsed: new Set(['secret']),
-    }
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -385,8 +385,8 @@ describe('parseDeploymentData', () => {
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion,
-    })
-  })
+    });
+  });
 
   it('creates a deployment object correctly with zeroconf alexaSkill', async () => {
     const serverless = {
@@ -409,7 +409,7 @@ describe('parseDeploymentData', () => {
         },
         outputs: { foo: 'bar' },
       },
-    }
+    };
     const provider = {
       getAccountId,
       request,
@@ -419,13 +419,13 @@ describe('parseDeploymentData', () => {
       },
       getStage: jest.fn().mockReturnValue('dev'),
       getRegion: jest.fn().mockReturnValue('us-est-1'),
-    }
+    };
     const state = {
       safeguardsResults: [],
       secretsUsed: new Set(['secret']),
-    }
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -487,8 +487,8 @@ describe('parseDeploymentData', () => {
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion,
-    })
-  })
+    });
+  });
 
   it('creates a deployment object correctly with websocket', async () => {
     const serverless = {
@@ -511,7 +511,7 @@ describe('parseDeploymentData', () => {
         },
         outputs: { foo: 'bar' },
       },
-    }
+    };
     const provider = {
       getAccountId,
       request,
@@ -521,13 +521,13 @@ describe('parseDeploymentData', () => {
       },
       getStage: jest.fn().mockReturnValue('dev'),
       getRegion: jest.fn().mockReturnValue('us-est-1'),
-    }
+    };
     const state = {
       safeguardsResults: [],
       secretsUsed: new Set(['secret']),
-    }
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -597,8 +597,8 @@ describe('parseDeploymentData', () => {
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion,
-    })
-  })
+    });
+  });
 
   it('creates a deployment object correctly without http events', async () => {
     const serverless = {
@@ -616,7 +616,7 @@ describe('parseDeploymentData', () => {
         functions: { func: { handler: 'func.handler', name: 'func-custom' } },
         outputs: { foo: 'bar' },
       },
-    }
+    };
     const provider = {
       getAccountId,
       request,
@@ -626,13 +626,13 @@ describe('parseDeploymentData', () => {
       },
       getStage: jest.fn().mockReturnValue('dev'),
       getRegion: jest.fn().mockReturnValue('us-est-1'),
-    }
+    };
     const state = {
       safeguardsResults: [],
       secretsUsed: new Set(['secret']),
-    }
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -688,6 +688,6 @@ describe('parseDeploymentData', () => {
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
       versionSDK: sdkVersion,
-    })
-  })
-})
+    });
+  });
+});

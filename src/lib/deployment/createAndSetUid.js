@@ -1,9 +1,9 @@
 'use strict';
 
-const uuid = require('uuid')
+const uuid = require('uuid');
 
-const createAndSetDeploymentUid = (ctx) => {
-  ctx.deploymentUid = uuid.v4()
-}
+const createAndSetDeploymentUid = ctx => {
+  ctx.deploymentUid = uuid.v4();
+};
 
-module.exports = createAndSetDeploymentUid
+module.exports = createAndSetDeploymentUid;

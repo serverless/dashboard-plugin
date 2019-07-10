@@ -1,23 +1,23 @@
 'use strict';
 
-const logsCollection = require('./logsCollection')
-const { LAMBDA_FILTER_PATTERN, API_GATEWAY_FILTER_PATTERN } = require('./utils')
-const { getLogDestination } = require('@serverless/platform-sdk')
+const logsCollection = require('./logsCollection');
+const { LAMBDA_FILTER_PATTERN, API_GATEWAY_FILTER_PATTERN } = require('./utils');
+const { getLogDestination } = require('@serverless/platform-sdk');
 
 jest.mock('@serverless/platform-sdk', () => ({
   getLogDestination: jest.fn().mockReturnValue(Promise.resolve({ destinationArn: 'arn:logdest' })),
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('accessKey')),
-}))
+}));
 
-afterAll(() => jest.restoreAllMocks())
+afterAll(() => jest.restoreAllMocks());
 
 describe('logsCollection', () => {
   it('adds log subscription filter to template', async () => {
-    const log = jest.fn()
-    const request = jest.fn().mockReturnValue(Promise.resolve({ Account: 'ACCOUNT_ID' }))
-    const getStage = jest.fn().mockReturnValue('dev')
-    const getRegion = jest.fn().mockReturnValue('us-east-1')
-    const getServiceName = jest.fn().mockReturnValue('serviceName')
+    const log = jest.fn();
+    const request = jest.fn().mockReturnValue(Promise.resolve({ Account: 'ACCOUNT_ID' }));
+    const getStage = jest.fn().mockReturnValue('dev');
+    const getRegion = jest.fn().mockReturnValue('us-east-1');
+    const getServiceName = jest.fn().mockReturnValue('serviceName');
     const ctx = {
       sls: {
         cli: { log },
@@ -53,13 +53,13 @@ describe('logsCollection', () => {
         getStage,
         getRegion,
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await logsCollection.bind(that)(ctx)
-    expect(log).toHaveBeenCalledTimes(0)
-    expect(getServiceName).toHaveBeenCalledTimes(1)
-    expect(getStage).toHaveBeenCalledTimes(1)
-    expect(getRegion).toHaveBeenCalledTimes(1)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await logsCollection.bind(that)(ctx);
+    expect(log).toHaveBeenCalledTimes(0);
+    expect(getServiceName).toHaveBeenCalledTimes(1);
+    expect(getStage).toHaveBeenCalledTimes(1);
+    expect(getRegion).toHaveBeenCalledTimes(1);
     expect(getLogDestination).toBeCalledWith({
       accessKey: 'accessKey',
       appUid: 'app123',
@@ -68,7 +68,7 @@ describe('logsCollection', () => {
       serviceName: 'serviceName',
       regionName: 'us-east-1',
       accountId: 'ACCOUNT_ID',
-    })
+    });
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Resources: {
         lambdaLogs: {
@@ -105,6 +105,6 @@ describe('logsCollection', () => {
           },
         },
       },
-    })
-  })
-})
+    });
+  });
+});

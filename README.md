@@ -1,4 +1,5 @@
 # Serverless Framework Enterprise Plugin
+
 [![Build Status](https://travis-ci.com/serverless/enterprise-plugin.svg)](https://travis-ci.com/serverless/enterprise-plugin)
 [![license](https://img.shields.io/npm/l/@serverless/enterprise-plugin.svg)](https://www.npmjs.com/package/@serverless/enterprise-plugin)
 [![coverage](https://img.shields.io/codecov/c/github/serverless/enterprise-plugin.svg)](https://codecov.io/gh/serverless/enterprise-plugin)
@@ -11,7 +12,7 @@ To enable the various features of the [Serverless Framework Enterprise](https://
 
 Upon deployment, the Serverless Framwork Enteprise Plugin will automatically wrap and instrument your functions to work with the Serverless Framework Enterprise dashboard.
 
-
 ## Dev notes
+
 If you need a newer version of platform-sdk, you can change the version depended upon in
 `package.json` to `next`

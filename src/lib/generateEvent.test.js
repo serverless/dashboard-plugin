@@ -1,15 +1,15 @@
 'use strict';
 
-const { generate } = require('./generateEvent')
-const zlib = require('zlib')
+const { generate } = require('./generateEvent');
+const zlib = require('zlib');
 
 describe('generating events', () => {
   afterEach(() => {
-    jest.restoreAllMocks()
-  })
+    jest.restoreAllMocks();
+  });
 
   it('builds http events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -19,15 +19,15 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         body: '{"foo": "bar"}',
         path: '/test/hello',
         headers: {
-          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
           'Accept-Encoding': 'gzip, deflate, lzma, sdch, br',
           'Accept-Language': 'en-US,en;q=0.8',
           'CloudFront-Forwarded-Proto': 'https',
@@ -36,11 +36,11 @@ describe('generating events', () => {
           'CloudFront-Is-SmartTV-Viewer': 'false',
           'CloudFront-Is-Tablet-Viewer': 'false',
           'CloudFront-Viewer-Country': 'US',
-          Host: 'wt6mne2s9k.execute-api.us-west-2.amazonaws.com',
+          'Host': 'wt6mne2s9k.execute-api.us-west-2.amazonaws.com',
           'Upgrade-Insecure-Requests': '1',
           'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36 OPR/39.0.2256.48',
-          Via: '1.1 fb7cca60f0ecd82ce07790c9c5eef16c.cloudfront.net (CloudFront)',
+          'Via': '1.1 fb7cca60f0ecd82ce07790c9c5eef16c.cloudfront.net (CloudFront)',
           'X-Amz-Cf-Id': 'nBsWBOrSHMgnaROZJK1wGCZ9PcRcSpq_oSXZNQwQ10OTZL4cimZo3g==',
           'X-Forwarded-For': '192.168.100.1, 192.168.1.1',
           'X-Forwarded-Port': '443',
@@ -82,11 +82,11 @@ describe('generating events', () => {
         queryStringParameters: { name: 'me' },
         stageVariables: { stageVarName: 'stageVarValue' },
       })
-    )
-  })
+    );
+  });
 
   it('builds SNS events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -96,9 +96,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -126,11 +126,11 @@ describe('generating events', () => {
           },
         ],
       })
-    )
-  })
+    );
+  });
 
   it('builds SQS events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -140,9 +140,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -164,11 +164,11 @@ describe('generating events', () => {
           },
         ],
       })
-    )
-  })
+    );
+  });
 
   it('builds DynamoDB events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -179,9 +179,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -197,11 +197,11 @@ describe('generating events', () => {
           },
         ],
       })
-    )
-  })
+    );
+  });
 
   it('builds Kinesis events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -211,9 +211,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -236,11 +236,11 @@ describe('generating events', () => {
           },
         ],
       })
-    )
-  })
+    );
+  });
 
   it('builds S3 events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -249,9 +249,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         Records: [
@@ -286,11 +286,11 @@ describe('generating events', () => {
           },
         ],
       })
-    )
-  })
+    );
+  });
 
   it('builds Alexa Skill events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -300,9 +300,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         version: '1.0',
@@ -342,11 +342,11 @@ describe('generating events', () => {
           locale: 'en-US',
         },
       })
-    )
-  })
+    );
+  });
 
   it('builds Alexa Smart Home events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -356,9 +356,9 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         header: { payloadVersion: '1', namespace: 'Control', name: 'SwitchOnRequest' },
@@ -371,20 +371,20 @@ describe('generating events', () => {
           accessToken: 'sampleAccessToken',
         },
       })
-    )
-  })
+    );
+  });
 
   it('builds Cloud Watch Log events', async () => {
-    const body = 'log data to be gzipped then base64 encoded'
+    const body = 'log data to be gzipped then base64 encoded';
     const zippedBody = await new Promise((res, rej) => {
       zlib.gzip(body, (error, result) => {
-        if (error) rej(error)
-        else res(result)
-      })
-    })
-    const encodedBody = Buffer.from(zippedBody).toString('base64')
+        if (error) rej(error);
+        else res(result);
+      });
+    });
+    const encodedBody = Buffer.from(zippedBody).toString('base64');
 
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -394,20 +394,20 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         awslogs: {
           data: encodedBody,
         },
       })
-    )
-  })
+    );
+  });
 
   it('builds Cloud Watch events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -417,29 +417,29 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
-        version: '0',
-        id: '6a7e8feb-b491-4cf7-a9f1-bf3703467718',
+        'version': '0',
+        'id': '6a7e8feb-b491-4cf7-a9f1-bf3703467718',
         'detail-type': 'EC2 Instance State-change Notification',
-        source: 'aws.ec2',
-        account: '111122223333',
-        time: '2017-12-22T18:43:48Z',
-        region: 'us-west-1',
-        resources: ['arn:aws:ec2:us-west-1:123456789012:instance/ i-1234567890abcdef0'],
-        detail: {
+        'source': 'aws.ec2',
+        'account': '111122223333',
+        'time': '2017-12-22T18:43:48Z',
+        'region': 'us-west-1',
+        'resources': ['arn:aws:ec2:us-west-1:123456789012:instance/ i-1234567890abcdef0'],
+        'detail': {
           'instance-id': 'some great instance',
-          state: 'started',
+          'state': 'started',
         },
       })
-    )
-  })
+    );
+  });
 
   it('builds IoT events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
@@ -449,30 +449,31 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         can: 'be anything',
       })
-    )
-  })
+    );
+  });
 
   it('builds Cognito User Pool events', async () => {
-    const logSpy = jest.spyOn(global.console, 'log')
+    const logSpy = jest.spyOn(global.console, 'log');
     const ctx = {
       sls: {
         processedInput: {
           options: {
             type: 'aws:cognitoUserPool',
-            body: '{"userName": "Aaron Stuyvenberg", "request": {"userAttributes": {"foo": "bar"}}}',
+            body:
+              '{"userName": "Aaron Stuyvenberg", "request": {"userAttributes": {"foo": "bar"}}}',
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await generate.bind(that)(ctx)
+    };
+    const that = { serverless: { classes: { Error } } };
+    await generate.bind(that)(ctx);
     expect(logSpy).toBeCalledWith(
       JSON.stringify({
         version: 2,
@@ -492,8 +493,8 @@ describe('generating events', () => {
         },
         response: {},
       })
-    )
-  })
+    );
+  });
 
   it('throws errors for invalid events', async () => {
     const ctx = {
@@ -506,8 +507,8 @@ describe('generating events', () => {
           },
         },
       },
-    }
-    const that = { serverless: { classes: { Error } } }
-    await expect(generate.bind(that)(ctx)).toThrowError
-  })
-})
+    };
+    const that = { serverless: { classes: { Error } } };
+    await expect(generate.bind(that)(ctx)).toThrowError;
+  });
+});

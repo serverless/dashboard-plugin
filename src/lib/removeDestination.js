@@ -1,16 +1,16 @@
 'use strict';
 
-const { getAccessKeyForTenant, removeLogDestination } = require('@serverless/platform-sdk')
+const { getAccessKeyForTenant, removeLogDestination } = require('@serverless/platform-sdk');
 
-module.exports = async (ctx) => {
+module.exports = async ctx => {
   if (
     !ctx.sls.service.custom ||
     !ctx.sls.service.custom.enterprise ||
     !ctx.sls.service.custom.enterprise.collectLambdaLogs
   ) {
-    return
+    return;
   }
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant);
   const destinationOpts = {
     accessKey,
     appUid: ctx.sls.service.appUid,
@@ -18,8 +18,8 @@ module.exports = async (ctx) => {
     serviceName: ctx.sls.service.getServiceName(),
     stageName: ctx.provider.getStage(),
     regionName: ctx.provider.getRegion(),
-  }
+  };
 
-  await removeLogDestination(destinationOpts)
-  return
-}
+  await removeLogDestination(destinationOpts);
+  return;
+};

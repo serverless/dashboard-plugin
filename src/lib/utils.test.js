@@ -1,18 +1,18 @@
 'use strict';
 
-const { upperFirst, pickResourceType } = require('./utils')
+const { upperFirst, pickResourceType } = require('./utils');
 
 describe('utils - upperFirst', () => {
   it('capitalizes the first letter if all lowercase', () => {
-    expect(upperFirst('foobar')).toEqual('Foobar')
-  })
+    expect(upperFirst('foobar')).toEqual('Foobar');
+  });
   it('capitalizes the first letter if camelCase', () => {
-    expect(upperFirst('fooBar')).toEqual('FooBar')
-  })
+    expect(upperFirst('fooBar')).toEqual('FooBar');
+  });
   it('is a no-op if alreay capitalized', () => {
-    expect(upperFirst('FooBar')).toEqual('FooBar')
-  })
-})
+    expect(upperFirst('FooBar')).toEqual('FooBar');
+  });
+});
 
 describe('utils - pickResourceType', () => {
   it('picks the right resource', () => {
@@ -46,6 +46,6 @@ describe('utils - pickResourceType', () => {
           Type: 'AWS::FooBar',
         },
       },
-    ])
-  })
-})
+    ]);
+  });
+});

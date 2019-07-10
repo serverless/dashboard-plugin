@@ -1,23 +1,23 @@
 'use strict';
 
 module.exports = function corsPolicy(policy, service) {
-  const functions = service.compiled['serverless-state.json'].service.functions
+  const functions = service.compiled['serverless-state.json'].service.functions;
 
   if (!functions) {
-    policy.approve()
-    return
+    policy.approve();
+    return;
   }
 
   Object.entries(functions).forEach(([functionName, functionConfig]) => {
-    if (!functionConfig.events) return
+    if (!functionConfig.events) return;
 
-    functionConfig.events.forEach((eventConfig) => {
-      if (!eventConfig.http) return
+    functionConfig.events.forEach(eventConfig => {
+      if (!eventConfig.http) return;
       if (!eventConfig.http.cors) {
         policy.warn(
           `Function "${functionName}" has no CORS configuration for its HTTP subscription.`
-        )
-        return
+        );
+        return;
       }
 
       if (
@@ -26,10 +26,10 @@ module.exports = function corsPolicy(policy, service) {
       ) {
         throw new policy.Failure(
           `Function "${functionName}" uses a wildcard CORS origin for an HTTP subscription. All CORS configurations must have specific, non-wildcard origins.`
-        )
+        );
       }
-    })
-  })
+    });
+  });
 
-  policy.approve()
-}
+  policy.approve();
+};

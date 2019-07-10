@@ -5,4 +5,4 @@ module.exports = {
   saveDeployment: require('./save'),
   getServerlessFilePath: require('./getServerlessFilePath'),
   createAndSetDeploymentUid: require('./createAndSetUid'),
-}
+};

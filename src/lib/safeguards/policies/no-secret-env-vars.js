@@ -1,6 +1,6 @@
 'use strict';
 
-const { entries, fromPairs, values } = require('lodash')
+const { entries, fromPairs, values } = require('lodash');
 
 // from https://github.com/dxa4481/truffleHogRegexes/blob/master/truffleHogRegexes/regexes.json
 const truffleHogRegexes = {
@@ -16,7 +16,7 @@ const truffleHogRegexes = {
   'Twitter Oauth': new RegExp(
     '[t|T][w|W][i|I][t|T][t|T][e|E][r|R].*[\'|"][0-9a-zA-Z]{35,44}[\'|"]'
   ),
-  GitHub: new RegExp('[g|G][i|I][t|T][h|H][u|U][b|B].*[\'|"][0-9a-zA-Z]{35,40}[\'|"]'),
+  'GitHub': new RegExp('[g|G][i|I][t|T][h|H][u|U][b|B].*[\'|"][0-9a-zA-Z]{35,40}[\'|"]'),
   'Google Oauth': new RegExp('("client_secret":"[a-zA-Z0-9-_]{24}")'),
   'AWS API Key': new RegExp('AKIA[0-9A-Z]{16}'),
   'Heroku API Key': new RegExp(
@@ -31,29 +31,31 @@ const truffleHogRegexes = {
   ),
   'Google (GCP) Service-account': new RegExp('"type": "service_account"'),
   'Twilio API Key': new RegExp('SK[a-z0-9]{32}'),
-  'Password in URL': new RegExp('[a-zA-Z]{3,10}://[^/\\s:@]{3,20}:[^/\\s:@]{3,20}@.{1,100}["\'\\s]'),
-}
+  'Password in URL': new RegExp(
+    '[a-zA-Z]{3,10}://[^/\\s:@]{3,20}:[^/\\s:@]{3,20}@.{1,100}["\'\\s]'
+  ),
+};
 function isSecret(string) {
   for (const regex of values(truffleHogRegexes)) {
     if (regex.test(string)) {
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 }
 
 module.exports = function noSecretEnvVarsPolicy(policy, service) {
-  let failed = false
+  let failed = false;
   const {
     declaration: { functions },
     provider: { naming },
     compiled: {
       'cloudformation-template-update-stack.json': { Resources },
     },
-  } = service
+  } = service;
   const logicalFuncNamesToConfigFuncName = fromPairs(
-    Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
-  )
+    Object.keys(functions || {}).map(funcName => [naming.getLambdaLogicalId(funcName), funcName])
+  );
 
   for (const [funcName, { Properties, Type }] of entries(Resources)) {
     if (
@@ -61,23 +63,23 @@ module.exports = function noSecretEnvVarsPolicy(policy, service) {
       !Properties.Environment ||
       !Properties.Environment.Variables
     ) {
-      continue
+      continue;
     }
 
     for (const [name, value] of entries(Properties.Environment.Variables)) {
       if (isSecret(value)) {
-        const configFuncName = logicalFuncNamesToConfigFuncName[funcName] || funcName
-        failed = true
+        const configFuncName = logicalFuncNamesToConfigFuncName[funcName] || funcName;
+        failed = true;
         policy.fail(
           `Environment variable ${name} on function '${configFuncName}' looks like it contains a secret value`
-        )
+        );
       }
     }
   }
 
   if (!failed) {
-    policy.approve()
+    policy.approve();
   }
-}
+};
 
-module.exports.docs = 'https://git.io/fjfkF'
+module.exports.docs = 'https://git.io/fjfkF';

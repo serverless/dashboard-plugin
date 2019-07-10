@@ -1,11 +1,13 @@
 'use strict';
 
-const stripAnsi = require('strip-ansi')
-const setup = require('./setup')
+const stripAnsi = require('strip-ansi');
+const setup = require('./setup');
 
-let sls1; let sls2; let teardown
+let sls1;
+let sls2;
+let teardown;
 
-jest.setTimeout(1000 * 60 * 3)
+jest.setTimeout(1000 * 60 * 3);
 
 beforeAll(
   async () =>
@@ -13,20 +15,20 @@ beforeAll(
       setup('service'),
       setup('service2'),
     ]))
-)
+);
 
 afterAll(() => {
-  if (teardown) return teardown()
-  return null
-})
+  if (teardown) return teardown();
+  return null;
+});
 
 describe('integration', () => {
   it('can publish and consume outputs', async () => {
-    await sls1(['deploy'])
+    await sls1(['deploy']);
 
     const printStdout = stripAnsi(
       String((await sls2(['print', '--path', 'custom.testOutput'])).stdoutBuffer)
-    )
-    expect(printStdout).toMatch('outputValue\n\n')
-  })
-})
+    );
+    expect(printStdout).toMatch('outputValue\n\n');
+  });
+});

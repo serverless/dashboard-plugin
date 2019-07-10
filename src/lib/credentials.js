@@ -1,13 +1,13 @@
 'use strict';
 
-const { getCredentials, getAccessKeyForTenant } = require('@serverless/platform-sdk')
+const { getCredentials, getAccessKeyForTenant } = require('@serverless/platform-sdk');
 
 module.exports = async function(ctx) {
   if (!process.env.SLS_CLOUD_ACCESS) {
-    return
+    return;
   }
 
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant);
 
   const { accessKeyId, secretAccessKey, sessionToken } = await getCredentials({
     accessKey,
@@ -16,9 +16,9 @@ module.exports = async function(ctx) {
     app: ctx.sls.service.app,
     tenant: ctx.sls.service.tenant,
     service: ctx.sls.service.getServiceName(),
-  })
-  process.env.AWS_ACCESS_KEY_ID = accessKeyId
-  process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey
-  process.env.AWS_SESSION_TOKEN = sessionToken
-  ctx.sls.cli.log('Cloud credentials set from Serverless Platform.')
-}
+  });
+  process.env.AWS_ACCESS_KEY_ID = accessKeyId;
+  process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey;
+  process.env.AWS_SESSION_TOKEN = sessionToken;
+  ctx.sls.cli.log('Cloud credentials set from Serverless Platform.');
+};

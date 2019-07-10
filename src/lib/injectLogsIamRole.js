@@ -1,7 +1,7 @@
 'use strict';
 
-const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk')
-const { entries, values } = require('lodash')
+const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk');
+const { entries, values } = require('lodash');
 
 module.exports = async function(ctx) {
   if (
@@ -9,7 +9,7 @@ module.exports = async function(ctx) {
     ctx.sls.service.custom.enterprise &&
     ctx.sls.service.custom.enterprise.collectLambdaLogs === false
   ) {
-    return
+    return;
   }
 
   if (
@@ -18,12 +18,12 @@ module.exports = async function(ctx) {
     ).length === 0
   ) {
     // no log groups
-    return
+    return;
   }
 
-  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant)
+  const accessKey = await getAccessKeyForTenant(ctx.sls.service.tenant);
 
-  const { awsAccountId } = await getMetadata(accessKey)
+  const { awsAccountId } = await getMetadata(accessKey);
   ctx.sls.service.provider.compiledCloudFormationTemplate.Resources.EnterpriseLogAccessIamRole = {
     Type: 'AWS::IAM::Role',
     Properties: {
@@ -64,10 +64,10 @@ module.exports = async function(ctx) {
         },
       ],
     },
-  }
+  };
   ctx.sls.service.provider.compiledCloudFormationTemplate.Outputs.EnterpriseLogAccessIamRole = {
     Value: {
       'Fn::GetAtt': ['EnterpriseLogAccessIamRole', 'Arn'],
     },
-  }
-}
+  };
+};

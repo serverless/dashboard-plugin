@@ -1,6 +1,6 @@
 'use strict';
 
-const { entries, fromPairs } = require('lodash')
+const { entries, fromPairs } = require('lodash');
 
 const asyncEvents = new Set([
   's3',
@@ -11,19 +11,19 @@ const asyncEvents = new Set([
   'cloudwatchLog',
   'cognitoUserPool',
   'alexaSmartHome',
-])
+]);
 module.exports = function dlqPolicy(policy, service) {
-  let failed = false
+  let failed = false;
   const {
     declaration: { functions },
     provider: { naming },
     compiled: {
       'cloudformation-template-update-stack.json': { Resources },
     },
-  } = service
+  } = service;
   const logicalFuncNamesToConfigFuncName = fromPairs(
-    Object.keys(functions || {}).map((funcName) => [naming.getLambdaLogicalId(funcName), funcName])
-  )
+    Object.keys(functions || {}).map(funcName => [naming.getLambdaLogicalId(funcName), funcName])
+  );
 
   // for (const [name, { events, onError }] of entries(functions)) {
   for (const [funcName, { Properties, Type }] of entries(Resources)) {
@@ -31,22 +31,22 @@ module.exports = function dlqPolicy(policy, service) {
       Type !== 'AWS::Lambda::Function' ||
       (Properties.DeadLetterConfig && Properties.DeadLetterConfig.TargetArn)
     ) {
-      continue
+      continue;
     }
-    const events = functions[logicalFuncNamesToConfigFuncName[funcName]].events || []
-    const eventTypes = new Set(events.map((ev) => Object.keys(ev)[0]))
-    const eventIntersection = new Set([...asyncEvents].filter((x) => eventTypes.has(x)))
+    const events = functions[logicalFuncNamesToConfigFuncName[funcName]].events || [];
+    const eventTypes = new Set(events.map(ev => Object.keys(ev)[0]));
+    const eventIntersection = new Set([...asyncEvents].filter(x => eventTypes.has(x)));
     if (events.length === 0 || eventIntersection.size > 0) {
-      failed = true
+      failed = true;
       policy.fail(
         `Function "${logicalFuncNamesToConfigFuncName[funcName]}" doesn't have a Dead Letter Queue configured.`
-      )
+      );
     }
   }
 
   if (!failed) {
-    policy.approve()
+    policy.approve();
   }
-}
+};
 
-module.exports.docs = 'https://git.io/fjfkN'
+module.exports.docs = 'https://git.io/fjfkN';

@@ -1,21 +1,21 @@
 'use strict';
 
-const { entries } = require('lodash')
+const { entries } = require('lodash');
 
 module.exports = function forbidS3HttpAccessPolicy(policy, service) {
-  let failed = false
+  let failed = false;
   const {
     compiled: {
       'cloudformation-template-update-stack.json': { Resources },
     },
-  } = service
+  } = service;
 
-  const buckets = new Map(entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::Bucket'))
+  const buckets = new Map(entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::Bucket'));
   const bucketPolicies = new Map(
     entries(Resources).filter(([, { Type }]) => Type === 'AWS::S3::BucketPolicy')
-  )
+  );
   for (const [bucketName, bucket] of buckets) {
-    let foundMatchingPolicy = false
+    let foundMatchingPolicy = false;
     for (const [, bucketPolicy] of bucketPolicies) {
       if (
         bucketPolicy.Properties &&
@@ -44,20 +44,20 @@ module.exports = function forbidS3HttpAccessPolicy(policy, service) {
         bucketPolicy.PolicyDocument.Statement[0].Condition.Bool['aws:SecureTransport'] === false &&
         true
       ) {
-        foundMatchingPolicy = true
+        foundMatchingPolicy = true;
       }
     }
     if (!foundMatchingPolicy) {
-      failed = true
+      failed = true;
       policy.fail(
         `Bucket "${bucketName}" doesn't have a BucketPolicy forbidding unsecure HTTP access.`
-      )
+      );
     }
   }
 
   if (!failed) {
-    policy.approve()
+    policy.approve();
   }
-}
+};
 
-module.exports.docs = 'https://git.io/fjfIT'
+module.exports.docs = 'https://git.io/fjfIT';

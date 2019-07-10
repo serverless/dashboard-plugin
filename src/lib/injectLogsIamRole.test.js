@@ -1,12 +1,12 @@
 'use strict';
 
-const injectLogsIamRole = require('./injectLogsIamRole')
-const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk')
+const injectLogsIamRole = require('./injectLogsIamRole');
+const { getAccessKeyForTenant, getMetadata } = require('@serverless/platform-sdk');
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('token')),
   getMetadata: jest.fn().mockReturnValue(Promise.resolve({ awsAccountId: '111111' })),
-}))
+}));
 
 describe('injectLogsIamRole', () => {
   it('adds IAM role for all the log groups created', async () => {
@@ -16,7 +16,7 @@ describe('injectLogsIamRole', () => {
         Bar: { Type: 'AWS::Logs::LogGroup' },
       },
       Outputs: {},
-    }
+    };
     const ctx = {
       sls: {
         service: {
@@ -25,8 +25,8 @@ describe('injectLogsIamRole', () => {
           provider: { compiledCloudFormationTemplate },
         },
       },
-    }
-    await injectLogsIamRole(ctx)
+    };
+    await injectLogsIamRole(ctx);
     expect(compiledCloudFormationTemplate).toEqual({
       Resources: {
         Foo: { Type: 'AWS::Logs::LogGroup' },
@@ -83,16 +83,16 @@ describe('injectLogsIamRole', () => {
           },
         },
       },
-    })
-    expect(getAccessKeyForTenant).toBeCalledWith('tenant')
-    expect(getMetadata).toBeCalledWith('token')
-  })
+    });
+    expect(getAccessKeyForTenant).toBeCalledWith('tenant');
+    expect(getMetadata).toBeCalledWith('token');
+  });
 
   it('does not add IAM role when no log groups', async () => {
     const compiledCloudFormationTemplate = {
       Resources: {},
       Outputs: {},
-    }
+    };
     const ctx = {
       sls: {
         service: {
@@ -101,11 +101,11 @@ describe('injectLogsIamRole', () => {
           provider: { compiledCloudFormationTemplate },
         },
       },
-    }
-    await injectLogsIamRole(ctx)
+    };
+    await injectLogsIamRole(ctx);
     expect(compiledCloudFormationTemplate).toEqual({
       Resources: {},
       Outputs: {},
-    })
-  })
-})
+    });
+  });
+});

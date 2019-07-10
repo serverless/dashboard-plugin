@@ -1,25 +1,29 @@
 'use strict';
 
-const chalk = require('chalk')
-const { configureFetchDefaults, getLoggedInUser, openBrowser } = require('@serverless/platform-sdk')
-const errorHandler = require('./errorHandler')
-const logsCollection = require('./logsCollection')
-const login = require('./login')
-const logout = require('./logout')
-const wrap = require('./wrap')
-const injectLogsIamRole = require('./injectLogsIamRole')
-const wrapClean = require('./wrapClean')
-const runPolicies = require('./safeguards')
-const getCredentials = require('./credentials')
-const getAppUids = require('./appUids')
-const removeDestination = require('./removeDestination')
-const { saveDeployment, createAndSetDeploymentUid } = require('./deployment')
-const { hookIntoVariableGetter } = require('./variables')
-const { generate, eventDict } = require('./generateEvent')
-const { configureDeployProfile } = require('./deployProfile')
-const { test } = require('./test')
-const { getDashboardUrl } = require('./dashboard')
-const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat')
+const chalk = require('chalk');
+const {
+  configureFetchDefaults,
+  getLoggedInUser,
+  openBrowser,
+} = require('@serverless/platform-sdk');
+const errorHandler = require('./errorHandler');
+const logsCollection = require('./logsCollection');
+const login = require('./login');
+const logout = require('./logout');
+const wrap = require('./wrap');
+const injectLogsIamRole = require('./injectLogsIamRole');
+const wrapClean = require('./wrapClean');
+const runPolicies = require('./safeguards');
+const getCredentials = require('./credentials');
+const getAppUids = require('./appUids');
+const removeDestination = require('./removeDestination');
+const { saveDeployment, createAndSetDeploymentUid } = require('./deployment');
+const { hookIntoVariableGetter } = require('./variables');
+const { generate, eventDict } = require('./generateEvent');
+const { configureDeployProfile } = require('./deployProfile');
+const { test } = require('./test');
+const { getDashboardUrl } = require('./dashboard');
+const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat');
 
 /*
  * Serverless Enterprise Plugin
@@ -27,11 +31,11 @@ const setApiGatewayAccessLogFormat = require('./setApiGatewayAccessLogFormat')
 
 class ServerlessEnterprisePlugin {
   constructor(sls) {
-    this.sls = sls
+    this.sls = sls;
 
-    configureFetchDefaults()
-    const user = getLoggedInUser()
-    const currentCommand = sls.processedInput.commands[0]
+    configureFetchDefaults();
+    const user = getLoggedInUser();
+    const currentCommand = sls.processedInput.commands[0];
 
     // default hook, only applies if user isn't using SFE. gets overridden if they are
     this.hooks = {
@@ -40,18 +44,18 @@ class ServerlessEnterprisePlugin {
           'Run `serverless login` and deploy again to explore, monitor, secure your serverless project for free.',
           'Serverless Enterprise'
         ),
-    }
+    };
 
     // Check if Enterprise is configured
-    const missing = []
+    const missing = [];
     if (!sls.service.tenant) {
-      missing.push('tenant')
+      missing.push('tenant');
     }
     if (!sls.service.app) {
-      missing.push('app')
+      missing.push('app');
     }
     if (!sls.service.service) {
-      missing.push('service')
+      missing.push('service');
     }
 
     // Skip everything if user is not logged in and not trying to log in or out...
@@ -62,12 +66,12 @@ class ServerlessEnterprisePlugin {
         !process.env.SERVERLESS_ACCESS_KEY)
     ) {
       if (missing.includes('tenant') && missing.includes('app')) {
-        return // user isn't trying to use SFE
+        return; // user isn't trying to use SFE
       }
-      const errorMessage = 'You are not currently logged in. To log in, use: $ serverless login'
-        console.log('') // eslint-disable-line
-        sls.cli.log(errorMessage, 'Serverless Enterprise') // eslint-disable-line
-        throw new Error(errorMessage) // eslint-disable-line
+      const errorMessage = 'You are not currently logged in. To log in, use: $ serverless login';
+      console.log(''); // eslint-disable-line
+      sls.cli.log(errorMessage, 'Serverless Enterprise'); // eslint-disable-line
+      throw new Error(errorMessage); // eslint-disable-line
     }
     if (currentCommand !== 'login' && currentCommand !== 'logout' && missing.length > 0) {
       // replace the default hook with a message about configuring sls enterprise
@@ -75,31 +79,31 @@ class ServerlessEnterprisePlugin {
         'after:aws:deploy:finalize:cleanup': () =>
           sls.cli.log(
             `Update your "serverless.yml" with ${missing
-              .map((opt) => `"${opt}"`)
+              .map(opt => `"${opt}"`)
               .join(
                 ', '
               )} properties and deploy again to explore, monitor, secure your serverless project for free.`,
             'Serverless Enterprise'
           ),
-      }
-      return
+      };
+      return;
     }
 
-    sls.enterpriseEnabled = true
+    sls.enterpriseEnabled = true;
 
     // Defaults
-    this.state = {} // Useful for storing data across hooks
-    this.state.secretsUsed = new Set()
-    this.provider = this.sls.getProvider('aws')
+    this.state = {}; // Useful for storing data across hooks
+    this.state.secretsUsed = new Set();
+    this.provider = this.sls.getProvider('aws');
 
     // Add commands
     this.commands = {
-      login: {
+      'login': {
         usage: 'Login or sign up for Serverless Enterprise',
         lifecycleEvents: ['login'],
         enterprise: true,
       },
-      logout: {
+      'logout': {
         usage: 'Logout from Serverless Enterprise',
         lifecycleEvents: ['logout'],
         enterprise: true,
@@ -120,11 +124,11 @@ class ServerlessEnterprisePlugin {
         },
         enterprise: true,
       },
-      test: {
+      'test': {
         usage: 'Run HTTP tests',
         lifecycleEvents: ['test'],
         options: {
-          'function': {
+          function: {
             usage: 'Specify the function to test',
             shortcut: 'f',
           },
@@ -135,24 +139,38 @@ class ServerlessEnterprisePlugin {
         },
         enterprise: true,
       },
-      dashboard: {
+      'dashboard': {
         usage: 'Open the Serverless Enterprise dashboard',
         lifecycleEvents: ['dashboard'],
         enterprise: true,
       },
-    }
+    };
 
     // Set Plugin hooks for all Enteprise Plugin features here
     this.hooks = {
-      'before:package:createDeploymentArtifacts': this.route('before:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
-      'after:package:createDeploymentArtifacts': this.route('after:package:createDeploymentArtifacts').bind(this), // eslint-disable-line
-      'before:deploy:function:packageFunction': this.route('before:deploy:function:packageFunction').bind(this), // eslint-disable-line
-      'after:deploy:function:packageFunction': this.route('after:deploy:function:packageFunction').bind(this), // eslint-disable-line
+      'before:package:createDeploymentArtifacts': this.route(
+        'before:package:createDeploymentArtifacts'
+      ).bind(this), // eslint-disable-line
+      'after:package:createDeploymentArtifacts': this.route(
+        'after:package:createDeploymentArtifacts'
+      ).bind(this), // eslint-disable-line
+      'before:deploy:function:packageFunction': this.route(
+        'before:deploy:function:packageFunction'
+      ).bind(this), // eslint-disable-line
+      'after:deploy:function:packageFunction': this.route(
+        'after:deploy:function:packageFunction'
+      ).bind(this), // eslint-disable-line
       'before:invoke:local:invoke': this.route('before:invoke:local:invoke').bind(this), // eslint-disable-line
-      'before:aws:package:finalize:saveServiceState': this.route('before:aws:package:finalize:saveServiceState').bind(this), // eslint-disable-line
+      'before:aws:package:finalize:saveServiceState': this.route(
+        'before:aws:package:finalize:saveServiceState'
+      ).bind(this), // eslint-disable-line
       'before:deploy:deploy': this.route('before:deploy:deploy').bind(this), // eslint-disable-line
-      'before:aws:deploy:deploy:createStack': this.route('before:aws:deploy:deploy:createStack').bind(this), // eslint-disable-line
-      'after:aws:deploy:finalize:cleanup': this.route('after:aws:deploy:finalize:cleanup').bind(this), // eslint-disable-line
+      'before:aws:deploy:deploy:createStack': this.route(
+        'before:aws:deploy:deploy:createStack'
+      ).bind(this), // eslint-disable-line
+      'after:aws:deploy:finalize:cleanup': this.route('after:aws:deploy:finalize:cleanup').bind(
+        this
+      ), // eslint-disable-line
       'after:deploy:finalize': this.route('after:deploy:finalize').bind(this), // eslint-disable-line
       'after:deploy:deploy': this.route('after:deploy:deploy').bind(this), // eslint-disable-line
       'before:info:info': this.route('before:info:info').bind(this), // eslint-disable-line
@@ -163,13 +181,15 @@ class ServerlessEnterprisePlugin {
       'after:remove:remove': this.route('after:remove:remove').bind(this), // eslint-disable-line
       'after:invoke:local:invoke': this.route('after:invoke:local:invoke').bind(this), // eslint-disable-line
       'before:offline:start:init': this.route('before:offline:start:init').bind(this), // eslint-disable-line
-      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(this), // eslint-disable-line
+      'before:step-functions-offline:start': this.route('before:step-functions-offline:start').bind(
+        this
+      ), // eslint-disable-line
       'login:login': this.route('login:login').bind(this), // eslint-disable-line
       'logout:logout': this.route('logout:logout').bind(this), // eslint-disable-line
       'generate-event:generate-event': this.route('generate-event:generate-event').bind(this), // eslint-disable-line
       'test:test': this.route('test:test').bind(this), // eslint-disable-line
       'dashboard:dashboard': this.route('dashboard:dashboard').bind(this), // eslint-disable-line
-    }
+    };
   }
 
   /*
@@ -177,106 +197,106 @@ class ServerlessEnterprisePlugin {
    */
 
   route(hook) {
-    const self = this
+    const self = this;
     return async () => {
       switch (hook) {
         case 'before:package:createDeploymentArtifacts':
           Object.assign(
             self.sls.service,
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
-          )
-          createAndSetDeploymentUid(self)
-          await wrap(self)
-          await injectLogsIamRole(self)
-          await setApiGatewayAccessLogFormat(self)
-          break
+          );
+          createAndSetDeploymentUid(self);
+          await wrap(self);
+          await injectLogsIamRole(self);
+          await setApiGatewayAccessLogFormat(self);
+          break;
         case 'after:package:createDeploymentArtifacts':
-          await wrapClean(self)
-          break
+          await wrapClean(self);
+          break;
         case 'before:deploy:function:packageFunction':
-          createAndSetDeploymentUid(self)
-          await wrap(self)
-          break
+          createAndSetDeploymentUid(self);
+          await wrap(self);
+          break;
         case 'after:deploy:function:packageFunction':
-          await wrapClean(self)
-          break
+          await wrapClean(self);
+          break;
         case 'before:aws:package:finalize:saveServiceState':
-          await getCredentials(self)
-          await logsCollection(self)
-          break
+          await getCredentials(self);
+          await logsCollection(self);
+          break;
         case 'before:deploy:deploy':
           this.enterprise = {
             errorHandler: errorHandler(this), // V.1 calls this when it crashes
-          }
-          await runPolicies(self)
-          break
+          };
+          await runPolicies(self);
+          break;
         case 'before:aws:deploy:deploy:createStack':
-          break
+          break;
         case 'after:aws:deploy:finalize:cleanup':
-          await saveDeployment(self)
-          break
+          await saveDeployment(self);
+          break;
         case 'before:info:info':
-          await getCredentials(self)
-          break
+          await getCredentials(self);
+          break;
         case 'after:info:info':
           // eslint-disable-next-line no-console
           console.log(
             chalk.yellow(
               `Run "serverless dashboard" to open the dashboard or visit ${getDashboardUrl(self)}`
             )
-          )
-          break
+          );
+          break;
         case 'dashboard:dashboard':
-          openBrowser(getDashboardUrl(self))
-          break
+          openBrowser(getDashboardUrl(self));
+          break;
         case 'before:logs:logs':
-          await getCredentials(self)
-          break
+          await getCredentials(self);
+          break;
         case 'before:metrics:metrics':
-          await getCredentials(self)
-          break
+          await getCredentials(self);
+          break;
         case 'before:remove:remove':
-          await getCredentials(self)
-          break
+          await getCredentials(self);
+          break;
         case 'after:remove:remove':
           Object.assign(
             self.sls.service,
             await getAppUids(self.sls.service.tenant, self.sls.service.app)
-          )
-          await removeDestination(self)
-          await saveDeployment(self, true)
-          break
+          );
+          await removeDestination(self);
+          await saveDeployment(self, true);
+          break;
         case 'before:invoke:local:invoke':
           Object.assign(self.sls.service, {
             appUid: '000000000000000000',
             tenantUid: '000000000000000000',
-          })
-          await wrap(self)
-          break
+          });
+          await wrap(self);
+          break;
         case 'after:invoke:local:invoke':
-          await wrapClean(self)
-          break
+          await wrapClean(self);
+          break;
         case 'before:offline:start:init':
           // await wrap(self)
-          break
+          break;
         case 'before:step-functions-offline:start':
           // await wrap(self)
-          break
+          break;
         case 'login:login':
-          await login(self)
-          break
+          await login(self);
+          break;
         case 'logout:logout':
-          await logout(self)
-          break
+          await logout(self);
+          break;
         case 'generate-event:generate-event':
-          await generate(self)
-          break
+          await generate(self);
+          break;
         case 'test:test':
-          await test(self)
-          break
+          await test(self);
+          break;
         default:
       }
-    }
+    };
   }
 
   async asyncInit() {
@@ -285,12 +305,12 @@ class ServerlessEnterprisePlugin {
       this.sls.processedInput.commands[0] === 'login' ||
       this.sls.processedInput.commands[0] === 'logout'
     ) {
-      hookIntoVariableGetter(this, {})
-      return
+      hookIntoVariableGetter(this, {});
+      return;
     }
 
-    await configureDeployProfile(this)
+    await configureDeployProfile(this);
   }
 }
 
-module.exports = ServerlessEnterprisePlugin
+module.exports = ServerlessEnterprisePlugin;

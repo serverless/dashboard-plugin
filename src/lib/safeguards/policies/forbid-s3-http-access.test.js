@@ -1,13 +1,13 @@
 'use strict';
 
-const forbidS3HttpAccessPolicy = require('./forbid-s3-http-access')
+const forbidS3HttpAccessPolicy = require('./forbid-s3-http-access');
 
 describe('forbidS3HttpAccessPolicy', () => {
-  let policy
-  let service
+  let policy;
+  let service;
 
   beforeEach(() => {
-    policy = { approve: jest.fn(), fail: jest.fn() }
+    policy = { approve: jest.fn(), fail: jest.fn() };
     service = {
       compiled: { 'cloudformation-template-update-stack.json': { Resources: {} } },
       declaration: {
@@ -15,9 +15,9 @@ describe('forbidS3HttpAccessPolicy', () => {
           func: {},
         },
       },
-      provider: { naming: { getLambdaLogicalId: (fnName) => `${fnName}Lambda` } },
-    }
-  })
+      provider: { naming: { getLambdaLogicalId: fnName => `${fnName}Lambda` } },
+    };
+  });
 
   it('allows buckets with a correct policy using refs', () => {
     service.compiled[
@@ -25,7 +25,7 @@ describe('forbidS3HttpAccessPolicy', () => {
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
       Properties: {},
-    }
+    };
     service.compiled[
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucketPolicy = {
@@ -50,11 +50,11 @@ describe('forbidS3HttpAccessPolicy', () => {
           },
         ],
       },
-    }
-    forbidS3HttpAccessPolicy(policy, service)
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.fail).toHaveBeenCalledTimes(0)
-  })
+    };
+    forbidS3HttpAccessPolicy(policy, service);
+    expect(policy.approve).toHaveBeenCalledTimes(1);
+    expect(policy.fail).toHaveBeenCalledTimes(0);
+  });
 
   it('allows buckets with a correct policy using refs and names', () => {
     service.compiled[
@@ -62,7 +62,7 @@ describe('forbidS3HttpAccessPolicy', () => {
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
       Properties: { Name: 'foobar' },
-    }
+    };
     service.compiled[
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucketPolicy = {
@@ -85,11 +85,11 @@ describe('forbidS3HttpAccessPolicy', () => {
           },
         ],
       },
-    }
-    forbidS3HttpAccessPolicy(policy, service)
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.fail).toHaveBeenCalledTimes(0)
-  })
+    };
+    forbidS3HttpAccessPolicy(policy, service);
+    expect(policy.approve).toHaveBeenCalledTimes(1);
+    expect(policy.fail).toHaveBeenCalledTimes(0);
+  });
 
   it('allows buckets with a correct policy using explicit name', () => {
     service.compiled[
@@ -97,7 +97,7 @@ describe('forbidS3HttpAccessPolicy', () => {
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
       Properties: { Name: 'foobar' },
-    }
+    };
     service.compiled[
       'cloudformation-template-update-stack.json'
     ].Resources.ServerlessDeploymentBucketPolicy = {
@@ -120,11 +120,11 @@ describe('forbidS3HttpAccessPolicy', () => {
           },
         ],
       },
-    }
-    forbidS3HttpAccessPolicy(policy, service)
-    expect(policy.approve).toHaveBeenCalledTimes(1)
-    expect(policy.fail).toHaveBeenCalledTimes(0)
-  })
+    };
+    forbidS3HttpAccessPolicy(policy, service);
+    expect(policy.approve).toHaveBeenCalledTimes(1);
+    expect(policy.fail).toHaveBeenCalledTimes(0);
+  });
 
   it('blocks buckets with out a bucket policy', () => {
     service.compiled[
@@ -132,12 +132,12 @@ describe('forbidS3HttpAccessPolicy', () => {
     ].Resources.ServerlessDeploymentBucket = {
       Type: 'AWS::S3::Bucket',
       Properties: {},
-    }
-    forbidS3HttpAccessPolicy(policy, service)
+    };
+    forbidS3HttpAccessPolicy(policy, service);
 
-    expect(policy.approve).toHaveBeenCalledTimes(0)
+    expect(policy.approve).toHaveBeenCalledTimes(0);
     expect(policy.fail).toBeCalledWith(
       'Bucket "ServerlessDeploymentBucket" doesn\'t have a BucketPolicy forbidding unsecure HTTP access.'
-    )
-  })
-})
+    );
+  });
+});

@@ -1,21 +1,21 @@
 'use strict';
 
-const { cloneDeep } = require('lodash')
-const chalk = require('chalk')
-const runPolicies = require('./')
-const { getSafeguards } = require('@serverless/platform-sdk')
+const { cloneDeep } = require('lodash');
+const chalk = require('chalk');
+const runPolicies = require('./');
+const { getSafeguards } = require('@serverless/platform-sdk');
 
-const { loadPolicy } = runPolicies
+const { loadPolicy } = runPolicies;
 
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('access-key')),
   getSafeguards: jest.fn(),
   urls: { frontendUrl: 'https://dashboard.serverless.com/' },
-}))
+}));
 
 jest.mock('node-dir', () => ({
   readFiles: jest.fn().mockReturnValue(Promise.resolve()),
-}))
+}));
 
 jest.mock('fs-extra', () => ({
   readdir: jest
@@ -28,62 +28,62 @@ jest.mock('fs-extra', () => ({
       })
     )
   ),
-}))
+}));
 
-const requireDlq = require('./policies/require-dlq')
+const requireDlq = require('./policies/require-dlq');
 
 jest.mock('./policies/require-dlq', () =>
-  jest.fn().mockImplementation((policy) => {
-    policy.approve()
+  jest.fn().mockImplementation(policy => {
+    policy.approve();
   })
-)
-const iamPolicy = require('./policies/no-wild-iam-role-statements')
+);
+const iamPolicy = require('./policies/no-wild-iam-role-statements');
 
 jest.mock('./policies/no-wild-iam-role-statements', () =>
-  jest.fn().mockImplementation((policy) => {
-    policy.approve()
+  jest.fn().mockImplementation(policy => {
+    policy.approve();
   })
-)
-const secretsPolicy = require('./policies/no-secret-env-vars')
+);
+const secretsPolicy = require('./policies/no-secret-env-vars');
 
 jest.mock('./policies/no-secret-env-vars', () =>
-  jest.fn().mockImplementation((policy) => {
-    policy.fail('Error Message')
-    policy.fail('Error Message')
+  jest.fn().mockImplementation(policy => {
+    policy.fail('Error Message');
+    policy.fail('Error Message');
   })
-)
+);
 
-const realStdoutWrite = process.stdout.write
+const realStdoutWrite = process.stdout.write;
 
 afterEach(() => {
-  process.stdout.write = realStdoutWrite
-  jest.restoreAllMocks()
-})
+  process.stdout.write = realStdoutWrite;
+  jest.restoreAllMocks();
+});
 
 beforeEach(() => {
-  process.stdout.write = jest.fn()
-  secretsPolicy.mockClear()
-  secretsPolicy.docs = 'https://git.io/secretDocs'
-  requireDlq.mockClear()
-  requireDlq.docs = 'https://git.io/dlqDocs'
-  iamPolicy.mockClear()
-  iamPolicy.docs = 'https://git.io/iamDocs'
-})
+  process.stdout.write = jest.fn();
+  secretsPolicy.mockClear();
+  secretsPolicy.docs = 'https://git.io/secretDocs';
+  requireDlq.mockClear();
+  requireDlq.docs = 'https://git.io/dlqDocs';
+  iamPolicy.mockClear();
+  iamPolicy.docs = 'https://git.io/iamDocs';
+});
 
 describe('safeguards - loadPolicy', () => {
   it('loads a safeguard from inside the plugin', async () => {
-    expect(typeof loadPolicy(undefined, 'require-dlq')).toBe('function')
-  })
+    expect(typeof loadPolicy(undefined, 'require-dlq')).toBe('function');
+  });
 
   it('loads a safeguard from outside the plugin', async () => {
     expect(
       typeof loadPolicy('../../../examples/safeguards-example-service/policies', 'no-wild-cors')
-    ).toBe('function')
-  })
-})
+    ).toBe('function');
+  });
+});
 
 describe('safeguards', () => {
-  let log
+  let log;
   const defualtCtx = {
     sls: {
       config: { servicePath: '.' },
@@ -97,23 +97,23 @@ describe('safeguards', () => {
     },
     state: {},
     safeguards: [],
-  }
+  };
   beforeEach(() => {
-    log = jest.fn()
-    defualtCtx.sls.cli.log = log
-  })
+    log = jest.fn();
+    defualtCtx.sls.cli.log = log;
+  });
 
   it('does nothing when there are no safeguards', async () => {
-    getSafeguards.mockReturnValue(Promise.resolve([]))
-    const ctx = cloneDeep(defualtCtx)
-    ctx.sls.service.custom.safeguards = false
-    await runPolicies(ctx)
-    expect(log).toHaveBeenCalledTimes(0)
-    expect(process.stdout.write).toHaveBeenCalledTimes(0)
-  })
+    getSafeguards.mockReturnValue(Promise.resolve([]));
+    const ctx = cloneDeep(defualtCtx);
+    ctx.sls.service.custom.safeguards = false;
+    await runPolicies(ctx);
+    expect(log).toHaveBeenCalledTimes(0);
+    expect(process.stdout.write).toHaveBeenCalledTimes(0);
+  });
 
   it('loads & runs 2 safeguards when specified by remote config', async () => {
-    const ctx = cloneDeep(defualtCtx)
+    const ctx = cloneDeep(defualtCtx);
     ctx.safeguards = [
       {
         title: 'Require Dead Letter Queues',
@@ -131,8 +131,8 @@ describe('safeguards', () => {
         safeguardConfig: null,
         describe: 'dude! no wild cards in iam roles!',
       },
-    ]
-    await runPolicies(ctx)
+    ];
+    await runPolicies(ctx);
     expect(log.mock.calls).toEqual([
       ['Safeguards Processing...', 'Serverless Enterprise'],
       [
@@ -148,19 +148,19 @@ describe('safeguards', () => {
         )}, ${chalk.red('0 errors')}`,
         '\nServerless Enterprise',
       ],
-    ])
+    ]);
     expect(process.stdout.write.mock.calls).toEqual([
       ['  running - Require Dead Letter Queues'],
       [`\r   ${chalk.green('passed')} - Require Dead Letter Queues\n`],
       ['  running - no wild iam'],
       [`\r   ${chalk.green('passed')} - no wild iam\n`],
-    ])
-    expect(requireDlq).toHaveBeenCalledTimes(1)
-    expect(iamPolicy).toHaveBeenCalledTimes(1)
-  })
+    ]);
+    expect(requireDlq).toHaveBeenCalledTimes(1);
+    expect(iamPolicy).toHaveBeenCalledTimes(1);
+  });
 
   it('loads & runs 1 warning safeguards at enforcementLevel=warning when specified by remote config', async () => {
-    const ctx = cloneDeep(defualtCtx)
+    const ctx = cloneDeep(defualtCtx);
     ctx.safeguards = [
       {
         title: 'no secrets',
@@ -170,8 +170,8 @@ describe('safeguards', () => {
         safeguardConfig: null,
         description: 'wtf yo? no secrets!',
       },
-    ]
-    await runPolicies(ctx)
+    ];
+    await runPolicies(ctx);
     expect(log.mock.calls).toEqual([
       ['Safeguards Processing...', 'Serverless Enterprise'],
       [
@@ -187,7 +187,7 @@ describe('safeguards', () => {
         )}, ${chalk.red('0 errors')}`,
         '\nServerless Enterprise',
       ],
-    ])
+    ]);
     expect(process.stdout.write.mock.calls).toEqual([
       ['  running - no secrets'],
       [`\r   ${chalk.keyword('orange')('warned')} - no secrets\n`],
@@ -200,12 +200,12 @@ describe('safeguards', () => {
 
 `,
       ],
-    ])
-    expect(secretsPolicy).toHaveBeenCalledTimes(1)
-  })
+    ]);
+    expect(secretsPolicy).toHaveBeenCalledTimes(1);
+  });
 
   it('loads & runs 1 error safeguards at enforcementLevel=error when specified by remote config', async () => {
-    const ctx = cloneDeep(defualtCtx)
+    const ctx = cloneDeep(defualtCtx);
     ctx.safeguards = [
       {
         title: 'no secrets',
@@ -215,10 +215,10 @@ describe('safeguards', () => {
         safeguardConfig: null,
         description: 'wtf yo? no secrets!',
       },
-    ]
+    ];
     await expect(runPolicies(ctx)).rejects.toThrow(
       'Deployment blocked by Serverless Enterprise Safeguards'
-    )
+    );
     expect(log.mock.calls).toEqual([
       ['Safeguards Processing...', 'Serverless Enterprise'],
       [
@@ -234,7 +234,7 @@ describe('safeguards', () => {
         )}, ${chalk.red('1 errors')}`,
         '\nServerless Enterprise',
       ],
-    ])
+    ]);
     expect(process.stdout.write.mock.calls).toEqual([
       ['  running - no secrets'],
       [`\r   ${chalk.red('failed')} - no secrets\n`],
@@ -247,7 +247,7 @@ describe('safeguards', () => {
 
 `,
       ],
-    ])
-    expect(secretsPolicy).toHaveBeenCalledTimes(1)
-  })
-})
+    ]);
+    expect(secretsPolicy).toHaveBeenCalledTimes(1);
+  });
+});

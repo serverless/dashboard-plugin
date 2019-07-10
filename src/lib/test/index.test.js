@@ -1,19 +1,19 @@
 'use strict';
 
-const chalk = require('chalk')
-const runTest = require('./runTest')
-const { test: testFunc } = require('./')
+const chalk = require('chalk');
+const runTest = require('./runTest');
+const { test: testFunc } = require('./');
 
-const realStdoutWrite = process.stdout.write
+const realStdoutWrite = process.stdout.write;
 
 afterEach(() => {
-  process.stdout.write = realStdoutWrite
-  jest.restoreAllMocks()
-})
+  process.stdout.write = realStdoutWrite;
+  jest.restoreAllMocks();
+});
 
 beforeEach(() => {
-  process.stdout.write = jest.fn()
-})
+  process.stdout.write = jest.fn();
+});
 
 jest.mock('fs-extra', () => ({
   exists: jest.fn().mockReturnValue(Promise.resolve(true)),
@@ -29,8 +29,8 @@ jest.mock('fs-extra', () => ({
       ])
     )
   ),
-}))
-jest.mock('./runTest', () => jest.fn().mockReturnValue(Promise.resolve()))
+}));
+jest.mock('./runTest', () => jest.fn().mockReturnValue(Promise.resolve()));
 
 describe('test', () => {
   it('calls runTest', async () => {
@@ -51,8 +51,8 @@ describe('test', () => {
           })
         ),
       },
-    }
-    await testFunc(ctx)
+    };
+    await testFunc(ctx);
     expect(runTest).toBeCalledWith(
       {
         name: 'foobar',
@@ -63,7 +63,7 @@ describe('test', () => {
       'blah',
       'post',
       'https://example.com'
-    )
+    );
     expect(ctx.sls.cli.log.mock.calls).toEqual([
       [
         `Test Results:
@@ -76,11 +76,11 @@ describe('test', () => {
         `Test Summary: ${chalk.green('1 passed')}, ${chalk.red('0 failed')}`,
         'Serverless Enterprise',
       ],
-    ])
+    ]);
     expect(process.stdout.write.mock.calls).toEqual([
       ['  running - POST blah - foobar'],
       [`\r   ${chalk.green('passed')} - POST blah - foobar\n`],
       ['\n'],
-    ])
-  })
-})
+    ]);
+  });
+});
