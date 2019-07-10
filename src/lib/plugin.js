@@ -43,11 +43,11 @@ class ServerlessEnterprisePlugin {
         sls.cli.log(
           'Run `serverless login` and deploy again to explore, monitor, secure your serverless project for free.',
           'Serverless Enterprise'
-        )
-    }
+        ),
+    };
 
     // forward compatibility with org
-    sls.service.tenant = sls.service.org || sls.service.tenant
+    sls.service.tenant = sls.service.org || sls.service.tenant;
 
     // Check if Enterprise is configured
     const missing = [];
@@ -69,7 +69,7 @@ class ServerlessEnterprisePlugin {
         !process.env.SERVERLESS_ACCESS_KEY)
     ) {
       if (missing.includes('org') && missing.includes('app')) {
-        return // user isn't trying to use SFE
+        return; // user isn't trying to use SFE
       }
       const errorMessage = 'You are not currently logged in. To log in, use: $ serverless login';
       console.log(''); // eslint-disable-line
