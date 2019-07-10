@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
@@ -11,5 +13,5 @@ module.exports = {
   testRunner: 'jest-circus/runner',
   // Workaround bug where output is not shown until test finalizes
   // https://github.com/facebook/jest/issues/5281
-  useStderr: true
-}
+  useStderr: true,
+};

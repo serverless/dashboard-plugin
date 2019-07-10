@@ -1,16 +1,18 @@
-const alexaSkill = require('./eventTypes/alexaSkill')
-const apiGateway = require('./eventTypes/apiGateway')
-const customAuthorizer = require('./eventTypes/customAuthorizer')
-const cloudFront = require('./eventTypes/cloudFront')
-const firehose = require('./eventTypes/firehose')
-const kinesis = require('./eventTypes/kinesis')
-const s3 = require('./eventTypes/s3')
-const scheduled = require('./eventTypes/scheduled')
-const slsIntegrationLamb = require('./eventTypes/slsIntegrationLambda')
-const sns = require('./eventTypes/sns')
-const sqs = require('./eventTypes/sqs')
+'use strict';
 
-const detectEventType = (event) =>
+const alexaSkill = require('./eventTypes/alexaSkill');
+const apiGateway = require('./eventTypes/apiGateway');
+const customAuthorizer = require('./eventTypes/customAuthorizer');
+const cloudFront = require('./eventTypes/cloudFront');
+const firehose = require('./eventTypes/firehose');
+const kinesis = require('./eventTypes/kinesis');
+const s3 = require('./eventTypes/s3');
+const scheduled = require('./eventTypes/scheduled');
+const slsIntegrationLamb = require('./eventTypes/slsIntegrationLambda');
+const sns = require('./eventTypes/sns');
+const sqs = require('./eventTypes/sqs');
+
+const detectEventType = event =>
   alexaSkill(event) ||
   // Custom authorizer must come before apiGateway because they share similar keys.
   customAuthorizer(event) ||
@@ -23,6 +25,6 @@ const detectEventType = (event) =>
   slsIntegrationLamb(event) ||
   sns(event) ||
   sqs(event) ||
-  null
+  null;
 
-module.exports = detectEventType
+module.exports = detectEventType;

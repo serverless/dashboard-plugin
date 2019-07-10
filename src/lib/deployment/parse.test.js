@@ -1,24 +1,26 @@
-const { version: pluginVersion } = require('../../../package.json')
-const { version: sdkVersion } = require('@serverless/platform-sdk/package.json')
-const parseDeploymentData = require('./parse')
+'use strict';
 
-const frameworkVersion = '1.38.0'
+const { version: pluginVersion } = require('../../../package.json');
+const { version: sdkVersion } = require('@serverless/platform-sdk/package.json');
+const parseDeploymentData = require('./parse');
+
+const frameworkVersion = '1.38.0';
 
 jest.mock('./getServerlessFilePath', () =>
   jest.fn().mockReturnValue(Promise.resolve('serverless.yml'))
-)
+);
 jest.mock('fs-extra', () => ({
-  readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar'))
-}))
+  readFile: jest.fn().mockReturnValue(Promise.resolve('service: foobar')),
+}));
 
 describe('parseDeploymentData', () => {
-  let getAccountId
-  let request
-  let getStackName
-  let getServiceEndpointRegex
+  let getAccountId;
+  let request;
+  let getStackName;
+  let getServiceEndpointRegex;
 
   beforeEach(() => {
-    getAccountId = jest.fn().mockReturnValue('account-id')
+    getAccountId = jest.fn().mockReturnValue('account-id');
     request = jest.fn().mockReturnValue(
       Promise.resolve({
         Stacks: [
@@ -26,24 +28,24 @@ describe('parseDeploymentData', () => {
             Outputs: [
               {
                 OutputKey: 'EnterpriseLogAccessIamRole',
-                OutputValue: 'arn:aws:iam::111111111111:role/foobarRole'
+                OutputValue: 'arn:aws:iam::111111111111:role/foobarRole',
               },
               {
                 OutputKey: 'apig',
-                OutputValue: 'https://api-id.execute.aws.amazon.com'
+                OutputValue: 'https://api-id.execute.aws.amazon.com',
               },
               {
                 OutputKey: 'apigWebsocket',
-                OutputValue: 'wss://api-id.execute.aws.amazon.com'
-              }
-            ]
-          }
-        ]
+                OutputValue: 'wss://api-id.execute.aws.amazon.com',
+              },
+            ],
+          },
+        ],
       })
-    )
-    getStackName = jest.fn().mockReturnValue('stackname')
-    getServiceEndpointRegex = jest.fn().mockReturnValue('apig')
-  })
+    );
+    getStackName = jest.fn().mockReturnValue('stackname');
+    getServiceEndpointRegex = jest.fn().mockReturnValue('apig');
+  });
 
   it('creates a deployment object correctly w/ no plugins', async () => {
     const serverless = {
@@ -61,28 +63,28 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
-          }
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }],
+          },
         },
-        outputs: { foo: 'bar' }
-      }
-    }
+        outputs: { foo: 'bar' },
+      },
+    };
     const provider = {
       getAccountId,
       request,
       naming: {
         getStackName,
-        getServiceEndpointRegex
+        getServiceEndpointRegex,
       },
       getStage: jest.fn().mockReturnValue('dev'),
-      getRegion: jest.fn().mockReturnValue('us-est-1')
-    }
+      getRegion: jest.fn().mockReturnValue('us-est-1'),
+    };
     const state = {
       safeguardsResults: [],
-      secretsUsed: new Set(['secret'])
-    }
+      secretsUsed: new Set(['secret']),
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -108,21 +110,21 @@ describe('parseDeploymentData', () => {
             tags: {},
             vpc: {
               securityGroupIds: [],
-              subnetIds: []
-            }
+              subnetIds: [],
+            },
           },
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
           timeout: undefined,
-          type: 'awsLambda'
-        }
+          type: 'awsLambda',
+        },
       },
       layers: {},
       plugins: [],
       provider: {
         aws: { accountId: 'account-id' },
-        type: 'aws'
+        type: 'aws',
       },
       regionName: 'us-est-1',
       resources: {},
@@ -141,22 +143,22 @@ describe('parseDeploymentData', () => {
           method: 'get',
           path: '/',
           restApiId: 'api-id',
-          type: 'http'
+          type: 'http',
         },
         {
           custom: {},
           function: 'service-dev-func',
           schedule: 'rate(10 minutes)',
-          type: 'schedule'
-        }
+          type: 'schedule',
+        },
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
-      versionSDK: sdkVersion
-    })
-  })
+      versionSDK: sdkVersion,
+    });
+  });
 
   it('creates a deployment object correctly w/ simple plugin list', async () => {
     const serverless = {
@@ -175,28 +177,28 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
-          }
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }],
+          },
         },
-        outputs: { foo: 'bar' }
-      }
-    }
+        outputs: { foo: 'bar' },
+      },
+    };
     const provider = {
       getAccountId,
       request,
       naming: {
         getStackName,
-        getServiceEndpointRegex
+        getServiceEndpointRegex,
       },
       getStage: jest.fn().mockReturnValue('dev'),
-      getRegion: jest.fn().mockReturnValue('us-est-1')
-    }
+      getRegion: jest.fn().mockReturnValue('us-est-1'),
+    };
     const state = {
       safeguardsResults: [],
-      secretsUsed: new Set(['secret'])
-    }
+      secretsUsed: new Set(['secret']),
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -222,21 +224,21 @@ describe('parseDeploymentData', () => {
             tags: {},
             vpc: {
               securityGroupIds: [],
-              subnetIds: []
-            }
+              subnetIds: [],
+            },
           },
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
           timeout: undefined,
-          type: 'awsLambda'
-        }
+          type: 'awsLambda',
+        },
       },
       layers: {},
       plugins: ['foo', 'bar'],
       provider: {
         aws: { accountId: 'account-id' },
-        type: 'aws'
+        type: 'aws',
       },
       regionName: 'us-est-1',
       resources: {},
@@ -255,22 +257,22 @@ describe('parseDeploymentData', () => {
           method: 'get',
           path: '/',
           restApiId: 'api-id',
-          type: 'http'
+          type: 'http',
         },
         {
           custom: {},
           function: 'service-dev-func',
           schedule: 'rate(10 minutes)',
-          type: 'schedule'
-        }
+          type: 'schedule',
+        },
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
-      versionSDK: sdkVersion
-    })
-  })
+      versionSDK: sdkVersion,
+    });
+  });
 
   it('creates a deployment object correctly w/ plugin object', async () => {
     const serverless = {
@@ -289,28 +291,28 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }]
-          }
+            events: [{ http: { path: '/', method: 'get' } }, { schedule: 'rate(10 minutes)' }],
+          },
         },
-        outputs: { foo: 'bar' }
-      }
-    }
+        outputs: { foo: 'bar' },
+      },
+    };
     const provider = {
       getAccountId,
       request,
       naming: {
         getStackName,
-        getServiceEndpointRegex
+        getServiceEndpointRegex,
       },
       getStage: jest.fn().mockReturnValue('dev'),
-      getRegion: jest.fn().mockReturnValue('us-est-1')
-    }
+      getRegion: jest.fn().mockReturnValue('us-est-1'),
+    };
     const state = {
       safeguardsResults: [],
-      secretsUsed: new Set(['secret'])
-    }
+      secretsUsed: new Set(['secret']),
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -336,21 +338,21 @@ describe('parseDeploymentData', () => {
             tags: {},
             vpc: {
               securityGroupIds: [],
-              subnetIds: []
-            }
+              subnetIds: [],
+            },
           },
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
           timeout: undefined,
-          type: 'awsLambda'
-        }
+          type: 'awsLambda',
+        },
       },
       layers: {},
       plugins: ['foo', 'bar'],
       provider: {
         aws: { accountId: 'account-id' },
-        type: 'aws'
+        type: 'aws',
       },
       regionName: 'us-est-1',
       resources: {},
@@ -369,22 +371,22 @@ describe('parseDeploymentData', () => {
           method: 'get',
           path: '/',
           restApiId: 'api-id',
-          type: 'http'
+          type: 'http',
         },
         {
           custom: {},
           function: 'service-dev-func',
           schedule: 'rate(10 minutes)',
-          type: 'schedule'
-        }
+          type: 'schedule',
+        },
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
-      versionSDK: sdkVersion
-    })
-  })
+      versionSDK: sdkVersion,
+    });
+  });
 
   it('creates a deployment object correctly with zeroconf alexaSkill', async () => {
     const serverless = {
@@ -402,28 +404,28 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: ['alexaSkill']
-          }
+            events: ['alexaSkill'],
+          },
         },
-        outputs: { foo: 'bar' }
-      }
-    }
+        outputs: { foo: 'bar' },
+      },
+    };
     const provider = {
       getAccountId,
       request,
       naming: {
         getStackName,
-        getServiceEndpointRegex
+        getServiceEndpointRegex,
       },
       getStage: jest.fn().mockReturnValue('dev'),
-      getRegion: jest.fn().mockReturnValue('us-est-1')
-    }
+      getRegion: jest.fn().mockReturnValue('us-est-1'),
+    };
     const state = {
       safeguardsResults: [],
-      secretsUsed: new Set(['secret'])
-    }
+      secretsUsed: new Set(['secret']),
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -449,21 +451,21 @@ describe('parseDeploymentData', () => {
             tags: {},
             vpc: {
               securityGroupIds: [],
-              subnetIds: []
-            }
+              subnetIds: [],
+            },
           },
           description: null,
           name: 'service-dev-func',
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           timeout: undefined,
-          type: 'awsLambda'
-        }
+          type: 'awsLambda',
+        },
       },
       layers: {},
       plugins: [],
       provider: {
         aws: { accountId: 'account-id' },
-        type: 'aws'
+        type: 'aws',
       },
       regionName: 'us-est-1',
       resources: {},
@@ -477,16 +479,16 @@ describe('parseDeploymentData', () => {
         {
           custom: {},
           function: 'service-dev-func',
-          type: 'alexaSkill'
-        }
+          type: 'alexaSkill',
+        },
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
-      versionSDK: sdkVersion
-    })
-  })
+      versionSDK: sdkVersion,
+    });
+  });
 
   it('creates a deployment object correctly with websocket', async () => {
     const serverless = {
@@ -504,28 +506,28 @@ describe('parseDeploymentData', () => {
         functions: {
           func: {
             handler: 'func.handler',
-            events: [{ websocket: { route: '$connect' } }, { schedule: 'rate(10 minutes)' }]
-          }
+            events: [{ websocket: { route: '$connect' } }, { schedule: 'rate(10 minutes)' }],
+          },
         },
-        outputs: { foo: 'bar' }
-      }
-    }
+        outputs: { foo: 'bar' },
+      },
+    };
     const provider = {
       getAccountId,
       request,
       naming: {
         getStackName,
-        getServiceEndpointRegex
+        getServiceEndpointRegex,
       },
       getStage: jest.fn().mockReturnValue('dev'),
-      getRegion: jest.fn().mockReturnValue('us-est-1')
-    }
+      getRegion: jest.fn().mockReturnValue('us-est-1'),
+    };
     const state = {
       safeguardsResults: [],
-      secretsUsed: new Set(['secret'])
-    }
+      secretsUsed: new Set(['secret']),
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -551,21 +553,21 @@ describe('parseDeploymentData', () => {
             tags: {},
             vpc: {
               securityGroupIds: [],
-              subnetIds: []
-            }
+              subnetIds: [],
+            },
           },
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:service-dev-func',
           name: 'service-dev-func',
           timeout: undefined,
-          type: 'awsLambda'
-        }
+          type: 'awsLambda',
+        },
       },
       layers: {},
       plugins: [],
       provider: {
         aws: { accountId: 'account-id' },
-        type: 'aws'
+        type: 'aws',
       },
       regionName: 'us-est-1',
       resources: {},
@@ -581,22 +583,22 @@ describe('parseDeploymentData', () => {
           function: 'service-dev-func',
           type: 'websocket',
           websocketApiId: 'api-id',
-          route: '$connect'
+          route: '$connect',
         },
         {
           custom: {},
           function: 'service-dev-func',
           schedule: 'rate(10 minutes)',
-          type: 'schedule'
-        }
+          type: 'schedule',
+        },
       ],
       tenantName: 'tenant',
       tenantUid: 'txxx',
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
-      versionSDK: sdkVersion
-    })
-  })
+      versionSDK: sdkVersion,
+    });
+  });
 
   it('creates a deployment object correctly without http events', async () => {
     const serverless = {
@@ -612,25 +614,25 @@ describe('parseDeploymentData', () => {
         provider: { stage: 'prod', region: 'us-est-2' },
         layers: {},
         functions: { func: { handler: 'func.handler', name: 'func-custom' } },
-        outputs: { foo: 'bar' }
-      }
-    }
+        outputs: { foo: 'bar' },
+      },
+    };
     const provider = {
       getAccountId,
       request,
       naming: {
         getStackName,
-        getServiceEndpointRegex
+        getServiceEndpointRegex,
       },
       getStage: jest.fn().mockReturnValue('dev'),
-      getRegion: jest.fn().mockReturnValue('us-est-1')
-    }
+      getRegion: jest.fn().mockReturnValue('us-est-1'),
+    };
     const state = {
       safeguardsResults: [],
-      secretsUsed: new Set(['secret'])
-    }
+      secretsUsed: new Set(['secret']),
+    };
 
-    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state })
+    const deployment = await parseDeploymentData({ sls: serverless, serverless, provider, state });
 
     expect(deployment.get()).toEqual({
       serverlessFile: 'service: foobar',
@@ -656,21 +658,21 @@ describe('parseDeploymentData', () => {
             tags: {},
             vpc: {
               securityGroupIds: [],
-              subnetIds: []
-            }
+              subnetIds: [],
+            },
           },
           description: null,
           arn: 'arn:aws:lambda:us-est-1:account-id:function:func-custom',
           name: 'func-custom',
           timeout: undefined,
-          type: 'awsLambda'
-        }
+          type: 'awsLambda',
+        },
       },
       layers: {},
       plugins: [],
       provider: {
         aws: { accountId: 'account-id' },
-        type: 'aws'
+        type: 'aws',
       },
       regionName: 'us-est-1',
       resources: {},
@@ -685,7 +687,7 @@ describe('parseDeploymentData', () => {
       tenantUid: 'txxx',
       versionEnterprisePlugin: pluginVersion,
       versionFramework: frameworkVersion,
-      versionSDK: sdkVersion
-    })
-  })
-})
+      versionSDK: sdkVersion,
+    });
+  });
+});

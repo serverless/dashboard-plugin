@@ -1,13 +1,15 @@
+'use strict';
+
 /*
  * Save Deployment
  * - This uses the new deployment data model.
  */
 
-const fs = require('fs-extra')
-const _ = require('lodash')
-const SDK = require('@serverless/platform-sdk')
-const getServerlessFilePath = require('./getServerlessFilePath')
-const { version: packageJsonVersion } = require('../../../package.json')
+const fs = require('fs-extra');
+const _ = require('lodash');
+const SDK = require('@serverless/platform-sdk');
+const getServerlessFilePath = require('./getServerlessFilePath');
+const { version: packageJsonVersion } = require('../../../package.json');
 
 /*
  * Parse Deployment Data
@@ -15,30 +17,30 @@ const { version: packageJsonVersion } = require('../../../package.json')
  */
 
 const parseDeploymentData = async (ctx, status = 'success', error = null, archived = false) => {
-  const { service } = ctx.sls
-  const deployment = new SDK.Deployment()
+  const { service } = ctx.sls;
+  const deployment = new SDK.Deployment();
 
-  const accountId = await ctx.provider.getAccountId()
+  const accountId = await ctx.provider.getAccountId();
   const serverlessFileName = await getServerlessFilePath(
     ctx.sls.processedInput.options.config,
     ctx.sls.config.servicePath
-  )
-  const serverlessFile = (await fs.readFile(serverlessFileName)).toString()
+  );
+  const serverlessFile = (await fs.readFile(serverlessFileName)).toString();
   /*
    * Add deployment data...
    */
 
   if (!archived) {
     const cfnStack = await ctx.provider.request('CloudFormation', 'describeStacks', {
-      StackName: ctx.provider.naming.getStackName()
-    })
+      StackName: ctx.provider.naming.getStackName(),
+    });
 
     // get log access role info
     const logsRole = _.find(
       cfnStack.Stacks[0].Outputs,
       ({ OutputKey }) => OutputKey === 'EnterpriseLogAccessIamRole'
-    )
-    const logsRoleArn = logsRole && logsRole.OutputValue
+    );
+    const logsRoleArn = logsRole && logsRole.OutputValue;
 
     deployment.set({
       serverlessFile,
@@ -58,7 +60,7 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       status,
       provider: {
         type: 'aws',
-        aws: { accountId }
+        aws: { accountId },
         // environment: Object.keys(service.provider.environment || {})
       },
       layers: service.layers || {},
@@ -67,18 +69,18 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       safeguards: ctx.state.safeguardsResults,
       secrets: Array.from(ctx.state.secretsUsed),
       outputs: service.outputs,
-      error
-    })
+      error,
+    });
 
     /*
      * Add this deployment's functions...
      */
 
-    for (const fnName in service.functions) {
-      const fn = service.functions[fnName]
+    for (const fnName of Object.keys(service.functions)) {
+      const fn = service.functions[fnName];
       const deployedFunctionName =
-        fn.name || `${service.service}-${ctx.provider.getStage()}-${fnName}`
-      fn.events = fn.events || []
+        fn.name || `${service.service}-${ctx.provider.getStage()}-${fnName}`;
+      fn.events = fn.events || [];
 
       // Function
       deployment.setFunction({
@@ -98,41 +100,41 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
           tags: fn.tags || {},
           vpc: fn.vpc || {},
           layers: fn.layers || [],
-          name: fn.name || fnName
-        }
-      })
+          name: fn.name || fnName,
+        },
+      });
 
       /*
        * Add this functions's subscriptions...
        */
 
       for (const sub of fn.events) {
-        let subDetails = {}
-        let type
+        let subDetails = {};
+        let type;
         if (typeof sub === 'string') {
-          type = sub
+          type = sub;
         } else {
-          type = Object.keys(sub)[0]
+          type = Object.keys(sub)[0];
           if (type === 'http') {
             const apigResource = _.find(
               cfnStack.Stacks[0].Outputs,
               ({ OutputKey }) =>
                 !OutputKey.endsWith('Websocket') &&
                 OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
-            )
+            );
             const apiId =
-              apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0]
+              apigResource && apigResource.OutputValue.split('https://')[1].split('.')[0];
             subDetails = {
               path: sub.http.path,
               method: sub.http.method,
               cors: sub.http.cors,
               integration: sub.http.integration,
-              restApiId: apiId
-            }
+              restApiId: apiId,
+            };
           } else if (sub[type] instanceof Object) {
-            Object.assign(subDetails, sub[type])
+            Object.assign(subDetails, sub[type]);
           } else {
-            Object.assign(subDetails, { [type]: sub[type] })
+            Object.assign(subDetails, { [type]: sub[type] });
           }
           if (type === 'websocket') {
             const apigResource = _.find(
@@ -140,13 +142,13 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
               ({ OutputKey }) =>
                 OutputKey.endsWith('Websocket') &&
                 OutputKey.match(ctx.provider.naming.getServiceEndpointRegex())
-            )
-            const apiId = apigResource && apigResource.OutputValue.split('wss://')[1].split('.')[0]
-            subDetails.websocketApiId = apiId
+            );
+            const apiId = apigResource && apigResource.OutputValue.split('wss://')[1].split('.')[0];
+            subDetails.websocketApiId = apiId;
           }
         }
 
-        deployment.setSubscription({ type, function: deployedFunctionName, ...subDetails })
+        deployment.setSubscription({ type, function: deployedFunctionName, ...subDetails });
       }
     }
   } else {
@@ -163,11 +165,11 @@ const parseDeploymentData = async (ctx, status = 'success', error = null, archiv
       archived,
       status,
       secrets: Array.from(ctx.state.secretsUsed),
-      error
-    })
+      error,
+    });
   }
 
-  return deployment
-}
+  return deployment;
+};
 
-module.exports = parseDeploymentData
+module.exports = parseDeploymentData;

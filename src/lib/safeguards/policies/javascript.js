@@ -1,42 +1,44 @@
-const jsonataQuery = require('jsonata')
-const vm = require('vm')
+'use strict';
+
+const jsonataQuery = require('jsonata');
+const vm = require('vm');
 
 const execStatement = (service, statement) => {
-  const jsonata = (queryStatement) => {
-    const expression = jsonataQuery(queryStatement)
-    const value = expression.evaluate(service)
+  const jsonata = queryStatement => {
+    const expression = jsonataQuery(queryStatement);
+    const value = expression.evaluate(service);
     if (Array.isArray(value)) {
-      return value.length > 0
+      return value.length > 0;
     } else if (typeof value === 'object') {
-      return Object.keys(value).length > 0
+      return Object.keys(value).length > 0;
     }
-    return Boolean(value)
-  }
+    return Boolean(value);
+  };
 
   const sandbox = {
     jsonata,
-    ...service
-  }
+    ...service,
+  };
 
-  vm.createContext(sandbox)
+  vm.createContext(sandbox);
 
-  return vm.runInContext(statement, sandbox)
-}
+  return vm.runInContext(statement, sandbox);
+};
 
 module.exports = function javascriptPolicy(policy, service, options) {
-  const statement = JSON.parse(options)
-  let response
+  const statement = JSON.parse(options);
+  let response;
   try {
-    response = execStatement(service, statement)
+    response = execStatement(service, statement);
   } catch (ex) {
-    policy.fail(`Error in the policy statement: "${statement}"`)
-    return
+    policy.fail(`Error in the policy statement: "${statement}"`);
+    return;
   }
   if (!response) {
-    policy.fail('Must comply with all of the configured queries.')
-    return
+    policy.fail('Must comply with all of the configured queries.');
+    return;
   }
-  policy.approve()
-}
+  policy.approve();
+};
 
-module.exports.docs = 'https://git.io/fjI97'
+module.exports.docs = 'https://git.io/fjI97';

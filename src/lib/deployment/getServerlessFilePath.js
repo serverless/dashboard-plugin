@@ -1,44 +1,46 @@
-const path = require('path')
-const fs = require('fs-extra')
+'use strict';
 
-const fileExists = async (filename) => {
+const path = require('path');
+const fs = require('fs-extra');
+
+const fileExists = async filename => {
   try {
-    const stat = await fs.lstat(filename)
-    return stat.isFile()
+    const stat = await fs.lstat(filename);
+    return stat.isFile();
   } catch (error) {
-    return false
+    return false;
   }
-}
+};
 
 module.exports = async function getServerlessFilePath(filename, servicePath) {
   if (filename) {
-    const filePath = path.join(servicePath, filename)
-    const customExists = await fileExists(filePath)
+    const filePath = path.join(servicePath, filename);
+    const customExists = await fileExists(filePath);
     if (!customExists) {
-      throw new Error('Could not find serverless service definition file.')
+      throw new Error('Could not find serverless service definition file.');
     }
-    return filePath
+    return filePath;
   }
 
-  const ymlFilePath = path.join(servicePath, 'serverless.yml')
-  const yamlFilePath = path.join(servicePath, 'serverless.yaml')
-  const jsonFilePath = path.join(servicePath, 'serverless.json')
-  const jsFilePath = path.join(servicePath, 'serverless.js')
+  const ymlFilePath = path.join(servicePath, 'serverless.yml');
+  const yamlFilePath = path.join(servicePath, 'serverless.yaml');
+  const jsonFilePath = path.join(servicePath, 'serverless.json');
+  const jsFilePath = path.join(servicePath, 'serverless.js');
 
   const [json, yml, yaml, js] = await Promise.all([
     fileExists(jsonFilePath),
     fileExists(ymlFilePath),
     fileExists(yamlFilePath),
-    fileExists(jsFilePath)
-  ])
+    fileExists(jsFilePath),
+  ]);
   if (yml) {
-    return ymlFilePath
+    return ymlFilePath;
   } else if (yaml) {
-    return yamlFilePath
+    return yamlFilePath;
   } else if (json) {
-    return jsonFilePath
+    return jsonFilePath;
   } else if (js) {
-    return jsFilePath
+    return jsFilePath;
   }
-  throw new Error('Could not find any serverless service definition file.')
-}
+  throw new Error('Could not find any serverless service definition file.');
+};

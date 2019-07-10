@@ -1,56 +1,58 @@
+'use strict';
+
 // coppied from https://github.com/sindresorhus/serialize-error/blob/master/index.js and converted
 // to use _.entries instead of Object.entries. and linted for our standards
 
-const { entries } = require('lodash')
+const { entries } = require('lodash');
 
 const destroyCircular = (from, seen) => {
-  const to = Array.isArray(from) ? [] : {}
+  const to = Array.isArray(from) ? [] : {};
 
-  seen.push(from)
+  seen.push(from);
 
   for (const [key, value] of entries(from)) {
     if (typeof value === 'function') {
-      continue
+      continue;
     }
 
     if (!value || typeof value !== 'object') {
-      to[key] = value
-      continue
+      to[key] = value;
+      continue;
     }
 
     if (!seen.includes(from[key])) {
-      to[key] = destroyCircular(from[key], seen.slice())
-      continue
+      to[key] = destroyCircular(from[key], seen.slice());
+      continue;
     }
 
-    to[key] = '[Circular]'
+    to[key] = '[Circular]';
   }
 
-  const commonProperties = ['name', 'message', 'stack', 'code']
+  const commonProperties = ['name', 'message', 'stack', 'code'];
 
   for (const property of commonProperties) {
     if (typeof from[property] === 'string') {
-      to[property] = from[property]
+      to[property] = from[property];
     }
   }
 
-  return to
-}
+  return to;
+};
 
-const serializeError = (value) => {
+const serializeError = value => {
   if (typeof value === 'object') {
-    return destroyCircular(value, [])
+    return destroyCircular(value, []);
   }
 
   // People sometimes throw things besides Error objects…
   if (typeof value === 'function') {
     // `JSON.stringify()` discards functions. We do too, unless a function is thrown directly.
-    return `[Function: ${value.name || 'anonymous'}]`
+    return `[Function: ${value.name || 'anonymous'}]`;
   }
 
-  return value
-}
+  return value;
+};
 
-module.exports = serializeError
+module.exports = serializeError;
 // TODO: Remove this for the next major release
-module.exports.default = serializeError
+module.exports.default = serializeError;

@@ -2,7 +2,7 @@ service: safeguards-example-service
 app: plugin-test
 tenant: dschep
 
-frameworkVersion: ">=1.45.1"
+frameworkVersion: '>=1.45.1'
 
 provider:
   name: aws

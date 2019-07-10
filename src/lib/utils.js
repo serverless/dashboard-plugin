@@ -1,23 +1,25 @@
+'use strict';
+
 function upperFirst(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function pickResourceType(template, resourcesType) {
-  const resources = []
-  for (const key in template.Resources) {
-    const resource = template.Resources[key]
+  const resources = [];
+  for (const key of Object.keys(template.Resources)) {
+    const resource = template.Resources[key];
     if (resource.Type === resourcesType) {
       resources.push({
         key,
-        resource
-      })
+        resource,
+      });
     }
   }
-  return resources
+  return resources;
 }
 
-const API_GATEWAY_FILTER_PATTERN = '"SLS_ACCESS_LOG"'
-const LAMBDA_FILTER_PATTERN = '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"'
+const API_GATEWAY_FILTER_PATTERN = '"SLS_ACCESS_LOG"';
+const LAMBDA_FILTER_PATTERN = '?"REPORT RequestId: " ?"SERVERLESS_ENTERPRISE"';
 const API_GATEWAY_LOG_FORMAT = {
   requestTime: '$context.requestTime',
   requestId: '$context.requestId',
@@ -34,13 +36,13 @@ const API_GATEWAY_LOG_FORMAT = {
   responseLength: '$context.responseLength',
   errorMessage: '$context.error.message',
   format: 'SLS_ACCESS_LOG',
-  version: '1.0.0'
-}
+  version: '1.0.0',
+};
 
 module.exports = {
   upperFirst,
   pickResourceType,
   API_GATEWAY_FILTER_PATTERN,
   LAMBDA_FILTER_PATTERN,
-  API_GATEWAY_LOG_FORMAT
-}
+  API_GATEWAY_LOG_FORMAT,
+};
