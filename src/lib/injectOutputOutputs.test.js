@@ -1,6 +1,7 @@
 'use strict';
 
 const injectOutputOutputs = require('./injectOutputOutputs');
+
 jest.mock('@serverless/platform-sdk', () => ({
   getAccessKeyForTenant: jest.fn().mockReturnValue(Promise.resolve('token')),
   getMetadata: jest.fn().mockReturnValue(Promise.resolve({ awsAccountId: '111111' })),
@@ -24,7 +25,7 @@ describe('injectOutputOutputs', () => {
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Outputs: {
         SFEOutputiamRole: {
-          Description: `SFE output "iamRole"`,
+          Description: 'SFE output "iamRole"',
           Value: { 'Fn::Join': ['', ['a', 'b']] },
         },
       },
@@ -47,7 +48,7 @@ describe('injectOutputOutputs', () => {
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Outputs: {
         SFEOutputiamRole: {
-          Description: `SFE output "iamRole"`,
+          Description: 'SFE output "iamRole"',
           Value: { 'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'] },
         },
       },
@@ -71,7 +72,7 @@ describe('injectOutputOutputs', () => {
     expect(ctx.sls.service.provider.compiledCloudFormationTemplate).toEqual({
       Outputs: {
         SFEOutputapig: {
-          Description: `SFE output "apig"`,
+          Description: 'SFE output "apig"',
           Value: { Ref: 'ApiGatewayRestId' },
         },
       },
