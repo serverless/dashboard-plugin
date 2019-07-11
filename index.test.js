@@ -4,7 +4,7 @@ describe('index', () => {
   test('registers regeneratorRuntime', () => {
     jest.resetModules();
     global.regeneratorRuntime = undefined;
-    require('./index');
+    require('./');
     expect(global.regeneratorRuntime).toBe(require('regenerator-runtime'));
   });
 });
