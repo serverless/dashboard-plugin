@@ -174,6 +174,7 @@ module.exports.captureAwsRequestSpan = function(resp) {
 
   const spanDetails = {
     tags: {
+      type: 'aws',
       requestHostname: hostname,
       aws: {
         region: awsRegion,
