@@ -45,8 +45,9 @@ script:
 # Ensure to fail build if deploy fails, Travis doesn't ensure that: https://github.com/travis-ci/travis-ci/issues/921
 before_deploy:
   - set -e
-  - npm run build
   - node ./scripts/updatePreReleaseVersion.js
+  - npm run build
+  - cd dist
   # Remove eventual old npm logs (needed for deploy status check)
   - rm -rf ~/.npm/_logs
 after_deploy:
