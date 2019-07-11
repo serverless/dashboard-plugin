@@ -46,6 +46,9 @@ class ServerlessEnterprisePlugin {
         ),
     };
 
+    // forward compatibility with org
+    sls.service.tenant = sls.service.org || sls.service.tenant;
+
     // Check if Enterprise is configured
     const missing = [];
     if (!sls.service.tenant) {
@@ -65,7 +68,7 @@ class ServerlessEnterprisePlugin {
         currentCommand !== 'logout' &&
         !process.env.SERVERLESS_ACCESS_KEY)
     ) {
-      if (missing.includes('tenant') && missing.includes('app')) {
+      if (missing.includes('org') && missing.includes('app')) {
         return; // user isn't trying to use SFE
       }
       const errorMessage = 'You are not currently logged in. To log in, use: $ serverless login';
