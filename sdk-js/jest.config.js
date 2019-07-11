@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-  coverageDirectory: '../coverage/',
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  coverageDirectory: '../coverage/',
   testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };
