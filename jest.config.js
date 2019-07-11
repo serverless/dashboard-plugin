@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = {
-  collectCoverage: true,
   coveragePathIgnorePatterns: [
     '^<rootDir>/(?:examples|integration-testing|node_modules)/',
     '^<rootDir>/.+\\.test.js$',

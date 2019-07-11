@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "NODE_ENV=production npm run folder && npm run webpack",
+    "cover": "jest --coverage",
     "folder": "rm -rf dist && mkdir dist",
     "lint": "eslint --cache .",
     "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",

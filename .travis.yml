@@ -103,9 +103,9 @@ jobs:
       before_install:
         - npm install -g npm codecov
       script:
-        - npm test
+        - npm run cover
         - cd sdk-js
-        - npm test
+        - npm run cover
         - cd ..
         - codecov
 
