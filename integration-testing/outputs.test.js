@@ -7,7 +7,7 @@ let sls1;
 let sls2;
 let teardown;
 
-jest.setTimeout(1000 * 60 * 3);
+jest.setTimeout(1000 * 60 * 5);
 
 beforeAll(
   async () =>

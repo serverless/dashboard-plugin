@@ -6,7 +6,7 @@ const setup = require('./setup');
 let sls;
 let teardown;
 
-jest.setTimeout(1000 * 60 * 3);
+jest.setTimeout(1000 * 60 * 5);
 
 beforeAll(async () => ({ sls, teardown } = await setup('service')));
 
