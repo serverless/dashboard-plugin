@@ -7,7 +7,7 @@
   "description": "The Serverless Enterprise plugin",
   "scripts": {
     "build": "./scripts/build.sh",
-    "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'",
+    "integration-test": "jest integration-testing",
     "lint": "eslint --cache .",
     "lint:staged": "lint-staged",
     "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",
@@ -15,7 +15,7 @@
     "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c --ignore-path .eslintignore",
     "prettify": "prettier --write --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
     "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write --ignore-path .eslintignore",
-    "test": "jest src --coveragePathIgnorePatterns='.*\\.test\\.js'",
+    "test": "jest --testPathIgnorePatterns=\"^<rootDir>/(?:coverage|dist|node_modules|sdk-js|integration-testing)/\"",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack"
   },
@@ -98,7 +98,7 @@
   "license": "Apache-2.0",
   "lint-staged": {
     "*.js": [
-      "eslint --fix src",
+      "eslint --fix .",
       "eslint --fix sdk-js/src",
       "git add -A"
     ]

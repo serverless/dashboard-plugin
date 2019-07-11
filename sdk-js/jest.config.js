@@ -2,8 +2,8 @@
 
 module.exports = {
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: '../coverage/',
+  coveragePathIgnorePatterns: ['^<rootDir>/.+\\.test.js$'],
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testPathIgnorePatterns: ['^<rootDir>/(?:dist|node_modules)/'],
 };
