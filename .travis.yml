@@ -108,6 +108,7 @@ jobs:
         - npm run cover
         - cd ..
         - codecov
+        - codecov -p sdk-js
 
     - name: 'Unit Tests - Node.js v8'
       node_js: 8
