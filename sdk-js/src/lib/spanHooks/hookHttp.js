@@ -39,13 +39,15 @@ module.exports = (emitter) => {
         }
 
         if ((captureHosts['*'] || captureHosts[requestHostname]) && !ignoreHosts[requestHostname]) {
-          clientRequest.on('response', function() {
+          clientRequest.on('response', function(response) {
             const endTime = Date.now()
 
             emitter.emit('span', {
               tags: {
+                type: 'http',
                 requestHostname,
-                httpMethod: clientRequest.method
+                httpMethod: clientRequest.method,
+                httpStatus: response.statusCode
               },
               startTime: new Date(startTime).toISOString(),
               endTime: new Date(endTime).toISOString(),
