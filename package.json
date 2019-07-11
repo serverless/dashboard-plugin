@@ -5,7 +5,6 @@
     "node": ">=6.0"
   },
   "description": "The Serverless Enterprise plugin",
-  "main": "dist/index.js",
   "scripts": {
     "build": "./scripts/build.sh",
     "integration-test": "jest integration-testing --coveragePathIgnorePatterns='.*\\.test\\.js'",
