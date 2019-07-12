@@ -52,7 +52,7 @@ const retrieveServerless = memoize(async () => {
   await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
   console.info('... symlink local @serverless/enterprise-plugin into dependencies');
   await ensureSymlink(
-    path.join(__dirname, '..'),
+    path.join(__dirname, '../dist'),
     path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin')
   );
 
