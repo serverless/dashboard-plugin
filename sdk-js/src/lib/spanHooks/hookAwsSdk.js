@@ -1,3 +1,5 @@
+'use strict';
+
 const requireHook = require('require-in-the-middle')
 const { captureAwsRequestSpan } = require('../parsers')
 
@@ -18,7 +20,7 @@ module.exports = (emitter) => {
         })
         // Send the request as usual
         return _send.apply(_thisRequest, _args)
-      }
+      },
     })
 
     return awsSdk
