@@ -8,8 +8,6 @@ const spanEmitter = new EventEmitter()
 
 require('./lib/spanHooks/hookAwsSdk')(spanEmitter)
 require('./lib/spanHooks/hookHttp')(spanEmitter)
-
-const spanEmitter = require('./lib/proxyAwsSdk');
 /*
  * Serverless SDK
  */

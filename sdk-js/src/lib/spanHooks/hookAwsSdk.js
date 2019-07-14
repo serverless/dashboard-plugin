@@ -1,5 +1,5 @@
 const requireHook = require('require-in-the-middle')
-const { captureAwsRequestSpan } = require('./parsers')
+const { captureAwsRequestSpan } = require('../parsers')
 
 module.exports = (emitter) => {
   requireHook(['aws-sdk'], (awsSdk) => {
