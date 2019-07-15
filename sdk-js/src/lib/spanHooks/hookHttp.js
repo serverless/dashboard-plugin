@@ -1,3 +1,5 @@
+'use strict';
+
 const url = require('url')
 const http = require('http')
 const https = require('https')
@@ -39,7 +41,7 @@ module.exports = (emitter) => {
         }
 
         if ((captureHosts['*'] || captureHosts[requestHostname]) && !ignoreHosts[requestHostname]) {
-          clientRequest.on('response', function(response) {
+          clientRequest.on('response', (response) => {
             const endTime = Date.now()
 
             emitter.emit('span', {
@@ -47,17 +49,17 @@ module.exports = (emitter) => {
                 type: 'http',
                 requestHostname,
                 httpMethod: clientRequest.method,
-                httpStatus: response.statusCode
+                httpStatus: response.statusCode,
               },
               startTime: new Date(startTime).toISOString(),
               endTime: new Date(endTime).toISOString(),
-              duration: endTime - startTime
+              duration: endTime - startTime,
             })
           })
         }
 
         return clientRequest
-      }
+      },
     })
 
     return _http
