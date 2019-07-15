@@ -3,13 +3,13 @@
 /*
  * Spans and Monkey Patching
  */
-const EventEmitter = require('events')
-const spanEmitter = new EventEmitter()
+const EventEmitter = require('events');
 
-require('./lib/spanHooks/hookAwsSdk')(spanEmitter)
-require('./lib/spanHooks/hookHttp')(spanEmitter)
+const spanEmitter = new EventEmitter();
 
-const spanEmitter = require('./lib/proxyAwsSdk');
+require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
+require('./lib/spanHooks/hookHttp')(spanEmitter);
+
 /*
  * Serverless SDK
  */
