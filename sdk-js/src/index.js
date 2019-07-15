@@ -205,10 +205,9 @@ class ServerlessSDK {
               return callback.call(functionContext, error || null, res || null);
             };
 
-            if (error || capturedError) {
-              if (capturedError) {
-                return trans.error(capturedError, false, cb);
-              }
+            if (capturedError) {
+              return trans.error(capturedError, false, cb);
+            } else if (error) {
               return trans.error(error, true, cb);
             }
             return trans.end(cb);
