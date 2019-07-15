@@ -45,8 +45,9 @@ script:
 # Ensure to fail build if deploy fails, Travis doesn't ensure that: https://github.com/travis-ci/travis-ci/issues/921
 before_deploy:
   - set -e
-  - npm run build
   - node ./scripts/updatePreReleaseVersion.js
+  - npm run build
+  - cd dist
   # Remove eventual old npm logs (needed for deploy status check)
   - rm -rf ~/.npm/_logs
 after_deploy:
@@ -69,7 +70,23 @@ jobs:
     # In most cases it's best to configure one job per platform & Node.js version combination
     # (job boot & setup takes ca 1 minute, one task run usually lasts seconds)
 
-    - name: 'Lint, Unit Tests - Linux - Node.js v12'
+    - name: 'Prettier check updated, Lint updated, Unit Tests - Node.js v12'
+      if: type = pull_request
+      node_js: 12
+      script:
+        - npm run prettier-check:updated
+        - npm run lint:updated
+        - cd sdk-js
+        - npm run prettier-check:updated
+        - npm run lint:updated
+        - cd ..
+        - npm test
+        - cd sdk-js
+        - npm test
+        - cd ..
+
+    - name: 'Lint, Unit Tests - Node.js v12'
+      if: type != pull_request
       node_js: 12
       script:
         - npm run lint
@@ -81,25 +98,26 @@ jobs:
         - npm test
         - cd ..
 
-    - name: 'Unit Tests, Coverage - Linux - Node.js v10'
+    - name: 'Unit Tests, Coverage - Node.js v10'
       node_js: 10
       before_install:
         - npm install -g npm codecov
       script:
-        - npm test
+        - npm run cover
         - cd sdk-js
-        - npm test
+        - npm run cover
         - cd ..
         - codecov
+        - codecov -p sdk-js
 
-    - name: 'Unit Tests - Linux - Node.js v8'
+    - name: 'Unit Tests - Node.js v8'
       node_js: 8
 
-    - name: 'Unit Tests - Linux - Node.js v6'
+    - name: 'Unit Tests - Node.js v6'
       node_js: 6
 
     - stage: Integration Test
-      name: 'Integration Tests - Linux - Node.js v12'
+      name: 'Integration Tests - Node.js v12'
       node_js: 12
       env:
         # SERVERLESS_ACCESS_KEY
@@ -131,6 +149,7 @@ jobs:
       before_install: node ./scripts/updatePreReleaseDependency.js
       deploy:
         provider: npm
+        tag: next # this is the NPM tag, not git tag.
         skip_cleanup: true
         email: services@serverless.com
         api_key:
