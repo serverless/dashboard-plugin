@@ -1,6 +1,0 @@
-diff a/sdk-js/src/index.js b/sdk-js/src/index.js	(rejected hunks)
-@@ -56,3 +56 @@ class ServerlessSDK {
--        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${
--          os.EOL
--        }${config}...`
-+        `ServerlessSDK: Handler: Loading function handler with these inputs: ${os.EOL}${fn}${os.EOL}${config}...`
