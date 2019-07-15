@@ -140,7 +140,7 @@ class Transaction {
     if (!_.has(this.$.schema, key)) {
       throw new Error(`ServerlessSDK: Invalid transaction property: "${key}"`);
     }
-    if (key && val) {
+    if (key && val !== undefined) {
       _.set(this.$.schema, key, val);
     }
   }
