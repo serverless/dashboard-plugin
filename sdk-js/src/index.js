@@ -228,6 +228,7 @@ class ServerlessSDK {
         context.captureError = (err) => {
           capturedError = err;
         };
+        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._captureError = context.captureError;
 
         // Set up span listener
@@ -269,6 +270,7 @@ class ServerlessSDK {
   }
 
   static captureError(error) {
+    // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._captureError(error);
   }
 }
