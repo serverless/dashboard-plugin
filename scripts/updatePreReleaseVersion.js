@@ -15,6 +15,9 @@ const version = semver.valid(
     .slice(0, -1)
 );
 
+// eslint-disable-next-line no-console
+console.log(version);
+
 if (packageJson.version === version && !process.env.TRAVIS_TAG) {
   // eslint-disable-next-line no-console
   console.error(
