@@ -54,6 +54,9 @@ after_deploy:
   - |
     # npm creates log only on failure
     if [ -d ~/.npm/_logs ]; then
+      # More debug info
+      ls -Rla .
+      cat package.json
       # Undocumented way to force Travis build to fail
       travis_terminate 1
     fi
