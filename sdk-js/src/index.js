@@ -3,13 +3,13 @@
 /*
  * Spans and Monkey Patching
  */
-const EventEmitter = require('events')
-const spanEmitter = new EventEmitter()
+const EventEmitter = require('events');
 
-require('./lib/spanHooks/hookAwsSdk')(spanEmitter)
-require('./lib/spanHooks/hookHttp')(spanEmitter)
+const spanEmitter = new EventEmitter();
 
-const spanEmitter = require('./lib/proxyAwsSdk');
+require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
+require('./lib/spanHooks/hookHttp')(spanEmitter);
+
 /*
  * Serverless SDK
  */
@@ -194,6 +194,7 @@ class ServerlessSDK {
          * - TODO: Inspect outgoing HTTP status codes
          */
 
+        let capturedError = null
         const wrappedCallback = (error, res) => {
           try {
             if (self.$.config.debug) {
@@ -204,8 +205,10 @@ class ServerlessSDK {
               return callback.call(functionContext, error || null, res || null);
             };
 
-            if (error) {
-              return trans.error(error, cb);
+            if (capturedError) {
+              return trans.error(capturedError, false, cb);
+            } else if (error) {
+              return trans.error(error, true, cb);
             }
             return trans.end(cb);
           } finally {
@@ -222,6 +225,11 @@ class ServerlessSDK {
         context.fail = err => {
           return wrappedCallback(err, null);
         };
+        context.captureError = (err) => {
+          capturedError = err;
+        };
+        // eslint-disable-next-line no-underscore-dangle
+        ServerlessSDK._captureError = context.captureError;
 
         // Set up span listener
         spanEmitter.on('span', span => {
@@ -259,6 +267,11 @@ class ServerlessSDK {
     throw new Error(
       `ServerlessSDK: Invalid Functions-as-a-Service compute type "${meta.computeType}"`
     );
+  }
+
+  static captureError(error) {
+    // eslint-disable-next-line no-underscore-dangle
+    ServerlessSDK._captureError(error);
   }
 }
 

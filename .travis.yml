@@ -45,7 +45,6 @@ script:
 # Ensure to fail build if deploy fails, Travis doesn't ensure that: https://github.com/travis-ci/travis-ci/issues/921
 before_deploy:
   - set -e
-  - node ./scripts/updatePreReleaseVersion.js
   - npm run build
   - cd dist
   # Remove eventual old npm logs (needed for deploy status check)
@@ -54,6 +53,9 @@ after_deploy:
   - |
     # npm creates log only on failure
     if [ -d ~/.npm/_logs ]; then
+      # More debug info
+      ls -Rla .
+      cat package.json
       # Undocumented way to force Travis build to fail
       travis_terminate 1
     fi
@@ -146,7 +148,9 @@ jobs:
       name: Pre-release
       if: branch = master
       node_js: 12
-      before_install: node ./scripts/updatePreReleaseDependency.js
+      before_install:
+        - node ./scripts/updatePreReleaseDependency.js
+        - node ./scripts/updatePreReleaseVersion.js
       deploy:
         provider: npm
         tag: next # this is the NPM tag, not git tag.
