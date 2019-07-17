@@ -59,6 +59,7 @@ class SDK(object):
     def transaction(self, context, function_name, timeout):
         start = time.time()
         start_isoformat = datetime.utcnow().isoformat() + "Z"
+        exception = None
         error_data = {
             "errorCulprit": None,
             "errorExceptionMessage": None,
@@ -68,7 +69,8 @@ class SDK(object):
         }
         try:
             yield
-        except Exception:
+        except Exception as exc:
+            exception = exc
             exc_type, exc_value, exc_traceback = sys.exc_info()
             stack_frames = traceback.extract_tb(exc_traceback)
             error_data[
@@ -192,3 +194,5 @@ class SDK(object):
                 "timestamp": end_isoformat,
             }
             print(f"SERVERLESS_ENTERPRISE {json.dumps(transaction_data)}")
+            if exception:
+                raise exception
