@@ -73,9 +73,9 @@ class SDK(object):
             exception = exc
             exc_type, exc_value, exc_traceback = sys.exc_info()
             stack_frames = traceback.extract_tb(exc_traceback)
-            error_data[
-                "errorCulprit"
-            ] = f"{stack_frames[-1][2]} ({stack_frames[-1][0]})"
+            error_data["errorCulprit"] = "{} ({})".format(
+                stack_frames[-1][2], stack_frames[-1][0]
+            )
             error_data["errorExceptionMessage"] = str(exc_value)
             error_data["errorExceptionStacktrace"] = json.dumps(
                 [
@@ -93,7 +93,9 @@ class SDK(object):
                 ]
             )
             error_data["errorExceptionType"] = exc_type.__name__
-            error_data["errorId"] = f"{exc_type.__name__}!?{str(exc_value)[:200]}"
+            error_data["errorId"] = "{}!?{}".format(
+                exc_type.__name__, str(exc_value)[:200]
+            )
         finally:
             if os.path.exists("/proc/meminfo"):
                 meminfo = {
@@ -108,7 +110,6 @@ class SDK(object):
             end_isoformat = datetime.utcnow().isoformat() + "Z"
             span_id = str(uuid.uuid4())
             tags = {
-                **error_data,
                 "appUid": self.app_uid,
                 "applicationName": self.application_name,
                 "computeContainerUptime": (time.time() - module_start_time) * 1000,
@@ -152,7 +153,9 @@ class SDK(object):
                 "computeMemorySize": os.environ.get("AWS_LAMBDA_FUNCTION_MEMORY_SIZE"),
                 "computeMemoryUsed": None,  #'{"rss":35741696,"heapTotal":11354112,"heapUsed":7258288,"external":8636}',
                 "computeRegion": os.environ.get("AWS_REGION"),
-                "computeRuntime": f"aws.lambda.python.{sys.version.split(' ')[0]}",
+                "computeRuntime": "aws.lambda.python.{}".format(
+                    sys.version.split(" ")[0]
+                ),
                 "computeType": "aws.lambda",
                 "eventCustomStage": "dev",
                 "eventSource": None,
@@ -170,6 +173,7 @@ class SDK(object):
                 "traceId": context.aws_request_id,
                 "transactionId": span_id,
             }
+            tags.update(error_data)
             transaction_data = {
                 "type": "error" if error_data["errorId"] else "transaction",
                 "origin": "sls-agent",
@@ -193,6 +197,6 @@ class SDK(object):
                 "schemaVersion": "0.0",
                 "timestamp": end_isoformat,
             }
-            print(f"SERVERLESS_ENTERPRISE {json.dumps(transaction_data)}")
+            print("SERVERLESS_ENTERPRISE {}".format(json.dumps(transaction_data)))
             if exception:
                 raise exception
