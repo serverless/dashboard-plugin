@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const {
   copy,
   ensureDir,
-  ensureSymlink,
   readFile,
   remove,
   writeFile,
