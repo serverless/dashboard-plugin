@@ -12,10 +12,18 @@ const {
   writeFile,
   writeJson,
 } = require('fs-extra');
-const spawn = require('child-process-ext/spawn');
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
+
+const spawn = (childProcessSpawn => (...args) => {
+  const result = childProcessSpawn(...args);
+  result.catch(error => {
+    if (error.stdoutBuffer) process.stdout.write(error.stdoutBuffer);
+    if (error.stderrBuffer) process.stdout.write(error.stderrBuffer);
+  });
+  return result;
+})(require('child-process-ext/spawn'));
 
 const tmpDir = os.tmpdir();
 
