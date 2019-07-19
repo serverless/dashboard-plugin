@@ -11,5 +11,4 @@ npm run build
 cd ..
 mkdir -p dist/sdk-js/dist
 cp -a sdk-js/dist/index.js dist/sdk-js/dist/index.js
-mkdir -p dist/sdk-py
 cp -a sdk-py/ dist/sdk-py
