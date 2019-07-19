@@ -3,15 +3,7 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const {
-  copy,
-  ensureDir,
-  ensureSymlink,
-  readFile,
-  remove,
-  writeFile,
-  writeJson,
-} = require('fs-extra');
+const { copy, ensureDir, readFile, remove, writeFile, writeJson } = require('fs-extra');
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
@@ -53,16 +45,11 @@ const retrieveServerless = memoize(async () => {
   console.info('... strip @serverless/enterprise-plugin dependency');
   const pkgJsonPath = `${serverlessTmpDir}/package.json`;
   const pkgJson = require(pkgJsonPath);
-  delete pkgJson.dependencies['@serverless/enterprise-plugin'];
+  pkgJson.dependencies['@serverless/enterprise-plugin'] = `file:${path.join(__dirname, '../dist')}`;
   await writeJson(pkgJsonPath, pkgJson);
 
   console.info('... npm install');
   await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
-  console.info('... symlink local @serverless/enterprise-plugin into dependencies');
-  await ensureSymlink(
-    path.join(__dirname, '../dist'),
-    path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin')
-  );
 
   return path.join(serverlessTmpDir, 'bin/serverless');
 });
