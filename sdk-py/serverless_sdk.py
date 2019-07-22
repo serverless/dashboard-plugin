@@ -15,7 +15,7 @@ module_start_time = time.time()
 def get_user_handler(user_handler_value):
     orig_path = sys.path
     if "/" in user_handler_value:
-        user_module_path, user_module_and_handler = user_handler_value.rsplit("/")
+        user_module_path, user_module_and_handler = user_handler_value.rsplit("/", 1)
         sys.path.append(user_module_path)
     else:
         user_module_and_handler = user_handler_value
