@@ -9,6 +9,7 @@ const _ = require('lodash');
 const uuidv4 = require('uuid/v4');
 const { parseError } = require('./parsers');
 const flatten = require('flat');
+const isError = require('type/error/is');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
@@ -155,7 +156,7 @@ class Transaction {
       `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
     );
     const self = this;
-    if (error instanceof Error) {
+    if (isError(error)) {
       // Create Error ID
       // Includes error name and message separated by these characters: !$
       // Back-end components rely on this format so don't change it without consulting others
