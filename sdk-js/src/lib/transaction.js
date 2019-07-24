@@ -141,7 +141,7 @@ class Transaction {
     if (!_.has(this.$.schema, key)) {
       throw new Error(`ServerlessSDK: Invalid transaction property: "${key}"`);
     }
-    if (key && val) {
+    if (key && val !== undefined) {
       _.set(this.$.schema, key, val);
     }
   }
@@ -151,10 +151,7 @@ class Transaction {
    * - Sends the error and ends the transaction
    */
 
-  error(error, cb) {
-    console.info(
-      `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
-    );
+  error(error, fatal, cb) {
     const self = this;
     if (isError(error)) {
       // Create Error ID
@@ -169,6 +166,7 @@ class Transaction {
 
       parseError(error, null, (res, errorStack) => {
         this.set('error.culprit', errorStack.culprit);
+        this.set('error.fatal', fatal);
         this.set('error.exception.type', errorStack.exception.type);
         this.set('error.exception.message', errorStack.exception.message);
         this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
@@ -186,6 +184,7 @@ class Transaction {
       console.info('');
       console.error(error);
       this.set('error.culprit', error);
+      this.set('error.fatal', fatal);
       this.set('error.exception.type', 'NotAnErrorType');
       this.set('error.exception.message', error);
       this.set('error.exception.stacktrace', []);

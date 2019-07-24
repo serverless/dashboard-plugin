@@ -28,6 +28,7 @@
   },
   "error": {
     "id": null,
+    "fatal": null,
     "culprit": null,
     "exception": {
       "type": null,

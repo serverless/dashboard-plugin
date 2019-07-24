@@ -46,13 +46,16 @@ script:
 before_deploy:
   - set -e
   - npm run build
-  - node ./scripts/updatePreReleaseVersion.js
+  - cd dist
   # Remove eventual old npm logs (needed for deploy status check)
   - rm -rf ~/.npm/_logs
 after_deploy:
   - |
     # npm creates log only on failure
     if [ -d ~/.npm/_logs ]; then
+      # More debug info
+      ls -Rla .
+      cat package.json
       # Undocumented way to force Travis build to fail
       travis_terminate 1
     fi
@@ -102,11 +105,12 @@ jobs:
       before_install:
         - npm install -g npm codecov
       script:
-        - npm test
+        - npm run cover
         - cd sdk-js
-        - npm test
+        - npm run cover
         - cd ..
         - codecov
+        - codecov -p sdk-js
 
     - name: 'Unit Tests - Node.js v8'
       node_js: 8
@@ -144,7 +148,9 @@ jobs:
       name: Pre-release
       if: branch = master
       node_js: 12
-      before_install: node ./scripts/updatePreReleaseDependency.js
+      before_install:
+        - node ./scripts/updatePreReleaseDependency.js
+        - node ./scripts/updatePreReleaseVersion.js
       deploy:
         provider: npm
         tag: next # this is the NPM tag, not git tag.
