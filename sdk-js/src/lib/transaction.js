@@ -4,7 +4,6 @@
  * Transaction
  */
 
-const os = require('os');
 const _ = require('lodash');
 const uuidv4 = require('uuid/v4');
 const { parseError } = require('./parsers');
