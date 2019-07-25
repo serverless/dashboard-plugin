@@ -4,11 +4,11 @@
  * Transaction
  */
 
-const os = require('os');
 const _ = require('lodash');
 const uuidv4 = require('uuid/v4');
 const { parseError } = require('./parsers');
 const flatten = require('flat');
+const isError = require('type/error/is');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
@@ -152,30 +152,46 @@ class Transaction {
 
   error(error, fatal, cb) {
     const self = this;
-    // Create Error ID
-    // Includes error name and message separated by these characters: !$
-    // Back-end components rely on this format so don't change it without consulting others
-    let id = error.name || 'Unknown';
-    id = error.message ? `${id}!$${error.message.toString().substring(0, 200)}` : id;
-    this.set('error.id', id);
-    // Log
-    console.info('');
-    console.error(error);
+    if (isError(error)) {
+      // Create Error ID
+      // Includes error name and message separated by these characters: !$
+      // Back-end components rely on this format so don't change it without consulting others
+      let id = error.name || 'Unknown';
+      id = error.message ? `${id}!$${error.message.toString().substring(0, 200)}` : id;
+      this.set('error.id', id);
+      // Log
+      console.info('');
+      console.error(error);
 
-    parseError(error, null, (res, errorStack) => {
-      console.info(
-        `${os.EOL}**** This error was logged & reported by the ServerlessSDK ****${os.EOL}`
-      );
-      this.set('error.culprit', errorStack.culprit);
+      parseError(error, null, (res, errorStack) => {
+        this.set('error.culprit', errorStack.culprit);
+        this.set('error.fatal', fatal);
+        this.set('error.exception.type', errorStack.exception.type);
+        this.set('error.exception.message', errorStack.exception.message);
+        this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
+
+        // End transaction
+        this.buildOutput(ERROR); // set this to transaction for now.
+        self.end(cb);
+      });
+    } else {
+      // Create Error ID
+      // since the user didn't actually thrown an error, just include it with a prefix
+      // reflecting it's not an error as the error type
+      this.set('error.id', `NotAnErrorType!$${error.substring(0, 200)}`);
+      // Log
+      console.info('');
+      console.error(error);
+      this.set('error.culprit', error);
       this.set('error.fatal', fatal);
-      this.set('error.exception.type', errorStack.exception.type);
-      this.set('error.exception.message', errorStack.exception.message);
-      this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
+      this.set('error.exception.type', 'NotAnErrorType');
+      this.set('error.exception.message', error);
+      this.set('error.exception.stacktrace', []);
 
       // End transaction
       this.buildOutput(ERROR); // set this to transaction for now.
       self.end(cb);
-    });
+    }
   }
 
   /*
