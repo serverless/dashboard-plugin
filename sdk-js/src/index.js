@@ -255,15 +255,16 @@ class ServerlessSDK {
         // If promise was returned, handle it
         if (result && typeof result.then === 'function') {
           return result
-            .then(data => {
+            .then(res => {
               // In a AWS Lambda 'async' handler, an error can be returned directly
               // This makes it look like a valid response, which it's not.
               // The SDK needs to look out for this here, so it can still log/report the error like all others.
-              if (data instanceof Error) {
-                finalize(data, null);
+              if (res instanceof Error) {
+                finalize(res, null);
               } else {
-                finalize(null, data);
+                finalize(null, res);
               }
+              return res;
             })
             .catch(err => {
               finalize(err, null);
