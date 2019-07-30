@@ -1,0 +1,31 @@
+tenant: integration
+app: integration
+service: CHANGEME
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+functions:
+  sync:
+    handler: handler.sync
+  syncError:
+    handler: handler.syncError
+  async:
+    handler: handler.async
+  asyncError:
+    handler: handler.asyncError
+  asyncDanglingCallback:
+    handler: handler.asyncDanglingCallback
+  callback:
+    handler: handler.callback
+  callbackError:
+    handler: handler.callbackError
+  done:
+    handler: handler.done
+  doneError:
+    handler: handler.doneError
+  fail:
+    handler: handler.fail
+  succeed:
+    handler: handler.succeed
