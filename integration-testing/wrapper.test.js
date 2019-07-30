@@ -1,11 +1,12 @@
 'use strict';
+process.env.SERVERLESS_PLATFORM_STAGE = 'dev';
 
 const stripAnsi = require('strip-ansi');
 const setup = require('./setup');
+const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk');
 const AWS = require('aws-sdk');
 
-const lambda = new AWS.Lambda({ region: 'us-east-1' });
-
+let lambda;
 let sls;
 let teardown;
 let serviceName;
@@ -13,6 +14,18 @@ let serviceName;
 jest.setTimeout(1000 * 60 * 5);
 
 beforeAll(async () => {
+  const accessKey = await getAccessKeyForTenant('integration');
+  const {
+    providerCredentials: { secretValue: credentials },
+  } = await getDeployProfile({
+    tenant: 'integration',
+    app: 'integration',
+    stage: 'dev',
+    service: serviceName,
+    accessKey,
+  });
+
+  lambda = new AWS.Lambda({ region: 'us-east-1', credentials });
   ({ sls, teardown } = await setup('service3'));
   await sls(['deploy']);
   serviceName = stripAnsi(
