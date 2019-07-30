@@ -260,14 +260,14 @@ class ServerlessSDK {
               // This makes it look like a valid response, which it's not.
               // The SDK needs to look out for this here, so it can still log/report the error like all others.
               if (res instanceof Error) {
-                finalize(res, null);
+                finalize(res);
               } else {
-                finalize(null, res);
+                finalize(null);
               }
               return res;
             })
             .catch(err => {
-              finalize(err, null);
+              finalize(err);
               throw err;
             });
         }
