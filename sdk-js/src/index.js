@@ -199,11 +199,12 @@ class ServerlessSDK {
           if (finalized) return;
           try {
             if (capturedError) {
-              return trans.error(capturedError, false);
+              trans.error(capturedError, false);
             } else if (error) {
-              return trans.error(error, true);
+              trans.error(error, true);
+            } else {
+              trans.end();
             }
-            return trans.end();
           } finally {
             finalized = true;
             // Remove the span listeners
