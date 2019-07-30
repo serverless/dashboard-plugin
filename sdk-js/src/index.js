@@ -194,7 +194,9 @@ class ServerlessSDK {
          */
 
         let capturedError = null;
+        let finalized = false
         const finalize = error => {
+          if (finalized) return;
           try {
             if (capturedError) {
               return trans.error(capturedError, false);
@@ -203,6 +205,7 @@ class ServerlessSDK {
             }
             return trans.end();
           } finally {
+            finalized = true;
             // Remove the span listeners
             spanEmitter.removeAllListeners('span');
           }
