@@ -120,7 +120,6 @@ class ServerlessSDK {
         // Defaults
         event = event || {};
         context = context || {};
-        const functionContext = this;
         const eventType = detectEventType(event);
 
         /*
@@ -194,38 +193,40 @@ class ServerlessSDK {
          * - TODO: Inspect outgoing HTTP status codes
          */
 
-        let capturedError = null
-        const wrappedCallback = (error, res) => {
+        let capturedError = null;
+        let finalized = false;
+        const finalize = error => {
+          if (finalized) return;
           try {
-            if (self.$.config.debug) {
-              console.info('ServerlessSDK: Handler: AWS Lambda wrapped callback executed...');
-            }
-
-            const cb = () => {
-              return callback.call(functionContext, error || null, res || null);
-            };
-
             if (capturedError) {
-              return trans.error(capturedError, false, cb);
+              trans.error(capturedError, false);
             } else if (error) {
-              return trans.error(error, true, cb);
+              trans.error(error, true);
+            } else {
+              trans.end();
             }
-            return trans.end(cb);
           } finally {
+            finalized = true;
             // Remove the span listeners
             spanEmitter.removeAllListeners('span');
           }
         };
 
         // Patch context methods
-        context.done = wrappedCallback;
+        const { done, succeed, fail } = context;
+        context.done = (err, res) => {
+          finalize(err);
+          done(err, res);
+        };
         context.succeed = res => {
-          return wrappedCallback(null, res);
+          finalize(null);
+          succeed(res);
         };
         context.fail = err => {
-          return wrappedCallback(err, null);
+          finalize(err);
+          fail(err);
         };
-        context.captureError = (err) => {
+        context.captureError = err => {
           capturedError = err;
         };
         // eslint-disable-next-line no-underscore-dangle
@@ -242,26 +243,36 @@ class ServerlessSDK {
 
         let result;
         try {
-          result = fn(event, context, wrappedCallback);
+          result = fn(event, context, (err, res) => {
+            finalize(err);
+            callback(err, res);
+          });
         } catch (error) {
-          wrappedCallback(error, null);
+          finalize(error);
+          throw error;
         }
 
         // If promise was returned, handle it
         if (result && typeof result.then === 'function') {
-          result
-            .then(data => {
+          return result
+            .then(res => {
               // In a AWS Lambda 'async' handler, an error can be returned directly
               // This makes it look like a valid response, which it's not.
               // The SDK needs to look out for this here, so it can still log/report the error like all others.
-              if (data instanceof Error) {
-                wrappedCallback(data, null);
+              if (res instanceof Error) {
+                finalize(res);
               } else {
-                wrappedCallback(null, data);
+                finalize(null);
               }
+              return res;
             })
-            .catch(wrappedCallback);
+            .catch(err => {
+              finalize(err);
+              throw err;
+            });
         }
+        finalize(null);
+        return result;
       };
     }
     throw new Error(
