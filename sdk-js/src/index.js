@@ -194,7 +194,7 @@ class ServerlessSDK {
          */
 
         let capturedError = null;
-        let finalized = false
+        let finalized = false;
         const finalize = error => {
           if (finalized) return;
           try {
