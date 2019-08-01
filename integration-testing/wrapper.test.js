@@ -98,7 +98,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-doneError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$doneError"/);
+    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$doneError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('doneError');
   });
 
@@ -116,7 +116,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$callbackError"/);
+    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$callbackError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('callbackError');
   });
 
@@ -125,7 +125,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-fail` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$failError"/);
+    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$failError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('failError');
   });
 
