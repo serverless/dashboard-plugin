@@ -96,6 +96,11 @@ describe('integration', () => {
     expect(JSON.parse(Payload).errorMessage).toEqual('callbackError');
   });
 
+  it('can call wrapped fail handler', async () => {
+    const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-fail` }).promise();
+    expect(JSON.parse(Payload).errorMessage).toEqual('failError');
+  });
+
   it('can call wrapped succeed handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-succeed` })
