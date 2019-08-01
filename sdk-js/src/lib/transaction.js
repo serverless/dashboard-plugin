@@ -150,7 +150,7 @@ class Transaction {
    * - Sends the error and ends the transaction
    */
 
-  error(error, fatal) {
+  async error(error, fatal) {
     const self = this;
     if (isError(error)) {
       // Create Error ID
@@ -159,39 +159,30 @@ class Transaction {
       let id = error.name || 'Unknown';
       id = error.message ? `${id}!$${error.message.toString().substring(0, 200)}` : id;
       this.set('error.id', id);
-      // Log
-      console.info('');
-      console.error(error);
-
-      parseError(error, null, (res, errorStack) => {
-        this.set('error.culprit', errorStack.culprit);
-        this.set('error.fatal', fatal);
-        this.set('error.exception.type', errorStack.exception.type);
-        this.set('error.exception.message', errorStack.exception.message);
-        this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
-
-        // End transaction
-        this.buildOutput(ERROR); // set this to transaction for now.
-        self.end();
-      });
+      await new Promise(resolve =>
+        parseError(error, null, (res, errorStack) => {
+          this.set('error.culprit', errorStack.culprit);
+          this.set('error.fatal', fatal);
+          this.set('error.exception.type', errorStack.exception.type);
+          this.set('error.exception.message', errorStack.exception.message);
+          this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
+          resolve();
+        })
+      );
     } else {
       // Create Error ID
       // since the user didn't actually thrown an error, just include it with a prefix
       // reflecting it's not an error as the error type
       this.set('error.id', `NotAnErrorType!$${error.substring(0, 200)}`);
-      // Log
-      console.info('');
-      console.error(error);
       this.set('error.culprit', error);
       this.set('error.fatal', fatal);
       this.set('error.exception.type', 'NotAnErrorType');
       this.set('error.exception.message', error);
       this.set('error.exception.stacktrace', []);
-
-      // End transaction
-      this.buildOutput(ERROR); // set this to transaction for now.
-      self.end();
     }
+    // End transaction
+    this.buildOutput(ERROR); // set this to transaction for now.
+    self.end();
   }
 
   /*

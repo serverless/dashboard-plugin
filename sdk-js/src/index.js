@@ -195,13 +195,13 @@ class ServerlessSDK {
 
         let capturedError = null;
         let finalized = false;
-        const finalize = error => {
+        const finalize = async error => {
           if (finalized) return;
           try {
             if (capturedError) {
-              trans.error(capturedError, false);
+              await trans.error(capturedError, false);
             } else if (error) {
-              trans.error(error, true);
+              await trans.error(error, true);
             } else {
               trans.end();
             }
@@ -214,16 +214,16 @@ class ServerlessSDK {
 
         // Patch context methods
         const { done, succeed, fail } = context;
-        context.done = (err, res) => {
-          finalize(err);
+        context.done = async (err, res) => {
+          await finalize(err);
           done(err, res);
         };
-        context.succeed = res => {
-          finalize(null);
+        context.succeed = async res => {
+          await finalize(null);
           succeed(res);
         };
-        context.fail = err => {
-          finalize(err);
+        context.fail = async err => {
+          await finalize(err);
           fail(err);
         };
         context.captureError = err => {
@@ -243,36 +243,36 @@ class ServerlessSDK {
 
         let result;
         try {
-          result = fn(event, context, (err, res) => {
-            finalize(err);
+          result = fn(event, context, async (err, res) => {
+            await finalize(err);
             callback(err, res);
           });
         } catch (error) {
-          finalize(error);
-          throw error;
+          return finalize(error).then(() => {
+            throw error;
+          });
         }
 
         // If promise was returned, handle it
         if (result && typeof result.then === 'function') {
           return result
-            .then(res => {
+            .then(async res => {
               // In a AWS Lambda 'async' handler, an error can be returned directly
               // This makes it look like a valid response, which it's not.
               // The SDK needs to look out for this here, so it can still log/report the error like all others.
               if (res instanceof Error) {
-                finalize(res);
+                await finalize(res);
               } else {
-                finalize(null);
+                await finalize(null);
               }
               return res;
             })
-            .catch(err => {
-              finalize(err);
+            .catch(async err => {
+              await finalize(err);
               throw err;
             });
         }
-        finalize(null);
-        return result;
+        return finalize(null);
       };
     }
     throw new Error(
