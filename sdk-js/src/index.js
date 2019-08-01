@@ -228,7 +228,7 @@ class ServerlessSDK {
               if (res && typeof res.then === 'function') {
                 res.then(resolve);
               } else {
-                resolve(res);
+                resolve(null);
               }
             } catch (error) {
               reject(error);
