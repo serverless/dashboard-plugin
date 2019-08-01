@@ -34,9 +34,9 @@ module.exports = emitter => {
         if (_args.length > 0 && _args[0]) {
           if (_args[0].constructor.name === 'String' || _args[0] instanceof url.Url) {
             const requestUrl = url.parse(_args[0]);
-            requestHostname = requestUrl.host.toLowerCase();
+            requestHostname = (requestUrl.host || requestUrl.hostname || '').toLowerCase();
           } else {
-            requestHostname = (_args[0].host || _args[0].hostname).toLowerCase();
+            requestHostname = (_args[0].host || _args[0].hostname || '').toLowerCase();
           }
         }
 
