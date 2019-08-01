@@ -195,15 +195,16 @@ class ServerlessSDK {
 
         let capturedError = null;
         let finalized = false;
-        const finalize = error => {
+        const finalize = (error, cb) => {
           if (finalized) return;
           try {
             if (capturedError) {
-              trans.error(capturedError, false);
+              trans.error(capturedError, false, cb);
             } else if (error) {
-              trans.error(error, true);
+              trans.error(error, true, cb);
             } else {
               trans.end();
+              cb();
             }
           } finally {
             finalized = true;
@@ -214,23 +215,21 @@ class ServerlessSDK {
 
         // Patch context methods
         const { done, succeed, fail } = context;
-        context.done = (err, res) => {
-          finalize(err);
-          done(err, res);
+        const newContext = Object.assign({}, context);
+        newContext.done = (err, res) => {
+          finalize(err, () => done(err, res));
         };
-        context.succeed = res => {
-          finalize(null);
-          succeed(res);
+        newContext.succeed = res => {
+          finalize(null, () => succeed(res));
         };
-        context.fail = err => {
-          finalize(err);
-          fail(err);
+        newContext.fail = err => {
+          finalize(err, () => fail(err));
         };
-        context.captureError = err => {
+        newContext.captureError = err => {
           capturedError = err;
         };
         // eslint-disable-next-line no-underscore-dangle
-        ServerlessSDK._captureError = context.captureError;
+        ServerlessSDK._captureError = newContext.captureError;
 
         // Set up span listener
         spanEmitter.on('span', span => {
@@ -243,13 +242,9 @@ class ServerlessSDK {
 
         let result;
         try {
-          result = fn(event, context, (err, res) => {
-            finalize(err);
-            callback(err, res);
-          });
+          result = fn(event, newContext, (err, res) => finalize(err, () => callback(err, res)));
         } catch (error) {
-          finalize(error);
-          throw error;
+          finalize(error, () => fail(error));
         }
 
         // If promise was returned, handle it
@@ -260,18 +255,17 @@ class ServerlessSDK {
               // This makes it look like a valid response, which it's not.
               // The SDK needs to look out for this here, so it can still log/report the error like all others.
               if (res instanceof Error) {
-                finalize(res);
-              } else {
-                finalize(null);
+                return new Promise(resolve => finalize(res, resolve)).then(() => res);
               }
-              return res;
+              return new Promise(resolve => finalize(null, resolve)).then(() => res);
             })
             .catch(err => {
-              finalize(err);
-              throw err;
+              return new Promise(resolve => finalize(err, resolve)).then(() => {
+                throw err;
+              });
             });
         }
-        finalize(null);
+        finalize(null, () => null);
         return result;
       };
     }

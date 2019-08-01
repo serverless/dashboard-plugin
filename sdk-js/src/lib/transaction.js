@@ -150,7 +150,7 @@ class Transaction {
    * - Sends the error and ends the transaction
    */
 
-  error(error, fatal) {
+  error(error, fatal, cb) {
     const self = this;
     if (isError(error)) {
       // Create Error ID
@@ -173,6 +173,7 @@ class Transaction {
         // End transaction
         this.buildOutput(ERROR); // set this to transaction for now.
         self.end();
+        cb();
       });
     } else {
       // Create Error ID
@@ -191,6 +192,7 @@ class Transaction {
       // End transaction
       this.buildOutput(ERROR); // set this to transaction for now.
       self.end();
+      cb();
     }
   }
 
