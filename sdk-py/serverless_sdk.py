@@ -93,7 +93,7 @@ class SDK(object):
                 ]
             )
             error_data["errorExceptionType"] = exc_type.__name__
-            error_data["errorId"] = "{}!?{}".format(
+            error_data["errorId"] = "{}!${}".format(
                 exc_type.__name__, str(exc_value)[:200]
             )
         finally:
