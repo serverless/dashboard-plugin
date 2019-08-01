@@ -212,20 +212,30 @@ class ServerlessSDK {
           }
         };
 
-        // Patch context methods
-        const { done, succeed, fail } = context;
-        context.done = async (err, res) => {
-          await finalize(err);
-          done(err, res);
-        };
-        context.succeed = async res => {
-          await finalize(null);
-          succeed(res);
-        };
-        context.fail = async err => {
-          await finalize(err);
-          fail(err);
-        };
+        // Wrap user handler to always behave like an async/promise handler
+        const promisifiedHandler = (evt, ctx) =>
+          new Promise((resolve, reject) => {
+            // fake context methods
+            const done = (err, res) => (err ? reject(err) : resolve(res));
+            const succeed = resolve;
+            const fail = reject;
+
+            try {
+              let res = fn(evt, Object.assign({}, ctx, { done, succeed, fail }), done);
+              if (res && typeof res.catch === 'function') {
+                res = res.catch(reject);
+              }
+              if (res && typeof res.then === 'function') {
+                res.then(resolve);
+              } else {
+                resolve(res);
+              }
+            } catch (error) {
+              reject(error);
+            }
+          });
+
+        // context method to capture error
         context.captureError = err => {
           capturedError = err;
         };
@@ -237,42 +247,22 @@ class ServerlessSDK {
           transactionSpans.push(span);
         });
 
-        /*
-         * Try Running Code
-         */
-
-        let result;
-        try {
-          result = fn(event, context, async (err, res) => {
+        return promisifiedHandler(event, context)
+          .then(async res => {
+            // In a AWS Lambda 'async' handler, an error can be returned directly
+            // This makes it look like a valid response, which it's not.
+            // The SDK needs to look out for this here, so it can still log/report the error like all others.
+            if (res instanceof Error) {
+              await finalize(res);
+            } else {
+              await finalize(null);
+            }
+            return res;
+          })
+          .catch(async err => {
             await finalize(err);
-            callback(err, res);
+            throw err;
           });
-        } catch (error) {
-          return finalize(error).then(() => {
-            throw error;
-          });
-        }
-
-        // If promise was returned, handle it
-        if (result && typeof result.then === 'function') {
-          return result
-            .then(async res => {
-              // In a AWS Lambda 'async' handler, an error can be returned directly
-              // This makes it look like a valid response, which it's not.
-              // The SDK needs to look out for this here, so it can still log/report the error like all others.
-              if (res instanceof Error) {
-                await finalize(res);
-              } else {
-                await finalize(null);
-              }
-              return res;
-            })
-            .catch(async err => {
-              await finalize(err);
-              throw err;
-            });
-        }
-        return finalize(null);
       };
     }
     throw new Error(
