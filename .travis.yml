@@ -39,7 +39,7 @@ before_script:
 script:
   - npm test
   - cd sdk-js
-  - npm test
+  - if node --version|grep -v v6 ; then npm test; fi # skip sdk tests on node 6
   - cd ..
 
 # Ensure to fail build if deploy fails, Travis doesn't ensure that: https://github.com/travis-ci/travis-ci/issues/921
