@@ -109,7 +109,7 @@ describe('integration', () => {
   });
 
   xit('gets SFE log msg from wrapped sync handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-sync` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -117,7 +117,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped syncError handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-syncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -125,7 +125,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped async handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-async` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -133,7 +133,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped asyncError handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -141,7 +141,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped asyncDanglingCallback handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -149,7 +149,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped done handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-done` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -157,7 +157,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped doneError handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-doneError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -165,7 +165,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped callback handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -173,7 +173,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped callbackError handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -181,7 +181,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped fail handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-fail` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -189,7 +189,7 @@ describe('integration', () => {
   });
 
   it('gets SFE log msg from wrapped succeed handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-succeed` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -197,7 +197,7 @@ describe('integration', () => {
   });
 
   it('gets right duration value from  wrapped callback handler', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
