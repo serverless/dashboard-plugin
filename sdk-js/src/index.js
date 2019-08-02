@@ -265,8 +265,6 @@ class ServerlessSDK {
               });
             });
         }
-        finalize(null, () => null);
-        return result;
       };
     }
     throw new Error(
