@@ -108,7 +108,7 @@ describe('integration', () => {
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
   });
 
-  it('gets SFE log msg from wrapped sync handler', async () => {
+  xit('gets SFE log msg from wrapped sync handler', async () => {
     const { LogResult, Payload } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-sync` })
       .promise();
