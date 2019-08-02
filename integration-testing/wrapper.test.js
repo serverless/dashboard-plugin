@@ -40,9 +40,7 @@ afterAll(() => {
 
 describe('integration', () => {
   it('gets right return value from  wrapped sync handler', async () => {
-    const { Payload } = await lambda
-      .invoke({ FunctionName: `${serviceName}-dev-sync` })
-      .promise();
+    const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-sync` }).promise();
     expect(JSON.parse(Payload)).toEqual(null); // why did i think this was possible?
   });
 
@@ -54,9 +52,7 @@ describe('integration', () => {
   });
 
   it('gets right return value from  wrapped async handler', async () => {
-    const { Payload } = await lambda
-      .invoke({ FunctionName: `${serviceName}-dev-async` })
-      .promise();
+    const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-async` }).promise();
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
   });
 
@@ -75,9 +71,7 @@ describe('integration', () => {
   });
 
   it('gets right return value from  wrapped done handler', async () => {
-    const { Payload } = await lambda
-      .invoke({ FunctionName: `${serviceName}-dev-done` })
-      .promise();
+    const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-done` }).promise();
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
   });
 
@@ -103,9 +97,7 @@ describe('integration', () => {
   });
 
   it('gets right return value from  wrapped fail handler', async () => {
-    const { Payload } = await lambda
-      .invoke({ FunctionName: `${serviceName}-dev-fail` })
-      .promise();
+    const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-fail` }).promise();
     expect(JSON.parse(Payload).errorMessage).toEqual('failError');
   });
 
@@ -209,7 +201,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    const duration = logResult.parseFloat('"duration":13.242'.match(/"duration":(\d+\.\d+)/)[1])
+    const duration = logResult.parseFloat('"duration":13.242'.match(/"duration":(\d+\.\d+)/)[1]);
     expect(duration).toBeGreatherThan(5);
   });
 });
