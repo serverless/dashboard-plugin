@@ -44,8 +44,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-sync` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
     expect(JSON.parse(Payload)).toEqual(null); // why did i think this was possible?
+    expect(logResult).toMatch(/"errorId":null/);
   });
 
   it('can call wrapped syncError handler', async () => {
@@ -53,8 +53,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-syncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$syncError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('syncError');
+    expect(logResult).toMatch(/"errorId":"Error!\$syncError"/);
   });
 
   it('can call wrapped async handler', async () => {
@@ -62,8 +62,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-async` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
+    expect(logResult).toMatch(/"errorId":null/);
   });
 
   it('can call wrapped asyncError handler', async () => {
@@ -71,8 +71,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$asyncError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('asyncError');
+    expect(logResult).toMatch(/"errorId":"Error!\$asyncError"/);
   });
 
   it('can call wrapped asyncDanglingCallback handler', async () => {
@@ -80,8 +80,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
+    expect(logResult).toMatch(/"errorId":null/);
   });
 
   it('can call wrapped done handler', async () => {
@@ -89,8 +89,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-done` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
+    expect(logResult).toMatch(/"errorId":null/);
   });
 
   it('can call wrapped doneError handler', async () => {
@@ -98,8 +98,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-doneError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$doneError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('doneError');
+    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$doneError"/);
   });
 
   it('can call wrapped callback handler', async () => {
@@ -107,8 +107,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
+    expect(logResult).toMatch(/"errorId":null/);
   });
 
   it('can call wrapped callbackError handler', async () => {
@@ -116,8 +116,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$callbackError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('callbackError');
+    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$callbackError"/);
   });
 
   it('can call wrapped fail handler', async () => {
@@ -125,8 +125,8 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-fail` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$failError"/);
     expect(JSON.parse(Payload).errorMessage).toEqual('failError');
+    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$failError"/);
   });
 
   it('can call wrapped succeed handler', async () => {
@@ -134,7 +134,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-succeed` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
     expect(JSON.parse(Payload)).toEqual({ statusCode: 200 });
+    expect(logResult).toMatch(/"errorId":null/);
   });
 });
