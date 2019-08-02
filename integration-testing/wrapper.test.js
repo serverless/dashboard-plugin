@@ -210,6 +210,6 @@ describe('integration', () => {
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
     const duration = logResult.parseFloat('"duration":13.242'.match(/"duration":(\d+\.\d+)/)[1])
-    expect(duration).toBeGreatherThan(10);
+    expect(duration).toBeGreatherThan(5);
   });
 });

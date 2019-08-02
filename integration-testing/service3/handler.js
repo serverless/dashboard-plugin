@@ -22,7 +22,7 @@ module.exports.asyncError = async () => {
 };
 
 module.exports.callback = (event, context, callback) => {
-  setTimeout(() => callback(null, { statusCode: 200 }), 10);
+  setTimeout(() => callback(null, { statusCode: 200 }), 5000);
 };
 
 module.exports.callbackError = (event, context, callback) => {
