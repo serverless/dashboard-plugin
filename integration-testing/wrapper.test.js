@@ -53,7 +53,7 @@ describe('integration', () => {
 
   it('gets right return value from  wrapped async handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-async` }).promise();
-    expect(JSON.parse(Payload)).toEqual("asyncReturn");
+    expect(JSON.parse(Payload)).toEqual('asyncReturn');
   });
 
   it('gets right return value from  wrapped asyncError handler', async () => {
@@ -67,12 +67,12 @@ describe('integration', () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual("asyncDanglyReturn");
+    expect(JSON.parse(Payload)).toEqual('asyncDanglyReturn');
   });
 
   it('gets right return value from  wrapped done handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-done` }).promise();
-    expect(JSON.parse(Payload)).toEqual("doneReturn");
+    expect(JSON.parse(Payload)).toEqual('doneReturn');
   });
 
   it('gets right return value from  wrapped doneError handler', async () => {
@@ -86,7 +86,7 @@ describe('integration', () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-callback` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual("callbackReturn");
+    expect(JSON.parse(Payload)).toEqual('callbackReturn');
   });
 
   it('gets right return value from  wrapped callbackError handler', async () => {
@@ -105,7 +105,7 @@ describe('integration', () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-succeed` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual("succeedReturn");
+    expect(JSON.parse(Payload)).toEqual('succeedReturn');
   });
 
   xit('gets SFE log msg from wrapped sync handler', async () => {
