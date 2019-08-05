@@ -204,4 +204,11 @@ describe('integration', () => {
     const duration = parseFloat(logResult.match(/"duration":(\d+\.\d+)/)[1]);
     expect(duration).toBeGreaterThan(5);
   });
+
+  it('gets the callback return value when a promise func calls callback', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-promise-and-callback-race` })
+      .promise();
+    expect(JSON.parse(Payload)).toEqual('callbackEarlyReturn');
+  });
 });

@@ -44,3 +44,8 @@ module.exports.fail = (event, context) => {
 module.exports.succeed = (event, context) => {
   context.succeed('succeedReturn');
 };
+
+module.exports.promiseAndCallbackRace = async (event, context, callback) => {
+  callback(null, 'callbackEarlyReturn');
+  return 'asyncReturn';
+};

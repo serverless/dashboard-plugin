@@ -29,3 +29,5 @@ functions:
     handler: handler.fail
   succeed:
     handler: handler.succeed
+  promise-and-callback-race:
+    handler: handler.promiseAndCallbackRace
