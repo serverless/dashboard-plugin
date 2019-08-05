@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports.sync = () => {
-  return { statusCode: 200 };
+  return "syncReturn";
 };
 
 module.exports.syncError = () => {
@@ -9,12 +9,12 @@ module.exports.syncError = () => {
 };
 
 module.exports.async = async () => {
-  return { statusCode: 200 };
+  return "asyncReturn";
 };
 
 module.exports.asyncDanglingCallback = async () => {
   setTimeout(() => true, 1000000);
-  return { statusCode: 200 };
+  return "asyncDanglyReturn";
 };
 
 module.exports.asyncError = async () => {
@@ -22,7 +22,7 @@ module.exports.asyncError = async () => {
 };
 
 module.exports.callback = (event, context, callback) => {
-  setTimeout(() => callback(null, { statusCode: 200 }), 5000);
+  setTimeout(() => callback(null, "callbackReturn"), 5000);
 };
 
 module.exports.callbackError = (event, context, callback) => {
@@ -30,7 +30,7 @@ module.exports.callbackError = (event, context, callback) => {
 };
 
 module.exports.done = (event, context) => {
-  context.done(null, { statusCode: 200 });
+  context.done(null, "doneReturn");
 };
 
 module.exports.doneError = (event, context) => {
@@ -42,5 +42,9 @@ module.exports.fail = (event, context) => {
 };
 
 module.exports.succeed = (event, context) => {
-  context.succeed({ statusCode: 200 });
+  context.succeed("succeedReturn");
 };
+
+module.exports.promiseAndCallbackRace = async (event, context, callback) => {
+
+}
