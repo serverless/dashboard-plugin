@@ -112,15 +112,18 @@ class SDK(object):
                 "TOKEN",
                 "REQUEST",
             )
-            is_apig = all(
-                key in event
-                for key in [
-                    "path",
-                    "headers",
-                    "requestContext",
-                    "resource",
-                    "httpMethod",
-                ]
+            is_apig = (
+                all(
+                    key in event
+                    for key in [
+                        "path",
+                        "headers",
+                        "requestContext",
+                        "resource",
+                        "httpMethod",
+                    ]
+                )
+                and "requestId" in event["requestContext"]
             )
             if not is_custom_authorizer and is_apig:
                 # For APIGW access logs
