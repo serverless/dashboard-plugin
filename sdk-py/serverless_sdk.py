@@ -50,13 +50,13 @@ class SDK(object):
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
-            with self.transaction(context, function_name, timeout):
+            with self.transaction(event, context, function_name, timeout):
                 return user_handler(event, context)
 
         return wrapped_handler
 
     @contextmanager
-    def transaction(self, context, function_name, timeout):
+    def transaction(self, event, context, function_name, timeout):
         start = time.time()
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
@@ -108,7 +108,28 @@ class SDK(object):
                 meminfo = {}
             self.invokation_count += 1
             end_isoformat = datetime.utcnow().isoformat() + "Z"
-            span_id = str(uuid.uuid4())
+            is_custom_authorizer = "methodArn" in event and event.get("type") in (
+                "TOKEN",
+                "REQUEST",
+            )
+            is_apig = (
+                all(
+                    key in event
+                    for key in [
+                        "path",
+                        "headers",
+                        "requestContext",
+                        "resource",
+                        "httpMethod",
+                    ]
+                )
+                and "requestId" in event["requestContext"]
+            )
+            if not is_custom_authorizer and is_apig:
+                # For APIGW access logs
+                span_id = event["requestContext"]["requestId"]
+            else:
+                span_id = str(uuid.uuid4())
             tags = {
                 "appUid": self.app_uid,
                 "applicationName": self.application_name,
