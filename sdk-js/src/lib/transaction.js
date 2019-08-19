@@ -94,6 +94,7 @@ class Transaction {
     this.$.schema.applicationName = data.applicationName;
     this.$.schema.serviceName = data.serviceName;
     this.$.schema.stageName = data.stageName;
+    this.$.schema.pluginVersion = data.pluginVersion;
     this.$.schema.functionName = data.functionName;
     this.$.schema.timeout = data.timeout;
     this.$.schema.compute.type = data.computeType;
