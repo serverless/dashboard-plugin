@@ -191,7 +191,7 @@ class Transaction {
       console.info('');
       console.error(error);
       // sliced to 25 kb: 25 * 1024 / 8 = 3200
-      const message = Buffer.from(errorStack.exception.message)
+      const message = Buffer.from(error)
         .slice(0, 3200)
         .toString();
       this.set('error.culprit', message);
