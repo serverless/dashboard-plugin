@@ -49,3 +49,11 @@ module.exports.promiseAndCallbackRace = async (event, context, callback) => {
   callback(null, 'callbackEarlyReturn');
   return 'asyncReturn';
 };
+
+module.exports.syncReferenceError = () => {
+  asdfasdf; // eslint-disable-line
+}
+
+module.exports.asyncReferenceError = async () => {
+  asdfasdf; // eslint-disable-line
+}

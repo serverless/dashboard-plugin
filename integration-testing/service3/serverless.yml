@@ -31,3 +31,7 @@ functions:
     handler: handler.succeed
   promise-and-callback-race:
     handler: handler.promiseAndCallbackRace
+  asyncReferenceError:
+    handler: handler.asyncReferenceError
+  syncReferenceError:
+    handler: handler.syncReferenceError

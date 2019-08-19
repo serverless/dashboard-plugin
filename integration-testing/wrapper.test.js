@@ -196,7 +196,7 @@ describe('integration', () => {
     expect(logResult).toMatch(/"errorId":null/);
   });
 
-  it('gets right duration value from  wrapped callback handler', async () => {
+  it('gets SFE log w/right duration value from  wrapped callback handler', async () => {
     const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
@@ -210,5 +210,33 @@ describe('integration', () => {
       .invoke({ FunctionName: `${serviceName}-dev-promise-and-callback-race` })
       .promise();
     expect(JSON.parse(Payload)).toEqual('callbackEarlyReturn');
+  });
+
+  // reference error reported by client & pravin
+  it('gets right return value from  wrapped syncReferenceError handler', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-syncReferenceError` })
+      .promise();
+    expect(JSON.parse(Payload).errorMessage).toEqual('asdfasdf is not defined');
+  });
+  it('gets right return value from  wrapped asyncReferenceError handler', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-asyncReferenceError` })
+      .promise();
+    expect(JSON.parse(Payload).errorMessage).toEqual('asdfasdf is not defined');
+  });
+  it('gets SFE log msg from wrapped syncReferenceError handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-syncReferenceError` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).toMatch(/"errorId":"ReferenceError!\$asdfasdf is not defined"/);
+  });
+  it('gets SFE log msg from wrapped asyncReferenceError handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncReferenceError` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).toMatch(/"errorId":"ReferenceError!\$asdfasdf is not defined"/);
   });
 });
