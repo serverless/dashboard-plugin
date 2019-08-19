@@ -52,8 +52,8 @@ module.exports.promiseAndCallbackRace = async (event, context, callback) => {
 
 module.exports.syncReferenceError = () => {
   asdfasdf; // eslint-disable-line
-}
+};
 
 module.exports.asyncReferenceError = async () => {
   asdfasdf; // eslint-disable-line
-}
+};
