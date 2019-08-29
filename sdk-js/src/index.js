@@ -40,6 +40,7 @@ class ServerlessSDK {
     this.$.applicationName = obj.applicationName || null;
     this.$.serviceName = obj.serviceName || null;
     this.$.stageName = obj.stageName || null;
+    this.$.pluginVersion = obj.pluginVersion || null;
   }
 
   /*
@@ -86,6 +87,7 @@ class ServerlessSDK {
     meta.deploymentUid = meta.deploymentUid || (this.$.deploymentUid || null);
     meta.serviceName = meta.serviceName || (this.$.serviceName || null);
     meta.stageName = meta.stageName || (this.$.stageName || null);
+    meta.pluginVersion = meta.pluginVersion || (this.$.pluginVersion || null);
     meta.functionName = config.functionName;
     meta.timeout = config.timeout || 6;
     meta.computeType = config.computeType || null;
@@ -134,6 +136,7 @@ class ServerlessSDK {
           tenantUid: meta.tenantUid,
           deploymentUid: meta.deploymentUid,
           serviceName: meta.serviceName,
+          pluginVersion: meta.pluginVersion,
           stageName: meta.stageName,
           functionName: meta.functionName,
           timeout: meta.timeout,
@@ -232,7 +235,13 @@ class ServerlessSDK {
         ServerlessSDK._captureError = newContext.captureError;
 
         // Set up span listener
+        let totalSpans = 0;
         spanEmitter.on('span', span => {
+          totalSpans += 1;
+          trans.set('totalSpans', totalSpans);
+          if (transactionSpans >= 50) {
+            return;
+          }
           transactionSpans.push(span);
         });
 
