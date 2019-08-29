@@ -38,6 +38,7 @@ class SDK(object):
         deployment_uid,
         service_name,
         stage_name,
+        plugin_version,
     ):
         self.tenant_id = tenant_id
         self.application_name = application_name
@@ -46,6 +47,7 @@ class SDK(object):
         self.deployment_uid = deployment_uid
         self.service_name = service_name
         self.stage_name = stage_name
+        self.plugin_version = plugin_version
         self.invokation_count = 0
 
     def handler(self, user_handler, function_name, timeout):
@@ -189,6 +191,7 @@ class SDK(object):
                 "stageName": self.stage_name,
                 "tenantId": self.tenant_id,
                 "tenantUid": self.tenant_uid,
+                "pluginVersion": self.plugin_version,
                 "timeout": timeout,
                 "timestamp": start_isoformat,
                 "traceId": context.aws_request_id,
