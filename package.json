@@ -1,10 +1,10 @@
 {
-  "name": "@serverless/dashboard-plugin",
+  "name": "@serverless/enterprise-plugin",
   "version": "2.0.0",
   "engines": {
     "node": ">=6.0"
   },
-  "description": "The Serverless Dashboard plugin",
+  "description": "The Serverless Enterprise plugin",
   "scripts": {
     "build": "./scripts/build.sh",
     "cover": "jest --coverage --testPathIgnorePatterns=\"^<rootDir>/(?:coverage|dist|node_modules|sdk-js|integration-testing)/\"",
