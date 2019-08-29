@@ -101,6 +101,7 @@ class Transaction {
     this.$.schema.event.type = data.eventType || 'unknown';
     this.$.schema.compute.isColdStart = transactionCount === 1;
     this.$.schema.compute.instanceInvocationCount = transactionCount;
+    this.$.schema.totalSpans = 0;
 
     // Track uptime of container
     this.$.schema.compute.containerUptime = process.uptime();
@@ -168,7 +169,13 @@ class Transaction {
         this.set('error.culprit', errorStack.culprit);
         this.set('error.fatal', fatal);
         this.set('error.exception.type', errorStack.exception.type);
-        this.set('error.exception.message', errorStack.exception.message);
+        // sliced to 25 kb: 25 * 1024 / 8 = 3200
+        this.set(
+          'error.exception.message',
+          Buffer.from(errorStack.exception.message)
+            .slice(0, 3200)
+            .toString()
+        );
         this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
 
         // End transaction
@@ -184,10 +191,14 @@ class Transaction {
       // Log
       console.info('');
       console.error(error);
-      this.set('error.culprit', error);
+      // sliced to 25 kb: 25 * 1024 / 8 = 3200
+      const message = Buffer.from(error)
+        .slice(0, 3200)
+        .toString();
+      this.set('error.culprit', message);
       this.set('error.fatal', fatal);
       this.set('error.exception.type', 'NotAnErrorType');
-      this.set('error.exception.message', error);
+      this.set('error.exception.message', message);
       this.set('error.exception.stacktrace', []);
 
       // End transaction

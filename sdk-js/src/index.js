@@ -235,7 +235,13 @@ class ServerlessSDK {
         ServerlessSDK._captureError = newContext.captureError;
 
         // Set up span listener
+        let totalSpans = 0;
         spanEmitter.on('span', span => {
+          totalSpans += 1;
+          trans.set('totalSpans', totalSpans);
+          if (transactionSpans >= 50) {
+            return;
+          }
           transactionSpans.push(span);
         });
 
