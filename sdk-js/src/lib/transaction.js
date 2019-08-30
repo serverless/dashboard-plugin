@@ -199,7 +199,7 @@ class Transaction {
       this.set('error.fatal', fatal);
       this.set('error.exception.type', 'NotAnErrorType');
       this.set('error.exception.message', message);
-      this.set('error.exception.stacktrace', []);
+      this.set('error.exception.stacktrace', '[]');
 
       // End transaction
       this.buildOutput(ERROR); // set this to transaction for now.
