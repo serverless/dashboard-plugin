@@ -58,7 +58,7 @@ module.exports = async function(templateName) {
   const randomPostfix = crypto.randomBytes(2).toString('hex');
   const serviceTmpDir = path.join(tmpDir, `serverless-enterprise-plugin-test-${randomPostfix}`);
 
-  const serviceName = `enterprise-plugin-test-${randomPostfix}`;
+  const serviceName = `plugin-test-${randomPostfix}`;
   console.info(
     `Setup '${serviceName}' service from '${templateName}' template at ${serviceTmpDir}`
   );
