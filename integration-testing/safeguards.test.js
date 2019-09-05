@@ -24,12 +24,12 @@ describe('integration', () => {
 
   it('deploys blocks deploy on illegal stage name', async () => {
     try {
-      await sls(['deploy', '-s', 'illegal-stage-name']);
+      await sls(['deploy', '-s', 'bad-stage']);
     } catch (error) {
       const stdout = stripAnsi(String(error.stdoutBuffer));
       expect(stdout).toMatch('failed - allowed-stages');
       expect(stdout).toMatch(
-        'Failed - Stage name "illegal-stage-name" not in list of permitted names: ["dev","qa","prod"]'
+        'Failed - Stage name "bad-stage" not in list of permitted names: ["dev","qa","prod"]'
       );
       return;
     }

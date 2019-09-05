@@ -418,6 +418,68 @@ const sqs = {
   ],
 };
 
+const hurricanComerceHttp = {
+  body: {},
+  method: 'GET',
+  principalId: 'cd1c462d-682f-4fac-a555-55abe039f00f',
+  stage: 'dev2',
+  cognitoPoolClaims: { sub: '' },
+  enhancedAuthContext: {
+    role: 'role-0001',
+    organisation: 'b24e02b2-00c0-4527-a773-cfa6683e2445',
+    principalId: 'cd1c462d-682f-4fac-a555-55abe039f00f',
+    integrationLatency: '38',
+    expiry: '2019-09-05T12:45:14.182Z',
+    email: 'tom.lee@hurricanecommerce.com',
+  },
+  headers: {
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8',
+    'Authorization':
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRvbS5sZWVAaHVycmljYW5lY29tbWVyY2UuY29tIiwiZmlyc3RuYW1lIjoiVG9tIiwic3VybmFtZSI6IkxlZSIsInJvbGUiOiJyb2xlLTAwMDEiLCJleHBpcnkiOiIyMDE5LTA5LTA1VDEyOjQ1OjE0LjE4MloiLCJvcmdhbmlzYXRpb24iOnsiaWQiOiJiMjRlMDJiMi0wMGMwLTQ1MjctYTc3My1jZmE2NjgzZTI0NDUiLCJuYW1lIjoiSHVycmljYW5lIE1vZHVsYXIgQ29tbWVyY2UifSwiaWF0IjoxNTY3NjAxMTE0LCJhdWQiOiJwbGF5Z3JvdW5kcy5ocnJjbi5pbyIsImlzcyI6ImFwaS5ocnJjbi5pbyIsInN1YiI6ImNkMWM0NjJkLTY4MmYtNGZhYy1hNTU1LTU1YWJlMDM5ZjAwZiJ9.jvBblzv9NnHTcjC_Qk82s8N-BO6UL9p_WAYRJ_MPfKE',
+    'CloudFront-Forwarded-Proto': 'https',
+    'CloudFront-Is-Desktop-Viewer': 'true',
+    'CloudFront-Is-Mobile-Viewer': 'false',
+    'CloudFront-Is-SmartTV-Viewer': 'false',
+    'CloudFront-Is-Tablet-Viewer': 'false',
+    'CloudFront-Viewer-Country': 'JE',
+    'content-type': 'application/x-www-form-urlencoded',
+    'Host': 'dev-api.hrrcn.io',
+    'origin': 'https://admin.hrrcn.dev',
+    'Referer': 'https://admin.hrrcn.dev/organisations',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+    'User-Agent':
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+    'Via': '2.0 8566cb770d0695bb6bffb61a26f5b400.cloudfront.net (CloudFront)',
+    'X-Amz-Cf-Id': 'llYYqlg3pcfyCQ3n6KtCJaJD3E2DrRuMDCx49G2IIxnsL6n9FxO8MQ==',
+    'X-Amzn-Trace-Id': 'Root=1-5d70fa86-45be9b33522cea17783901b4',
+    'X-Forwarded-For': '62.68.188.190, 70.132.20.72',
+    'X-Forwarded-Port': '443',
+    'X-Forwarded-Proto': 'https',
+  },
+  query: { activeOnly: 'true', parentOnly: 'true' },
+  path: {},
+  identity: {
+    cognitoIdentityPoolId: '',
+    accountId: '',
+    cognitoIdentityId: '',
+    caller: '',
+    sourceIp: '62.68.188.190',
+    principalOrgId: '',
+    accessKey: '',
+    cognitoAuthenticationType: '',
+    cognitoAuthenticationProvider: '',
+    userArn: '',
+    userAgent:
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+    user: '',
+  },
+  stageVariables: {},
+  requestPath: '/admin/organisations',
+};
+
 describe('eventDetection', () => {
   it('identifies alexaSkill', () => {
     expect(detectEventType(alexaSkill)).toEqual('aws.alexaskill');
@@ -455,7 +517,7 @@ describe('eventDetection', () => {
     expect(detectEventType(scheduled)).toEqual('aws.scheduled');
   });
 
-  it('identifies slsIntegrationLambda', () => {
+  xit('identifies slsIntegrationLambda', () => {
     expect(detectEventType(slsIntegrationLambda)).toEqual('aws.apigateway.http');
   });
 
@@ -469,5 +531,9 @@ describe('eventDetection', () => {
 
   it('does not identify an empty object', () => {
     expect(detectEventType({})).toEqual(null);
+  });
+
+  it('does not the hurricanComerceHttp payload', () => {
+    expect(detectEventType(hurricanComerceHttp)).toEqual(null);
   });
 });
