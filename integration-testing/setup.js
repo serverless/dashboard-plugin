@@ -29,11 +29,11 @@ const retrieveServerless = memoize(async () => {
   console.info(`Setup 'serverless' at ${serverlessTmpDir}`);
   const servelressDirDeferred = ensureDir(serverlessTmpDir);
   console.info('... fetch metadata');
-  const metaData = await (await fetch('https://registry.npmjs.org/serverless')).json();
+  // const metaData = await (await fetch('https://registry.npmjs.org/serverless')).json();
 
   await servelressDirDeferred;
   console.info('... fetch tarball');
-  const res = await fetch(metaData.versions[metaData['dist-tags'].latest].dist.tarball);
+  const res = await fetch('https://github.com/serverless/serverless/archive/master.tar.gz');
   const tarDeferred = tar.x({ cwd: serverlessTmpDir, strip: 1 });
   res.body.pipe(tarDeferred);
   await new Promise((resolve, reject) => {
