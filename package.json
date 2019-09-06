@@ -48,6 +48,7 @@
     "@babel/preset-env": "^7.1.0",
     "@serverless/eslint-config": "^1.0.1",
     "aws-sdk": "^2.503.0",
+    "chai": "^4.2.0",
     "child-process-ext": "^2.0.0",
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.14.0",
@@ -55,8 +56,10 @@
     "jest": "^24.8.0",
     "jest-circus": "^24.8.0",
     "lint-staged": "^8.1.5",
+    "mocha": "^6.2.0",
     "pre-commit": "^1.2.2",
     "prettier": "^1.18.2",
+    "serverless": "^1.51.0",
     "strip-ansi": "^5.2.0",
     "tar": "^4.4.10"
   },
@@ -73,6 +76,7 @@
           "devDependencies": [
             "**/*.test.js",
             "**/scripts/**",
+            "**/test/**",
             "**/integration-testing/**",
             "prettier.config.js"
           ]
@@ -96,6 +100,10 @@
         }
       }
     ]
+  },
+  "mocha": {
+    "reporter": "test/mocha-reporter",
+    "timeout": 5000
   },
   "author": "",
   "license": "Apache-2.0",
