@@ -202,7 +202,7 @@ describe('integration', function() {
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
     const duration = parseFloat(logResult.match(/"duration":(\d+\.\d+)/)[1]);
-    expect(duration).toBeGreaterThan(5);
+    expect(duration).to.be.above(5);
   });
 
   it('gets the callback return value when a promise func calls callback', async () => {
