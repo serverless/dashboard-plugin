@@ -41,71 +41,71 @@ describe('integration', function() {
 
   it('gets right return value from  wrapped sync handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-sync` }).promise();
-    expect(JSON.parse(Payload)).toEqual(null); // why did i think this was possible?
+    expect(JSON.parse(Payload)).to.equal(null); // why did i think this was possible?
   });
 
   it('gets right return value from  wrapped syncError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-syncError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('syncError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('syncError');
   });
 
   it('gets right return value from  wrapped async handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-async` }).promise();
-    expect(JSON.parse(Payload)).toEqual('asyncReturn');
+    expect(JSON.parse(Payload)).to.equal('asyncReturn');
   });
 
   it('gets right return value from  wrapped asyncError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-asyncError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('asyncError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('asyncError');
   });
 
   it('gets right return value from  wrapped asyncDanglingCallback handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('asyncDanglyReturn');
+    expect(JSON.parse(Payload)).to.equal('asyncDanglyReturn');
   });
 
   it('gets right return value from  wrapped done handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-done` }).promise();
-    expect(JSON.parse(Payload)).toEqual('doneReturn');
+    expect(JSON.parse(Payload)).to.equal('doneReturn');
   });
 
   it('gets right return value from  wrapped doneError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-doneError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('doneError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('doneError');
   });
 
   it('gets right return value from  wrapped callback handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-callback` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('callbackReturn');
+    expect(JSON.parse(Payload)).to.equal('callbackReturn');
   });
 
   it('gets right return value from  wrapped callbackError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('callbackError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('callbackError');
   });
 
   it('gets right return value from  wrapped fail handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-fail` }).promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('failError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('failError');
   });
 
   it('gets right return value from  wrapped succeed handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-succeed` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('succeedReturn');
+    expect(JSON.parse(Payload)).to.equal('succeedReturn');
   });
 
   xit('gets SFE log msg from wrapped sync handler', async () => {
@@ -209,7 +209,7 @@ describe('integration', function() {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-promise-and-callback-race` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('callbackEarlyReturn');
+    expect(JSON.parse(Payload)).to.equal('callbackEarlyReturn');
   });
 
   it('gets spans', async () => {
@@ -224,31 +224,31 @@ describe('integration', function() {
         .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
         .split('SERVERLESS_ENTERPRISE')[1]
     );
-    expect(payload.type).toEqual('transaction');
-    expect(payload.payload.spans.length).toEqual(3);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(3);
     // aws span
-    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
       new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
     );
-    expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
     // first http span (POST w/ https.request)
-    expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).toEqual({
+    expect(payload.payload.spans[1].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       httpMethod: 'POST',
       httpStatus: 200,
     });
     // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[2].tags).toEqual({
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
       httpMethod: 'GET',
@@ -268,31 +268,31 @@ describe('integration', function() {
         .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
         .split('SERVERLESS_ENTERPRISE')[1]
     );
-    expect(payload.type).toEqual('transaction');
-    expect(payload.payload.spans.length).toEqual(3);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(3);
     // aws span
-    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
       new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
     );
-    expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
     // first http span (POST w/ https.request)
-    expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).toEqual({
+    expect(payload.payload.spans[1].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       httpMethod: 'POST',
       httpStatus: 200,
     });
     // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[2].tags).toEqual({
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
       httpMethod: 'GET',

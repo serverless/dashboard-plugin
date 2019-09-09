@@ -482,58 +482,58 @@ const hurricanComerceHttp = {
 
 describe('eventDetection', () => {
   it('identifies alexaSkill', () => {
-    expect(detectEventType(alexaSkill)).toEqual('aws.alexaskill');
+    expect(detectEventType(alexaSkill)).to.equal('aws.alexaskill');
   });
 
   it('identifies apiGateway', () => {
-    expect(detectEventType(apiGateway)).toEqual('aws.apigateway.http');
+    expect(detectEventType(apiGateway)).to.equal('aws.apigateway.http');
   });
 
   it('identifies cloudFront', () => {
-    expect(detectEventType(cloudFront)).toEqual('aws.cloudfront');
+    expect(detectEventType(cloudFront)).to.equal('aws.cloudfront');
   });
 
   it('identifies token custom authorizers', () => {
-    expect(detectEventType(customAuthorizerToken)).toEqual('aws.apigateway.authorizer');
+    expect(detectEventType(customAuthorizerToken)).to.equal('aws.apigateway.authorizer');
   });
 
   it('identifies request custom authorizers', () => {
-    expect(detectEventType(customAuthorizerRequest)).toEqual('aws.apigateway.authorizer');
+    expect(detectEventType(customAuthorizerRequest)).to.equal('aws.apigateway.authorizer');
   });
 
   it('identifies firehose', () => {
-    expect(detectEventType(firehose)).toEqual('aws.firehose');
+    expect(detectEventType(firehose)).to.equal('aws.firehose');
   });
 
   it('identifies kinesis', () => {
-    expect(detectEventType(kinesis)).toEqual('aws.kinesis');
+    expect(detectEventType(kinesis)).to.equal('aws.kinesis');
   });
 
   it('identifies s3', () => {
-    expect(detectEventType(s3)).toEqual('aws.s3');
+    expect(detectEventType(s3)).to.equal('aws.s3');
   });
 
   it('identifies scheduled', () => {
-    expect(detectEventType(scheduled)).toEqual('aws.scheduled');
+    expect(detectEventType(scheduled)).to.equal('aws.scheduled');
   });
 
   xit('identifies slsIntegrationLambda', () => {
-    expect(detectEventType(slsIntegrationLambda)).toEqual('aws.apigateway.http');
+    expect(detectEventType(slsIntegrationLambda)).to.equal('aws.apigateway.http');
   });
 
   it('identifies sns', () => {
-    expect(detectEventType(sns)).toEqual('aws.sns');
+    expect(detectEventType(sns)).to.equal('aws.sns');
   });
 
   it('identifies sqs', () => {
-    expect(detectEventType(sqs)).toEqual('aws.sqs');
+    expect(detectEventType(sqs)).to.equal('aws.sqs');
   });
 
   it('does not identify an empty object', () => {
-    expect(detectEventType({})).toEqual(null);
+    expect(detectEventType({})).to.equal(null);
   });
 
   it('does not the hurricanComerceHttp payload', () => {
-    expect(detectEventType(hurricanComerceHttp)).toEqual(null);
+    expect(detectEventType(hurricanComerceHttp)).to.equal(null);
   });
 });
