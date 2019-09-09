@@ -10,6 +10,8 @@ Mocha.prototype.run = (run =>
     this.suite.on(EVENT_FILE_PRE_REQUIRE, () => {
       global.expect = require('chai').expect;
       global.test = global.it;
+      global.beforeAll = global.before;
+      global.afterAll = global.after;
     });
     return run.call(this, ...args);
   })(Mocha.prototype.run);
