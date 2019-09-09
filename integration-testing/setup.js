@@ -73,7 +73,7 @@ const retrieveServerless = memoize(async () => {
   console.info('... npm install');
   await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
 
-  return path.join(serverlessTmpDir, 'bin/serverless');
+  return path.join(serverlessTmpDir, 'bin/serverless.js');
 });
 
 module.exports = async function(templateName) {
