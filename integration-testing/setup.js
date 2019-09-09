@@ -3,7 +3,7 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { copy, ensureDir, readFile, remove, writeFile, writeJson } = require('fs-extra');
+const { copy, ensureDir, readFile, remove, writeFile, writeJson, realpath } = require('fs-extra');
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
@@ -26,6 +26,28 @@ const retrieveServerless = memoize(async () => {
     tmpDir,
     `serverless-enterprise-plugin-test-serverless-${crypto.randomBytes(2).toString('hex')}`
   );
+  if (process.env.LOCAL_SERVERLESS_LINK_PATH) {
+    // Test against local serverless installation which is expected to have
+    // this instance of `@serverless/enterprise-plugin` linked in its node_modules
+    const serverlessPath = path.join(process.cwd(), process.env.LOCAL_SERVERLESS_LINK_PATH);
+    let pluginPath;
+    let serverlessPluginPath;
+    try {
+      [pluginPath, serverlessPluginPath] = await Promise.all([
+        realpath(path.join(__dirname, '..')),
+        realpath(path.join(serverlessPath, 'node_modules/@serverless/enterprise-plugin')),
+      ]);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+    if (!pluginPath || pluginPath !== serverlessPluginPath) {
+      throw new Error(
+        `SERVERLESS_LINK_PATH which resolves to ${serverlessPath}, doesn't point a ` +
+          'serverless installation which links this installation of a plugin'
+      );
+    }
+    return path.join(serverlessPath, 'bin/serverless.js');
+  }
   console.info(`Setup 'serverless' at ${serverlessTmpDir}`);
   const servelressDirDeferred = ensureDir(serverlessTmpDir);
   console.info('... fetch metadata');
