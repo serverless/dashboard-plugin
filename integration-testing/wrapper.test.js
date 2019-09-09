@@ -11,34 +11,34 @@ let sls;
 let teardown;
 let serviceName;
 
-jest.setTimeout(1000 * 60 * 5);
+describe('integration', function() {
+  this.timeout(1000 * 60 * 5);
 
-beforeAll(async () => {
-  const accessKey = await getAccessKeyForTenant('integration');
-  const {
-    providerCredentials: { secretValue: credentials },
-  } = await getDeployProfile({
-    tenant: 'integration',
-    app: 'integration',
-    stage: 'dev',
-    service: serviceName,
-    accessKey,
+  beforeAll(async () => {
+    const accessKey = await getAccessKeyForTenant('integration');
+    const {
+      providerCredentials: { secretValue: credentials },
+    } = await getDeployProfile({
+      tenant: 'integration',
+      app: 'integration',
+      stage: 'dev',
+      service: serviceName,
+      accessKey,
+    });
+
+    lambda = new AWS.Lambda({ region: 'us-east-1', credentials });
+    ({ sls, teardown } = await setup('service3'));
+    await sls(['deploy']);
+    serviceName = stripAnsi(
+      String((await sls(['print', '--path', 'service'], { env: { SLS_DEBUG: '' } })).stdoutBuffer)
+    ).trim();
   });
 
-  lambda = new AWS.Lambda({ region: 'us-east-1', credentials });
-  ({ sls, teardown } = await setup('service3'));
-  await sls(['deploy']);
-  serviceName = stripAnsi(
-    String((await sls(['print', '--path', 'service'], { env: { SLS_DEBUG: '' } })).stdoutBuffer)
-  ).trim();
-});
+  afterAll(() => {
+    if (teardown) return teardown();
+    return null;
+  });
 
-afterAll(() => {
-  if (teardown) return teardown();
-  return null;
-});
-
-describe('integration', () => {
   it('gets right return value from  wrapped sync handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-sync` }).promise();
     expect(JSON.parse(Payload)).toEqual(null); // why did i think this was possible?

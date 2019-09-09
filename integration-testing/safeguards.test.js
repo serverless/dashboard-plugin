@@ -6,16 +6,16 @@ const setup = require('./setup');
 let sls;
 let teardown;
 
-jest.setTimeout(1000 * 60 * 5);
+describe('integration: safeguards', function() {
+  this.timeout(1000 * 60 * 5);
 
-beforeAll(async () => ({ sls, teardown } = await setup('service')));
+  beforeAll(async () => ({ sls, teardown } = await setup('service')));
 
-afterAll(() => {
-  if (teardown) return teardown();
-  return null;
-});
+  afterAll(() => {
+    if (teardown) return teardown();
+    return null;
+  });
 
-describe('integration', () => {
   it('deploys with no extra options, warns on cfn role', async () => {
     const stdout = stripAnsi(String((await sls(['deploy'])).stdoutBuffer));
     expect(stdout).toMatch('warned - require-cfn-role');
