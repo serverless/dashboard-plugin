@@ -29,6 +29,6 @@ describe('integration: outputs', function() {
     const printStdout = stripAnsi(
       String((await sls2(['print', '--path', 'custom.testOutput'])).stdoutBuffer)
     );
-    expect(printStdout).toMatch('outputValue\n\n');
+    expect(printStdout).to.include('outputValue\n\n');
   });
 });

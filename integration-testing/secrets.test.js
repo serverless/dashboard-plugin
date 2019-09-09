@@ -14,6 +14,6 @@ describe('integration: secrets', function() {
     const stdout = stripAnsi(
       String((await sls(['print', '--path', 'custom.testSecret'])).stdoutBuffer)
     );
-    expect(stdout).toMatch('testSecretValue\n\n');
+    expect(stdout).to.include('testSecretValue\n\n');
   });
 });

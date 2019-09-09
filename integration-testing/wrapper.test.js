@@ -113,7 +113,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-sync` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped syncError handler', async () => {
@@ -121,7 +121,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-syncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$syncError"/);
+    expect(logResult).to.match(/"errorId":"Error!\$syncError"/);
   });
 
   it('gets SFE log msg from wrapped async handler', async () => {
@@ -129,7 +129,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-async` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped asyncError handler', async () => {
@@ -137,7 +137,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$asyncError"/);
+    expect(logResult).to.match(/"errorId":"Error!\$asyncError"/);
   });
 
   it('gets SFE log msg from wrapped asyncDanglingCallback handler', async () => {
@@ -145,7 +145,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped done handler', async () => {
@@ -153,7 +153,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-done` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped doneError handler', async () => {
@@ -161,7 +161,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-doneError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$doneError"/);
+    expect(logResult).to.match(/"errorId":"NotAnErrorType!\$doneError"/);
   });
 
   it('gets SFE log msg from wrapped callback handler', async () => {
@@ -169,7 +169,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped callbackError handler', async () => {
@@ -177,7 +177,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$callbackError"/);
+    expect(logResult).to.match(/"errorId":"NotAnErrorType!\$callbackError"/);
   });
 
   it('gets SFE log msg from wrapped fail handler', async () => {
@@ -185,7 +185,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-fail` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$failError"/);
+    expect(logResult).to.match(/"errorId":"NotAnErrorType!\$failError"/);
   });
 
   it('gets SFE log msg from wrapped succeed handler', async () => {
@@ -193,7 +193,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-succeed` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets right duration value from  wrapped callback handler', async () => {
@@ -217,7 +217,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
     const payload = JSON.parse(
       logResult
         .split('\n')
@@ -261,7 +261,7 @@ describe('integration', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans8` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
     const payload = JSON.parse(
       logResult
         .split('\n')
