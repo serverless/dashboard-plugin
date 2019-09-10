@@ -8,7 +8,7 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "cover": "nyc npm test",
-    "integration-test": "mocha \"integration-testing/**/*.test.js\"",
+    "integration-test": "node node_modules/serverless/scripts/test-isolated.js --pass-through-aws-creds --skip-fs-cleanup-check \"integration-testing/**/*.test.js\"",
     "lint": "eslint --cache .",
     "lint:staged": "lint-staged",
     "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",
