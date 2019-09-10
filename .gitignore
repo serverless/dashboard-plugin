@@ -5,6 +5,7 @@
 v8-compile-cache-*
 .vscode/
 .eslintcache
+/.nyc_output
 /dist
 /coverage
 /node_modules
