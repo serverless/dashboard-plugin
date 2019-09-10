@@ -112,8 +112,13 @@ jobs:
         - codecov
         - codecov -p sdk-js
 
-    - name: 'Unit Tests - Node.js v8'
+    - name: 'Isolated Unit Tests - Node.js v8'
       node_js: 8
+      script:
+        - npm run test-isolated
+        - cd sdk-js
+        - npm test
+        - cd ..
 
     - name: 'Unit Tests - Node.js v6'
       node_js: 6
