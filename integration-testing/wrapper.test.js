@@ -11,7 +11,7 @@ let sls;
 let teardown;
 let serviceName;
 
-describe('integration', function() {
+describe('integration: wrapper', function() {
   this.timeout(1000 * 60 * 5);
 
   beforeAll(async () => {
