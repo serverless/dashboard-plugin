@@ -9,6 +9,8 @@ from datetime import datetime
 from contextlib import contextmanager
 from importlib import import_module
 
+from serverless_sdk.vendor import wrapt
+
 module_start_time = time.time()
 
 
@@ -49,6 +51,9 @@ class SDK(object):
         self.stage_name = stage_name
         self.plugin_version = plugin_version
         self.invokation_count = 0
+        self.spans = []
+
+        self.instrument_botocore()
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
@@ -60,6 +65,8 @@ class SDK(object):
     @contextmanager
     def transaction(self, event, context, function_name, timeout):
         start = time.time()
+        if self.invokation_count > 0: # reset spans whe not a cold start
+            self.spans = []
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
         error_data = {
@@ -213,7 +220,7 @@ class SDK(object):
                         "traceId": context.aws_request_id,
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
-                    "spans": [],
+                    "spans": self.spans,
                     "startTime": start_isoformat,
                     "tags": tags,
                 },
@@ -224,3 +231,38 @@ class SDK(object):
             print("SERVERLESS_ENTERPRISE {}".format(json.dumps(transaction_data)))
             if exception:
                 raise exception
+
+
+    def instrument_botocore(self):
+        def wrapper(wrapped, instance, args, kwargs):
+            start_isoformat = datetime.utcnow().isoformat() + 'Z'
+            start = time.time()
+            try:
+                response = wrapped(*args, **kwargs)
+                return response
+            except Exception as error:
+                response = error.response
+                raise error
+            finally:
+                end_isoformat = datetime.utcnow().isoformat() + 'Z'
+                self.spans.append({
+                    "tags": {
+                        "type": "aws",
+                        "requestHostname": instance._endpoint.host.split("://")[1],
+                        "aws": {
+                            "region": instance.meta.region_name,
+                            "service": instance._service_model.service_name,
+                            "operation": args[0],
+                            "requestId": response.get("ResponseMetadata", {}).get("RequestId"),
+                            "errorCode": response.get("Error", {}).get("Code"),
+                        },
+                    },
+                    "startTime": start_isoformat,
+                    "endTime": end_isoformat,
+                    "duration": int((time.time() - start) * 1000),
+                })
+        wrapt.wrap_function_wrapper(
+            'botocore.client',
+            'BaseClient._make_api_call',
+            wrapper,
+        )
