@@ -7,6 +7,7 @@ provider:
   runtime: nodejs10.x
 
 functions:
+  # NodeJS handlers
   sync:
     handler: handler.sync
   syncError:
@@ -31,3 +32,11 @@ functions:
     handler: handler.succeed
   promise-and-callback-race:
     handler: handler.promiseAndCallbackRace
+
+  # Python handlers
+  pythonSuccess:
+    handler: handler.success
+    runtime: python3.7
+  pythonError:
+    handler: handler.error
+    runtime: python3.7
