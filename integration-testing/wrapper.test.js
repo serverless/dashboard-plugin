@@ -224,23 +224,37 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonSuccess` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
+    console.log(logResult);
     expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(logResult.split('\n').filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0].slice(22))
-    expect(payload.type).toEqual('transaction')
-    expect(payload.payload.spans).toEqual([])
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
+        .slice(22)
+    );
+    expect(payload.type).toEqual('transaction');
+    expect(payload.payload.spans.length).toEqual(1);
+    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[0].tags.type).toEqual('aws');
   });
 
   it('gets the error value when calling python error', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-pythonError` })
       .promise();
-      expect(JSON.parse(Payload)).toEqual({
-        "errorMessage": "error",
-        "errorType": "Exception",
-        "stackTrace": [
-          "  File \"/var/task/serverless_sdk/__init__.py\", line 56, in wrapped_handler\n    return user_handler(event, context)\n",
-          "  File \"/var/task/handler.py\", line 8, in error\n    raise Exception('error')\n"
-        ]});
+    expect(JSON.parse(Payload)).toEqual({
+      errorMessage: 'error',
+      errorType: 'Exception',
+      stackTrace: [
+        '  File "/var/task/serverless_sdk/__init__.py", line 61, in wrapped_handler\n    return user_handler(event, context)\n',
+        '  File "/var/task/handler.py", line 8, in error\n    raise Exception(\'error\')\n',
+      ],
+    });
   });
 
   it('gets SFE log msg from wrapped python error handler', async () => {
@@ -249,7 +263,12 @@ describe('integration', () => {
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
     expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(logResult.split('\n').filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0].slice(22))
-    expect(payload.type).toEqual('error')
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
+        .slice(22)
+    );
+    expect(payload.type).toEqual('error');
   });
 });
