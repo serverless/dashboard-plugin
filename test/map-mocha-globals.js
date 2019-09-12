@@ -15,5 +15,3 @@ Mocha.prototype.run = (run =>
     });
     return run.call(this, ...args);
   })(Mocha.prototype.run);
-
-module.exports = require('serverless/tests/mocha-reporter');
