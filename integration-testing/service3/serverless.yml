@@ -31,3 +31,8 @@ functions:
     handler: handler.succeed
   promise-and-callback-race:
     handler: handler.promiseAndCallbackRace
+  spans:
+    handler: handler.spans
+  spans8:
+    handler: handler.spans
+    runtime: nodejs8.10
