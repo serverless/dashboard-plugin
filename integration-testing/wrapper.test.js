@@ -212,7 +212,7 @@ describe('integration', () => {
     expect(JSON.parse(Payload)).toEqual('callbackEarlyReturn');
   });
 
-  it('gets an http span', async () => {
+  it('gets spans', async () => {
     const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans` })
       .promise();
@@ -256,7 +256,7 @@ describe('integration', () => {
     });
   });
 
-  it('gets an http span in node 8', async () => {
+  it('gets spans in node 8', async () => {
     const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans8` })
       .promise();
