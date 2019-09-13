@@ -224,7 +224,6 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonSuccess` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    console.log(logResult);
     expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
     const payload = JSON.parse(
       logResult
