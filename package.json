@@ -101,9 +101,7 @@
   "license": "Apache-2.0",
   "lint-staged": {
     "*.js": [
-      "eslint --fix .",
-      "eslint --fix sdk-js/src",
-      "git add -A"
+      "eslint"
     ]
   },
   "pre-commit": [
