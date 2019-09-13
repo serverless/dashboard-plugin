@@ -56,7 +56,7 @@ module.exports.spans = async () => {
   const sts = new AWS.STS();
   await sts.getCallerIdentity().promise();
   await new Promise((resolve, reject) => {
-    const req = https.request({host: 'httpbin.org', path: '/post', method: 'POST'},resp => {
+    const req = https.request({ host: 'httpbin.org', path: '/post', method: 'POST' }, resp => {
       let data = '';
       resp.on('data', chunk => {
         data += chunk;
@@ -69,7 +69,7 @@ module.exports.spans = async () => {
     req.end();
   });
   await new Promise((resolve, reject) => {
-    const req = https.get({host: 'example.com', path: '/', method: 'get'}, resp => {
+    const req = https.get({ host: 'example.com', path: '/', method: 'get' }, resp => {
       let data = '';
       resp.on('data', chunk => {
         data += chunk;

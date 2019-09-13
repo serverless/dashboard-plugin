@@ -242,7 +242,7 @@ describe('integration', () => {
       type: 'http',
       requestHostname: 'httpbin.org',
       httpMethod: 'POST',
-      httpStatus: 200
+      httpStatus: 200,
     });
     // second http span (https.get)
     expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
@@ -252,7 +252,7 @@ describe('integration', () => {
       type: 'http',
       requestHostname: 'example.com',
       httpMethod: 'GET',
-      httpStatus: 200
+      httpStatus: 200,
     });
   });
 
@@ -286,7 +286,7 @@ describe('integration', () => {
       type: 'http',
       requestHostname: 'httpbin.org',
       httpMethod: 'POST',
-      httpStatus: 200
+      httpStatus: 200,
     });
     // second http span (https.get)
     expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
@@ -296,7 +296,7 @@ describe('integration', () => {
       type: 'http',
       requestHostname: 'example.com',
       httpMethod: 'GET',
-      httpStatus: 200
+      httpStatus: 200,
     });
   });
 });
