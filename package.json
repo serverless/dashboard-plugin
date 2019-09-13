@@ -102,6 +102,9 @@
   "lint-staged": {
     "*.js": [
       "eslint"
+    ],
+    "*.{css,html,js,json,md,yaml,yml}": [
+      "prettier -c"
     ]
   },
   "pre-commit": [
