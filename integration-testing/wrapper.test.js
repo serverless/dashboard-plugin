@@ -213,7 +213,7 @@ describe('integration', () => {
   });
 
   it('gets an http span', async () => {
-    const { LogResult, Payload } = await lambda
+    const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
@@ -225,7 +225,8 @@ describe('integration', () => {
         .split('SERVERLESS_ENTERPRISE')[1]
     );
     expect(payload.type).toEqual('transaction');
-    expect(payload.payload.spans.length).toEqual(2);
+    expect(payload.payload.spans.length).toEqual(3);
+    // aws span
     expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
@@ -233,12 +234,25 @@ describe('integration', () => {
       new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
     );
     expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    // first http span (POST w/ https.request)
     expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[1].tags))).toEqual(
-      new Set(['type', 'requestHostname', 'httpMethod', 'httpStatus'])
+    expect(payload.payload.spans[1].tags).toEqual({
+      type: 'http',
+      requestHostname: 'httpbin.org',
+      httpMethod: 'POST',
+      httpStatus: 200
+    });
+    // second http span (https.get)
+    expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags.type).toEqual('http');
+    expect(payload.payload.spans[2].tags).toEqual({
+      type: 'http',
+      requestHostname: 'example.com',
+      httpMethod: 'GET',
+      httpStatus: 200
+    });
   });
 });
