@@ -1,9 +1,11 @@
 'use strict';
 
+const proxyquire = require('proxyquire');
+
 describe('runtime.js', () => {
   test('it registers regeneratorRuntime', () => {
     global.regeneratorRuntime = undefined;
-    require('./runtime');
+    proxyquire('./runtime', {}); // Ensure fresh require
     expect(global.regeneratorRuntime).to.equal(require('regenerator-runtime'));
   });
 });
