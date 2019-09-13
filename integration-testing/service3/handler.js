@@ -1,4 +1,6 @@
 'use strict';
+const https = require('https');
+const AWS = require('aws-sdk');
 
 module.exports.sync = () => {
   return 'syncReturn';
@@ -48,4 +50,22 @@ module.exports.succeed = (event, context) => {
 module.exports.promiseAndCallbackRace = async (event, context, callback) => {
   callback(null, 'callbackEarlyReturn');
   return 'asyncReturn';
+};
+
+module.exports.spans = async () => {
+  const sts = new AWS.STS();
+  await sts.getCallerIdentity().promise();
+  await new Promise((resolve, reject) => {
+    https
+      .get('https://httpbin.org/get', resp => {
+        let data = '';
+        resp.on('data', chunk => {
+          data += chunk;
+        });
+        resp.on('end', () => {
+          resolve(data);
+        });
+      })
+      .on('error', reject);
+  });
 };

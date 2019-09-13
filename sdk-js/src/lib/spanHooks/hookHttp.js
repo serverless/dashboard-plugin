@@ -4,8 +4,9 @@ const url = require('url');
 const http = require('http');
 const https = require('https');
 
-const captureHosts = {};
+const captureHosts = { '*': true };
 if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS) {
+  delete captureHosts['*'];
   const domainNames = process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS.toLowerCase()
     .split(',')
     .filter(domain => domain.length > 0);
@@ -44,17 +45,20 @@ module.exports = emitter => {
           clientRequest.on('response', response => {
             const endTime = Date.now();
 
-            emitter.emit('span', {
-              tags: {
-                type: 'http',
-                requestHostname,
-                httpMethod: clientRequest.method,
-                httpStatus: response.statusCode,
-              },
-              startTime: new Date(startTime).toISOString(),
-              endTime: new Date(endTime).toISOString(),
-              duration: endTime - startTime,
-            });
+            const userAgent = (_args[0].headers || {})['User-Agent'] || '';
+            if (!userAgent.startsWith('aws-sdk-nodejs/') || process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) {
+              emitter.emit('span', {
+                tags: {
+                  type: 'http',
+                  requestHostname,
+                  httpMethod: clientRequest.method,
+                  httpStatus: response.statusCode,
+                },
+                startTime: new Date(startTime).toISOString(),
+                endTime: new Date(endTime).toISOString(),
+                duration: endTime - startTime,
+              });
+            }
           });
         }
 

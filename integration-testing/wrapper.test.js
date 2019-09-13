@@ -211,4 +211,34 @@ describe('integration', () => {
       .promise();
     expect(JSON.parse(Payload)).toEqual('callbackEarlyReturn');
   });
+
+  it('gets an http span', async () => {
+    const { LogResult, Payload } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).toEqual('transaction');
+    expect(payload.payload.spans.length).toEqual(2);
+    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(new Set(Object.keys(payload.payload.spans[1].tags))).toEqual(
+      new Set(['type', 'requestHostname', 'httpMethod', 'httpStatus'])
+    );
+    expect(payload.payload.spans[1].tags.type).toEqual('http');
+  });
 });
