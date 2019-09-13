@@ -4,7 +4,7 @@ service: CHANGEME
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.x
 
 functions:
   sync:
@@ -33,3 +33,6 @@ functions:
     handler: handler.promiseAndCallbackRace
   spans:
     handler: handler.spans
+  spans8:
+    handler: handler.spans
+    runtime: nodejs8.10

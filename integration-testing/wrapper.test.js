@@ -255,4 +255,48 @@ describe('integration', () => {
       httpStatus: 200
     });
   });
+
+  it('gets an http span in node 8', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans8` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).toEqual('transaction');
+    expect(payload.payload.spans.length).toEqual(3);
+    // aws span
+    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    // first http span (POST w/ https.request)
+    expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[1].tags).toEqual({
+      type: 'http',
+      requestHostname: 'httpbin.org',
+      httpMethod: 'POST',
+      httpStatus: 200
+    });
+    // second http span (https.get)
+    expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[2].tags).toEqual({
+      type: 'http',
+      requestHostname: 'example.com',
+      httpMethod: 'GET',
+      httpStatus: 200
+    });
+  });
 });
