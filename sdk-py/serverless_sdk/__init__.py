@@ -29,6 +29,10 @@ def get_user_handler(user_handler_value):
 
     return getattr(user_module, user_handler_name)
 
+_capture_exception = lambda x: None # will be replaced by real exception capture func in SDK.transaction
+def capture_exception(exception):
+    _capture_exception(exception)
+
 
 class SDK(object):
     def __init__(
@@ -75,7 +79,42 @@ class SDK(object):
             "errorExceptionStacktrace": None,
             "errorExceptionType": None,
             "errorId": None,
+            "errorFatal": None,
         }
+        def capture_exception(exception):
+            try:
+                raise exception
+            except Exception as exc:
+                exception = exc
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                stack_frames = traceback.extract_tb(exc_traceback)
+                error_data["errorCulprit"] = "{} ({})".format(
+                    stack_frames[-1][2], stack_frames[-1][0]
+                )
+                error_data["errorExceptionMessage"] = str(exc_value)
+                error_data["errorExceptionStacktrace"] = json.dumps(
+                    [
+                        {
+                            "filename": frame[0],
+                            "lineno": frame[1],
+                            "function": frame[2],
+                            "library_frame": False,
+                            "abs_path": os.path.abspath(frame[0]),
+                            "pre_context": [],
+                            "context_line": frame[3],
+                            "post_context": [],
+                        }
+                        for frame in reversed(stack_frames)
+                    ]
+                )
+                error_data["errorExceptionType"] = exc_type.__name__
+                error_data["errorFatal"] = False
+                error_data["errorId"] = "{}!${}".format(
+                    exc_type.__name__, str(exc_value)[:200]
+                )
+        global _capture_exception
+        _capture_exception = capture_exception
+        context.capture_exception = capture_exception
         try:
             yield
         except Exception as exc:
@@ -102,6 +141,7 @@ class SDK(object):
                 ]
             )
             error_data["errorExceptionType"] = exc_type.__name__
+            error_data["errorFatal"] = True
             error_data["errorId"] = "{}!${}".format(
                 exc_type.__name__, str(exc_value)[:200]
             )
@@ -229,7 +269,7 @@ class SDK(object):
                 "timestamp": end_isoformat,
             }
             print("SERVERLESS_ENTERPRISE {}".format(json.dumps(transaction_data)))
-            if exception:
+            if exception and error_data["errorFatal"]:
                 raise exception
 
 
