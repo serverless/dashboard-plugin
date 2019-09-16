@@ -1,10 +1,11 @@
 'use strict';
 
+const proxyquire = require('proxyquire');
+
 describe('runtime.js', () => {
   test('it registers regeneratorRuntime', () => {
-    jest.resetModules();
     global.regeneratorRuntime = undefined;
-    require('./runtime');
-    expect(global.regeneratorRuntime).toBe(require('regenerator-runtime'));
+    proxyquire('./runtime', {}); // Ensure fresh require
+    expect(global.regeneratorRuntime).to.equal(require('regenerator-runtime'));
   });
 });

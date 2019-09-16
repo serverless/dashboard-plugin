@@ -11,101 +11,101 @@ let sls;
 let teardown;
 let serviceName;
 
-jest.setTimeout(1000 * 60 * 5);
+describe('integration: wrapper', function() {
+  this.timeout(1000 * 60 * 5);
 
-beforeAll(async () => {
-  const accessKey = await getAccessKeyForTenant('integration');
-  const {
-    providerCredentials: { secretValue: credentials },
-  } = await getDeployProfile({
-    tenant: 'integration',
-    app: 'integration',
-    stage: 'dev',
-    service: serviceName,
-    accessKey,
+  beforeAll(async () => {
+    const accessKey = await getAccessKeyForTenant('integration');
+    const {
+      providerCredentials: { secretValue: credentials },
+    } = await getDeployProfile({
+      tenant: 'integration',
+      app: 'integration',
+      stage: 'dev',
+      service: serviceName,
+      accessKey,
+    });
+
+    lambda = new AWS.Lambda({ region: 'us-east-1', credentials });
+    ({ sls, teardown } = await setup('service3'));
+    await sls(['deploy']);
+    serviceName = stripAnsi(
+      String((await sls(['print', '--path', 'service'], { env: { SLS_DEBUG: '' } })).stdoutBuffer)
+    ).trim();
   });
 
-  lambda = new AWS.Lambda({ region: 'us-east-1', credentials });
-  ({ sls, teardown } = await setup('service3'));
-  await sls(['deploy']);
-  serviceName = stripAnsi(
-    String((await sls(['print', '--path', 'service'], { env: { SLS_DEBUG: '' } })).stdoutBuffer)
-  ).trim();
-});
+  afterAll(() => {
+    if (teardown) return teardown();
+    return null;
+  });
 
-afterAll(() => {
-  if (teardown) return teardown();
-  return null;
-});
-
-describe('integration', () => {
   it('gets right return value from  wrapped sync handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-sync` }).promise();
-    expect(JSON.parse(Payload)).toEqual(null); // why did i think this was possible?
+    expect(JSON.parse(Payload)).to.equal(null); // why did i think this was possible?
   });
 
   it('gets right return value from  wrapped syncError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-syncError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('syncError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('syncError');
   });
 
   it('gets right return value from  wrapped async handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-async` }).promise();
-    expect(JSON.parse(Payload)).toEqual('asyncReturn');
+    expect(JSON.parse(Payload)).to.equal('asyncReturn');
   });
 
   it('gets right return value from  wrapped asyncError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-asyncError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('asyncError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('asyncError');
   });
 
   it('gets right return value from  wrapped asyncDanglingCallback handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('asyncDanglyReturn');
+    expect(JSON.parse(Payload)).to.equal('asyncDanglyReturn');
   });
 
   it('gets right return value from  wrapped done handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-done` }).promise();
-    expect(JSON.parse(Payload)).toEqual('doneReturn');
+    expect(JSON.parse(Payload)).to.equal('doneReturn');
   });
 
   it('gets right return value from  wrapped doneError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-doneError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('doneError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('doneError');
   });
 
   it('gets right return value from  wrapped callback handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-callback` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('callbackReturn');
+    expect(JSON.parse(Payload)).to.equal('callbackReturn');
   });
 
   it('gets right return value from  wrapped callbackError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('callbackError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('callbackError');
   });
 
   it('gets right return value from  wrapped fail handler', async () => {
     const { Payload } = await lambda.invoke({ FunctionName: `${serviceName}-dev-fail` }).promise();
-    expect(JSON.parse(Payload).errorMessage).toEqual('failError');
+    expect(JSON.parse(Payload).errorMessage).to.equal('failError');
   });
 
   it('gets right return value from  wrapped succeed handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-succeed` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('succeedReturn');
+    expect(JSON.parse(Payload)).to.equal('succeedReturn');
   });
 
   xit('gets SFE log msg from wrapped sync handler', async () => {
@@ -113,7 +113,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-sync` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped syncError handler', async () => {
@@ -121,7 +121,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-syncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$syncError"/);
+    expect(logResult).to.match(/"errorId":"Error!\$syncError"/);
   });
 
   it('gets SFE log msg from wrapped async handler', async () => {
@@ -129,7 +129,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-async` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped asyncError handler', async () => {
@@ -137,7 +137,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"Error!\$asyncError"/);
+    expect(logResult).to.match(/"errorId":"Error!\$asyncError"/);
   });
 
   it('gets SFE log msg from wrapped asyncDanglingCallback handler', async () => {
@@ -145,7 +145,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-asyncDanglingCallback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped done handler', async () => {
@@ -153,7 +153,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-done` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped doneError handler', async () => {
@@ -161,7 +161,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-doneError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$doneError"/);
+    expect(logResult).to.match(/"errorId":"NotAnErrorType!\$doneError"/);
   });
 
   it('gets SFE log msg from wrapped callback handler', async () => {
@@ -169,7 +169,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callback` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets SFE log msg from wrapped callbackError handler', async () => {
@@ -177,7 +177,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-callbackError` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$callbackError"/);
+    expect(logResult).to.match(/"errorId":"NotAnErrorType!\$callbackError"/);
   });
 
   it('gets SFE log msg from wrapped fail handler', async () => {
@@ -185,7 +185,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-fail` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":"NotAnErrorType!\$failError"/);
+    expect(logResult).to.match(/"errorId":"NotAnErrorType!\$failError"/);
   });
 
   it('gets SFE log msg from wrapped succeed handler', async () => {
@@ -193,7 +193,7 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-succeed` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/"errorId":null/);
+    expect(logResult).to.match(/"errorId":null/);
   });
 
   it('gets right duration value from  wrapped callback handler', async () => {
@@ -202,14 +202,14 @@ describe('integration', () => {
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
     const duration = parseFloat(logResult.match(/"duration":(\d+\.\d+)/)[1]);
-    expect(duration).toBeGreaterThan(5);
+    expect(duration).to.be.above(5);
   });
 
   it('gets the callback return value when a promise func calls callback', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-promise-and-callback-race` })
       .promise();
-    expect(JSON.parse(Payload)).toEqual('callbackEarlyReturn');
+    expect(JSON.parse(Payload)).to.equal('callbackEarlyReturn');
   });
 
   it('gets spans', async () => {
@@ -217,38 +217,38 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
     const payload = JSON.parse(
       logResult
         .split('\n')
         .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
         .split('SERVERLESS_ENTERPRISE')[1]
     );
-    expect(payload.type).toEqual('transaction');
-    expect(payload.payload.spans.length).toEqual(3);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(3);
     // aws span
-    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
       new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
     );
-    expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
     // first http span (POST w/ https.request)
-    expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).toEqual({
+    expect(payload.payload.spans[1].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       httpMethod: 'POST',
       httpStatus: 200,
     });
     // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[2].tags).toEqual({
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
       httpMethod: 'GET',
@@ -261,38 +261,38 @@ describe('integration', () => {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-spans8` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
     const payload = JSON.parse(
       logResult
         .split('\n')
         .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
         .split('SERVERLESS_ENTERPRISE')[1]
     );
-    expect(payload.type).toEqual('transaction');
-    expect(payload.payload.spans.length).toEqual(3);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(3);
     // aws span
-    expect(new Set(Object.keys(payload.payload.spans[0]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
       new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
     );
-    expect(payload.payload.spans[0].tags.type).toEqual('aws');
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
     // first http span (POST w/ https.request)
-    expect(new Set(Object.keys(payload.payload.spans[1]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).toEqual({
+    expect(payload.payload.spans[1].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       httpMethod: 'POST',
       httpStatus: 200,
     });
     // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).toEqual(
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[2].tags).toEqual({
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
       httpMethod: 'GET',

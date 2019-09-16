@@ -110,10 +110,10 @@ module.exports = async function(templateName) {
       },
     });
     if (childDeferred.stdout) {
-      childDeferred.stdout.on('data', data => console.info(String(data)));
+      childDeferred.stdout.on('data', data => process.stdout.write(data));
     }
     if (childDeferred.stderr) {
-      childDeferred.stderr.on('data', data => console.info(String(data)));
+      childDeferred.stderr.on('data', data => process.stderr.write(data));
     }
     return childDeferred;
   };
