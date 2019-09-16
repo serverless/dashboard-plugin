@@ -1,5 +1,6 @@
 'use strict';
 
+const { expect } = require('chai');
 const Transaction = require('./transaction');
 
 describe('Transaction', () => {
@@ -13,8 +14,8 @@ describe('Transaction', () => {
       stageName: 'stageName',
       computeType: 'computeType',
     });
-    expect(firstTransaction.$.schema.compute.isColdStart).toEqual(true);
-    expect(firstTransaction.$.schema.compute.instanceInvocationCount).toEqual(1);
+    expect(firstTransaction.$.schema.compute.isColdStart).to.equal(true);
+    expect(firstTransaction.$.schema.compute.instanceInvocationCount).to.equal(1);
     const secondTransaction = new Transaction({
       tenantId: 'tenantId',
       applicationName: 'applicationName',
@@ -24,7 +25,7 @@ describe('Transaction', () => {
       stageName: 'stageName',
       computeType: 'computeType',
     });
-    expect(secondTransaction.$.schema.compute.isColdStart).toEqual(false);
-    expect(secondTransaction.$.schema.compute.instanceInvocationCount).toEqual(2);
+    expect(secondTransaction.$.schema.compute.isColdStart).to.equal(false);
+    expect(secondTransaction.$.schema.compute.instanceInvocationCount).to.equal(2);
   });
 });

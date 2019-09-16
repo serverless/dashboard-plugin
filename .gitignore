@@ -5,9 +5,12 @@
 v8-compile-cache-*
 .vscode/
 .eslintcache
+/.nyc_output
 /dist
 /coverage
 /node_modules
+/sdk-js/.nyc_output
+/sdk-js/coverage
 /sdk-js/node_modules
 /sdk-js/dist
 /package-lock.json
