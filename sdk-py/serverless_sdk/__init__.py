@@ -9,6 +9,8 @@ from datetime import datetime
 from contextlib import contextmanager
 from importlib import import_module
 
+from serverless_sdk.vendor import wrapt
+
 module_start_time = time.time()
 
 
@@ -26,6 +28,10 @@ def get_user_handler(user_handler_value):
         sys.path.pop()
 
     return getattr(user_module, user_handler_name)
+
+_capture_exception = lambda x: None # will be replaced by real exception capture func in SDK.transaction
+def capture_exception(exception):
+    _capture_exception(exception)
 
 
 class SDK(object):
@@ -49,6 +55,9 @@ class SDK(object):
         self.stage_name = stage_name
         self.plugin_version = plugin_version
         self.invokation_count = 0
+        self.spans = []
+
+        self.instrument_botocore()
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
@@ -60,6 +69,8 @@ class SDK(object):
     @contextmanager
     def transaction(self, event, context, function_name, timeout):
         start = time.time()
+        if self.invokation_count > 0: # reset spans whe not a cold start
+            self.spans = []
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
         error_data = {
@@ -68,7 +79,42 @@ class SDK(object):
             "errorExceptionStacktrace": None,
             "errorExceptionType": None,
             "errorId": None,
+            "errorFatal": None,
         }
+        def capture_exception(exception):
+            try:
+                raise exception
+            except Exception as exc:
+                exception = exc
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                stack_frames = traceback.extract_tb(exc_traceback)
+                error_data["errorCulprit"] = "{} ({})".format(
+                    stack_frames[-1][2], stack_frames[-1][0]
+                )
+                error_data["errorExceptionMessage"] = str(exc_value)
+                error_data["errorExceptionStacktrace"] = json.dumps(
+                    [
+                        {
+                            "filename": frame[0],
+                            "lineno": frame[1],
+                            "function": frame[2],
+                            "library_frame": False,
+                            "abs_path": os.path.abspath(frame[0]),
+                            "pre_context": [],
+                            "context_line": frame[3],
+                            "post_context": [],
+                        }
+                        for frame in reversed(stack_frames)
+                    ]
+                )
+                error_data["errorExceptionType"] = exc_type.__name__
+                error_data["errorFatal"] = False
+                error_data["errorId"] = "{}!${}".format(
+                    exc_type.__name__, str(exc_value)[:200]
+                )
+        global _capture_exception
+        _capture_exception = capture_exception
+        context.capture_exception = capture_exception
         try:
             yield
         except Exception as exc:
@@ -95,6 +141,7 @@ class SDK(object):
                 ]
             )
             error_data["errorExceptionType"] = exc_type.__name__
+            error_data["errorFatal"] = True
             error_data["errorId"] = "{}!${}".format(
                 exc_type.__name__, str(exc_value)[:200]
             )
@@ -213,7 +260,7 @@ class SDK(object):
                         "traceId": context.aws_request_id,
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
-                    "spans": [],
+                    "spans": self.spans,
                     "startTime": start_isoformat,
                     "tags": tags,
                 },
@@ -222,5 +269,40 @@ class SDK(object):
                 "timestamp": end_isoformat,
             }
             print("SERVERLESS_ENTERPRISE {}".format(json.dumps(transaction_data)))
-            if exception:
+            if exception and error_data["errorFatal"]:
                 raise exception
+
+
+    def instrument_botocore(self):
+        def wrapper(wrapped, instance, args, kwargs):
+            start_isoformat = datetime.utcnow().isoformat() + 'Z'
+            start = time.time()
+            try:
+                response = wrapped(*args, **kwargs)
+                return response
+            except Exception as error:
+                response = error.response
+                raise error
+            finally:
+                end_isoformat = datetime.utcnow().isoformat() + 'Z'
+                self.spans.append({
+                    "tags": {
+                        "type": "aws",
+                        "requestHostname": instance._endpoint.host.split("://")[1],
+                        "aws": {
+                            "region": instance.meta.region_name,
+                            "service": instance._service_model.service_name,
+                            "operation": args[0],
+                            "requestId": response.get("ResponseMetadata", {}).get("RequestId"),
+                            "errorCode": response.get("Error", {}).get("Code"),
+                        },
+                    },
+                    "startTime": start_isoformat,
+                    "endTime": end_isoformat,
+                    "duration": int((time.time() - start) * 1000),
+                })
+        wrapt.wrap_function_wrapper(
+            'botocore.client',
+            'BaseClient._make_api_call',
+            wrapper,
+        )

@@ -27,7 +27,7 @@ describe('integration: wrapper', function() {
     });
 
     lambda = new AWS.Lambda({ region: 'us-east-1', credentials });
-    ({ sls, teardown } = await setup('service3'));
+    ({ sls, teardown } = await setup('wrapper-service'));
     await sls(['deploy']);
     serviceName = stripAnsi(
       String((await sls(['print', '--path', 'service'], { env: { SLS_DEBUG: '' } })).stdoutBuffer)
@@ -298,5 +298,64 @@ describe('integration: wrapper', function() {
       httpMethod: 'GET',
       httpStatus: 200,
     });
+  });
+
+  it('gets the return value when calling python', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-pythonSuccess` })
+      .promise();
+    expect(JSON.parse(Payload)).to.equal('success');
+  });
+
+  it('gets SFE log msg from wrapped python handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonSuccess` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
+        .slice(22)
+    );
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(1);
+    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
+  });
+
+  it('gets the error value when calling python error', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-pythonError` })
+      .promise();
+    expect(JSON.parse(Payload)).to.deep.equal({
+      errorMessage: 'error',
+      errorType: 'Exception',
+      stackTrace: [
+        '  File "/var/task/serverless_sdk/__init__.py", line 65, in wrapped_handler\n    return user_handler(event, context)\n',
+        '  File "/var/task/handler.py", line 8, in error\n    raise Exception(\'error\')\n',
+      ],
+    });
+  });
+
+  it('gets SFE log msg from wrapped python error handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonError` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
+        .slice(22)
+    );
+    expect(payload.type).to.equal('error');
   });
 });

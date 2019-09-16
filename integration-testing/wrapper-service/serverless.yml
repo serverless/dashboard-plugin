@@ -7,6 +7,7 @@ provider:
   runtime: nodejs10.x
 
 functions:
+  # NodeJS handlers
   sync:
     handler: handler.sync
   syncError:
@@ -36,3 +37,11 @@ functions:
   spans8:
     handler: handler.spans
     runtime: nodejs8.10
+
+  # Python handlers
+  pythonSuccess:
+    handler: handler.success
+    runtime: python3.7
+  pythonError:
+    handler: handler.error
+    runtime: python3.7
