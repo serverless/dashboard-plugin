@@ -312,7 +312,7 @@ describe('integration: wrapper', function() {
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonSuccess` })
       .promise();
     const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).toMatch(/SERVERLESS_ENTERPRISE/);
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
     const payload = JSON.parse(
       logResult
         .split('\n')
@@ -338,7 +338,7 @@ describe('integration: wrapper', function() {
       errorMessage: 'error',
       errorType: 'Exception',
       stackTrace: [
-        '  File "/var/task/serverless_sdk/__init__.py", line 61, in wrapped_handler\n    return user_handler(event, context)\n',
+        '  File "/var/task/serverless_sdk/__init__.py", line 65, in wrapped_handler\n    return user_handler(event, context)\n',
         '  File "/var/task/handler.py", line 8, in error\n    raise Exception(\'error\')\n',
       ],
     });
