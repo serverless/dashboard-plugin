@@ -44,7 +44,7 @@ module.exports = memoize(async () => {
           'serverless installation which links this installation of a plugin'
       );
     }
-    return path.join(serverlessPath, 'bin/serverless.js');
+    return { root: serverlessPath, binary: path.join(serverlessPath, 'bin/serverless.js') };
   }
   console.info(`Setup 'serverless' at ${serverlessTmpDir}`);
   const servelressDirDeferred = ensureDir(serverlessTmpDir);
@@ -71,5 +71,5 @@ module.exports = memoize(async () => {
   console.info('... npm install');
   await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
 
-  return path.join(serverlessTmpDir, 'bin/serverless.js');
+  return { root: serverlessTmpDir, binary: path.join(serverlessTmpDir, 'bin/serverless.js') };
 });

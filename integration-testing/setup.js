@@ -34,7 +34,7 @@ module.exports = async function(templateName) {
       const slsYamlString = await readFile(slsYamlPath, 'utf8');
       return writeFile(slsYamlPath, slsYamlString.replace('CHANGEME', serviceName));
     }),
-    setupServerless(),
+    setupServerless().then(data => data.binary),
   ]);
 
   console.info('... (done)');
