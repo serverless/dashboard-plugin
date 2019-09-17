@@ -89,7 +89,8 @@
     "overrides": [
       {
         "files": [
-          "integration-testing/**"
+          "integration-testing/**",
+          "test/**"
         ],
         "rules": {
           "no-console": [
