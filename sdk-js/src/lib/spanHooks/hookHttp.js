@@ -33,12 +33,15 @@ module.exports = emitter => {
         const clientRequest = _request.apply(_this, _args);
 
         let requestHostname;
+        let requestPath;
         if (_args.length > 0 && _args[0]) {
           if (_args[0].constructor.name === 'String' || _args[0] instanceof url.Url) {
             const requestUrl = url.parse(_args[0]);
             requestHostname = (requestUrl.host || requestUrl.hostname || '').toLowerCase();
+            requestPath = requestUrl.path || requestUrl.pathname || '';
           } else {
             requestHostname = (_args[0].host || _args[0].hostname || '').toLowerCase();
+            requestPath = _args[0].path || '';
           }
         }
 
@@ -61,6 +64,7 @@ module.exports = emitter => {
                 tags: {
                   type: 'http',
                   requestHostname,
+                  requestPath,
                   httpMethod: clientRequest.method,
                   httpStatus: response.statusCode,
                 },
