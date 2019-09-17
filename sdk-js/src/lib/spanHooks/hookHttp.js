@@ -3,6 +3,7 @@
 const url = require('url');
 const http = require('http');
 const https = require('https');
+const { isArray } = require('lodash');
 
 const captureHosts = {};
 if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS) {
@@ -49,17 +50,18 @@ module.exports = emitter => {
           clientRequest.on('response', response => {
             const endTime = Date.now();
 
-            const userAgent = (_args[0].headers || {})['User-Agent'] || '';
-            // we store the __slsCapturedRequest boolean on the callback because on node 8
+            let userAgent = (_args[0].headers || {})['User-Agent'] || '';
+            if (isArray(userAgent)) userAgent = userAgent[0];
+            // we store the __slsCapturedRequest boolean on the clientRequest because on node 8
             // the https library ultimately calls the http library  resultiing in duplicate spans.
             // this avoids that (in node 10+, it doesn't so we can't just wrap the http lib)
             if (
               (!userAgent.startsWith('aws-sdk-nodejs/') ||
                 process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) &&
-              !_args.slice(-1)[0].__slsCapturedRequest // eslint-disable-line no-underscore-dangle
+              !clientRequest.__slsCapturedRequest // eslint-disable-line no-underscore-dangle
             ) {
               // eslint-disable-next-line no-underscore-dangle
-              _args.slice(-1)[0].__slsCapturedRequest = true;
+              clientRequest.__slsCapturedRequest = true;
               emitter.emit('span', {
                 tags: {
                   type: 'http',
