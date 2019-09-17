@@ -241,6 +241,7 @@ describe('integration: wrapper', function() {
     expect(payload.payload.spans[1].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
+      requestPath: '/post',
       httpMethod: 'POST',
       httpStatus: 200,
     });
@@ -251,6 +252,7 @@ describe('integration: wrapper', function() {
     expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
+      requestPath: '/',
       httpMethod: 'GET',
       httpStatus: 200,
     });
