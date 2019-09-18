@@ -187,7 +187,7 @@ class Transaction {
       // Create Error ID
       // since the user didn't actually thrown an error, just include it with a prefix
       // reflecting it's not an error as the error type
-      this.set('error.id', `NotAnErrorType!$${error.substring(0, 200)}`);
+      this.set('error.id', `NotAnErrorType!$${error.toString().substring(0, 200)}`);
       // Log
       console.info('');
       console.error(error);
