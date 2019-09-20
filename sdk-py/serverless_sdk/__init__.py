@@ -96,6 +96,13 @@ class SDK(object):
 
         return wrapped_handler
 
+    def span(self, span_type):
+        """
+        A wrapper around the Span context manager that sets the emitter to be
+        appending to self.spans
+        """
+        return Span(self.spans.append, span_type)
+
     @contextmanager
     def transaction(self, event, context, function_name, timeout):
         start = time.time()
@@ -304,13 +311,6 @@ class SDK(object):
             if exception and error_data["errorFatal"]:
                 raise exception
 
-    @contextmanager
-    def span(self, span_type):
-        span = Span(span_type)
-        try:
-            yield span
-        finally:
-            self.spans.append(span.end())
 
     def instrument_botocore(self):
         def wrapper(wrapped, instance, args, kwargs):
