@@ -88,6 +88,8 @@ class SDK(object):
 
         self.instrument_botocore()
         self.instrument_urllib3()
+        self.instrument_stdlib_urllib("urllib.request")
+        self.instrument_stdlib_urllib("urllib2")
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
@@ -338,9 +340,12 @@ class SDK(object):
                         },
                     )
 
-        wrapt.wrap_function_wrapper(
-            "botocore.client", "BaseClient._make_api_call", wrapper
-        )
+        try:
+            wrapt.wrap_function_wrapper(
+                "botocore.client", "BaseClient._make_api_call", wrapper
+            )
+        except ModuleNotFoundError:
+            pass
 
     def instrument_urllib3(self):
         def wrapper(wrapped, instance, args, kwargs):
@@ -385,11 +390,55 @@ class SDK(object):
             else:
                 return wrapped(*args, **kwargs)
 
-        wrapt.wrap_function_wrapper(
-            "urllib3.connectionpool", "HTTPConnectionPool.urlopen", wrapper
-        )
-        wrapt.wrap_function_wrapper(
-            "botocore.vendored.requests.packages.urllib3.connectionpool",
-            "HTTPConnectionPool.urlopen",
-            wrapper,
-        )
+        try:
+            wrapt.wrap_function_wrapper(
+                "urllib3.connectionpool", "HTTPConnectionPool.urlopen", wrapper
+            )
+        except ModuleNotFoundError:
+            pass
+        try:
+            wrapt.wrap_function_wrapper(
+                "botocore.vendored.requests.packages.urllib3.connectionpool",
+                "HTTPConnectionPool.urlopen",
+                wrapper,
+            )
+        except ModuleNotFoundError:
+            pass
+
+    def instrument_stdlib_urllib(self, module):
+        def wrapper(wrapped, instance, args, kwargs):
+            http_class, req = args
+            if "method" in kwargs:
+                method = kwargs["method"]
+            else:
+                method = args[0]
+            if "url" in kwargs:
+                path = kwargs["url"]
+            else:
+                path = args[0]
+            status = None
+            if (
+                (
+                    capture_hosts.get("*", False)
+                    or capture_hosts.get(req.host.lower(), False)
+                )
+                and not ignore_hosts.get(req.host.lower(), False)
+            ):
+                with self.span("http") as span:
+                    try:
+                        response = wrapped(*args, **kwargs)
+                        return response
+                    finally:
+                        if response:
+                            status = response.status
+                            span.set_tag("requestHostname", req.host.lower())
+                            span.set_tag("requestPath", urlparse(req.get_full_url()).path)
+                            span.set_tag("httpMethod", req.get_method())
+                            span.set_tag("httpStatus", status)
+            else:
+                return wrapped(*args, **kwargs)
+
+        try:
+            wrapt.wrap_function_wrapper(module, "AbstractHTTPHandler.do_open", wrapper)
+        except ModuleNotFoundError:
+            pass
