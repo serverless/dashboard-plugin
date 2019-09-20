@@ -344,7 +344,7 @@ class SDK(object):
             wrapt.wrap_function_wrapper(
                 "botocore.client", "BaseClient._make_api_call", wrapper
             )
-        except ModuleNotFoundError:
+        except ImportError:
             pass
 
     def instrument_urllib3(self):
@@ -394,7 +394,7 @@ class SDK(object):
             wrapt.wrap_function_wrapper(
                 "urllib3.connectionpool", "HTTPConnectionPool.urlopen", wrapper
             )
-        except ModuleNotFoundError:
+        except ImportError:
             pass
         try:
             wrapt.wrap_function_wrapper(
@@ -402,7 +402,7 @@ class SDK(object):
                 "HTTPConnectionPool.urlopen",
                 wrapper,
             )
-        except ModuleNotFoundError:
+        except ImportError:
             pass
 
     def instrument_stdlib_urllib(self, module):
@@ -422,7 +422,7 @@ class SDK(object):
                         return response
                     finally:
                         if response:
-                            status = response.status
+                            status = response.code
                             span.set_tag("requestHostname", req.host.lower())
                             span.set_tag("requestPath", urlparse(req.get_full_url()).path)
                             span.set_tag("httpMethod", req.get_method())
@@ -432,5 +432,5 @@ class SDK(object):
 
         try:
             wrapt.wrap_function_wrapper(module, "AbstractHTTPHandler.do_open", wrapper)
-        except ModuleNotFoundError:
+        except ImportError:
             pass

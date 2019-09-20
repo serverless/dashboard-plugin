@@ -344,6 +344,46 @@ describe('integration: wrapper', function() {
     });
   });
 
+  it('gets the return value when calling python2', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-pythonSuccess2` })
+      .promise();
+    expect(JSON.parse(Payload)).to.equal('success');
+  });
+
+  it('gets SFE log msg from wrapped python2 handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonSuccess2` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
+        .slice(22)
+    );
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(2);
+    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
+    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[1].tags).to.deep.equal({
+      type: 'http',
+      requestHostname: 'httpbin.org',
+      requestPath: '/get',
+      httpMethod: 'GET',
+      httpStatus: 200,
+    });
+  });
+
   it('gets the error value when calling python error', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-pythonError` })

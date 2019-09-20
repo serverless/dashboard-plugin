@@ -42,6 +42,9 @@ functions:
   pythonSuccess:
     handler: handler.success
     runtime: python3.7
+  pythonSuccess2:
+    handler: handler.success
+    runtime: python2.7
   pythonError:
     handler: handler.error
     runtime: python3.7

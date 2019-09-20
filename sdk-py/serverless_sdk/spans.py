@@ -13,7 +13,7 @@ class Span(object):
 
     def dump(self):
         return {
-            "tags": {**self.tags, "type": self.span_type},
+            "tags": dict(type=self.span_type, **self.tags),
             "startTime": self.start_isoformat,
             "endTime": self.end_isoformat,
             "duration": int((self.end - self.start) * 1000),
