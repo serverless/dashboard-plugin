@@ -356,7 +356,7 @@ class SDK(object):
             if "url" in kwargs:
                 path = kwargs["url"]
             else:
-                path = args[0]
+                path = args[1]
             user_agent = kwargs.get("headers", {}).get("User-Agent", "")
             # sometimes ua is binary string sometimes a normal string :/
             if hasattr(user_agent, "decode"):
@@ -408,14 +408,6 @@ class SDK(object):
     def instrument_stdlib_urllib(self, module):
         def wrapper(wrapped, instance, args, kwargs):
             http_class, req = args
-            if "method" in kwargs:
-                method = kwargs["method"]
-            else:
-                method = args[0]
-            if "url" in kwargs:
-                path = kwargs["url"]
-            else:
-                path = args[0]
             status = None
             if (
                 (
