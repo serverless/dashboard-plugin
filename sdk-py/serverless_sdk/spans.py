@@ -6,6 +6,7 @@ class Span(object):
     def __init__(self, emmiter, span_type):
         self.emmiter = emmiter
         self.span_type = span_type
+        self.tags = {}
 
     def set_tag(self, tag, value):
         self.tags[tag] = value
@@ -21,7 +22,6 @@ class Span(object):
     def __enter__(self):
         self.start_isoformat = datetime.utcnow().isoformat() + "Z"
         self.start = time.time()
-        self.tags = {}
 
         return self
 
