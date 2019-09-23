@@ -44,7 +44,11 @@ module.exports = memoize(async () => {
           'serverless installation which links this installation of a plugin'
       );
     }
-    return { root: serverlessPath, binary: path.join(serverlessPath, 'bin/serverless.js') };
+    return {
+      root: serverlessPath,
+      binary: path.join(serverlessPath, 'bin/serverless.js'),
+      plugin: pluginPath,
+    };
   }
   console.info(`Setup 'serverless' at ${serverlessTmpDir}`);
   const servelressDirDeferred = ensureDir(serverlessTmpDir);
@@ -63,13 +67,18 @@ module.exports = memoize(async () => {
   });
 
   console.info('... strip @serverless/enterprise-plugin dependency');
+  const pluginPath = path.join(__dirname, '../dist');
   const pkgJsonPath = `${serverlessTmpDir}/package.json`;
   const pkgJson = require(pkgJsonPath);
-  pkgJson.dependencies['@serverless/enterprise-plugin'] = `file:${path.join(__dirname, '../dist')}`;
+  pkgJson.dependencies['@serverless/enterprise-plugin'] = `file:${pluginPath}`;
   await writeJson(pkgJsonPath, pkgJson);
 
   console.info('... npm install');
   await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
 
-  return { root: serverlessTmpDir, binary: path.join(serverlessTmpDir, 'bin/serverless.js') };
+  return {
+    root: serverlessTmpDir,
+    binary: path.join(serverlessTmpDir, 'bin/serverless.js'),
+    plugin: pluginPath,
+  };
 });
