@@ -3,7 +3,7 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { ensureDir, writeJson, realpath } = require('fs-extra');
+const { ensureDir, ensureSymlink, writeJson, realpath } = require('fs-extra');
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
@@ -20,7 +20,6 @@ const spawn = (childProcessSpawn => (...args) => {
 const tmpDir = os.tmpdir();
 
 const resolveMode = options => {
-  if (process.version.match(/\d+/)[0] < 8) return 'compiled';
   if (!options) return 'direct';
   return options.mode === 'compiled' ? 'compiled' : 'direct';
 };
@@ -68,16 +67,25 @@ module.exports = memoize(async (options = {}) => {
     tarDeferred.on('finish', resolve);
   });
 
-  console.info('... strip @serverless/enterprise-plugin dependency');
-  const mode = resolveMode(options);
-  const pluginPath = path.join(__dirname, `../${mode === 'direct' ? '' : 'dist'}`);
+  console.info('... patch serverless/package.json');
   const pkgJsonPath = `${serverlessTmpDir}/package.json`;
   const pkgJson = require(pkgJsonPath);
-  pkgJson.dependencies['@serverless/enterprise-plugin'] = `file:${pluginPath}`;
+  // Do not npm install @serverless/enterprise-plugin
+  // (local installation will be linked in further steps)
+  delete pkgJson.dependencies['@serverless/enterprise-plugin'];
+  // Prevent any postinstall setup (stats requests, automcomplete setup, logs etc.)
+  delete pkgJson.scripts.postinstall;
   await writeJson(pkgJsonPath, pkgJson);
 
   console.info('... npm install');
   await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
+
+  console.info('... link @serverless/enterprise-plugin dependency');
+  const mode = resolveMode(options);
+  await ensureSymlink(
+    path.join(__dirname, `../${mode === 'direct' ? '' : 'dist'}`),
+    path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin')
+  );
 
   return {
     root: serverlessTmpDir,
