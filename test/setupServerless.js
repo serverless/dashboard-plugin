@@ -19,7 +19,13 @@ const spawn = (childProcessSpawn => (...args) => {
 
 const tmpDir = os.tmpdir();
 
-module.exports = memoize(async () => {
+const resolveMode = options => {
+  if (process.version.match(/\d+/)[0] < 8) return 'compiled';
+  if (!options) return 'direct';
+  return options.mode === 'compiled' ? 'compiled' : 'direct';
+};
+
+module.exports = memoize(async (options = {}) => {
   const serverlessTmpDir = path.join(
     tmpDir,
     `serverless-enterprise-plugin-test-serverless-${crypto.randomBytes(2).toString('hex')}`
@@ -67,7 +73,8 @@ module.exports = memoize(async () => {
   });
 
   console.info('... strip @serverless/enterprise-plugin dependency');
-  const pluginPath = path.join(__dirname, '../dist');
+  const mode = resolveMode(options);
+  const pluginPath = path.join(__dirname, `../${mode === 'direct' ? '' : 'dist'}`);
   const pkgJsonPath = `${serverlessTmpDir}/package.json`;
   const pkgJson = require(pkgJsonPath);
   pkgJson.dependencies['@serverless/enterprise-plugin'] = `file:${pluginPath}`;
@@ -81,4 +88,4 @@ module.exports = memoize(async () => {
     binary: path.join(serverlessTmpDir, 'bin/serverless.js'),
     plugin: pluginPath,
   };
-});
+}, resolveMode);
