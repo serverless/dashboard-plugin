@@ -3,7 +3,7 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { ensureDir, ensureSymlink, writeJson, realpath } = require('fs-extra');
+const { ensureDir, ensureSymlink, writeJson, realpath, removeSync } = require('fs-extra');
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
@@ -57,6 +57,14 @@ module.exports = memoize(async (options = {}) => {
   }
   console.info(`Setup 'serverless' at ${serverlessTmpDir}`);
   await ensureDir(serverlessTmpDir);
+  process.on('exit', () => {
+    try {
+      removeSync(serverlessTmpDir);
+    } catch (error) {
+      // Safe to ignore
+    }
+  });
+
   console.info('... fetch tarball');
   const res = await fetch('https://github.com/serverless/serverless/archive/master.tar.gz');
   const tarDeferred = tar.x({ cwd: serverlessTmpDir, strip: 1 });
