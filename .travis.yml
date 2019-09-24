@@ -123,7 +123,6 @@ jobs:
     - name: 'Unit Tests - Node.js v6'
       node_js: 6
       script:
-        - npm run build
         - npm test -- --require "@babel/register"
         - cd sdk-js
         - npm test
