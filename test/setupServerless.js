@@ -86,6 +86,8 @@ module.exports = memoize(async (options = {}) => {
   return {
     root: serverlessTmpDir,
     binary: path.join(serverlessTmpDir, 'bin/serverless.js'),
-    plugin: pluginPath,
+    plugin: await realpath(
+      path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin')
+    ),
   };
 }, resolveMode);
