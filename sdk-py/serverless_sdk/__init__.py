@@ -9,9 +9,34 @@ from datetime import datetime
 from contextlib import contextmanager
 from importlib import import_module
 
+
+try:
+    from urlparse import urlparse  # python 2
+except ImportError:
+    from urllib.parse import urlparse  # python 3
+
+from serverless_sdk.spans import Span
 from serverless_sdk.vendor import wrapt
 
 module_start_time = time.time()
+
+capture_hosts = {}
+if "SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS" in os.environ:
+    for domain in os.environ.get("SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS", "").split(
+        ","
+    ):
+        if domain:
+            capture_hosts[domain.lower()] = True
+else:
+    capture_hosts["*"] = True
+ignore_hosts = {}
+if "SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS" in os.environ:
+    for domain in os.environ.get("SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS", "").split(
+        ","
+    ):
+        if domain:
+            ignore_hosts[domain] = True
+            ignore_hosts[domain.lower()] = True
 
 
 def get_user_handler(user_handler_value):
@@ -29,7 +54,11 @@ def get_user_handler(user_handler_value):
 
     return getattr(user_module, user_handler_name)
 
-_capture_exception = lambda x: None # will be replaced by real exception capture func in SDK.transaction
+
+# will be replaced by real exception capture func in SDK.transaction
+_capture_exception = lambda x: None
+
+
 def capture_exception(exception):
     _capture_exception(exception)
 
@@ -58,6 +87,9 @@ class SDK(object):
         self.spans = []
 
         self.instrument_botocore()
+        self.instrument_urllib3()
+        self.instrument_stdlib_urllib("urllib.request")
+        self.instrument_stdlib_urllib("urllib2")
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
@@ -66,10 +98,17 @@ class SDK(object):
 
         return wrapped_handler
 
+    def span(self, span_type):
+        """
+        A wrapper around the Span context manager that sets the emitter to be
+        appending to self.spans
+        """
+        return Span(self.spans.append, span_type)
+
     @contextmanager
     def transaction(self, event, context, function_name, timeout):
         start = time.time()
-        if self.invokation_count > 0: # reset spans whe not a cold start
+        if self.invokation_count > 0:  # reset spans whe not a cold start
             self.spans = []
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
@@ -81,6 +120,7 @@ class SDK(object):
             "errorId": None,
             "errorFatal": None,
         }
+
         def capture_exception(exception):
             try:
                 raise exception
@@ -112,6 +152,7 @@ class SDK(object):
                 error_data["errorId"] = "{}!${}".format(
                     exc_type.__name__, str(exc_value)[:200]
                 )
+
         global _capture_exception
         _capture_exception = capture_exception
         context.capture_exception = capture_exception
@@ -275,34 +316,121 @@ class SDK(object):
 
     def instrument_botocore(self):
         def wrapper(wrapped, instance, args, kwargs):
-            start_isoformat = datetime.utcnow().isoformat() + 'Z'
-            start = time.time()
-            try:
-                response = wrapped(*args, **kwargs)
-                return response
-            except Exception as error:
-                response = error.response
-                raise error
-            finally:
-                end_isoformat = datetime.utcnow().isoformat() + 'Z'
-                self.spans.append({
-                    "tags": {
-                        "type": "aws",
-                        "requestHostname": instance._endpoint.host.split("://")[1],
-                        "aws": {
+            with self.span("aws") as span:
+                try:
+                    response = wrapped(*args, **kwargs)
+                    return response
+                except Exception as error:
+                    response = error.response
+                    raise error
+                finally:
+                    span.set_tag(
+                        "requestHostname", instance._endpoint.host.split("://")[1]
+                    )
+                    span.set_tag(
+                        "aws",
+                        {
                             "region": instance.meta.region_name,
                             "service": instance._service_model.service_name,
                             "operation": args[0],
-                            "requestId": response.get("ResponseMetadata", {}).get("RequestId"),
+                            "requestId": response.get("ResponseMetadata", {}).get(
+                                "RequestId"
+                            ),
                             "errorCode": response.get("Error", {}).get("Code"),
                         },
-                    },
-                    "startTime": start_isoformat,
-                    "endTime": end_isoformat,
-                    "duration": int((time.time() - start) * 1000),
-                })
-        wrapt.wrap_function_wrapper(
-            'botocore.client',
-            'BaseClient._make_api_call',
-            wrapper,
-        )
+                    )
+
+        try:
+            wrapt.wrap_function_wrapper(
+                "botocore.client", "BaseClient._make_api_call", wrapper
+            )
+        except ImportError:
+            pass
+
+    def instrument_urllib3(self):
+        def wrapper(wrapped, instance, args, kwargs):
+            if "method" in kwargs:
+                method = kwargs["method"]
+            else:
+                method = args[0]
+            if "url" in kwargs:
+                path = kwargs["url"]
+            else:
+                path = args[1]
+            user_agent = kwargs.get("headers", {}).get("User-Agent", "")
+            # sometimes ua is binary string sometimes a normal string :/
+            if hasattr(user_agent, "decode"):
+                user_agent = user_agent.decode()
+            status = None
+            if (
+                (
+                    # Ignore http calls from boto
+                    not user_agent.startswith("Boto3")
+                    or os.environ.get(
+                        "SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP"
+                    )
+                )
+                and (
+                    capture_hosts.get("*", False)
+                    or capture_hosts.get(instance.host.lower(), False)
+                )
+                and not ignore_hosts.get(instance.host.lower(), False)
+            ):
+                with self.span("http") as span:
+                    try:
+                        response = wrapped(*args, **kwargs)
+                        return response
+                    finally:
+                        if response:
+                            status = response.status
+                            span.set_tag("requestHostname", instance.host)
+                            span.set_tag("requestPath", path)
+                            span.set_tag("httpMethod", method)
+                            span.set_tag("httpStatus", status)
+            else:
+                return wrapped(*args, **kwargs)
+
+        try:
+            wrapt.wrap_function_wrapper(
+                "urllib3.connectionpool", "HTTPConnectionPool.urlopen", wrapper
+            )
+        except ImportError:
+            pass
+        try:
+            wrapt.wrap_function_wrapper(
+                "botocore.vendored.requests.packages.urllib3.connectionpool",
+                "HTTPConnectionPool.urlopen",
+                wrapper,
+            )
+        except ImportError:
+            pass
+
+    def instrument_stdlib_urllib(self, module):
+        def wrapper(wrapped, instance, args, kwargs):
+            http_class, req = args
+            status = None
+            if (
+                (
+                    capture_hosts.get("*", False)
+                    or capture_hosts.get(req.host.lower(), False)
+                )
+                and not ignore_hosts.get(req.host.lower(), False)
+            ):
+                with self.span("http") as span:
+                    try:
+                        response = wrapped(*args, **kwargs)
+                        return response
+                    finally:
+                        if response:
+                            status = response.code
+                            span.set_tag("requestHostname", req.host.lower())
+                            span.set_tag("requestPath", urlparse(req.get_full_url()).path)
+                            span.set_tag("httpMethod", req.get_method())
+                            span.set_tag("httpStatus", status)
+            else:
+                return wrapped(*args, **kwargs)
+
+        try:
+            wrapt.wrap_function_wrapper(module, "AbstractHTTPHandler.do_open", wrapper)
+        except ImportError:
+            pass
