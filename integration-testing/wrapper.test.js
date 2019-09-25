@@ -392,8 +392,8 @@ describe('integration: wrapper', function() {
       errorMessage: 'error',
       errorType: 'Exception',
       stackTrace: [
-        '  File "/var/task/serverless_sdk/__init__.py", line 65, in wrapped_handler\n    return user_handler(event, context)\n',
-        '  File "/var/task/handler.py", line 8, in error\n    raise Exception(\'error\')\n',
+        '  File "/var/task/serverless_sdk/__init__.py", line 97, in wrapped_handler\n    return user_handler(event, context)\n',
+        '  File "/var/task/handler.py", line 10, in error\n    raise Exception(\'error\')\n',
       ],
     });
   });
