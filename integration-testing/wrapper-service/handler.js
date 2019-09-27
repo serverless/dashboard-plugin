@@ -81,3 +81,9 @@ module.exports.spans = async () => {
     req.on('error', reject);
   });
 };
+
+module.exports.noWaitForEmptyLoop = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  https.get({ host: 'httpbin.org', path: '/delay/10' });
+  callback(null, 'noWaitForEmptyLoop');
+};

@@ -89,6 +89,13 @@ describe('integration: wrapper', function() {
     expect(JSON.parse(Payload)).to.equal('callbackReturn');
   });
 
+  it('gets right return value from  wrapped callback handler with dangling events but callbackWaitsForEmptyEventLoop=false', async () => {
+    const { Payload } = await lambda
+      .invoke({ FunctionName: `${serviceName}-dev-noWaitForEmptyLoop` })
+      .promise();
+    expect(JSON.parse(Payload)).to.equal('noWaitForEmptyLoop');
+  });
+
   it('gets right return value from  wrapped callbackError handler', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-callbackError` })

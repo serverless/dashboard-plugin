@@ -217,22 +217,34 @@ class ServerlessSDK {
         };
 
         // Patch context methods
-        const { done, succeed, fail } = context;
-        const newContext = Object.assign({}, context);
-        newContext.done = (err, res) => {
-          finalize(err, () => done(err, res));
-        };
-        newContext.succeed = res => {
-          finalize(null, () => succeed(res));
-        };
-        newContext.fail = err => {
-          finalize(err, () => fail(err));
-        };
-        newContext.captureError = err => {
+        const contextProxy = new Proxy(context, {
+          get: (target, prop) => {
+            if (prop === 'done') {
+              return (err, res) => {
+                finalize(err, () => target.done(err, res));
+              };
+            } else if (prop === 'succeed') {
+              return res => {
+                finalize(null, () => target.succeed(res));
+              };
+            } else if (prop === 'fail') {
+              return err => {
+                finalize(err, () => target.fail(err));
+              };
+            } else if (prop === 'captureError') {
+              return err => {
+                capturedError = err;
+              };
+            }
+            return target[prop];
+          },
+        });
+
+        contextProxy.captureError = err => {
           capturedError = err;
         };
         // eslint-disable-next-line no-underscore-dangle
-        ServerlessSDK._captureError = newContext.captureError;
+        ServerlessSDK._captureError = contextProxy.captureError;
 
         // Set up span listener
         let totalSpans = 0;
@@ -251,9 +263,9 @@ class ServerlessSDK {
 
         let result;
         try {
-          result = fn(event, newContext, (err, res) => finalize(err, () => callback(err, res)));
+          result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
         } catch (error) {
-          finalize(error, () => fail(error));
+          finalize(error, () => context.fail(error));
         }
 
         // If promise was returned, handle it
