@@ -22,6 +22,8 @@ functions:
     handler: handler.callback
   callbackError:
     handler: handler.callbackError
+  noWaitForEmptyLoop:
+    handler: handler.noWaitForEmptyLoop
   done:
     handler: handler.done
   doneError:
