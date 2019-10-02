@@ -1,3 +1,4 @@
+import time
 import boto3
 from botocore.vendored import requests
 
@@ -17,3 +18,6 @@ def http_error(event, context):
     except:
         pass
     return 'http_erroO'
+
+def timeout(event, context):
+    time.sleep(10)

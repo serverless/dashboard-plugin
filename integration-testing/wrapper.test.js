@@ -343,6 +343,21 @@ describe('integration: wrapper', function() {
     });
   });
 
+  it('gets SFE log msg from wrapped node timeout handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-timeout` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).to.equal('timeout');
+  });
+
   it('gets the return value when calling python', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-pythonSuccess` })
@@ -491,5 +506,20 @@ describe('integration: wrapper', function() {
         .slice(22)
     );
     expect(payload.type).to.equal('error');
+  });
+
+  it('gets SFE log msg from wrapped python timeout handler', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonTimeout` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).to.equal('timeout');
   });
 });

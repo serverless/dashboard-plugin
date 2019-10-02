@@ -1,6 +1,8 @@
 import json
 import os
 import platform
+import signal
+import threading
 import sys
 import time
 import traceback
@@ -176,37 +178,26 @@ class SDK(object):
         _span = self.user_span
         context.span = self.user_span
 
-        try:
-            yield
-        except Exception as exc:
-            exception = exc
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            stack_frames = traceback.extract_tb(exc_traceback)
-            error_data["errorCulprit"] = "{} ({})".format(
-                stack_frames[-1][2], stack_frames[-1][0]
-            )
-            error_data["errorExceptionMessage"] = str(exc_value)
-            error_data["errorExceptionStacktrace"] = json.dumps(
-                [
-                    {
-                        "filename": frame[0],
-                        "lineno": frame[1],
-                        "function": frame[2],
-                        "library_frame": False,
-                        "abs_path": os.path.abspath(frame[0]),
-                        "pre_context": [],
-                        "context_line": frame[3],
-                        "post_context": [],
-                    }
-                    for frame in reversed(stack_frames)
-                ]
-            )
-            error_data["errorExceptionType"] = exc_type.__name__
+        # handle getting a SIGTERM, which represents an imminent timeout
+        def sigterm_handler(signal, frame):
+            error_data["errorCulprit"] = "timeout"
+            error_data["errorExceptionMessage"] = "Function execution duration going to exceeded configured timeout limit."
+            error_data["errorExceptionStacktrace"] = "[]"
+            error_data["errorExceptionType"] = "TimeoutError"
             error_data["errorFatal"] = True
-            error_data["errorId"] = "{}!${}".format(
-                exc_type.__name__, str(exc_value)[:200]
-            )
-        finally:
+            error_data["errorId"] = "TimeoutError!$Function execution duration going to exceeded configured timeout limit."
+            finalize()
+
+        signal.signal(signal.SIGTERM, sigterm_handler)
+
+        # create a thread to SIGTERM self right before timeout
+        def sigterm_sender():
+            os.kill(os.getpid(), signal.SIGTERM)
+
+        sigterm_timer = threading.Timer(timeout - 0.05, sigterm_sender)
+
+        def finalize():
+            sigterm_timer.cancel()
             if os.path.exists("/proc/meminfo"):
                 meminfo = {
                     line.split(":")[0].strip(): int(
@@ -306,8 +297,14 @@ class SDK(object):
                 "transactionId": span_id,
             }
             tags.update(error_data)
+            if error_data["errorExceptionType"] == "TimeoutError":
+                transaction_type = "timeout"
+            elif error_data["errorId"]:
+                transaction_type = "error"
+            else:
+                transaction_type = "transaction"
             transaction_data = {
-                "type": "error" if error_data["errorId"] else "transaction",
+                "type": transaction_type,
                 "origin": "sls-agent",
                 "payload": {
                     "duration": (time.time() - start) * 1000,
@@ -332,6 +329,39 @@ class SDK(object):
             print("SERVERLESS_ENTERPRISE {}".format(json.dumps(transaction_data)))
             if exception and error_data["errorFatal"]:
                 raise exception
+
+        try:
+            yield
+        except Exception as exc:
+            exception = exc
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            stack_frames = traceback.extract_tb(exc_traceback)
+            error_data["errorCulprit"] = "{} ({})".format(
+                stack_frames[-1][2], stack_frames[-1][0]
+            )
+            error_data["errorExceptionMessage"] = str(exc_value)
+            error_data["errorExceptionStacktrace"] = json.dumps(
+                [
+                    {
+                        "filename": frame[0],
+                        "lineno": frame[1],
+                        "function": frame[2],
+                        "library_frame": False,
+                        "abs_path": os.path.abspath(frame[0]),
+                        "pre_context": [],
+                        "context_line": frame[3],
+                        "post_context": [],
+                    }
+                    for frame in reversed(stack_frames)
+                ]
+            )
+            error_data["errorExceptionType"] = exc_type.__name__
+            error_data["errorFatal"] = True
+            error_data["errorId"] = "{}!${}".format(
+                exc_type.__name__, str(exc_value)[:200]
+            )
+        finally:
+            finalize()
 
     def instrument_botocore(self):
         def wrapper(wrapped, instance, args, kwargs):

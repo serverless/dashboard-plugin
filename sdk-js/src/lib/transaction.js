@@ -12,6 +12,7 @@ const isError = require('type/error/is');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
+const TIMEOUT = 'timeout';
 
 let transactionCount = 0;
 
@@ -209,6 +210,27 @@ class Transaction {
   }
 
   /*
+   * report (on SIGTERM)
+   */
+
+  report() {
+    this.set(
+      'error.id',
+      'TimeoutError!$Function execution duration going to exceeded configured timeout limit.'
+    );
+    this.set('error.culprit', 'timeout');
+    this.set('error.fatal', true);
+    this.set('error.exception.type', 'TimeoutError');
+    this.set(
+      'error.exception.message',
+      'Function execution duration going to exceeded configured timeout limit.'
+    );
+    this.set('error.exception.stacktrace', '[]');
+    this.buildOutput(TIMEOUT);
+    this.end();
+  }
+
+  /*
    * End
    */
 
@@ -263,7 +285,7 @@ class Transaction {
       envelope.payload.spans = this.$.spans;
 
       console.info('SERVERLESS_ENTERPRISE', JSON.stringify(envelope));
-      this.processed = true;
+      this.processed = this.$.schema.error.type !== 'TimeoutError';
     }
   }
 }
