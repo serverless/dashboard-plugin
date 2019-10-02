@@ -257,6 +257,36 @@ class ServerlessSDK {
           transactionSpans.push(span);
         });
 
+        // user spans
+        // eslint-disable-next-line consistent-return
+        contextProxy.span = (tag, userCode) => {
+          const startTime = new Date().toISOString();
+          const start = Date.now();
+
+          const end = () => {
+            const endTime = new Date().toISOString();
+            spanEmitter.emit('span', {
+              tags: {
+                type: 'custom',
+                label: tag,
+              },
+              startTime,
+              endTime,
+              duration: Date.now() - start,
+            });
+          };
+
+          let result;
+          try {
+            result = userCode();
+          } catch (e) {
+            end();
+            throw e;
+          }
+          if (result && typeof result.then === 'function') return result.then(end);
+          end();
+        };
+
         /*
          * Try Running Code
          */

@@ -93,6 +93,7 @@ class SDK(object):
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
+            context.span = self.user_span
             with self.transaction(event, context, function_name, timeout):
                 return user_handler(event, context)
 
@@ -104,6 +105,15 @@ class SDK(object):
         appending to self.spans
         """
         return Span(self.spans.append, span_type)
+
+    def user_span(self, span_type):
+        """
+        A wrapper around the Span context manager that sets the emitter to be
+        appending to self.spans
+        """
+        span = Span(self.spans.append, 'custom')
+        span.set_tag('label', span_type)
+        return span
 
     @contextmanager
     def transaction(self, event, context, function_name, timeout):

@@ -232,20 +232,28 @@ describe('integration: wrapper', function() {
         .split('SERVERLESS_ENTERPRISE')[1]
     );
     expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(3);
-    // aws span
+    expect(payload.payload.spans.length).to.equal(5);
+    // first custom span (create sts client)
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[0].tags.type).to.equal('aws');
-    // first http span (POST w/ https.request)
+    expect(payload.payload.spans[0].tags).to.deep.equal({
+      type: 'custom',
+      label: 'create sts client',
+    });
+    // aws span
     expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).to.deep.equal({
+    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[1].tags.type).to.equal('aws');
+    // first http span (POST w/ https.request)
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       requestPath: '/post',
@@ -253,15 +261,23 @@ describe('integration: wrapper', function() {
       httpStatus: 200,
     });
     // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
+    expect(new Set(Object.keys(payload.payload.spans[3]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
+    expect(payload.payload.spans[3].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
       requestPath: '/',
       httpMethod: 'GET',
       httpStatus: 200,
+    });
+    // second custom span (asynctest)
+    expect(new Set(Object.keys(payload.payload.spans[4]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[4].tags).to.deep.equal({
+      type: 'custom',
+      label: 'asynctest',
     });
   });
 
@@ -278,20 +294,28 @@ describe('integration: wrapper', function() {
         .split('SERVERLESS_ENTERPRISE')[1]
     );
     expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(3);
-    // aws span
+    expect(payload.payload.spans.length).to.equal(5);
+    // first custom span (create sts client)
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[0].tags.type).to.equal('aws');
-    // first http span (POST w/ https.request)
+    expect(payload.payload.spans[0].tags).to.deep.equal({
+      type: 'custom',
+      label: 'create sts client',
+    });
+    // aws span
     expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).to.deep.equal({
+    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[1].tags.type).to.equal('aws');
+    // first http span (POST w/ https.request)
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       requestPath: '/post',
@@ -299,15 +323,23 @@ describe('integration: wrapper', function() {
       httpStatus: 200,
     });
     // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
+    expect(new Set(Object.keys(payload.payload.spans[3]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
+    expect(payload.payload.spans[3].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'example.com',
       requestPath: '/',
       httpMethod: 'GET',
       httpStatus: 200,
+    });
+    // second custom span (asynctest)
+    expect(new Set(Object.keys(payload.payload.spans[4]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[4].tags).to.deep.equal({
+      type: 'custom',
+      label: 'asynctest',
     });
   });
 
@@ -331,18 +363,25 @@ describe('integration: wrapper', function() {
         .slice(22)
     );
     expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(2);
+    expect(payload.payload.spans.length).to.equal(3);
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[0].tags.type).to.equal('aws');
+    expect(payload.payload.spans[0].tags).to.deep.equal({
+      type: 'custom',
+      label: 'create sts client',
+    });
     expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).to.deep.equal({
+    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[1].tags.type).to.equal('aws');
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       requestPath: '/get',
@@ -371,18 +410,25 @@ describe('integration: wrapper', function() {
         .slice(22)
     );
     expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(2);
+    expect(payload.payload.spans.length).to.equal(3);
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(new Set(Object.keys(payload.payload.spans[0].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[0].tags.type).to.equal('aws');
+    expect(payload.payload.spans[0].tags).to.deep.equal({
+      type: 'custom',
+      label: 'create sts client',
+    });
     expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
-    expect(payload.payload.spans[1].tags).to.deep.equal({
+    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
+      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
+    );
+    expect(payload.payload.spans[1].tags.type).to.equal('aws');
+    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'httpbin.org',
       requestPath: '/get',
@@ -399,8 +445,8 @@ describe('integration: wrapper', function() {
       errorMessage: 'error',
       errorType: 'Exception',
       stackTrace: [
-        '  File "/var/task/serverless_sdk/__init__.py", line 97, in wrapped_handler\n    return user_handler(event, context)\n',
-        '  File "/var/task/handler.py", line 10, in error\n    raise Exception(\'error\')\n',
+        '  File "/var/task/serverless_sdk/__init__.py", line 98, in wrapped_handler\n    return user_handler(event, context)\n',
+        '  File "/var/task/handler.py", line 12, in error\n    raise Exception(\'error\')\n',
       ],
     });
   });
