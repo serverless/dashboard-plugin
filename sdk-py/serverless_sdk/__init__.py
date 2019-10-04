@@ -113,7 +113,8 @@ class SDK(object):
     def user_span(self, span_type):
         """
         A wrapper around the Span context manager that sets the emitter to be
-        appending to self.spans
+        appending to self.spans and sets span type to custom and the user
+        specified span type as the label tag.
         """
         span = Span(self.spans.append, "custom")
         span.set_tag("label", span_type)
