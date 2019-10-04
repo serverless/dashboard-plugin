@@ -286,6 +286,8 @@ class ServerlessSDK {
           if (result && typeof result.then === 'function') return result.then(end);
           end();
         };
+        // eslint-disable-next-line no-underscore-dangle
+        ServerlessSDK._span = contextProxy.span;
 
         /*
          * Try Running Code
@@ -327,6 +329,11 @@ class ServerlessSDK {
   static captureError(error) {
     // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._captureError(error);
+  }
+
+  static span(label, userCode) {
+    // eslint-disable-next-line no-underscore-dangle
+    ServerlessSDK._span(label, userCode);
   }
 }
 
