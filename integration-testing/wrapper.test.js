@@ -404,7 +404,7 @@ describe('integration: wrapper', function() {
     expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'asdfkasdjsdf',
-      requestPath: '',
+      requestPath: '/',
       httpMethod: 'GET',
     });
   });

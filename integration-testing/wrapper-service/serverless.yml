@@ -1,5 +1,5 @@
-tenant: integration
-app: integration
+tenant: sandbox
+app: sandbox
 service: CHANGEME
 
 provider:
