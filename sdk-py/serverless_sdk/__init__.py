@@ -385,10 +385,10 @@ class SDK(object):
                         return response
                     except Exception as e:
                         response = None
+                        span.set_tag("httpStatus", "Exc")
                         raise e
                     finally:
                         if response:
-                            status = response.status
                             span.set_tag("httpStatus", response.status)
             else:
                 return wrapped(*args, **kwargs)
