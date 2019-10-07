@@ -365,7 +365,7 @@ describe('integration: wrapper', function() {
     );
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(1);
-    expect(payload.payload.spans[1].tags).to.deep.equal({
+    expect(payload.payload.spans[0].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'asdfkasdjsdf',
       requestPath: '/',
