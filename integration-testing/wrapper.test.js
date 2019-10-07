@@ -351,6 +351,33 @@ describe('integration: wrapper', function() {
     });
   });
 
+  it('gets http connection errors from python', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonHttpError` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
+        .slice(22)
+    );
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.spans.length).to.equal(1);
+    expect(payload.payload.spans[0].tags.type).to.equal('aws');
+    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
+      new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
+    expect(payload.payload.spans[1].tags).to.deep.equal({
+      type: 'http',
+      requestHostname: 'asdfkasdjsdf',
+      requestPath: '/',
+      httpMethod: 'GET',
+      httpStatus: 'Exc',
+    });
+  });
+
   it('gets the return value when calling python2', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-pythonSuccess2` })
