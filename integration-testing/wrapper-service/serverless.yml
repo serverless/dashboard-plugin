@@ -50,3 +50,6 @@ functions:
   pythonError:
     handler: handler.error
     runtime: python3.7
+  pythonHttpError:
+    handler: handler.http_error
+    runtime: python3.7

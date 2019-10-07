@@ -331,7 +331,7 @@ describe('integration: wrapper', function() {
         .slice(22)
     );
     expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(3);
+    expect(payload.payload.spans.length).to.equal(2);
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
@@ -348,15 +348,6 @@ describe('integration: wrapper', function() {
       requestPath: '/get',
       httpMethod: 'GET',
       httpStatus: 200,
-    });
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
-      type: 'http',
-      requestHostname: 'asdfkasdjsdf',
-      requestPath: '',
-      httpMethod: 'GET',
     });
   });
 
@@ -380,7 +371,7 @@ describe('integration: wrapper', function() {
         .slice(22)
     );
     expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(3);
+    expect(payload.payload.spans.length).to.equal(2);
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
     );
@@ -397,15 +388,6 @@ describe('integration: wrapper', function() {
       requestPath: '/get',
       httpMethod: 'GET',
       httpStatus: 200,
-    });
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
-      type: 'http',
-      requestHostname: 'asdfkasdjsdf',
-      requestPath: '/',
-      httpMethod: 'GET',
     });
   });
 
