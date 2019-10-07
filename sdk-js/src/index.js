@@ -4,6 +4,7 @@
  * Spans and Monkey Patching
  */
 const EventEmitter = require('events');
+const isThenable = require('type/thenable/is');
 
 const spanEmitter = new EventEmitter();
 
@@ -283,7 +284,7 @@ class ServerlessSDK {
             end();
             throw e;
           }
-          if (result && typeof result.then === 'function') return result.then(end);
+          if (isThenable(result)) return result.then(end);
           end();
         };
         // eslint-disable-next-line no-underscore-dangle

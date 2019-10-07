@@ -24,7 +24,7 @@
     "lodash": "^4.17.13",
     "require-in-the-middle": "^4.0.0",
     "stackman": "^3.0.2",
-    "type": "^1.0.1",
+    "type": "^1.2.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
