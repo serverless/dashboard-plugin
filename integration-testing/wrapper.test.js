@@ -351,6 +351,7 @@ describe('integration: wrapper', function() {
     });
     expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
     expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'asdfkasdjsdf',
@@ -399,6 +400,7 @@ describe('integration: wrapper', function() {
     });
     expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
       new Set(['duration', 'endTime', 'startTime', 'tags'])
+    );
     expect(payload.payload.spans[2].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'asdfkasdjsdf',
