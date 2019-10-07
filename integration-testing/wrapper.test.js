@@ -365,10 +365,6 @@ describe('integration: wrapper', function() {
     );
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(1);
-    expect(payload.payload.spans[0].tags.type).to.equal('aws');
-    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
     expect(payload.payload.spans[1].tags).to.deep.equal({
       type: 'http',
       requestHostname: 'asdfkasdjsdf',
