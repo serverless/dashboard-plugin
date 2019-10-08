@@ -377,16 +377,19 @@ class SDK(object):
                 and not ignore_hosts.get(instance.host.lower(), False)
             ):
                 with self.span("http") as span:
+                    span.set_tag("requestHostname", instance.host)
+                    span.set_tag("requestPath", path)
+                    span.set_tag("httpMethod", method)
                     try:
                         response = wrapped(*args, **kwargs)
                         return response
+                    except Exception as e:
+                        response = None
+                        span.set_tag("httpStatus", "Exc")
+                        raise e
                     finally:
                         if response:
-                            status = response.status
-                            span.set_tag("requestHostname", instance.host)
-                            span.set_tag("requestPath", path)
-                            span.set_tag("httpMethod", method)
-                            span.set_tag("httpStatus", status)
+                            span.set_tag("httpStatus", response.status)
             else:
                 return wrapped(*args, **kwargs)
 

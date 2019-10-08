@@ -8,3 +8,10 @@ def success(event, context):
 
 def error(event, context):
     raise Exception('error')
+
+def http_error(event, context):
+    try:
+        requests.get("https://asdfkasdjsdf")
+    except:
+        pass
+    return 'http_erroO'
