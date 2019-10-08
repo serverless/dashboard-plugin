@@ -11,6 +11,8 @@ if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS) {
     .split(',')
     .filter(domain => domain.length > 0);
   Object.assign(captureHosts, ...domainNames.map(domain => ({ [domain]: true })));
+} else {
+  captureHosts['*'] = true;
 }
 const ignoreHosts = {};
 if (process.env.SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS) {
