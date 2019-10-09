@@ -55,12 +55,17 @@ def get_user_handler(user_handler_value):
     return getattr(user_module, user_handler_name)
 
 
-# will be replaced by real exception capture func in SDK.transaction
+# will be replaced by real exception capture and span func in SDK.transaction
 _capture_exception = lambda x: None
+_span = lambda x: x
 
 
 def capture_exception(exception):
     _capture_exception(exception)
+
+
+def span(span_type):
+    return _span(span_type)
 
 
 class SDK(object):
@@ -104,6 +109,16 @@ class SDK(object):
         appending to self.spans
         """
         return Span(self.spans.append, span_type)
+
+    def user_span(self, span_type):
+        """
+        A wrapper around the Span context manager that sets the emitter to be
+        appending to self.spans and sets span type to custom and the user
+        specified span type as the label tag.
+        """
+        span = Span(self.spans.append, "custom")
+        span.set_tag("label", span_type)
+        return span
 
     @contextmanager
     def transaction(self, event, context, function_name, timeout):
@@ -156,6 +171,11 @@ class SDK(object):
         global _capture_exception
         _capture_exception = capture_exception
         context.capture_exception = capture_exception
+
+        global _span
+        _span = self.user_span
+        context.span = self.user_span
+
         try:
             yield
         except Exception as exc:
@@ -313,7 +333,6 @@ class SDK(object):
             if exception and error_data["errorFatal"]:
                 raise exception
 
-
     def instrument_botocore(self):
         def wrapper(wrapped, instance, args, kwargs):
             with self.span("aws") as span:
@@ -413,12 +432,9 @@ class SDK(object):
             http_class, req = args
             status = None
             if (
-                (
-                    capture_hosts.get("*", False)
-                    or capture_hosts.get(req.host.lower(), False)
-                )
-                and not ignore_hosts.get(req.host.lower(), False)
-            ):
+                capture_hosts.get("*", False)
+                or capture_hosts.get(req.host.lower(), False)
+            ) and not ignore_hosts.get(req.host.lower(), False):
                 with self.span("http") as span:
                     try:
                         response = wrapped(*args, **kwargs)
@@ -427,7 +443,9 @@ class SDK(object):
                         if response:
                             status = response.code
                             span.set_tag("requestHostname", req.host.lower())
-                            span.set_tag("requestPath", urlparse(req.get_full_url()).path)
+                            span.set_tag(
+                                "requestPath", urlparse(req.get_full_url()).path
+                            )
                             span.set_tag("httpMethod", req.get_method())
                             span.set_tag("httpStatus", status)
             else:

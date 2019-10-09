@@ -52,8 +52,11 @@ module.exports.promiseAndCallbackRace = async (event, context, callback) => {
   return 'asyncReturn';
 };
 
-module.exports.spans = async () => {
-  const sts = new AWS.STS();
+module.exports.spans = async (event, context) => {
+  let sts;
+  context.span('create sts client', () => {
+    sts = new AWS.STS();
+  });
   await sts.getCallerIdentity().promise();
   await new Promise((resolve, reject) => {
     const req = https.request({ host: 'httpbin.org', path: '/post', method: 'POST' }, resp => {
@@ -68,17 +71,19 @@ module.exports.spans = async () => {
     req.on('error', reject);
     req.end();
   });
-  await new Promise((resolve, reject) => {
-    const req = https.get({ host: 'example.com', path: '/', method: 'get' }, resp => {
-      let data = '';
-      resp.on('data', chunk => {
-        data += chunk;
+  await context.span('asynctest', async () => {
+    await new Promise((resolve, reject) => {
+      const req = https.get({ host: 'example.com', path: '/', method: 'get' }, resp => {
+        let data = '';
+        resp.on('data', chunk => {
+          data += chunk;
+        });
+        resp.on('end', () => {
+          resolve(data);
+        });
       });
-      resp.on('end', () => {
-        resolve(data);
-      });
+      req.on('error', reject);
     });
-    req.on('error', reject);
   });
 };
 

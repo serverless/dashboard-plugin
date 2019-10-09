@@ -4,6 +4,7 @@
  * Spans and Monkey Patching
  */
 const EventEmitter = require('events');
+const isThenable = require('type/thenable/is');
 
 const spanEmitter = new EventEmitter();
 
@@ -257,6 +258,38 @@ class ServerlessSDK {
           transactionSpans.push(span);
         });
 
+        // user spans
+        contextProxy.span = (tag, userCode) => {
+          const startTime = new Date().toISOString();
+          const start = Date.now();
+
+          const end = () => {
+            const endTime = new Date().toISOString();
+            spanEmitter.emit('span', {
+              tags: {
+                type: 'custom',
+                label: tag,
+              },
+              startTime,
+              endTime,
+              duration: Date.now() - start,
+            });
+          };
+
+          let result;
+          try {
+            result = userCode();
+          } catch (e) {
+            end();
+            throw e;
+          }
+          if (isThenable(result)) return result.then(end);
+          end();
+          return null;
+        };
+        // eslint-disable-next-line no-underscore-dangle
+        ServerlessSDK._span = contextProxy.span;
+
         /*
          * Try Running Code
          */
@@ -297,6 +330,11 @@ class ServerlessSDK {
   static captureError(error) {
     // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._captureError(error);
+  }
+
+  static span(label, userCode) {
+    // eslint-disable-next-line no-underscore-dangle
+    ServerlessSDK._span(label, userCode);
   }
 }
 
