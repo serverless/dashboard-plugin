@@ -19,7 +19,9 @@
     "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
     "test-isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
@@ -41,7 +43,8 @@
     "simple-git": "^1.118.0",
     "source-map-support": "^0.5.12",
     "uuid": "^3.3.2",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "snyk": "^1.234.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.0",
@@ -147,5 +150,6 @@
   },
   "pre-commit": [
     "lint:staged"
-  ]
+  ],
+  "snyk": true
 }
