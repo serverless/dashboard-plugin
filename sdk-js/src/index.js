@@ -259,7 +259,6 @@ class ServerlessSDK {
         });
 
         // user spans
-        // eslint-disable-next-line consistent-return
         contextProxy.span = (tag, userCode) => {
           const startTime = new Date().toISOString();
           const start = Date.now();
@@ -286,6 +285,7 @@ class ServerlessSDK {
           }
           if (isThenable(result)) return result.then(end);
           end();
+          return null;
         };
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._span = contextProxy.span;
