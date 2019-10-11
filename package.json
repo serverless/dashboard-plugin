@@ -45,8 +45,8 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.6.2",
-    "@babel/core": "7.6.2",
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.6.0",
     "@serverless/eslint-config": "^1.0.1",
