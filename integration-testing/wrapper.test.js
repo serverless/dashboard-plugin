@@ -469,7 +469,7 @@ describe('integration: wrapper', function() {
       / *File "\/var\/task\/serverless_sdk\/__init__.py", line \d+, in wrapped_handler\n *return user_handler\(event, context\)\n/
     );
     expect(payload.stackTrace[1]).to.match(
-      / *File "\/var\/task\/handler.py", line \d+, in error\n *raise Exception('error')\n/
+      / *File "\/var\/task\/handler.py", line \d+, in error\n *raise Exception\('error'\)\n/
     );
     delete payload.stackTrace;
     expect(payload).to.deep.equal({
