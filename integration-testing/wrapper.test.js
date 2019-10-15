@@ -466,7 +466,7 @@ describe('integration: wrapper', function() {
       .promise();
     const payload = JSON.parse(Payload);
     expect(payload.stackTrace[0]).to.match(
-      / *File "\/var\/task\/serverless_sdk\/__init__.py", line \d+, in wrapped_handler\n *return user_handler(event, context)\n/
+      / *File "\/var\/task\/serverless_sdk\/__init__.py", line \d+, in wrapped_handler\n *return user_handler\(event, context\)\n/
     );
     expect(payload.stackTrace[1]).to.match(
       / *File "\/var\/task\/handler.py", line \d+, in error\n *raise Exception('error')\n/
