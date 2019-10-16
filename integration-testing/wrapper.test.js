@@ -464,13 +464,17 @@ describe('integration: wrapper', function() {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-pythonError` })
       .promise();
-    expect(JSON.parse(Payload)).to.deep.equal({
+    const payload = JSON.parse(Payload);
+    expect(payload.stackTrace[0]).to.match(
+      / *File "\/var\/task\/serverless_sdk\/__init__.py", line \d+, in wrapped_handler\n *return user_handler\(event, context\)\n/
+    );
+    expect(payload.stackTrace[1]).to.match(
+      / *File "\/var\/task\/handler.py", line \d+, in error\n *raise Exception\('error'\)\n/
+    );
+    delete payload.stackTrace;
+    expect(payload).to.deep.equal({
       errorMessage: 'error',
       errorType: 'Exception',
-      stackTrace: [
-        '  File "/var/task/serverless_sdk/__init__.py", line 98, in wrapped_handler\n    return user_handler(event, context)\n',
-        '  File "/var/task/handler.py", line 12, in error\n    raise Exception(\'error\')\n',
-      ],
     });
   });
 
