@@ -78,6 +78,7 @@ class Transaction {
       eTransaction: null,
       duration: nanosecondnow(), // start transaction timer
       spans: [],
+      events: [],
     };
 
     /*
@@ -261,6 +262,7 @@ class Transaction {
       span.tags = tags;
       envelope.payload = span;
       envelope.payload.spans = this.$.spans;
+      envelope.payload.events = this.$.events;
 
       console.info('SERVERLESS_ENTERPRISE', JSON.stringify(envelope));
       this.processed = true;
