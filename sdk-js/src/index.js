@@ -191,6 +191,7 @@ class ServerlessSDK {
         trans.set('event.custom.stage', meta.stageName);
 
         const transactionSpans = trans.$.spans;
+        const transactionEvents = trans.$.events;
 
         /*
          * Callback Wrapper
@@ -290,6 +291,15 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._span = contextProxy.span;
 
+        tagEvent = (tagName, value, custom = {}) => {
+          transactionEvents.push({
+            tagName,
+            value,
+            custom
+          })
+        };
+        ServerlessSDK._tagEvent = tagEvent;
+
         /*
          * Try Running Code
          */
@@ -335,6 +345,11 @@ class ServerlessSDK {
   static span(label, userCode) {
     // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._span(label, userCode);
+  }
+
+  static tagEvent(label, tag) {
+    // eslint-disable-next-line no-underscore-dangle
+    ServerlessSDK._tagEvent(label, tag);
   }
 }
 
