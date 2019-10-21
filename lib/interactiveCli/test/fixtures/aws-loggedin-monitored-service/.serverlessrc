@@ -2,9 +2,9 @@
   "frameworkId": "00000000-0000-0000-0000-000000000000",
   "meta": {
     "created_at": 1560000000,
-    "updated_at": 1571314895
+    "updated_at": 1560000000
   },
-  "userId": "github|667763",
+  "userId": "testinteractivecli",
   "users": {
     "testinteractivecli": {
       "userId": "testinteractivecli",
@@ -25,26 +25,6 @@
         "versionSDK": "2.1.1",
         "timeLastLogin": 1560000000,
         "timeLastLogout": 1560000000
-      }
-    },
-    "github|667763": {
-      "userId": "github|667763",
-      "name": "Daniel Schep",
-      "email": "dschep@gmail.com",
-      "username": "dschep",
-      "dashboard": {
-        "refreshToken": "9TXFJe5IpSq00LFhDm2fkgtwRSXzs0rHPIvyuDsPEI2Pj",
-        "accessToken": "IQr2E1gkSOwXaMBsEKGviLeFhshijWtD",
-        "idToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik56azVNREl5TVRnNFJqWTBORGswT0VJM1JrRXpORGN4UmtVMU1FWXdNemczT1VKQlFqRTBNZyJ9.eyJuaWNrbmFtZSI6ImRzY2hlcCIsIm5hbWUiOiJEYW5pZWwgU2NoZXAiLCJwaWN0dXJlIjoiaHR0cHM6Ly9hdmF0YXJzMC5naXRodWJ1c2VyY29udGVudC5jb20vdS82Njc3NjM_dj00IiwidXBkYXRlZF9hdCI6IjIwMTktMTAtMTdUMTI6MTk6MjAuNDIyWiIsImVtYWlsIjoiZHNjaGVwQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL3NlcnZlcmxlc3NpbmMuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1Ynw2Njc3NjMiLCJhdWQiOiJZQUhPRzhwYXBiMXRrckx0dE5Wb1ZPU3M0WUxPanJOaiIsImlhdCI6MTU3MTMxNDc2MSwiZXhwIjoxNTcxNDAxMTYxfQ.mtCuRNN4DGhpzpOfxzQfBeHqPtjpBQ5w-aNYnPTWiZxO4ImN4sL_6VrmzBtwJTdBSyUrx-eH8Zji7r7BKhef7Nv-gRdFOnqJrZk_2KusOOrcGM3xjmlshvz0RehOc-w1eZE86SCXUd4Ywnhl3YhAnAsfXpJxRZeSu5xnIKJmf3pWzkGNeGdwUCYfEiD571MMQNLNqWa2ElWrXT4Yf9-2SCWA1m69WCKZL3daYHCbAAvBxEk6RydOtidNACsIsmK0eC3YcxTRXO-6Ys0Y-omj5kVFJS20YpBGcsNv46Z6WZQ1yBtiQCrGs5aVtMzJlIWnmvt1fstKoH_E-UuACQJnrg",
-        "expiresAt": 1571401162279,
-        "username": "dschep",
-        "accessKeys": {
-          "hmdapp": "AKV1U0hD3CeeNeQm7SCH3TfZCjAOe3H8BewlklQZG8NwT"
-        }
-      },
-      "enterprise": {
-        "versionSDK": "2.1.2",
-        "timeLastLogin": 1571314763
       }
     }
   }
