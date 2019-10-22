@@ -66,9 +66,7 @@ module.exports = memoize(async (options = {}) => {
   });
 
   console.info('... fetch tarball');
-  const res = await fetch(
-    'https://github.com/serverless/serverless/archive/service-app-org-flags.tar.gz'
-  );
+  const res = await fetch('https://github.com/serverless/serverless/archive/master.tar.gz');
   const tarDeferred = tar.x({ cwd: serverlessTmpDir, strip: 1 });
   res.body.pipe(tarDeferred);
   await new Promise((resolve, reject) => {
@@ -100,6 +98,7 @@ module.exports = memoize(async (options = {}) => {
   return {
     root: serverlessTmpDir,
     binary: path.join(serverlessTmpDir, 'bin/serverless.js'),
+    version: pkgJson.version,
     plugin: await realpath(
       path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin')
     ),
