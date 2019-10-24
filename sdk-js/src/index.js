@@ -295,8 +295,11 @@ class ServerlessSDK {
           transactionEventTags.push({
             tagName: tagName.toString(),
             tagValue: tagValue.toString(),
-            custom: JSON.stringify(custom)
-          })
+            custom: JSON.stringify(custom),
+          });
+          if (transactionEventTags.length > 10) {
+            transactionEventTags.pop();
+          }
         };
         ServerlessSDK._tagEvent = tagEvent;
 
