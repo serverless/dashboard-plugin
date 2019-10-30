@@ -301,6 +301,7 @@ class ServerlessSDK {
             transactionEventTags.pop();
           }
         };
+        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._tagEvent = tagEvent;
 
         /*
