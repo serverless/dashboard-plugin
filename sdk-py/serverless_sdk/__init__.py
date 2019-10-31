@@ -92,7 +92,7 @@ class SDK(object):
         self.plugin_version = plugin_version
         self.invokation_count = 0
         self.spans = []
-        self.eventTags = []
+        self.event_tags = []
 
         self.instrument_botocore()
         self.instrument_urllib3()
@@ -172,9 +172,9 @@ class SDK(object):
                 )
         
         def tag_event(tag, value = '', custom = ''):
-            self.eventTags.append({'tagName': tag, 'tagValue': value, 'custom': json.dumps(custom)})
-            if len(self.eventTags) > 10:
-                self.eventTags.pop(0)
+            self.event_tags.append({'tagName': tag, 'tagValue': value, 'custom': json.dumps(custom)})
+            if len(self.event_tags) > 10:
+                self.event_tags.pop(0)
 
         global _capture_exception
         _capture_exception = capture_exception
@@ -333,7 +333,7 @@ class SDK(object):
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
                     "spans": self.spans,
-                    "eventTags": self.eventTags,
+                    "event_tags": self.event_tags,
                     "startTime": start_isoformat,
                     "tags": tags,
                 },
