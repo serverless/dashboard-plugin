@@ -170,7 +170,7 @@ class SDK(object):
                 error_data["errorId"] = "{}!${}".format(
                     exc_type.__name__, str(exc_value)[:200]
                 )
-        
+
         def tag_event(tag, value = '', custom = ''):
             self.event_tags.append({'tagName': tag, 'tagValue': value, 'custom': json.dumps(custom)})
             if len(self.event_tags) > 10:
@@ -333,7 +333,7 @@ class SDK(object):
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
                     "spans": self.spans,
-                    "event_tags": self.event_tags,
+                    "eventTags": self.event_tags,
                     "startTime": start_isoformat,
                     "tags": tags,
                 },
