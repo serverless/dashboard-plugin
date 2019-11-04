@@ -1,7 +1,6 @@
 import boto3
 from botocore.vendored import requests
-from serverless_sdk import tag_event
-from serverless_sdk import span
+from serverless_sdk import tag_event, span
 
 def success(event, context):
     with span('create sts client'):
