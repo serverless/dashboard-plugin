@@ -1,9 +1,10 @@
 import boto3
 from botocore.vendored import requests
 from serverless_sdk import tag_event
+from serverless_sdk import span
 
 def success(event, context):
-    with context.span('create sts client'):
+    with span('create sts client'):
         sts = boto3.client('sts')
     sts.get_caller_identity()
     requests.get('https://httpbin.org/get')
