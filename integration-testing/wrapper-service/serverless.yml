@@ -39,6 +39,8 @@ functions:
   spans8:
     handler: handler.spans
     runtime: nodejs8.10
+  eventTags:
+    handler: handler.eventTags
 
   # Python handlers
   pythonSuccess:
@@ -52,4 +54,7 @@ functions:
     runtime: python3.7
   pythonHttpError:
     handler: handler.http_error
+    runtime: python3.7
+  pythonEventTags:
+    handler: handler.event_tags
     runtime: python3.7

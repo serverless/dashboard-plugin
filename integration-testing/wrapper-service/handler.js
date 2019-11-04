@@ -1,6 +1,8 @@
 'use strict';
 const https = require('https');
 const AWS = require('aws-sdk');
+// eslint-disable-next-line import/no-unresolved
+const { tagEvent, span } = require('./serverless_sdk');
 
 module.exports.sync = () => {
   return 'syncReturn';
@@ -52,9 +54,14 @@ module.exports.promiseAndCallbackRace = async (event, context, callback) => {
   return 'asyncReturn';
 };
 
+module.exports.eventTags = async () => {
+  tagEvent('event-tagged', 'true', { customerId: 5, userName: 'aaron.stuyvenberg' });
+  return 'asyncReturn';
+};
+
 module.exports.spans = async (event, context) => {
   let sts;
-  context.span('create sts client', () => {
+  span('create sts client', () => {
     sts = new AWS.STS();
   });
   await sts.getCallerIdentity().promise();

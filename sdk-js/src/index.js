@@ -191,6 +191,7 @@ class ServerlessSDK {
         trans.set('event.custom.stage', meta.stageName);
 
         const transactionSpans = trans.$.spans;
+        const transactionEventTags = trans.$.eventTags;
 
         /*
          * Callback Wrapper
@@ -290,6 +291,19 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._span = contextProxy.span;
 
+        const tagEvent = (tagName, tagValue = '', custom = {}) => {
+          transactionEventTags.push({
+            tagName: tagName.toString(),
+            tagValue: tagValue.toString(),
+            custom: JSON.stringify(custom),
+          });
+          if (transactionEventTags.length > 10) {
+            transactionEventTags.pop();
+          }
+        };
+        // eslint-disable-next-line no-underscore-dangle
+        ServerlessSDK._tagEvent = tagEvent;
+
         /*
          * Try Running Code
          */
@@ -335,6 +349,11 @@ class ServerlessSDK {
   static span(label, userCode) {
     // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._span(label, userCode);
+  }
+
+  static tagEvent(label, tag, custom) {
+    // eslint-disable-next-line no-underscore-dangle
+    ServerlessSDK._tagEvent(label, tag, custom);
   }
 }
 
