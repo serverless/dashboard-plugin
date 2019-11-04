@@ -531,7 +531,7 @@ describe('integration: wrapper', function() {
     expect(payload.payload.eventTags[0]).to.deep.equal({
       tagName: 'event-tagged',
       tagValue: 'true',
-      custom: '{"customerId":5,"userName":"aaron.stuyvenberg"}',
+      custom: '{"customerId": 5, "userName": "aaron.stuyvenberg"}',
     });
   });
 });
