@@ -65,6 +65,8 @@ _span = lambda x: x
 def capture_exception(exception):
     _capture_exception(exception)
 
+def tag_event(tag, value = '', custom = ''):
+    _tag_event(tag, value, custom)
 
 def span(span_type):
     return _span(span_type)
@@ -92,6 +94,7 @@ class SDK(object):
         self.plugin_version = plugin_version
         self.invokation_count = 0
         self.spans = []
+        self.event_tags = []
 
         self.instrument_botocore()
         self.instrument_urllib3()
@@ -125,8 +128,9 @@ class SDK(object):
     @contextmanager
     def transaction(self, event, context, function_name, timeout):
         start = time.time()
-        if self.invokation_count > 0:  # reset spans whe not a cold start
+        if self.invokation_count > 0:  # reset spans when not a cold start
             self.spans = []
+            self.event_tags = []
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
         error_data = {
@@ -170,9 +174,17 @@ class SDK(object):
                     exc_type.__name__, str(exc_value)[:200]
                 )
 
+        def tag_event(tag, value = '', custom = ''):
+            self.event_tags.append({'tagName': tag, 'tagValue': value, 'custom': json.dumps(custom)})
+            if len(self.event_tags) > 10:
+                self.event_tags.pop(0)
+
         global _capture_exception
         _capture_exception = capture_exception
         context.capture_exception = capture_exception
+
+        global _tag_event
+        _tag_event = tag_event
 
         global _span
         _span = self.user_span
@@ -319,6 +331,7 @@ class SDK(object):
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
                     "spans": self.spans,
+                    "eventTags": self.event_tags,
                     "startTime": start_isoformat,
                     "tags": tags,
                 },

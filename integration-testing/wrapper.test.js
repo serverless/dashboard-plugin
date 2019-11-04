@@ -508,6 +508,48 @@ describe('integration: wrapper', function() {
     expect(payload.type).to.equal('error');
   });
 
+  it('gets node eventTags', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-eventTags` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.eventTags.length).to.equal(1);
+    expect(payload.payload.eventTags[0]).to.deep.equal({
+      tagName: 'event-tagged',
+      tagValue: 'true',
+      custom: '{"customerId":5,"userName":"aaron.stuyvenberg"}',
+    });
+  });
+
+  it('gets python eventTags', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonEventTags` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.eventTags.length).to.equal(1);
+    expect(payload.payload.eventTags[0]).to.deep.equal({
+      tagName: 'event-tagged',
+      tagValue: 'true',
+      custom: '{"customerId":5,"userName":"aaron.stuyvenberg"}',
+    });
+  });
+
   it('gets SFE log msg from wrapped python timeout handler', async () => {
     const { LogResult } = await lambda
       .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-pythonTimeout` })

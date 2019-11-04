@@ -27,4 +27,4 @@ functions:
 
 custom:
   testSecret: ${secrets:test}
-  testOutput: ${state:service.outputVariable, 'missingValue'}
+  testOutput: ${output:service.outputVariable, 'missingValue'}

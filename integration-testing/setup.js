@@ -62,6 +62,8 @@ module.exports = async function(templateName) {
   };
   return {
     sls,
+    serviceTmpDir,
+    serviceName,
     teardown: async () => {
       await sls(['remove']);
       return remove(serviceTmpDir);
