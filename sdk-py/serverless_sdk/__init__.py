@@ -128,6 +128,7 @@ class SDK(object):
         start = time.time()
         if self.invokation_count > 0:  # reset spans when not a cold start
             self.spans = []
+            self.event_tags = []
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
         error_data = {
