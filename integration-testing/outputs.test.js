@@ -1,25 +1,36 @@
 'use strict';
 
+const fs = require('fs');
 const stripAnsi = require('strip-ansi');
 const setup = require('./setup');
 
 let sls1;
 let sls2;
-let teardown;
+let serviceName;
+let serviceTmpDir;
+let teardown1;
+let teardown2;
 
 describe('integration: outputs', function() {
   this.timeout(1000 * 60 * 5);
 
-  beforeAll(
-    async () =>
-      ([{ sls: sls1, teardown }, { sls: sls2 }] = await Promise.all([
-        setup('service'),
-        setup('service2'),
-      ]))
-  );
+  beforeAll(async () => {
+    [
+      { sls: sls1, serviceName, teardown: teardown1 },
+      { sls: sls2, teardown: teardown2, serviceTmpDir },
+    ] = await Promise.all([setup('service'), setup('service2')]);
+
+    let slsYaml = fs.readFileSync(`${serviceTmpDir}/serverless.yml`).toString();
+    slsYaml = slsYaml.replace(
+      'output:service.outputVariable',
+      `output:${serviceName}.outputVariable`
+    );
+    fs.writeFileSync(`${serviceTmpDir}/serverless.yml`, slsYaml);
+  });
 
   afterAll(() => {
-    if (teardown) return teardown();
+    if (teardown1) return teardown1();
+    if (teardown2) return teardown2();
     return null;
   });
 
