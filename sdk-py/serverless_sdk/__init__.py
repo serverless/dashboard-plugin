@@ -207,6 +207,7 @@ class SDK(object):
             os.kill(os.getpid(), signal.SIGTERM)
 
         sigterm_timer = threading.Timer(timeout - 0.05, sigterm_sender)
+        sigterm_timer.start()
 
         def finalize():
             sigterm_timer.cancel()
