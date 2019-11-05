@@ -38,7 +38,7 @@ describe('integration: safeguards', function() {
 
   it('deploys blocks deploy on disallowed region', async () => {
     try {
-      await sls(['deploy', '-r', 'us-west-1']);
+      await sls(['deploy', '-r', 'us-west-2']);
     } catch (error) {
       const stdout = stripAnsi(String(error.stdoutBuffer));
       expect(stdout).to.include('failed - allowed-regions');
