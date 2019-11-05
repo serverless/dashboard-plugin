@@ -1,3 +1,4 @@
+import time
 import boto3
 from botocore.vendored import requests
 from serverless_sdk import tag_event, span
@@ -22,3 +23,6 @@ def http_error(event, context):
 def event_tags(event, context):
     tag_event('event-tagged', 'true', { 'customerId': 5, 'userName': 'aaron.stuyvenberg'})
     return 'success'
+
+def timeout(event, context):
+    time.sleep(10)

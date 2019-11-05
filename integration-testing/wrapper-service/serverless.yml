@@ -41,6 +41,8 @@ functions:
     runtime: nodejs8.10
   eventTags:
     handler: handler.eventTags
+  timeout:
+    handler: handler.timeout
 
   # Python handlers
   pythonSuccess:
@@ -57,4 +59,7 @@ functions:
     runtime: python3.7
   pythonEventTags:
     handler: handler.event_tags
+    runtime: python3.7
+  pythonTimeout:
+    handler: handler.timeout
     runtime: python3.7

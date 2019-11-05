@@ -1,5 +1,7 @@
 'use strict';
 
+const { spawn } = require('child_process');
+
 /*
  * Spans and Monkey Patching
  */
@@ -145,6 +147,12 @@ class ServerlessSDK {
           eventType,
         });
 
+        // SIGTERM self shortly before timeout & catch and print transaction
+        const timeoutHandler = spawn(`sleep ${(config.timeout || 6) - 0.05} && kill $PPID`, {
+          shell: true,
+        });
+        process.on('SIGTERM', () => trans.report());
+
         // Capture Compute Data: aws.lambda
         trans.set('compute.runtime', `aws.lambda.nodejs.${process.versions.node}`);
         trans.set('compute.region', process.env.AWS_REGION);
@@ -202,6 +210,7 @@ class ServerlessSDK {
         let finalized = false;
         const finalize = (error, cb) => {
           if (finalized) return;
+          timeoutHandler.kill('SIGKILL'); // kill the timeout handler
           try {
             if (capturedError) {
               trans.error(capturedError, false, cb);
