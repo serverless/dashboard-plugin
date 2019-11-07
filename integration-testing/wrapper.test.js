@@ -355,7 +355,7 @@ describe('integration: wrapper', function() {
         .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
         .split('SERVERLESS_ENTERPRISE')[1]
     );
-    expect(payload.type).to.equal('timeout');
+    expect(payload.type).to.equal('report');
   });
 
   it('gets the return value when calling python', async () => {
@@ -562,6 +562,6 @@ describe('integration: wrapper', function() {
         .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
         .split('SERVERLESS_ENTERPRISE')[1]
     );
-    expect(payload.type).to.equal('timeout');
+    expect(payload.type).to.equal('report');
   });
 });
