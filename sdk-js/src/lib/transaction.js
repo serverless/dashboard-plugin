@@ -12,7 +12,7 @@ const isError = require('type/error/is');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
-const TIMEOUT = 'timeout';
+const REPORT = 'report';
 
 let transactionCount = 0;
 
@@ -227,7 +227,7 @@ class Transaction {
       'Function execution duration going to exceeded configured timeout limit.'
     );
     this.set('error.exception.stacktrace', '[]');
-    this.buildOutput(TIMEOUT);
+    this.buildOutput(REPORT);
     this.end();
   }
 

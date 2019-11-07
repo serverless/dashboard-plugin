@@ -311,7 +311,7 @@ class SDK(object):
             }
             tags.update(error_data)
             if error_data["errorExceptionType"] == "TimeoutError":
-                transaction_type = "timeout"
+                transaction_type = "report"
             elif error_data["errorId"]:
                 transaction_type = "error"
             else:
