@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "3.2.4",
+  "version": "3.2.3",
   "engines": {
     "node": ">=6.0"
   },
