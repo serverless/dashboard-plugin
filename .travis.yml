@@ -132,7 +132,7 @@ jobs:
       node_js: 12
       env:
         # SERVERLESS_ACCESS_KEY
-        - secure: s/X+z/Ed6/9qXGMU73Mbasg26Fkzu7kwqvlgE5BduqT1rio/f/cCKI2jiOjIthnYYDb7gujKlHw7CQynv6C4h7caVyn3pnInyH/MdZECNfLuVIfXT/2moImmnoXYVVRp3Qzs7UCkSXYR6f3i6Sfzn/xDNnVSLHZdu1M9dPIVE5Hw1iG5QdMqD/0NUtps/4SJH8SbTQrSr5Cttzzx+jXsd7KZ5kmHKSKnknSgo+wcZ+gPVU8/Kgxmmy6hOx99DZBxufXHMopSJofzsrSavEjgyTml4Z9qQZEvzc6DWfMceXIxWAkVgq/3lPq8OqrtG+2jj1rlp/fr5AM2CWp5cLiTe1e7/zb+7P7Ckaatk49V1Ze+4oD0zQh++7XBierydDeVJHIkIWhJ2vwq8vBMLMzTdm6ChZomAb6yYMJ3SCaKdvpieo6IBsGuaQYHUvjjiiOl5YXTFEJ7UhPaDTnJFQ7k2WacJSXR0PupXUeru8N4H9YQl2q2rYRg9dy7Pcxx+e2BY89rDivl5NOFOxw87g+lkeGnFbFboHnh0zdtXxqAHgun1SMrA6MrMeoZ9c5UGuVkTWNbvJMYI0djgl5q8VUfTPH7Nt5oQZuS6gBXa1t6lXV/XNAG5Ykc12hPRR5WNk/HPH+s3fgLoF3RJt4OlN0A/L4f1HmTOn1atghFc+DLQX0=
+        - secure: 'l7ewp82ZIUatnah8QG3bV62CRQhsGOGsJQhD02i4PXp/MD7mgER6jJxx2DkT7NThlZ5+uYjdh+v9nP4vjAi5JFFogf74dgKk6W6GGH+CVysrtf/odeMBly+MLobD/EGj+NfZfITnxtSav3VLLwEq1IHZ+CDYfj96U8h9oxUm8prfffgGZFKtheNLOkDzCxFKAmoGFlieF5iqLOITULrybGWCnMKAOcHPZB99ekW1zWxVxquOM2BUIMNh06tPyz+h7jfLN39IkPswHPIveysz/LoPSJrSH5HoH/pIURlbWKEvU30PCiE9pfMplA7rlgdayHoqK+5j5yPbidSKmggK1TKqF60mLlwqytk8dqp5IHa2IH5MJZeedAKKqotYEybTR1dOKislZbsQEQK8jFvWl7yje18p5qQj/cBJEFCbqhP8HShCuz6fUoaUHeN7wtTxBn07pe6gyNDIG2YmitZsqKDgl6jwC5bn1QKKLbMnGVlQEmasiOsA8gYBdPAZ+hbgKD3RebVloZUTnC+hFEaGXX6rk/fZak6vqlwnY34qQEaEpk0cgCSF4fD04E6U0mPkMuQv3e7GUxNBFRZmuFWTDxTqXHqmsCLDWjbKQM4cOYKtVCRBq1HlUaveJAxRzzr5O8B/nyA4wUG/EmKNXKFaSo/vo0UkYzOTi5RQbfWooGw='
       script:
         - npm run build
         - npm run integration-test
