@@ -63,7 +63,7 @@ after_deploy:
 stages:
   - name: Test
   - name: Integration Test
-    if: branch = master AND type = push
+    if: (branch = master OR branch = try-reencrypting-secret) AND type = push
   - name: Deploy
     if: (branch = master AND type = push) OR tag =~ ^v\d+\.\d+\.\d+$
 
