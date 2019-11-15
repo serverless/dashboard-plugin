@@ -300,7 +300,7 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._span = contextProxy.span;
 
-        const tagEvent = (tagName, tagValue = '', custom = {}) => {
+        contextProxy.tagEvent = (tagName, tagValue = '', custom = {}) => {
           transactionEventTags.push({
             tagName: tagName.toString(),
             tagValue: tagValue.toString(),
@@ -311,7 +311,7 @@ class ServerlessSDK {
           }
         };
         // eslint-disable-next-line no-underscore-dangle
-        ServerlessSDK._tagEvent = tagEvent;
+        ServerlessSDK._tagEvent = contextProxy.tagEvent;
 
         /*
          * Try Running Code

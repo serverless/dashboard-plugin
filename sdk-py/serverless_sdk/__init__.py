@@ -185,6 +185,7 @@ class SDK(object):
 
         global _tag_event
         _tag_event = tag_event
+        context.tag_event = tag_event
 
         global _span
         _span = self.user_span
