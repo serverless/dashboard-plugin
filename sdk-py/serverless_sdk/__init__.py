@@ -179,17 +179,24 @@ class SDK(object):
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
+        class SDK_METHOD_WRAPPER:
+            def __init__(self, capture_exception, tag_event, span):
+                self.capture_exception = capture_exception
+                self.tag_event = tag_event
+                self.span = span
+
         global _capture_exception
         _capture_exception = capture_exception
         context.capture_exception = capture_exception
 
         global _tag_event
         _tag_event = tag_event
-        context.tag_event = tag_event
 
         global _span
         _span = self.user_span
         context.span = self.user_span
+
+        context.serverless_sdk = SDK_METHOD_WRAPPER(capture_exception, tag_event, span)
 
         # handle getting a SIGTERM, which represents an imminent timeout
         def sigterm_handler(signal, frame):
