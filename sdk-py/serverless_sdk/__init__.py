@@ -175,7 +175,7 @@ class SDK(object):
                 )
 
         def tag_event(tag, value = '', custom = ''):
-            self.event_tags.append({'tagName': tag, 'tagValue': value, 'custom': json.dumps(custom)})
+            self.event_tags.append({'tagName': str(tag), 'tagValue': str(value), 'custom': json.dumps(custom)})
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
