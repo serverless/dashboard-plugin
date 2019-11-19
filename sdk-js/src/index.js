@@ -251,9 +251,11 @@ class ServerlessSDK {
           },
         });
 
+        contextProxy.serverlessSdk = {};
         contextProxy.captureError = err => {
           capturedError = err;
         };
+        contextProxy.serverlessSdk.captureError = contextProxy.captureError; // TODO deprecate in next major rev
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._captureError = contextProxy.captureError;
 
@@ -297,10 +299,11 @@ class ServerlessSDK {
           end();
           return null;
         };
+        contextProxy.serverlessSdk.span = contextProxy.span; // TODO deprecate in next major rev
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._span = contextProxy.span;
 
-        const tagEvent = (tagName, tagValue = '', custom = {}) => {
+        contextProxy.serverlessSdk.tagEvent = (tagName, tagValue = '', custom = {}) => {
           transactionEventTags.push({
             tagName: tagName.toString(),
             tagValue: tagValue.toString(),
@@ -311,7 +314,7 @@ class ServerlessSDK {
           }
         };
         // eslint-disable-next-line no-underscore-dangle
-        ServerlessSDK._tagEvent = tagEvent;
+        ServerlessSDK._tagEvent = contextProxy.tagEvent;
 
         /*
          * Try Running Code
