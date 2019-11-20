@@ -102,4 +102,12 @@ module.exports.noWaitForEmptyLoop = (event, context, callback) => {
   callback(null, 'noWaitForEmptyLoop');
 };
 
+module.exports.waitForEmptyLoop = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = true;
+  https.get({ host: 'httpbin.org', path: '/delay/10' });
+  setTimeout(() => {
+    return callback(null, 'noWaitForEmptyLoop');
+  }, 10000);
+};
+
 module.exports.timeout = async () => await new Promise(resolve => setTimeout(resolve, 10000));

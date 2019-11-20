@@ -43,6 +43,8 @@ functions:
     handler: handler.eventTags
   timeout:
     handler: handler.timeout
+  waitForEmptyLoop:
+    handler: handler.waitForEmptyLoop
 
   # Python handlers
   pythonSuccess:
