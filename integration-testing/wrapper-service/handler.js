@@ -102,8 +102,8 @@ module.exports.noWaitForEmptyLoop = (event, context, callback) => {
   callback(null, 'noWaitForEmptyLoop');
 };
 
+//  By default in lambda, context.callbackWaitsForEmptyEventLoop = true
 module.exports.waitForEmptyLoop = (event, context, callback) => {
-  context.callbackWaitsForEmptyEventLoop = true;
   https.get({ host: 'httpbin.org', path: '/delay/10' });
   setTimeout(() => {
     return callback(null, 'noWaitForEmptyLoop');
