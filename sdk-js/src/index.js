@@ -145,7 +145,10 @@ class ServerlessSDK {
           eventType,
         });
 
-        setTimeout(() => trans.report(), (config.timeout * 1000 || 6000) - 50).unref();
+        const timeoutHandler = setTimeout(
+          () => trans.report(),
+          (config.timeout * 1000 || 6000) - 50
+        ).unref();
 
         // Capture Compute Data: aws.lambda
         trans.set('compute.runtime', `aws.lambda.nodejs.${process.versions.node}`);
@@ -204,6 +207,7 @@ class ServerlessSDK {
         let finalized = false;
         const finalize = (error, cb) => {
           if (finalized) return;
+          clearTimeout(timeoutHandler);
           try {
             if (capturedError) {
               trans.error(capturedError, false, cb);
