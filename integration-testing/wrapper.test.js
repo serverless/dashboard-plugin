@@ -358,6 +358,21 @@ describe('integration: wrapper', function() {
     expect(payload.type).to.equal('report');
   });
 
+  it('gets SFE log msg from wrapped node timeout handler with callbackWaitsForEmptyEventLoop true', async () => {
+    const { LogResult } = await lambda
+      .invoke({ LogType: 'Tail', FunctionName: `${serviceName}-dev-waitForEmptyLoop` })
+      .promise();
+    const logResult = new Buffer(LogResult, 'base64').toString();
+    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
+    const payload = JSON.parse(
+      logResult
+        .split('\n')
+        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
+        .split('SERVERLESS_ENTERPRISE')[1]
+    );
+    expect(payload.type).to.equal('report');
+  });
+
   it('gets the return value when calling python', async () => {
     const { Payload } = await lambda
       .invoke({ FunctionName: `${serviceName}-dev-pythonSuccess` })
