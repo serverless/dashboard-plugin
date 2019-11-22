@@ -339,7 +339,7 @@ class SDK(object):
                         "traceId": context.aws_request_id,
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
-                    "spans": self.spans,
+                    "spans": self.spans[:50], # Limit spans to only the first 50
                     "eventTags": self.event_tags,
                     "startTime": start_isoformat,
                     "tags": tags,
