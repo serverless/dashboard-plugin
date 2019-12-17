@@ -311,7 +311,7 @@ class ServerlessSDK {
           }
         };
         // eslint-disable-next-line no-underscore-dangle
-        ServerlessSDK._tagEvent = contextProxy.tagEvent;
+        ServerlessSDK._tagEvent = contextProxy.serverlessSdk.tagEvent;
 
         /*
          * Try Running Code
