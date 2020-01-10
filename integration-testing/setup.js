@@ -32,7 +32,13 @@ module.exports = async function(templateName) {
     copy(path.join(__dirname, templateName), serviceTmpDir).then(async () => {
       const slsYamlPath = path.join(serviceTmpDir, 'serverless.yml');
       const slsYamlString = await readFile(slsYamlPath, 'utf8');
-      return writeFile(slsYamlPath, slsYamlString.replace('SERVICE_PLACEHOLDER', serviceName));
+      return writeFile(
+        slsYamlPath,
+        slsYamlString
+          .replace('SERVICE_PLACEHOLDER', serviceName)
+          .replace('ORG_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration')
+          .replace('APP_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
+      );
     }),
     setupServerless({ mode: 'compiled' }).then(data => data.binary),
   ]);

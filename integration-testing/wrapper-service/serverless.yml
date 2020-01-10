@@ -1,5 +1,5 @@
-org: integration
-app: integration
+org: ORG_PLACEHOLDER
+app: APP_PLACEHOLDER
 service: SERVICE_PLACEHOLDER
 
 provider:
