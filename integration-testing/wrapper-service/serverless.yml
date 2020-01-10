@@ -1,6 +1,6 @@
 tenant: integration
 app: integration
-service: CHANGEME
+service: SERVICE_PLACEHOLDER
 
 provider:
   name: aws
