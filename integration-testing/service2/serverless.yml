@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-tenant: integration
+org: integration
 app: integration
 service: SERVICE_PLACEHOLDER
 

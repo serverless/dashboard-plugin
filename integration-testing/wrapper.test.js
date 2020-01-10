@@ -19,7 +19,7 @@ describe('integration: wrapper', function() {
     const {
       providerCredentials: { secretValue: credentials },
     } = await getDeployProfile({
-      tenant: 'integration',
+      org: 'integration',
       app: 'integration',
       stage: 'dev',
       service: serviceName,
