@@ -38,7 +38,7 @@ functions:
     handler: handler.spans
   spans8:
     handler: handler.spans
-    runtime: nodejs8.10
+    runtime: nodejs12.x
   eventTags:
     handler: handler.eventTags
   timeout:
