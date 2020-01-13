@@ -113,6 +113,7 @@
       "@serverless/test/setup/async-leaks-detector",
       "@serverless/test/setup/mock-homedir",
       "@serverless/test/setup/restore-cwd",
+      "@serverless/test/setup/restore-env",
       "./test/map-mocha-globals"
     ],
     "timeout": 5000
