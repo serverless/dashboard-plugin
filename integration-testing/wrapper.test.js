@@ -12,6 +12,14 @@ let serviceName;
 const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
 
+const resolveLog = encodedLogMsg => {
+  const logMsg = new Buffer(encodedLogMsg, 'base64').toString();
+  expect(logMsg).to.match(/SERVERLESS_ENTERPRISE/);
+  const logLine = logMsg.split('\n').find(line => line.includes('SERVERLESS_ENTERPRISE'));
+  const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
+  return JSON.parse(payloadString);
+};
+
 describe('integration: wrapper', function() {
   this.timeout(1000 * 60 * 5);
   let lambdaService;
@@ -247,14 +255,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-spans`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(5);
     // first custom span (create sts client)
@@ -310,14 +311,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-spans8`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(5);
     // first custom span (create sts client)
@@ -373,14 +367,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-timeout`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('report');
   });
 
@@ -389,14 +376,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-waitForEmptyLoop`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('report');
   });
 
@@ -412,14 +392,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-pythonSuccess`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
-        .slice(22)
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(3);
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
@@ -453,14 +426,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-pythonHttpError`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
-        .slice(22)
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(1);
     expect(payload.payload.spans[0].tags).to.deep.equal({
@@ -484,14 +450,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-pythonSuccess2`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
-        .slice(22)
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.spans.length).to.equal(3);
     expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
@@ -543,14 +502,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-pythonError`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.startsWith('SERVERLESS_ENTERPRISE'))[0]
-        .slice(22)
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('error');
   });
 
@@ -559,14 +511,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-eventTags`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.eventTags.length).to.equal(1);
     expect(payload.payload.eventTags[0]).to.deep.equal({
@@ -581,14 +526,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-pythonEventTags`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
     expect(payload.payload.eventTags.length).to.equal(1);
     expect(payload.payload.eventTags[0]).to.deep.equal({
@@ -603,14 +541,7 @@ describe('integration: wrapper', function() {
       LogType: 'Tail',
       FunctionName: `${serviceName}-dev-pythonTimeout`,
     });
-    const logResult = new Buffer(LogResult, 'base64').toString();
-    expect(logResult).to.match(/SERVERLESS_ENTERPRISE/);
-    const payload = JSON.parse(
-      logResult
-        .split('\n')
-        .filter(line => line.includes('SERVERLESS_ENTERPRISE'))[0]
-        .split('SERVERLESS_ENTERPRISE')[1]
-    );
+    const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('report');
   });
 });
