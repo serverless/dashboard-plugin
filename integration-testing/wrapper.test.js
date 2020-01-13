@@ -1,4 +1,5 @@
 'use strict';
+
 process.env.SERVERLESS_PLATFORM_STAGE = 'dev';
 
 const setup = require('./setup');
