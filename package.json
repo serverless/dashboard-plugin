@@ -109,6 +109,7 @@
   "mocha": {
     "reporter": "@serverless/test/setup/mocha-reporter",
     "require": [
+      "@serverless/test/setup/log",
       "@serverless/test/setup/async-leaks-detector",
       "@serverless/test/setup/mock-homedir",
       "@serverless/test/setup/restore-cwd",
