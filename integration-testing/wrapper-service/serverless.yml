@@ -4,7 +4,7 @@ service: SERVICE_PLACEHOLDER
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
 
 functions:
   # NodeJS handlers
@@ -36,9 +36,9 @@ functions:
     handler: handler.promiseAndCallbackRace
   spans:
     handler: handler.spans
-  spans8:
+  spans10:
     handler: handler.spans
-    runtime: nodejs12.x
+    runtime: nodejs10.x
   eventTags:
     handler: handler.eventTags
   timeout:

@@ -306,10 +306,10 @@ describe('integration: wrapper', function() {
     });
   });
 
-  it('gets spans in node 8', async () => {
+  it('gets spans in node 10', async () => {
     const { LogResult } = await awsRequest(lambdaService, 'invoke', {
       LogType: 'Tail',
-      FunctionName: `${serviceName}-dev-spans8`,
+      FunctionName: `${serviceName}-dev-spans10`,
     });
     const payload = resolveLog(LogResult);
     expect(payload.type).to.equal('transaction');
