@@ -36,7 +36,7 @@ class ServerlessSDK {
 
     this.$.tenantId = obj.tenantId || null;
     this.$.appUid = obj.appUid || null;
-    this.$.tenantUid = obj.tenantUid || null;
+    this.$.orgUid = obj.orgUid || null;
     this.$.deploymentUid = obj.deploymentUid || null;
     this.$.applicationName = obj.applicationName || null;
     this.$.serviceName = obj.serviceName || null;
@@ -84,7 +84,7 @@ class ServerlessSDK {
     meta.tenantId = meta.tenantId || this.$.tenantId || null;
     meta.applicationName = meta.applicationName || this.$.applicationName || null;
     meta.appUid = meta.appUid || this.$.appUid || null;
-    meta.orgUid = meta.tenantUid || this.$.tenantUid || null;
+    meta.orgUid = meta.orgUid || this.$.orgUid || null;
     meta.deploymentUid = meta.deploymentUid || this.$.deploymentUid || null;
     meta.serviceName = meta.serviceName || this.$.serviceName || null;
     meta.stageName = meta.stageName || this.$.stageName || null;
@@ -134,7 +134,7 @@ class ServerlessSDK {
           tenantId: meta.tenantId,
           applicationName: meta.applicationName,
           appUid: meta.appUid,
-          tenantUid: meta.tenantUid,
+          orgUid: meta.orgUid,
           deploymentUid: meta.deploymentUid,
           serviceName: meta.serviceName,
           pluginVersion: meta.pluginVersion,

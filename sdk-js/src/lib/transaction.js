@@ -54,8 +54,8 @@ class Transaction {
     if (!data.appUid) {
       missing = 'appUid';
     }
-    if (!data.tenantUid) {
-      missing = 'tenantUid';
+    if (!data.orgUid) {
+      missing = 'orgUid';
     }
     if (!data.serviceName) {
       missing = 'serviceName';
@@ -92,7 +92,7 @@ class Transaction {
     // this.$.schema.traceId = uuidv4();
     this.$.schema.tenantId = data.tenantId;
     this.$.schema.appUid = data.appUid;
-    this.$.schema.tenantUid = data.tenantUid;
+    this.$.schema.tenantUid = data.orgUid;
     this.$.schema.applicationName = data.applicationName;
     this.$.schema.serviceName = data.serviceName;
     this.$.schema.stageName = data.stageName;

@@ -78,7 +78,7 @@ class SDK(object):
         tenant_id,
         application_name,
         app_uid,
-        tenant_uid,
+        org_uid,
         deployment_uid,
         service_name,
         stage_name,
@@ -87,7 +87,7 @@ class SDK(object):
         self.tenant_id = tenant_id
         self.application_name = application_name
         self.app_uid = app_uid
-        self.tenant_uid = tenant_uid
+        self.org_uid = org_uid
         self.deployment_uid = deployment_uid
         self.service_name = service_name
         self.stage_name = stage_name
@@ -310,7 +310,7 @@ class SDK(object):
                 "serviceName": self.service_name,
                 "stageName": self.stage_name,
                 "tenantId": self.tenant_id,
-                "tenantUid": self.tenant_uid,
+                "tenantUid": self.org_uid,
                 "pluginVersion": self.plugin_version,
                 "timeout": timeout,
                 "timestamp": start_isoformat,
