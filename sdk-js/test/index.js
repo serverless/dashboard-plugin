@@ -92,7 +92,7 @@ const testEvent = {
 const ServerlessSDK = require('../src/index.js');
 
 const serverless = new ServerlessSDK({
-  tenantId: 'ac360',
+  orgId: 'ac360',
   applicationName: 'webapp',
   serviceName: 'webapp-users',
   stageName: 'dev',

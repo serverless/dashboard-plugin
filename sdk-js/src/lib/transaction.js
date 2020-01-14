@@ -45,8 +45,8 @@ class Transaction {
   constructor(data) {
     // Enforce required properties
     let missing;
-    if (!data.tenantId) {
-      missing = 'tenantId';
+    if (!data.orgId) {
+      missing = 'orgId';
     }
     if (!data.applicationName) {
       missing = 'applicationName';
@@ -90,7 +90,7 @@ class Transaction {
     this.$.schema.timestamp = new Date().toISOString();
     this.$.schema.transactionId = uuidv4();
     // this.$.schema.traceId = uuidv4();
-    this.$.schema.tenantId = data.tenantId;
+    this.$.schema.tenantId = data.orgId;
     this.$.schema.appUid = data.appUid;
     this.$.schema.tenantUid = data.orgUid;
     this.$.schema.applicationName = data.applicationName;

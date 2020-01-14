@@ -34,7 +34,7 @@ class ServerlessSDK {
     this.$.config = {};
     this.$.config.debug = obj.config ? obj.config.debug || false : false;
 
-    this.$.tenantId = obj.tenantId || null;
+    this.$.orgId = obj.orgId || null;
     this.$.appUid = obj.appUid || null;
     this.$.orgUid = obj.orgUid || null;
     this.$.deploymentUid = obj.deploymentUid || null;
@@ -81,7 +81,7 @@ class ServerlessSDK {
     // Add global defaults
     // WARNING: This data is accessed in function handlers.  Therefore, DON'T add values that are request-specific.
     // WARNING: This will result in data from prevous requests affecting the current request
-    meta.tenantId = this.$.tenantId || null;
+    meta.orgId = this.$.orgId || null;
     meta.applicationName = this.$.applicationName || null;
     meta.appUid = this.$.appUid || null;
     meta.orgUid = this.$.orgUid || null;
@@ -131,7 +131,7 @@ class ServerlessSDK {
 
         // Start transaction
         const trans = self.transaction({
-          tenantId: meta.tenantId,
+          orgId: meta.orgId,
           applicationName: meta.applicationName,
           appUid: meta.appUid,
           orgUid: meta.orgUid,
