@@ -52,6 +52,7 @@ module.exports = memoize(async (options = {}) => {
     return {
       root: serverlessPath,
       binary: path.join(serverlessPath, 'bin/serverless.js'),
+      version: require(path.join(serverlessPath, 'package.json')).version,
       plugin: pluginPath,
     };
   }
