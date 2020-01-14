@@ -11,9 +11,9 @@
 #
 # Happy Coding!
 
-tenant: integration
-app: integration
-service: CHANGEME
+org: ORG_PLACEHOLDER
+app: APP_PLACEHOLDER
+service: SERVICE_PLACEHOLDER
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -38,7 +38,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
 
   # you can overwrite defaults here
   #  stage: dev
