@@ -81,14 +81,14 @@ class ServerlessSDK {
     // Add global defaults
     // WARNING: This data is accessed in function handlers.  Therefore, DON'T add values that are request-specific.
     // WARNING: This will result in data from prevous requests affecting the current request
-    meta.tenantId = meta.tenantId || this.$.tenantId || null;
-    meta.applicationName = meta.applicationName || this.$.applicationName || null;
-    meta.appUid = meta.appUid || this.$.appUid || null;
-    meta.orgUid = meta.orgUid || this.$.orgUid || null;
-    meta.deploymentUid = meta.deploymentUid || this.$.deploymentUid || null;
-    meta.serviceName = meta.serviceName || this.$.serviceName || null;
-    meta.stageName = meta.stageName || this.$.stageName || null;
-    meta.pluginVersion = meta.pluginVersion || this.$.pluginVersion || null;
+    meta.tenantId = this.$.tenantId || null;
+    meta.applicationName = this.$.applicationName || null;
+    meta.appUid = this.$.appUid || null;
+    meta.orgUid = this.$.orgUid || null;
+    meta.deploymentUid = this.$.deploymentUid || null;
+    meta.serviceName = this.$.serviceName || null;
+    meta.stageName = this.$.stageName || null;
+    meta.pluginVersion = this.$.pluginVersion || null;
     meta.functionName = config.functionName;
     meta.timeout = config.timeout || 6;
     meta.computeType = config.computeType || null;
