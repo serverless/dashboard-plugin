@@ -3,7 +3,7 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { copy, readFile, remove, writeFile } = require('fs-extra');
+const { copy, readFile, writeFile } = require('fs-extra');
 const setupServerless = require('../test/setupServerless');
 
 const spawn = require('child-process-ext/spawn');
@@ -55,9 +55,6 @@ module.exports = async function(templateName) {
     sls,
     serviceTmpDir,
     serviceName,
-    teardown: async () => {
-      await sls(['remove']);
-      return remove(serviceTmpDir);
-    },
+    teardown: async () => sls(['remove']),
   };
 };
