@@ -3,17 +3,10 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { copy, readFile, remove, writeFile } = require('fs-extra');
+const { copy, readFile, writeFile } = require('fs-extra');
 const setupServerless = require('../test/setupServerless');
 
-const spawn = (childProcessSpawn => (...args) => {
-  const result = childProcessSpawn(...args);
-  result.catch(error => {
-    if (error.stdoutBuffer) process.stdout.write(error.stdoutBuffer);
-    if (error.stderrBuffer) process.stdout.write(error.stderrBuffer);
-  });
-  return result;
-})(require('child-process-ext/spawn'));
+const spawn = require('child-process-ext/spawn');
 
 const tmpDir = os.tmpdir();
 
@@ -32,7 +25,13 @@ module.exports = async function(templateName) {
     copy(path.join(__dirname, templateName), serviceTmpDir).then(async () => {
       const slsYamlPath = path.join(serviceTmpDir, 'serverless.yml');
       const slsYamlString = await readFile(slsYamlPath, 'utf8');
-      return writeFile(slsYamlPath, slsYamlString.replace('CHANGEME', serviceName));
+      return writeFile(
+        slsYamlPath,
+        slsYamlString
+          .replace('SERVICE_PLACEHOLDER', serviceName)
+          .replace('ORG_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration')
+          .replace('APP_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
+      );
     }),
     setupServerless({ mode: 'compiled' }).then(data => data.binary),
   ]);
@@ -41,32 +40,21 @@ module.exports = async function(templateName) {
 
   const sls = (args, options = {}) => {
     console.info(`Invoke sls ${args.join(' ')}`);
-    const childDeferred = spawn('node', [serverlessBinPath, ...args], {
+    return spawn('node', [serverlessBinPath, ...args], {
       ...options,
       cwd: serviceTmpDir,
       env: {
         ...process.env,
         SERVERLESS_PLATFORM_STAGE,
-        FORCE_COLOR: '1',
         SLS_DEBUG: '*',
         ...options.env,
       },
     });
-    if (childDeferred.stdout) {
-      childDeferred.stdout.on('data', data => process.stdout.write(data));
-    }
-    if (childDeferred.stderr) {
-      childDeferred.stderr.on('data', data => process.stderr.write(data));
-    }
-    return childDeferred;
   };
   return {
     sls,
     serviceTmpDir,
     serviceName,
-    teardown: async () => {
-      await sls(['remove']);
-      return remove(serviceTmpDir);
-    },
+    teardown: async () => sls(['remove']),
   };
 };

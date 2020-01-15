@@ -1,10 +1,10 @@
-tenant: integration
-app: integration
-service: CHANGEME
+org: ORG_PLACEHOLDER
+app: APP_PLACEHOLDER
+service: SERVICE_PLACEHOLDER
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
 
 functions:
   # NodeJS handlers
@@ -36,9 +36,9 @@ functions:
     handler: handler.promiseAndCallbackRace
   spans:
     handler: handler.spans
-  spans8:
+  spans10:
     handler: handler.spans
-    runtime: nodejs8.10
+    runtime: nodejs10.x
   eventTags:
     handler: handler.eventTags
   timeout:
