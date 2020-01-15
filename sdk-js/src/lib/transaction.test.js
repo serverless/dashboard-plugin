@@ -6,10 +6,10 @@ const Transaction = require('./transaction');
 describe('Transaction', () => {
   it('counts invocations & tracks cold starts', () => {
     const firstTransaction = new Transaction({
-      tenantId: 'tenantId',
+      orgId: 'orgId',
       applicationName: 'applicationName',
       appUid: 'appUid',
-      tenantUid: 'tenantUid',
+      orgUid: 'orgUid',
       serviceName: 'serviceName',
       stageName: 'stageName',
       computeType: 'computeType',
@@ -17,10 +17,10 @@ describe('Transaction', () => {
     expect(firstTransaction.$.schema.compute.isColdStart).to.equal(true);
     expect(firstTransaction.$.schema.compute.instanceInvocationCount).to.equal(1);
     const secondTransaction = new Transaction({
-      tenantId: 'tenantId',
+      orgId: 'orgId',
       applicationName: 'applicationName',
       appUid: 'appUid',
-      tenantUid: 'tenantUid',
+      orgUid: 'orgUid',
       serviceName: 'serviceName',
       stageName: 'stageName',
       computeType: 'computeType',

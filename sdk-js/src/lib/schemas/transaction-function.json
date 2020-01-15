@@ -2,7 +2,7 @@
   "schemaType": "s-transaction-function",
   "schemaVersion": "0.0",
   "timestamp": null,
-  "tenantId": null,
+  "orgId": null,
   "applicationName": null,
   "serviceName": null,
   "stageName": null,
