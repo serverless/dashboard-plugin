@@ -34,7 +34,6 @@ describe('integration: wrapper', function() {
             tenant: org,
             app,
             stage: 'dev',
-            service: serviceName,
             accessKey,
           })
         ).providerCredentials.secretValue,
