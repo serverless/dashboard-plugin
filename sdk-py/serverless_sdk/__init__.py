@@ -71,6 +71,9 @@ def tag_event(tag, value = '', custom = ''):
 def span(span_type):
     return _span(span_type)
 
+def set_endpoint(endpoint):
+    _set_endpoint(endpoint)
+
 
 class SDK(object):
     def __init__(
@@ -95,6 +98,7 @@ class SDK(object):
         self.invokation_count = 0
         self.spans = []
         self.event_tags = []
+        self.endpoint = None
 
         self.instrument_botocore()
         self.instrument_urllib3()
@@ -131,6 +135,7 @@ class SDK(object):
         if self.invokation_count > 0:  # reset spans when not a cold start
             self.spans = []
             self.event_tags = []
+            self.endpoint = None
         start_isoformat = datetime.utcnow().isoformat() + "Z"
         exception = None
         error_data = {
@@ -179,6 +184,9 @@ class SDK(object):
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
+        def set_endpoint(endpoint):
+            self.endpoint = endpoint
+
         class SDK_METHOD_WRAPPER:
             def __init__(self, capture_exception, tag_event, span):
                 self.capture_exception = capture_exception
@@ -195,6 +203,9 @@ class SDK(object):
         global _span
         _span = self.user_span
         context.span = self.user_span
+
+        global _set_endpoint
+        _set_endpoint = set_endpoint
 
         context.serverless_sdk = SDK_METHOD_WRAPPER(capture_exception, tag_event, span)
 
@@ -316,6 +327,7 @@ class SDK(object):
                 "timestamp": start_isoformat,
                 "traceId": context.aws_request_id,
                 "transactionId": span_id,
+                "endpoint": self.endpoint,
             }
             tags.update(error_data)
             if error_data["errorExceptionType"] == "TimeoutError":

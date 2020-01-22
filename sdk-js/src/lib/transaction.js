@@ -104,6 +104,7 @@ class Transaction {
     this.$.schema.compute.isColdStart = transactionCount === 1;
     this.$.schema.compute.instanceInvocationCount = transactionCount;
     this.$.schema.totalSpans = 0;
+    this.$.schema.endpoint = data.endpoint;
 
     // Track uptime of container
     this.$.schema.compute.containerUptime = process.uptime();
