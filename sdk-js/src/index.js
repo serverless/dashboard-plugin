@@ -143,7 +143,6 @@ class ServerlessSDK {
           timeout: meta.timeout,
           computeType: meta.computeType,
           eventType,
-          endpoint,
         });
 
         const timeoutHandler = setTimeout(
