@@ -392,7 +392,10 @@ class SDK(object):
                     response = wrapped(*args, **kwargs)
                     return response
                 except Exception as error:
-                    response = error.response
+                    if hasattr(error, "response"):
+                        response = error.response
+                    else:
+                        response = {}
                     raise error
                 finally:
                     span.set_tag(
