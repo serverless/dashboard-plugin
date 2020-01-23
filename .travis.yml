@@ -156,6 +156,7 @@ jobs:
       node_js: 12
       script: skip
       deploy:
+        edge: true # Workaround Travis regression: https://travis-ci.community/t/missing-api-key-when-deploying-to-github-releases/5761
         provider: npm
         skip_cleanup: true
         email: services@serverless.com
@@ -173,6 +174,7 @@ jobs:
         - node ./scripts/updatePreReleaseDependency.js
         - node ./scripts/updatePreReleaseVersion.js
       deploy:
+        edge: true # Workaround Travis regression: https://travis-ci.community/t/missing-api-key-when-deploying-to-github-releases/5761
         provider: npm
         tag: next # this is the NPM tag, not git tag.
         skip_cleanup: true
