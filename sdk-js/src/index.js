@@ -372,6 +372,7 @@ class ServerlessSDK {
   }
 
   static setEndpoint(endpoint) {
+    // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._setEndpoint(endpoint);
   }
 }
