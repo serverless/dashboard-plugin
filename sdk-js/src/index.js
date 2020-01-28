@@ -313,6 +313,12 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._tagEvent = contextProxy.serverlessSdk.tagEvent;
 
+        contextProxy.serverlessSdk.setEndpoint = endpoint => {
+          trans.$.schema.endpoint = endpoint;
+        };
+        // eslint-disable-next-line no-underscore-dangle
+        ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
+
         /*
          * Try Running Code
          */
@@ -363,6 +369,11 @@ class ServerlessSDK {
   static tagEvent(label, tag, custom) {
     // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._tagEvent(label, tag, custom);
+  }
+
+  static setEndpoint(endpoint) {
+    // eslint-disable-next-line no-underscore-dangle
+    ServerlessSDK._setEndpoint(endpoint);
   }
 }
 
