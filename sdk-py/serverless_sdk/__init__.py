@@ -188,10 +188,11 @@ class SDK(object):
             self.endpoint = endpoint
 
         class SDK_METHOD_WRAPPER:
-            def __init__(self, capture_exception, tag_event, span):
+            def __init__(self, capture_exception, tag_event, span, set_endpoint):
                 self.capture_exception = capture_exception
                 self.tag_event = tag_event
                 self.span = span
+                self.set_endpoint = set_endpoint
 
         global _capture_exception
         _capture_exception = capture_exception
@@ -207,7 +208,7 @@ class SDK(object):
         global _set_endpoint
         _set_endpoint = set_endpoint
 
-        context.serverless_sdk = SDK_METHOD_WRAPPER(capture_exception, tag_event, span)
+        context.serverless_sdk = SDK_METHOD_WRAPPER(capture_exception, tag_event, span, set_endpoint)
 
         # handle getting a SIGTERM, which represents an imminent timeout
         def sigterm_handler(signal, frame):
