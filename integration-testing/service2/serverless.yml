@@ -21,6 +21,7 @@ frameworkVersion: '>=1.37.1'
 provider:
   name: aws
   runtime: nodejs12.x
+  region: REGION_PLACEHOLDER
 functions:
   hello:
     handler: handler.hello

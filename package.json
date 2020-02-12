@@ -51,7 +51,7 @@
     "@babel/preset-env": "^7.7.7",
     "@babel/register": "^7.7.7",
     "@serverless/eslint-config": "^1.2.1",
-    "@serverless/test": "^3.4.0",
+    "@serverless/test": "^3.5.2",
     "aws-sdk": "^2.596.0",
     "chai": "^4.2.0",
     "child-process-ext": "^2.1.0",
