@@ -29,6 +29,7 @@ describe('integration: wrapper', function() {
     lambdaService = {
       name: 'Lambda',
       params: {
+        region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
         credentials: (
           await getDeployProfile({
             tenant: org,

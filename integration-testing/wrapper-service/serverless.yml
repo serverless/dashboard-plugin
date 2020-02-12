@@ -5,6 +5,7 @@ service: SERVICE_PLACEHOLDER
 provider:
   name: aws
   runtime: nodejs12.x
+  region: REGION_PLACEHOLDER
 
 functions:
   # NodeJS handlers
