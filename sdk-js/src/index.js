@@ -206,7 +206,14 @@ class ServerlessSDK {
         let capturedError = null;
         let finalized = false;
         const finalize = (error, cb) => {
-          if (finalized) return;
+          if (finalized) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              'WARNING: Callback/response already delivered.  Did your function invoke the callback and also return a promise? ' +
+                'For more details, see: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html'
+            );
+            return;
+          }
           clearTimeout(timeoutHandler);
           try {
             if (capturedError) {
