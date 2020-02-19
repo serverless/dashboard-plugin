@@ -15,6 +15,7 @@ require('./lib/spanHooks/hookHttp')(spanEmitter);
  * Serverless SDK
  */
 
+const Pusher = require('pusher');
 const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
 const detectEventType = require('./lib/eventDetection');
@@ -23,6 +24,16 @@ const detectEventType = require('./lib/eventDetection');
 * Serverless SDK Class
 
 */
+
+const pusher = new Pusher({
+  appId: '950175',
+  key: '5e81e76f73bf0c18f888',
+  secret: '2f8c88071c62b1775d1d',
+  cluster: 'mt1',
+  useTLS: true,
+});
+
+console.log('here in the plugin');
 
 class ServerlessSDK {
   /*
@@ -113,7 +124,7 @@ class ServerlessSDK {
         console.info('ServerlessSDK: Handler: Loading AWS Lambda handler...');
       }
 
-      return (event, context, callback) => {
+      return async (event, context, callback) => {
         if (self.$.config.debug) {
           console.info(
             `ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`
@@ -325,7 +336,101 @@ class ServerlessSDK {
 
         let result;
         try {
+          // await new Promise((resolve, reject) => {
+          //   pusher.trigger(
+          //     'logs-test',
+          //     'my-event',
+          //     {
+          //       message: 'here in plugin!',
+          //     },
+          //     err => {
+          //       if (err) {
+          //         return reject(err);
+          //       }
+
+          //       resolve();
+          //     }
+          //   );
+          // });
+
+          const logs = [];
+
+          /**
+           * Patch console.log
+           */
+          console.log = async function(...inputs) {
+            const output = inputs.map(input => JSON.stringify(input)).join(' ');
+
+            logs.push(output);
+
+            process.stdout.write(output + '\n');
+          };
+
+          /**
+           * Start capturing output
+           */
+          // capcon.startCapture(process.stdout, stdout => {
+          //   // console.log('here in capture...', stdout);
+          //   console.log('what is this...');
+          //   console.log(JSON.stringify(stdout));
+          //   logs.push(stdout);
+          // });
+          // Start capturing
+          // const captureConsole = new CaptureConsole();
+          // captureConsole.startCapture();
+
+          // (async () => {
+          //   const promise = hookStd.stdout(async output => {
+          //     // promise.unhook();
+          //     // assert.strictEqual(output.trim(), 'unicorn');
+
+          //     await new Promise((resolve, reject) => {
+          //       pusher.trigger(
+          //         'logs-test',
+          //         'my-event',
+          //         {
+          //           message: output,
+          //         },
+          //         err => {
+          //           if (err) {
+          //             return reject(err);
+          //           }
+
+          //           resolve();
+          //         }
+          //       );
+          //     });
+          //   });
+
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
+
+          /**
+           * Stop capturing logs
+           */
+          // capcon.stopCapture(process.stdout);
+          // captureConsole.stopCapture();
+          // const logs = captureConsole.getCapturedText();
+
+          /**
+           * Flush logs to the socket
+           */
+          await new Promise((resolve, reject) => {
+            pusher.triggerBatch(
+              logs.map(log => ({
+                channel: 'channel-sls-dev',
+                name: 'log',
+                data: { functionName: process.env.AWS_LAMBDA_FUNCTION_NAME, log },
+              })),
+
+              err => {
+                if (err) {
+                  return reject(err);
+                }
+
+                resolve();
+              }
+            );
+          });
         } catch (error) {
           finalize(error, () => context.fail(error));
         }
