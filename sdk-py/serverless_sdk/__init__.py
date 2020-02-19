@@ -405,7 +405,7 @@ class SDK(object):
                     response = wrapped(*args, **kwargs)
                     return response
                 except Exception as error:
-                    if hasattr(error, "response"):
+                    if getattr(error, "response", None) is not None:
                         response = error.response
                     else:
                         response = {}
