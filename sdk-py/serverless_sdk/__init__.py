@@ -90,6 +90,7 @@ class SDK(object):
         org_uid,
         deployment_uid,
         service_name,
+        should_log_meta,
         stage_name,
         plugin_version,
     ):
@@ -99,6 +100,7 @@ class SDK(object):
         self.org_uid = org_uid
         self.deployment_uid = deployment_uid
         self.service_name = service_name
+        self.should_log_meta = should_log_meta
         self.stage_name = stage_name
         self.plugin_version = plugin_version
         self.invokation_count = 0
@@ -372,8 +374,9 @@ class SDK(object):
                 "schemaVersion": "0.0",
                 "timestamp": end_isoformat,
             }
-            print("SERVERLESS_ENTERPRISE {}".format(
-                json.dumps(transaction_data)))
+            if self.should_log_meta:
+                print("SERVERLESS_ENTERPRISE {}".format(
+                    json.dumps(transaction_data)))
             if exception and error_data["errorFatal"]:
                 raise exception
 

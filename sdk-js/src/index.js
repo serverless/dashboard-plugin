@@ -42,6 +42,7 @@ class ServerlessSDK {
     this.$.serviceName = obj.serviceName || null;
     this.$.stageName = obj.stageName || null;
     this.$.pluginVersion = obj.pluginVersion || null;
+    this.shouldLogMeta = obj.shouldLogMeta;
   }
 
   /*
@@ -142,6 +143,7 @@ class ServerlessSDK {
           functionName: meta.functionName,
           timeout: meta.timeout,
           computeType: meta.computeType,
+          shouldLogMeta: this.shouldLogMeta,
           eventType,
         });
 
