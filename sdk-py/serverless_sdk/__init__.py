@@ -44,7 +44,8 @@ if "SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS" in os.environ:
 def get_user_handler(user_handler_value):
     orig_path = sys.path
     if "/" in user_handler_value:
-        user_module_path, user_module_and_handler = user_handler_value.rsplit("/", 1)
+        user_module_path, user_module_and_handler = user_handler_value.rsplit(
+            "/", 1)
         sys.path.append(user_module_path)
     else:
         user_module_and_handler = user_handler_value
@@ -58,18 +59,23 @@ def get_user_handler(user_handler_value):
 
 
 # will be replaced by real exception capture and span func in SDK.transaction
-_capture_exception = lambda x: None
-_span = lambda x: x
+def _capture_exception(x): return None
+
+
+def _span(x): return x
 
 
 def capture_exception(exception):
     _capture_exception(exception)
 
-def tag_event(tag, value = '', custom = ''):
+
+def tag_event(tag, value='', custom=''):
     _tag_event(tag, value, custom)
+
 
 def span(span_type):
     return _span(span_type)
+
 
 def set_endpoint(endpoint):
     _set_endpoint(endpoint)
@@ -84,6 +90,7 @@ class SDK(object):
         org_uid,
         deployment_uid,
         service_name,
+        should_log_meta,
         stage_name,
         plugin_version,
     ):
@@ -93,6 +100,7 @@ class SDK(object):
         self.org_uid = org_uid
         self.deployment_uid = deployment_uid
         self.service_name = service_name
+        self.should_log_meta = should_log_meta
         self.stage_name = stage_name
         self.plugin_version = plugin_version
         self.invokation_count = 0
@@ -179,8 +187,9 @@ class SDK(object):
                     exc_type.__name__, str(exc_value)[:200]
                 )
 
-        def tag_event(tag, value = '', custom = ''):
-            self.event_tags.append({'tagName': str(tag), 'tagValue': str(value), 'custom': json.dumps(custom)})
+        def tag_event(tag, value='', custom=''):
+            self.event_tags.append(
+                {'tagName': str(tag), 'tagValue': str(value), 'custom': json.dumps(custom)})
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
@@ -208,7 +217,8 @@ class SDK(object):
         global _set_endpoint
         _set_endpoint = set_endpoint
 
-        context.serverless_sdk = SDK_METHOD_WRAPPER(capture_exception, tag_event, span, set_endpoint)
+        context.serverless_sdk = SDK_METHOD_WRAPPER(
+            capture_exception, tag_event, span, set_endpoint)
 
         # handle getting a SIGTERM, which represents an imminent timeout
         def sigterm_handler(signal, frame):
@@ -271,7 +281,8 @@ class SDK(object):
                 "computeCustomArn": context.invoked_function_arn,
                 "computeCustomAwsRequestId": context.aws_request_id,
                 "computeCustomEnvArch": platform.architecture()[0],
-                "computeCustomEnvCpus": None,  # TODO '[{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":2200,"nice":0,"sys":2300,"idle":8511300,"irq":0}},{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":1200,"nice":0,"sys":1700,"idle":8513400,"irq":0}}]',
+                # TODO '[{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":2200,"nice":0,"sys":2300,"idle":8511300,"irq":0}},{"model":"Intel(R) Xeon(R) Processor @ 2.50GHz","speed":2500,"times":{"user":1200,"nice":0,"sys":1700,"idle":8513400,"irq":0}}]',
+                "computeCustomEnvCpus": None,
                 "computeCustomEnvMemoryFree": meminfo.get("MemFree") * 1024
                 if meminfo
                 else None,
@@ -306,7 +317,8 @@ class SDK(object):
                 if meminfo
                 else None,
                 "computeMemorySize": os.environ.get("AWS_LAMBDA_FUNCTION_MEMORY_SIZE"),
-                "computeMemoryUsed": None,  #'{"rss":35741696,"heapTotal":11354112,"heapUsed":7258288,"external":8636}',
+                # '{"rss":35741696,"heapTotal":11354112,"heapUsed":7258288,"external":8636}',
+                "computeMemoryUsed": None,
                 "computeRegion": os.environ.get("AWS_REGION"),
                 "computeRuntime": "aws.lambda.python.{}".format(
                     sys.version.split(" ")[0]
@@ -352,7 +364,8 @@ class SDK(object):
                         "traceId": context.aws_request_id,
                         "xTraceId": os.environ.get("_X_AMZN_TRACE_ID"),
                     },
-                    "spans": self.spans[:50], # Limit spans to only the first 50
+                    # Limit spans to only the first 50
+                    "spans": self.spans[:50],
                     "eventTags": self.event_tags,
                     "startTime": start_isoformat,
                     "tags": tags,
@@ -361,7 +374,9 @@ class SDK(object):
                 "schemaVersion": "0.0",
                 "timestamp": end_isoformat,
             }
-            print("SERVERLESS_ENTERPRISE {}".format(json.dumps(transaction_data)))
+            if self.should_log_meta:
+                print("SERVERLESS_ENTERPRISE {}".format(
+                    json.dumps(transaction_data)))
             if exception and error_data["errorFatal"]:
                 raise exception
 
@@ -412,7 +427,8 @@ class SDK(object):
                     raise error
                 finally:
                     span.set_tag(
-                        "requestHostname", instance._endpoint.host.split("://")[1]
+                        "requestHostname", instance._endpoint.host.split(
+                            "://")[1]
                     )
                     span.set_tag(
                         "aws",
@@ -512,7 +528,8 @@ class SDK(object):
                             status = response.code
                             span.set_tag("requestHostname", req.host.lower())
                             span.set_tag(
-                                "requestPath", urlparse(req.get_full_url()).path
+                                "requestPath", urlparse(
+                                    req.get_full_url()).path
                             )
                             span.set_tag("httpMethod", req.get_method())
                             span.set_tag("httpStatus", status)
@@ -520,6 +537,7 @@ class SDK(object):
                 return wrapped(*args, **kwargs)
 
         try:
-            wrapt.wrap_function_wrapper(module, "AbstractHTTPHandler.do_open", wrapper)
+            wrapt.wrap_function_wrapper(
+                module, "AbstractHTTPHandler.do_open", wrapper)
         except ImportError:
             pass
