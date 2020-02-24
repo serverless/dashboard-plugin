@@ -91,6 +91,8 @@ class SDK(object):
         deployment_uid,
         service_name,
         should_log_meta,
+        should_log_aws_spans,
+        should_log_http_spans,
         stage_name,
         plugin_version,
     ):
@@ -101,6 +103,8 @@ class SDK(object):
         self.deployment_uid = deployment_uid
         self.service_name = service_name
         self.should_log_meta = should_log_meta
+        self.should_log_aws_spans = should_log_aws_spans
+        self.should_log_http_spans = should_log_http_spans
         self.stage_name = stage_name
         self.plugin_version = plugin_version
         self.invokation_count = 0
@@ -415,33 +419,36 @@ class SDK(object):
 
     def instrument_botocore(self):
         def wrapper(wrapped, instance, args, kwargs):
-            with self.span("aws") as span:
-                try:
-                    response = wrapped(*args, **kwargs)
-                    return response
-                except Exception as error:
-                    if getattr(error, "response", None) is not None:
-                        response = error.response
-                    else:
-                        response = {}
-                    raise error
-                finally:
-                    span.set_tag(
-                        "requestHostname", instance._endpoint.host.split(
-                            "://")[1]
-                    )
-                    span.set_tag(
-                        "aws",
-                        {
-                            "region": instance.meta.region_name,
-                            "service": instance._service_model.service_name,
-                            "operation": args[0],
-                            "requestId": response.get("ResponseMetadata", {}).get(
-                                "RequestId"
-                            ),
-                            "errorCode": response.get("Error", {}).get("Code"),
-                        },
-                    )
+            if (
+                self.should_log_aws_spans
+            ):
+                with self.span("aws") as span:
+                    try:
+                        response = wrapped(*args, **kwargs)
+                        return response
+                    except Exception as error:
+                        if getattr(error, "response", None) is not None:
+                            response = error.response
+                        else:
+                            response = {}
+                        raise error
+                    finally:
+                        span.set_tag(
+                            "requestHostname", instance._endpoint.host.split(
+                                "://")[1]
+                        )
+                        span.set_tag(
+                            "aws",
+                            {
+                                "region": instance.meta.region_name,
+                                "service": instance._service_model.service_name,
+                                "operation": args[0],
+                                "requestId": response.get("ResponseMetadata", {}).get(
+                                    "RequestId"
+                                ),
+                                "errorCode": response.get("Error", {}).get("Code"),
+                            },
+                        )
 
         try:
             wrapt.wrap_function_wrapper(
@@ -466,7 +473,8 @@ class SDK(object):
                 user_agent = user_agent.decode()
             status = None
             if (
-                (
+                self.should_log_http_spans
+                and (
                     # Ignore http calls from boto
                     not user_agent.startswith("Boto3")
                     or os.environ.get(

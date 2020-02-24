@@ -22,7 +22,7 @@ if (process.env.SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS) {
   Object.assign(ignoreHosts, ...domainNames.map(domain => ({ [domain]: true })));
 }
 
-module.exports = emitter => {
+module.exports = (emitter, shouldLogHttpSpans) => {
   function patchModule(_http) {
     if (!_http.request) {
       return _http;
@@ -94,6 +94,8 @@ module.exports = emitter => {
     return _http;
   }
 
-  patchModule(http);
-  patchModule(https);
+  if (shouldLogHttpSpans) {
+    patchModule(http);
+    patchModule(https);
+  }
 };

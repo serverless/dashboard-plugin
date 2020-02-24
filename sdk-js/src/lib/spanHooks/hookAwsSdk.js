@@ -3,7 +3,10 @@
 const requireHook = require('require-in-the-middle');
 const { captureAwsRequestSpan } = require('../parsers');
 
-module.exports = emitter => {
+module.exports = (emitter, shouldLogAwsSpans) => {
+  if (!shouldLogAwsSpans) {
+    return;
+  }
   requireHook(['aws-sdk'], awsSdk => {
     for (const Service of Object.values(awsSdk)) {
       if (Service.serviceIdentifier) {
