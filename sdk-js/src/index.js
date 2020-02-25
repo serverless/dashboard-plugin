@@ -154,8 +154,6 @@ class ServerlessSDK {
           timeout: meta.timeout,
           computeType: meta.computeType,
           shouldLogMeta: this.shouldLogMeta,
-          shouldLogAwsSpans: this.shouldLogAwsSpans,
-          shouldLogHttpSpans: this.shouldLogHttpSpans,
           eventType,
         });
 
