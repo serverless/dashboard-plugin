@@ -45,13 +45,14 @@ class ServerlessSDK {
      * Monkey patch spans using config
      */
     if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) {
+      // eslint-disable-next-line no-console
       console.warn(
         'The environment variable SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP is deprecated and will be removed in the future. ' +
-          'Please use the key custom.enterprise.collectHttpSpans=false in your serverless.yml file to disable HTTP span collection.'
+          'Please use the key custom.enterprise.disableHttpSpans=true in your serverless.yml file to disable HTTP span collection.'
       );
     }
-    require('./lib/spanHooks/hookAwsSdk')(spanEmitter, obj.shouldLogAwsSpans);
-    require('./lib/spanHooks/hookHttp')(spanEmitter, obj.shouldLogHttpSpans);
+    require('./lib/spanHooks/hookAwsSdk')(spanEmitter, obj.disableAwsSpans);
+    require('./lib/spanHooks/hookHttp')(spanEmitter, obj.disableHttpSpans);
   }
 
   /*

@@ -91,8 +91,8 @@ class SDK(object):
         deployment_uid,
         service_name,
         should_log_meta,
-        should_log_aws_spans,
-        should_log_http_spans,
+        disable_aws_spans,
+        disable_http_spans,
         stage_name,
         plugin_version,
     ):
@@ -103,8 +103,8 @@ class SDK(object):
         self.deployment_uid = deployment_uid
         self.service_name = service_name
         self.should_log_meta = should_log_meta
-        self.should_log_aws_spans = should_log_aws_spans
-        self.should_log_http_spans = should_log_http_spans
+        self.disable_aws_spans = disable_aws_spans
+        self.disable_http_spans = disable_http_spans
         self.stage_name = stage_name
         self.plugin_version = plugin_version
         self.invokation_count = 0
@@ -420,7 +420,7 @@ class SDK(object):
     def instrument_botocore(self):
         def wrapper(wrapped, instance, args, kwargs):
             if (
-                self.should_log_aws_spans
+                not self.disable_aws_spans
             ):
                 with self.span("aws") as span:
                     try:
@@ -473,7 +473,7 @@ class SDK(object):
                 user_agent = user_agent.decode()
             status = None
             if (
-                self.should_log_http_spans
+                not self.disable_http_spans
                 and (
                     # Ignore http calls from boto
                     not user_agent.startswith("Boto3")
