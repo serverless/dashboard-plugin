@@ -8,9 +8,6 @@ const isThenable = require('type/thenable/is');
 
 const spanEmitter = new EventEmitter();
 
-require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
-require('./lib/spanHooks/hookHttp')(spanEmitter);
-
 /*
  * Serverless SDK
  */
@@ -43,6 +40,19 @@ class ServerlessSDK {
     this.$.stageName = obj.stageName || null;
     this.$.pluginVersion = obj.pluginVersion || null;
     this.shouldLogMeta = obj.shouldLogMeta;
+
+    /*
+     * Monkey patch spans using config
+     */
+    if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'The environment variable SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP is deprecated and will be removed in the future. ' +
+          'To disable HTTP span collection, in your serverless.yml file add this key: custom.enterprise.disableHttpSpans: true'
+      );
+    }
+    if (!obj.disableAwsSpans) require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
+    if (!obj.disableHttpSpans) require('./lib/spanHooks/hookHttp')(spanEmitter);
   }
 
   /*
