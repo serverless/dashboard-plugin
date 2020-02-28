@@ -1,5 +1,7 @@
 'use strict';
 
+const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
+
 /*
  * Spans and Monkey Patching
  */
@@ -15,26 +17,13 @@ require('./lib/spanHooks/hookHttp')(spanEmitter);
  * Serverless SDK
  */
 
-const Pusher = require('pusher');
 const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
 const detectEventType = require('./lib/eventDetection');
 
 /*
-* Serverless SDK Class
-
-*/
-
-const pusher = new Pusher({
-  appId: '950175',
-  key: '5e81e76f73bf0c18f888',
-  secret: '2f8c88071c62b1775d1d',
-  cluster: 'mt1',
-  useTLS: true,
-});
-
-console.log('here in the plugin');
-
+ * Serverless SDK Class
+ */
 class ServerlessSDK {
   /*
    * Constructor
@@ -53,6 +42,9 @@ class ServerlessSDK {
     this.$.serviceName = obj.serviceName || null;
     this.$.stageName = obj.stageName || null;
     this.$.pluginVersion = obj.pluginVersion || null;
+    this.$.devModeEnabled = obj.devModeEnabled || false;
+    this.$.serverlessPlatformStage = obj.serverlessPlatformStage || 'prod';
+    this.$.accessKey = obj.accessKey;
   }
 
   /*
@@ -336,102 +328,36 @@ class ServerlessSDK {
 
         let result;
         try {
-          // await new Promise((resolve, reject) => {
-          //   pusher.trigger(
-          //     'logs-test',
-          //     'my-event',
-          //     {
-          //       message: 'here in plugin!',
-          //     },
-          //     err => {
-          //       if (err) {
-          //         return reject(err);
-          //       }
-
-          //       resolve();
-          //     }
-          //   );
-          // });
-
-          const logs = [];
-
-          /**
-           * Patch console.log
-           */
-          console.log = async function(...inputs) {
-            const output = inputs.map(input => JSON.stringify(input)).join(' ');
-
-            logs.push(output);
-
-            process.stdout.write(output + '\n');
-          };
+          let sdk = null;
+          const devModeEnabled = this.$.devModeEnabled;
 
           /**
            * Start capturing output
            */
-          // capcon.startCapture(process.stdout, stdout => {
-          //   // console.log('here in capture...', stdout);
-          //   console.log('what is this...');
-          //   console.log(JSON.stringify(stdout));
-          //   logs.push(stdout);
-          // });
-          // Start capturing
-          // const captureConsole = new CaptureConsole();
-          // captureConsole.startCapture();
+          if (devModeEnabled) {
+            sdk = new PlatformSDK({
+              platformStage: this.$.serverlessPlatformStage,
+              accessKey: this.$.accessKey,
+            });
 
-          // (async () => {
-          //   const promise = hookStd.stdout(async output => {
-          //     // promise.unhook();
-          //     // assert.strictEqual(output.trim(), 'unicorn');
+            await sdk.connect({
+              orgUid: this.$.orgUid,
+            });
 
-          //     await new Promise((resolve, reject) => {
-          //       pusher.trigger(
-          //         'logs-test',
-          //         'my-event',
-          //         {
-          //           message: output,
-          //         },
-          //         err => {
-          //           if (err) {
-          //             return reject(err);
-          //           }
-
-          //           resolve();
-          //         }
-          //       );
-          //     });
-          //   });
+            sdk.startInterceptingLogs('service.logs');
+          }
 
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
 
           /**
            * Stop capturing logs
            */
-          // capcon.stopCapture(process.stdout);
-          // captureConsole.stopCapture();
-          // const logs = captureConsole.getCapturedText();
-
-          /**
-           * Flush logs to the socket
-           */
-          await new Promise((resolve, reject) => {
-            pusher.triggerBatch(
-              logs.map(log => ({
-                channel: 'channel-sls-dev',
-                name: 'log',
-                data: { functionName: process.env.AWS_LAMBDA_FUNCTION_NAME, log },
-              })),
-
-              err => {
-                if (err) {
-                  return reject(err);
-                }
-
-                resolve();
-              }
-            );
-          });
+          if (devModeEnabled) {
+            sdk.stopInterceptingLogs();
+            sdk.disconnect();
+          }
         } catch (error) {
+          console.log(error);
           finalize(error, () => context.fail(error));
         }
 
