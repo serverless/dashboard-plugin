@@ -344,7 +344,7 @@ class ServerlessSDK {
               orgUid: this.$.orgUid,
             });
 
-            sdk.startInterceptingLogs('service.logs');
+            sdk.startInterceptingLogs(`service.logs.${config.functionName}`);
           }
 
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
