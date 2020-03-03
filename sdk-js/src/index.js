@@ -327,10 +327,11 @@ class ServerlessSDK {
          */
 
         let result;
-        try {
-          let sdk = null;
-          const devModeEnabled = this.$.devModeEnabled;
 
+        const devModeEnabled = this.$.devModeEnabled;
+        let sdk = null;
+
+        try {
           /**
            * Start capturing output
            */
@@ -344,11 +345,16 @@ class ServerlessSDK {
               orgUid: this.$.orgUid,
             });
 
-            sdk.startInterceptingLogs(`service.logs.${config.functionName}`);
+            sdk.startInterceptingLogs(`service.logs.${config.functionName.split('-').pop()}`);
           }
 
+          /**
+           * Call the function code
+           */
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
-
+        } catch (error) {
+          finalize(error, () => context.fail(error));
+        } finally {
           /**
            * Stop capturing logs
            */
@@ -356,9 +362,6 @@ class ServerlessSDK {
             sdk.stopInterceptingLogs();
             sdk.disconnect();
           }
-        } catch (error) {
-          console.log(error);
-          finalize(error, () => context.fail(error));
         }
 
         // If promise was returned, handle it
