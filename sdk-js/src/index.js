@@ -342,7 +342,7 @@ class ServerlessSDK {
             });
 
             await sdk.connect({
-              orgUid: this.$.orgUid,
+              orgName: this.$.orgId,
             });
 
             sdk.startInterceptingLogs(`service.logs.${config.functionName.split('-').pop()}`);
