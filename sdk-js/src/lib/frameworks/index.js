@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('./wrappers/express');
 const lambdaApi = require('./wrappers/lambda-api');
 

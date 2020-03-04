@@ -1,3 +1,5 @@
+'use strict';
+
 const requireHook = require('require-in-the-middle');
 
 module.exports.init = (sdk, config) => {
