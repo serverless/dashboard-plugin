@@ -53,7 +53,9 @@ class ServerlessSDK {
     }
     if (!obj.disableAwsSpans) require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
     if (!obj.disableHttpSpans) require('./lib/spanHooks/hookHttp')(spanEmitter);
-    if (!obj.disableFrameworks) require('./lib/frameworks')(ServerlessSDK, this.config);
+    if (!obj.disableFrameworkInstrumentation) {
+      require('./lib/frameworks')(ServerlessSDK, this.config);
+    }
   }
 
   /*
