@@ -9,6 +9,7 @@ module.exports.init = (sdk, config) => {
       const defaultImplementation = Route.prototype.dispatch;
       Route.prototype.dispatch = function handle(req, res, next) {
         try {
+          // eslint-disable-next-line no-underscore-dangle
           sdk._setEndpoint(req.route ? req.route.path : req.path);
         } catch (err) {
           if (config && config.debug === true) {

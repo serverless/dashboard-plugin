@@ -9,6 +9,7 @@ module.exports.init = (sdk, config) => {
       try {
         api.use((req, res, next) => {
           try {
+            // eslint-disable-next-line no-underscore-dangle
             sdk._setEndpoint(req.route);
           } catch (err) {
             if (config && config.debug) {
