@@ -95,6 +95,7 @@ class SDK(object):
         disable_http_spans,
         stage_name,
         plugin_version,
+        disable_frameworks_instrumentation,
     ):
         self.org_id = org_id
         self.application_name = application_name
@@ -116,6 +117,9 @@ class SDK(object):
         self.instrument_urllib3()
         self.instrument_stdlib_urllib("urllib.request")
         self.instrument_stdlib_urllib("urllib2")
+
+        if not disable_frameworks_instrumentation:
+            self.instrument_flask("flask")
 
     def handler(self, user_handler, function_name, timeout):
         def wrapped_handler(event, context):
@@ -547,5 +551,31 @@ class SDK(object):
         try:
             wrapt.wrap_function_wrapper(
                 module, "AbstractHTTPHandler.do_open", wrapper)
+        except ImportError:
+            pass
+
+    def instrument_flask(self, module):
+        def wrap_add_url_rule(wrapped, app, args, kwargs):
+            args = list(args)
+            rule = args.pop(0)
+            try:
+                endpoint = kwargs.pop('endpoint')
+            except KeyError:
+                endpoint = args.pop(0)
+            try:
+                view_func = kwargs.pop('view_func')
+            except KeyError:
+                view_func = args.pop(0)
+            def wrap_view_func(**req_args):
+              try:
+                  return view_func(**req_args)
+              finally:
+                  try:
+                      set_endpoint(rule)
+                  except:
+                      pass
+            return wrapped(rule, endpoint, wrap_view_func, *args, **kwargs)
+        try:
+            wrapt.wrap_function_wrapper(module, "Flask.add_url_rule", wrap_add_url_rule)
         except ImportError:
             pass
