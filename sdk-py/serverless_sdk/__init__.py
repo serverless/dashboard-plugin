@@ -95,7 +95,7 @@ class SDK(object):
         disable_http_spans,
         stage_name,
         plugin_version,
-        disable_framework_instrumentation,
+        disable_frameworks_instrumentation,
     ):
         self.org_id = org_id
         self.application_name = application_name
@@ -118,7 +118,7 @@ class SDK(object):
         self.instrument_stdlib_urllib("urllib.request")
         self.instrument_stdlib_urllib("urllib2")
 
-        if not disable_framework_instrumentation:
+        if not disable_frameworks_instrumentation:
             self.instrument_flask("flask")
 
     def handler(self, user_handler, function_name, timeout):
