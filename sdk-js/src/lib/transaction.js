@@ -73,6 +73,7 @@ class Transaction {
     }
 
     this.processed = false;
+    this.shouldLogMeta = data.shouldLogMeta;
     transactionCount += 1;
     this.$ = {
       schema: null,
@@ -243,6 +244,7 @@ class Transaction {
   }
 
   buildOutput(type) {
+    if (!this.shouldLogMeta) return;
     if (!this.processed) {
       // End transaction timer
       const duration = nanosecondnow() - this.$.duration;

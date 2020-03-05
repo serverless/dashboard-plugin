@@ -10,9 +10,6 @@ const isThenable = require('type/thenable/is');
 
 const spanEmitter = new EventEmitter();
 
-require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
-require('./lib/spanHooks/hookHttp')(spanEmitter);
-
 /*
  * Serverless SDK
  */
@@ -45,6 +42,24 @@ class ServerlessSDK {
     this.$.devModeEnabled = obj.devModeEnabled || false;
     this.$.serverlessPlatformStage = obj.serverlessPlatformStage || 'prod';
     this.$.accessKey = obj.accessKey;
+
+    this.shouldLogMeta = obj.shouldLogMeta;
+
+    /*
+     * Monkey patch spans using config
+     */
+    if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'The environment variable SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP is deprecated and will be removed in the future. ' +
+          'To disable HTTP span collection, in your serverless.yml file add this key: custom.enterprise.disableHttpSpans: true'
+      );
+    }
+    if (!obj.disableAwsSpans) require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
+    if (!obj.disableHttpSpans) require('./lib/spanHooks/hookHttp')(spanEmitter);
+    if (!obj.disableFrameworksInstrumentation) {
+      require('./lib/frameworks')(ServerlessSDK, this.config);
+    }
   }
 
   /*
@@ -145,6 +160,7 @@ class ServerlessSDK {
           functionName: meta.functionName,
           timeout: meta.timeout,
           computeType: meta.computeType,
+          shouldLogMeta: this.shouldLogMeta,
           eventType,
         });
 
@@ -209,7 +225,14 @@ class ServerlessSDK {
         let capturedError = null;
         let finalized = false;
         const finalize = (error, cb) => {
-          if (finalized) return;
+          if (finalized) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              'WARNING: Callback/response already delivered.  Did your function invoke the callback and also return a promise? ' +
+                'For more details, see: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html'
+            );
+            return;
+          }
           clearTimeout(timeoutHandler);
           try {
             if (capturedError) {

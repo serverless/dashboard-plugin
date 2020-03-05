@@ -17,8 +17,9 @@ module.exports = async function(templateName) {
   const serviceTmpDir = path.join(tmpDir, `serverless-enterprise-plugin-test-${randomPostfix}`);
 
   const serviceName = `plugin-test-${randomPostfix}`;
+  const region = process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1';
   console.info(
-    `Setup '${serviceName}' service from '${templateName}' template at ${serviceTmpDir}`
+    `Setup '${serviceName}' (for region ${region}) service from '${templateName}' template at ${serviceTmpDir}`
   );
   // Copy template
   const [, serverlessBinPath] = await Promise.all([
@@ -29,6 +30,7 @@ module.exports = async function(templateName) {
         slsYamlPath,
         slsYamlString
           .replace('SERVICE_PLACEHOLDER', serviceName)
+          .replace('REGION_PLACEHOLDER', region)
           .replace('ORG_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration')
           .replace('APP_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
       );
