@@ -77,8 +77,8 @@ def span(span_type):
     return _span(span_type)
 
 
-def set_endpoint(endpoint):
-    _set_endpoint(endpoint)
+def set_endpoint(endpoint, meta=None):
+    _set_endpoint(endpoint, meta)
 
 
 class SDK(object):
@@ -112,6 +112,7 @@ class SDK(object):
         self.spans = []
         self.event_tags = []
         self.endpoint = None
+        self.endpoint_mechanism = None
 
         self.instrument_botocore()
         self.instrument_urllib3()
@@ -201,8 +202,9 @@ class SDK(object):
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
-        def set_endpoint(endpoint):
+        def set_endpoint(endpoint, meta=None):
             self.endpoint = endpoint
+            self.endpoint_meta = meta
 
         class SDK_METHOD_WRAPPER:
             def __init__(self, capture_exception, tag_event, span, set_endpoint):
@@ -349,6 +351,7 @@ class SDK(object):
                 "traceId": context.aws_request_id,
                 "transactionId": span_id,
                 "endpoint": self.endpoint,
+                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else "explicit",
             }
             tags.update(error_data)
             if error_data["errorExceptionType"] == "TimeoutError":
@@ -571,7 +574,7 @@ class SDK(object):
                   return view_func(**req_args)
               finally:
                   try:
-                      set_endpoint(rule)
+                      set_endpoint(rule, meta={"mechanism": "flask-middleware"})
                   except:
                       pass
             return wrapped(rule, endpoint, wrap_view_func, *args, **kwargs)
