@@ -335,8 +335,9 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._tagEvent = contextProxy.serverlessSdk.tagEvent;
 
-        contextProxy.serverlessSdk.setEndpoint = endpoint => {
+        contextProxy.serverlessSdk.setEndpoint = (endpoint, metadata) => {
           trans.$.schema.endpoint = endpoint;
+          trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
         };
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
@@ -393,9 +394,9 @@ class ServerlessSDK {
     ServerlessSDK._tagEvent(label, tag, custom);
   }
 
-  static setEndpoint(endpoint) {
+  static setEndpoint(endpoint, metadata) {
     // eslint-disable-next-line no-underscore-dangle
-    ServerlessSDK._setEndpoint(endpoint);
+    ServerlessSDK._setEndpoint(endpoint, metadata);
   }
 }
 

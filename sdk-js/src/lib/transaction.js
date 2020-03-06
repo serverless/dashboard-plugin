@@ -106,6 +106,7 @@ class Transaction {
     this.$.schema.compute.instanceInvocationCount = transactionCount;
     this.$.schema.totalSpans = 0;
     this.$.schema.endpoint = data.endpoint;
+    this.$.schema.endpointMeta = data.endpointEndpointMeta;
 
     // Track uptime of container
     this.$.schema.compute.containerUptime = process.uptime();

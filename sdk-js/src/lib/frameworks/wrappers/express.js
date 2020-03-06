@@ -10,7 +10,9 @@ module.exports.init = (sdk, config) => {
       Route.prototype.dispatch = function handle(req, res, next) {
         try {
           // eslint-disable-next-line no-underscore-dangle
-          sdk._setEndpoint(req.route ? req.route.path : req.path);
+          sdk._setEndpoint(req.route ? req.route.path : req.path, {
+            mechanism: 'express-middleware',
+          });
         } catch (err) {
           if (config && config.debug === true) {
             console.debug('error setting endpoint with express route', err);
