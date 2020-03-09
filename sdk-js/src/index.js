@@ -1,7 +1,5 @@
 'use strict';
 
-const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
-
 /*
  * Spans and Monkey Patching
  */
@@ -359,6 +357,8 @@ class ServerlessSDK {
            * Start capturing output
            */
           if (devModeEnabled) {
+            const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
+
             sdk = new PlatformSDK({
               platformStage: this.$.serverlessPlatformStage,
               accessKey: this.$.accessKey,
