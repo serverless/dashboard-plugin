@@ -112,7 +112,7 @@ class SDK(object):
         self.spans = []
         self.event_tags = []
         self.endpoint = None
-        self.endpoint_mechanism = None
+        self.endpoint_meta = None
 
         self.instrument_botocore()
         self.instrument_urllib3()
@@ -351,7 +351,7 @@ class SDK(object):
                 "traceId": context.aws_request_id,
                 "transactionId": span_id,
                 "endpoint": self.endpoint,
-                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else "explicit",
+                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else None,
             }
             tags.update(error_data)
             if error_data["errorExceptionType"] == "TimeoutError":
