@@ -50,7 +50,7 @@ npm run build
 npm link
 ```
 
-Then cone & link sls & link the plugin into sls:
+Then clone & link sls & link the plugin into sls:
 
 ```
 git clone https://github.com/serverl/serverless
