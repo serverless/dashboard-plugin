@@ -27,7 +27,7 @@
     "@serverless/platform-sdk": "^2.3.0",
     "chalk": "^2.4.2",
     "child-process-ext": "^2.1.0",
-    "chokidar": "^2.1.5",
+    "chokidar": "^3.3.1",
     "cli-color": "^2.0.0",
     "dependency-tree": "^7.2.1",
     "find-process": "^1.4.3",
