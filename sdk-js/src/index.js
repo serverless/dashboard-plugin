@@ -17,10 +17,8 @@ const ServerlessTransaction = require('./lib/transaction.js');
 const detectEventType = require('./lib/eventDetection');
 
 /*
-* Serverless SDK Class
-
-*/
-
+ * Serverless SDK Class
+ */
 class ServerlessSDK {
   /*
    * Constructor
@@ -39,6 +37,10 @@ class ServerlessSDK {
     this.$.serviceName = obj.serviceName || null;
     this.$.stageName = obj.stageName || null;
     this.$.pluginVersion = obj.pluginVersion || null;
+    this.$.devModeEnabled = obj.devModeEnabled || false;
+    this.$.serverlessPlatformStage = obj.serverlessPlatformStage || 'prod';
+    this.$.accessKey = obj.accessKey;
+
     this.shouldLogMeta = obj.shouldLogMeta;
 
     /*
@@ -127,7 +129,7 @@ class ServerlessSDK {
         console.info('ServerlessSDK: Handler: Loading AWS Lambda handler...');
       }
 
-      return (event, context, callback) => {
+      return async (event, context, callback) => {
         if (self.$.config.debug) {
           console.info(
             `ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`
@@ -347,10 +349,43 @@ class ServerlessSDK {
          */
 
         let result;
+
+        const devModeEnabled = this.$.devModeEnabled;
+        let sdk = null;
+
         try {
+          /**
+           * Start capturing output
+           */
+          if (devModeEnabled) {
+            const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
+
+            sdk = new PlatformSDK({
+              platformStage: this.$.serverlessPlatformStage,
+              accessKey: this.$.accessKey,
+            });
+
+            await sdk.connect({
+              orgName: this.$.orgId,
+            });
+
+            sdk.startInterceptingLogs(`service.logs.${config.functionName.split('-').pop()}`);
+          }
+
+          /**
+           * Call the function code
+           */
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
         } catch (error) {
           finalize(error, () => context.fail(error));
+        } finally {
+          /**
+           * Stop capturing logs
+           */
+          if (devModeEnabled) {
+            sdk.stopInterceptingLogs();
+            sdk.disconnect();
+          }
         }
 
         // If promise was returned, handle it
