@@ -75,6 +75,9 @@
     "strip-ansi": "^5.2.0",
     "tar": "^5.0.5"
   },
+  "optionalDependencies": {
+    "fsevents": "*"
+  },
   "eslintConfig": {
     "extends": "@serverless/eslint-config/node",
     "root": true,
