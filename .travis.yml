@@ -26,14 +26,11 @@ install:
   # Note: `npm update` has issues which we need to workaround:
   # - There seems no way to update all project dependency groups in one run
   #   Hence different calls for prod and dev dependencies
-  # - The bigger depth, the longer update takes (-9999 as proposed in npm docs hangs the process).
-  #   Therefore we keep at 3 which should ensure most of dependencies are at latest versions
-  # - Depth setting makes optional dependencies not optional (install error crashes process)
-  #   Hence we skip install of optional dependencies completely, with --no-optional
-  #   Note: this patch works only for npm@5+
+  # - We were relying on "--depth 3", but depth setting makes optional dependencies not optional
+  #   and adding "--no-optional" proven to not be a reliable workaround (worked just in some cases)
   # - npm documents --dev option for dev dependencies update, but it's only --save-dev that works
-  - npm update --depth 3 --no-optional --no-save # Updates just dependencies
-  - npm update --depth 3 --save-dev --no-save # Updates just devDependencies
+  - npm update --no-save
+  - npm update --save-dev --no-save
   - cd sdk-js
   - npm install # On publish it's bundled with deps, therefore we rely on `package-lock.json`
   - cd ..
