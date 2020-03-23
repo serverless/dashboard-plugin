@@ -60,6 +60,38 @@ class ServerlessSDK {
     }
   }
 
+  /**
+   * Start capturing log output
+   */
+  async startDevMode() {
+    if (this.$.devModeEnabled) {
+      const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
+
+      this.platformV2SDK = new PlatformSDK({
+        platformStage: this.$.serverlessPlatformStage,
+        accessKey: this.$.accessKey,
+      });
+
+      await this.platformV2SDK.connect({
+        orgName: this.$.orgId,
+      });
+
+      this.platformV2SDK.startInterceptingLogs(
+        `service.logs.${process.env.AWS_LAMBDA_FUNCTION_NAME.split('-').pop()}`
+      );
+    }
+  }
+
+  /**
+   * Stop capturing log output
+   */
+  stopDevMode() {
+    if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
+      this.platformV2SDK.stopInterceptingLogs();
+      this.platformV2SDK.disconnect();
+    }
+  }
+
   /*
    * Transaction
    * - Creates a new transaction
@@ -129,7 +161,7 @@ class ServerlessSDK {
         console.info('ServerlessSDK: Handler: Loading AWS Lambda handler...');
       }
 
-      return async (event, context, callback) => {
+      return (event, context, callback) => {
         if (self.$.config.debug) {
           console.info(
             `ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`
@@ -350,42 +382,13 @@ class ServerlessSDK {
 
         let result;
 
-        const devModeEnabled = this.$.devModeEnabled;
-        let sdk = null;
-
         try {
-          /**
-           * Start capturing output
-           */
-          if (devModeEnabled) {
-            const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
-
-            sdk = new PlatformSDK({
-              platformStage: this.$.serverlessPlatformStage,
-              accessKey: this.$.accessKey,
-            });
-
-            await sdk.connect({
-              orgName: this.$.orgId,
-            });
-
-            sdk.startInterceptingLogs(`service.logs.${config.functionName.split('-').pop()}`);
-          }
-
           /**
            * Call the function code
            */
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
         } catch (error) {
           finalize(error, () => context.fail(error));
-        } finally {
-          /**
-           * Stop capturing logs
-           */
-          if (devModeEnabled) {
-            sdk.stopInterceptingLogs();
-            sdk.disconnect();
-          }
         }
 
         // If promise was returned, handle it
