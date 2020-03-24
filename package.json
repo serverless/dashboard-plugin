@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "engines": {
     "node": ">=6.0"
   },
@@ -43,9 +43,9 @@
     "moment": "^2.24.0",
     "node-dir": "^0.1.17",
     "node-fetch": "^2.6.0",
-    "regenerator-runtime": "^0.13.3",
+    "regenerator-runtime": "^0.13.5",
     "semver": "^6.3.0",
-    "simple-git": "^1.131.0",
+    "simple-git": "^1.132.0",
     "source-map-support": "^0.5.16",
     "update-notifier": "^2.5.0",
     "uuid": "^3.4.0",
@@ -53,12 +53,12 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
-    "@babel/register": "^7.8.6",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/register": "^7.9.0",
     "@serverless/eslint-config": "^1.2.1",
-    "@serverless/test": "^3.5.3",
-    "aws-sdk": "^2.634.0",
+    "@serverless/test": "^3.5.4",
+    "aws-sdk": "^2.644.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.1",
