@@ -577,6 +577,7 @@ class SDK(object):
                       set_endpoint(rule, meta={"mechanism": "flask-middleware"})
                   except:
                       pass
+            wrap_view_func.__name__ = view_func.__name__
             return wrapped(rule, endpoint, wrap_view_func, *args, **kwargs)
         try:
             wrapt.wrap_function_wrapper(module, "Flask.add_url_rule", wrap_add_url_rule)
