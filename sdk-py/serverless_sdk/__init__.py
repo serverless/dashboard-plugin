@@ -206,7 +206,7 @@ class SDK(object):
             self.endpoint = endpoint
             self.endpoint_meta = meta
             self.http_method = http_method
-            self.request_status_code = str(request_status_code)
+            self.request_status_code = str(request_status_code) if request_status_code else None
 
         class SDK_METHOD_WRAPPER:
             def __init__(self, capture_exception, tag_event, span, set_endpoint):
