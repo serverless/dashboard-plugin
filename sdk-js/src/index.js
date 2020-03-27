@@ -377,7 +377,7 @@ class ServerlessSDK {
         ) => {
           trans.$.schema.endpoint = endpoint;
           trans.$.schema.httpMethod = httpMethod;
-          trans.$.schema.httpStatusCode = String(httpStatusCode);
+          trans.$.schema.httpStatusCode = httpStatusCode && String(httpStatusCode);
           trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
         };
         // eslint-disable-next-line no-underscore-dangle
