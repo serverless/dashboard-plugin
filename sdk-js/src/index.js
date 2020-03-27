@@ -371,9 +371,9 @@ class ServerlessSDK {
 
         contextProxy.serverlessSdk.setEndpoint = (
           endpoint,
-          metadata,
           httpMethod,
-          httpStatusCode
+          httpStatusCode,
+          metadata
         ) => {
           trans.$.schema.endpoint = endpoint;
           trans.$.schema.httpMethod = httpMethod;
@@ -439,9 +439,9 @@ class ServerlessSDK {
     ServerlessSDK._tagEvent(label, tag, custom);
   }
 
-  static setEndpoint(endpoint, metadata, httpMethod, httpStatusCode) {
+  static setEndpoint(endpoint, httpMethod, httpStatusCode, metadata) {
     // eslint-disable-next-line no-underscore-dangle
-    ServerlessSDK._setEndpoint(endpoint, metadata, httpMethod, httpStatusCode);
+    ServerlessSDK._setEndpoint(endpoint, httpMethod, httpStatusCode, metadata);
   }
 }
 

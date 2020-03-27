@@ -10,7 +10,7 @@ module.exports.init = (sdk, config) => {
         api.use((req, res, next) => {
           try {
             // eslint-disable-next-line no-underscore-dangle
-            sdk._setEndpoint(req.route, { mechanism: 'lambda-api-middleware' });
+            sdk._setEndpoint(req.route, req.method, null, { mechanism: 'lambda-api-middleware' });
           } catch (err) {
             if (config && config.debug) {
               console.debug('error setting endpoint with lambda-api route', err);
