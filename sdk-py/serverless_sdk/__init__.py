@@ -77,8 +77,8 @@ def span(span_type):
     return _span(span_type)
 
 
-def set_endpoint(endpoint, meta=None):
-    _set_endpoint(endpoint, meta)
+def set_endpoint(endpoint, meta=None, httpMethod=None, httpStatusCode=None):
+    _set_endpoint(endpoint, meta, httpMethod, httpStatusCode)
 
 
 class SDK(object):
@@ -202,9 +202,11 @@ class SDK(object):
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
-        def set_endpoint(endpoint, meta=None):
+        def set_endpoint(endpoint, meta=None, http_method=None, request_status_code=None):
             self.endpoint = endpoint
             self.endpoint_meta = meta
+            self.http_method = http_method
+            self.request_status_code = str(request_status_code)
 
         class SDK_METHOD_WRAPPER:
             def __init__(self, capture_exception, tag_event, span, set_endpoint):
