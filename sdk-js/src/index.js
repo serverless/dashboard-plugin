@@ -77,7 +77,7 @@ class ServerlessSDK {
       });
 
       this.platformV2SDK.startInterceptingLogs(
-        `service.logs.${process.env.AWS_LAMBDA_FUNCTION_NAME.split('-').pop()}`
+        `service.logs.${process.env.AWS_LAMBDA_FUNCTION_NAME}`
       );
     }
   }
