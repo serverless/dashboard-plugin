@@ -56,7 +56,7 @@ class ServerlessSDK {
     if (!obj.disableAwsSpans) require('./lib/spanHooks/hookAwsSdk')(spanEmitter);
     if (!obj.disableHttpSpans) require('./lib/spanHooks/hookHttp')(spanEmitter);
     if (!obj.disableFrameworksInstrumentation) {
-      require('./lib/frameworks')(ServerlessSDK, this.config);
+      require('./lib/frameworks')(ServerlessSDK, this.$.config);
     }
   }
 
@@ -375,9 +375,9 @@ class ServerlessSDK {
           httpStatusCode,
           metadata
         ) => {
-          trans.$.schema.endpoint = endpoint;
-          trans.$.schema.httpMethod = httpMethod;
-          trans.$.schema.httpStatusCode = httpStatusCode && String(httpStatusCode);
+          if (endpoint) trans.$.schema.endpoint = endpoint;
+          if (httpMethod) trans.$.schema.httpMethod = httpMethod;
+          if (httpStatusCode) trans.$.schema.httpStatusCode = String(httpStatusCode);
           trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
         };
         // eslint-disable-next-line no-underscore-dangle

@@ -4,6 +4,7 @@ const requireHook = require('require-in-the-middle');
 
 module.exports.init = (sdk, config) => {
   requireHook(['express'], express => {
+    // patch request route dispatch
     try {
       const Route = express.Route;
       const defaultImplementation = Route.prototype.dispatch;
@@ -23,9 +24,37 @@ module.exports.init = (sdk, config) => {
       };
     } catch (err) {
       if (config && config.debug === true) {
-        console.debug('error setting up express hook', err);
+        console.debug('error setting up express route dispatch hook', err);
       }
     }
-    return express;
+
+    // set up response code proxy
+    return function() {
+      const app = express();
+      try {
+        const statusHandler = {
+          set: function(obj, property, value) {
+            try {
+              if (property === 'statusCode') {
+                sdk._setEndpoint(null, null, value, { mechanism: 'express-middleware' });
+              }
+            } catch (err) {
+              if (config && config.debug === true) {
+                console.debug('error setting express status code', err);
+              }
+            } finally {
+              obj[property] = value;
+              return true;
+            }
+          },
+        };
+        app.response = new Proxy(app.response, statusHandler);
+      } catch (err) {
+        if (config && config.debug === true) {
+          console.debug('error setting up express response status code proxy', err);
+        }
+      }
+      return app;
+    };
   });
 };

@@ -78,7 +78,7 @@ def span(span_type):
 
 
 def set_endpoint(endpoint, http_method=None, http_status_code=None, meta=None):
-    _set_endpoint(endpoint, http_method==http_method, http_status_code=http_status_code, meta=meta)
+    _set_endpoint(endpoint, http_method=http_method, http_status_code=http_status_code, meta=meta)
 
 
 class SDK(object):
@@ -205,9 +205,9 @@ class SDK(object):
                 self.event_tags.pop(0)
 
         def set_endpoint(endpoint, http_method=None, http_status_code=None, meta=None):
-            self.endpoint = endpoint
-            self.http_method = http_method
-            self.http_status_code = str(http_status_code) if http_status_code else None
+            if endpoint: self.endpoint = endpoint
+            if http_method: self.http_method = http_method
+            if http_status_code: self.http_status_code = str(http_status_code)
             self.endpoint_meta = meta
 
         class SDK_METHOD_WRAPPER:
@@ -580,12 +580,31 @@ class SDK(object):
                   return view_func(**req_args)
               finally:
                   try:
-                      set_endpoint(rule, meta={"mechanism": "flask-middleware"})
+                      from flask import request
+                      set_endpoint(rule, request.method, meta={"mechanism": "flask-middleware"})
                   except:
                       pass
             wrap_view_func.__name__ = view_func.__name__
             return wrapped(rule, endpoint, wrap_view_func, *args, **kwargs)
+
+        def wrap_init(wrapped, app, args, kwargs):
+          wrapped(*args, **kwargs)
+          try:
+            def after(response):
+              try:
+                  from flask import request
+                  status = response.status_code or response.default_status
+                  path = request.path if status == 404 or status >= 500 else None
+                  set_endpoint(path, request.method, status, meta={"mechanism": "flask-middleware"})
+              except:
+                pass
+              return response
+            app.after_request(after)
+          except:
+            pass
+
         try:
             wrapt.wrap_function_wrapper(module, "Flask.add_url_rule", wrap_add_url_rule)
+            wrapt.wrap_function_wrapper(module, "Flask.__init__", wrap_init)
         except ImportError:
             pass
