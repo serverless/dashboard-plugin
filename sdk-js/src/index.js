@@ -377,7 +377,7 @@ class ServerlessSDK {
           if (typeof endpoint === 'string' || endpoint instanceof String) {
             value = endpoint;
           } else {
-            ({ value, httpMethod, httpStatusCode, metadata } = endpoint);
+            ({ endpoint: value, httpMethod, httpStatusCode, metadata } = endpoint);
           }
           if (value) trans.$.schema.endpoint = value;
           if (httpMethod) trans.$.schema.httpMethod = httpMethod;
