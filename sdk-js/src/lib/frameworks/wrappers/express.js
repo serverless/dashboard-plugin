@@ -11,8 +11,10 @@ module.exports.init = (sdk, config) => {
       Route.prototype.dispatch = function handle(req, res, next) {
         try {
           // eslint-disable-next-line no-underscore-dangle
-          sdk._setEndpoint(req.route ? req.route.path : req.path, req.method, null, {
-            mechanism: 'express-middleware',
+          sdk._setEndpoint({
+            endpoint: req.route ? req.route.path : req.path,
+            httpMethod: req.method,
+            metadata: { mechanism: 'express-middleware' },
           });
         } catch (err) {
           if (config && config.debug === true) {
@@ -33,10 +35,14 @@ module.exports.init = (sdk, config) => {
       const app = express();
       try {
         const statusHandler = {
-          set: function(obj, property, value) {
+          set(obj, property, value) {
             try {
               if (property === 'statusCode') {
-                sdk._setEndpoint(null, null, value, { mechanism: 'express-middleware' });
+                // eslint-disable-next-line no-underscore-dangle
+                sdk._setEndpoint({
+                  httpStatusCode: value,
+                  metadata: { mechanism: 'express-middleware' },
+                });
               }
             } catch (err) {
               if (config && config.debug === true) {
@@ -44,8 +50,8 @@ module.exports.init = (sdk, config) => {
               }
             } finally {
               obj[property] = value;
-              return true;
             }
+            return true;
           },
         };
         app.response = new Proxy(app.response, statusHandler);

@@ -369,13 +369,17 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._tagEvent = contextProxy.serverlessSdk.tagEvent;
 
-        contextProxy.serverlessSdk.setEndpoint = (
-          endpoint,
-          httpMethod,
-          httpStatusCode,
-          metadata
-        ) => {
-          if (endpoint) trans.$.schema.endpoint = endpoint;
+        contextProxy.serverlessSdk.setEndpoint = endpoint => {
+          let value;
+          let httpMethod;
+          let httpStatusCode;
+          let metadata;
+          if (typeof endpoint === 'string' || endpoint instanceof String) {
+            value = endpoint;
+          } else {
+            ({ value, httpMethod, httpStatusCode, metadata } = endpoint);
+          }
+          if (value) trans.$.schema.endpoint = value;
           if (httpMethod) trans.$.schema.httpMethod = httpMethod;
           if (httpStatusCode) trans.$.schema.httpStatusCode = String(httpStatusCode);
           trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
@@ -439,9 +443,15 @@ class ServerlessSDK {
     ServerlessSDK._tagEvent(label, tag, custom);
   }
 
-  static setEndpoint(endpoint, httpMethod, httpStatusCode, metadata) {
-    // eslint-disable-next-line no-underscore-dangle
-    ServerlessSDK._setEndpoint(endpoint, httpMethod, httpStatusCode, metadata);
+  static setEndpoint(endpoint) {
+    if (typeof endpoint === 'string' || endpoint instanceof String) {
+      // eslint-disable-next-line no-underscore-dangle
+      ServerlessSDK._setEndpoint(endpoint);
+    } else {
+      const { httpMethod, httpStatusCode, metadata } = endpoint;
+      // eslint-disable-next-line no-underscore-dangle
+      ServerlessSDK._setEndpoint(endpoint, { httpMethod, httpStatusCode, metadata });
+    }
   }
 }
 

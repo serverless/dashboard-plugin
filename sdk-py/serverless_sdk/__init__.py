@@ -581,7 +581,11 @@ class SDK(object):
               finally:
                   try:
                       from flask import request
-                      set_endpoint(rule, request.method, meta={"mechanism": "flask-middleware"})
+                      set_endpoint(
+                        rule,
+                        http_method=request.method,
+                        meta={"mechanism": "flask-middleware"}
+                      )
                   except:
                       pass
             wrap_view_func.__name__ = view_func.__name__
@@ -595,7 +599,12 @@ class SDK(object):
                   from flask import request
                   status = response.status_code or response.default_status
                   path = request.path if status == 404 or status >= 500 else None
-                  set_endpoint(path, request.method, status, meta={"mechanism": "flask-middleware"})
+                  set_endpoint(
+                    path,
+                    http_method=request.method,
+                    http_status_code=status,
+                    meta={"mechanism": "flask-middleware"}
+                  )
               except:
                 pass
               return response
