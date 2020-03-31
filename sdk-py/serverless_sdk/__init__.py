@@ -357,7 +357,7 @@ class SDK(object):
                 "endpoint": self.endpoint,
                 "httpMethod": self.http_method,
                 "httpStatusCode": self.http_status_code,
-                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else None,
+                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else "explicit",
             }
             tags.update(error_data)
             if error_data["errorExceptionType"] == "TimeoutError":

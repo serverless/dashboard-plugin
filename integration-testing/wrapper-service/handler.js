@@ -96,6 +96,20 @@ module.exports.spans = async (event, context) => {
   });
 };
 
+module.exports.setEndpoint = async (event, context) => {
+  context.serverlessSdk.setEndpoint('/test/:param1');
+  return 'asyncReturn';
+};
+
+module.exports.setEndpointWithHttpMetadata = async (event, context) => {
+  context.serverlessSdk.setEndpoint({
+    endpoint: '/test/:param2',
+    httpMethod: 'POST',
+    httpStatusCode: 201,
+  });
+  return 'asyncReturn';
+};
+
 module.exports.noWaitForEmptyLoop = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   https.get({ host: 'httpbin.org', path: '/delay/10' });

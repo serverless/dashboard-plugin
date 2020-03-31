@@ -23,5 +23,9 @@ def event_tags(event, context):
     context.serverless_sdk.tag_event('event-tagged', 'true', { 'customerId': 5, 'userName': 'aaron.stuyvenberg'})
     return 'success'
 
+def set_endpoint(event, context):
+    context.serverless_sdk.set_endpoint('/test/:param', 'PATCH', '202')
+    return 'success'
+
 def timeout(event, context):
     time.sleep(10)
