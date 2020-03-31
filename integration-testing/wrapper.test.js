@@ -536,6 +536,43 @@ describe('integration: wrapper', function() {
     });
   });
 
+  it('sets node endpoint', async () => {
+    const { LogResult } = await awsRequest(lambdaService, 'invoke', {
+      LogType: 'Tail',
+      FunctionName: `${serviceName}-dev-setEndpoint`,
+    });
+    const payload = resolveLog(LogResult);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.tags.endpoint).to.equal('/test/:param1');
+    expect(payload.payload.tags.endpointMechanism).to.equal('explicit');
+  });
+
+  it('sets node endpoint along with http metadata', async () => {
+    const { LogResult } = await awsRequest(lambdaService, 'invoke', {
+      LogType: 'Tail',
+      FunctionName: `${serviceName}-dev-setEndpointWithHttpMetadata`,
+    });
+    const payload = resolveLog(LogResult);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.tags.endpoint).to.equal('/test/:param2');
+    expect(payload.payload.tags.httpMethod).to.equal('POST');
+    expect(payload.payload.tags.httpStatusCode).to.equal('201');
+    expect(payload.payload.tags.endpointMechanism).to.equal('explicit');
+  });
+
+  it('sets python endpoint', async () => {
+    const { LogResult } = await awsRequest(lambdaService, 'invoke', {
+      LogType: 'Tail',
+      FunctionName: `${serviceName}-dev-pythonSetEndpoint`,
+    });
+    const payload = resolveLog(LogResult);
+    expect(payload.type).to.equal('transaction');
+    expect(payload.payload.tags.endpoint).to.equal('/test/:param');
+    expect(payload.payload.tags.httpMethod).to.equal('PATCH');
+    expect(payload.payload.tags.httpStatusCode).to.equal('202');
+    expect(payload.payload.tags.endpointMechanism).to.equal('explicit');
+  });
+
   it('gets SFE log msg from wrapped python timeout handler', async () => {
     const { LogResult } = await awsRequest(lambdaService, 'invoke', {
       LogType: 'Tail',

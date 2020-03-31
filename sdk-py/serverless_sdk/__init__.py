@@ -77,8 +77,8 @@ def span(span_type):
     return _span(span_type)
 
 
-def set_endpoint(endpoint, meta=None):
-    _set_endpoint(endpoint, meta)
+def set_endpoint(endpoint, http_method=None, http_status_code=None, meta=None):
+    _set_endpoint(endpoint, http_method=http_method, http_status_code=http_status_code, meta=meta)
 
 
 class SDK(object):
@@ -112,6 +112,8 @@ class SDK(object):
         self.spans = []
         self.event_tags = []
         self.endpoint = None
+        self.http_method = None
+        self.http_status_code = None
         self.endpoint_meta = None
 
         self.instrument_botocore()
@@ -202,8 +204,10 @@ class SDK(object):
             if len(self.event_tags) > 10:
                 self.event_tags.pop(0)
 
-        def set_endpoint(endpoint, meta=None):
-            self.endpoint = endpoint
+        def set_endpoint(endpoint, http_method=None, http_status_code=None, meta=None):
+            if endpoint: self.endpoint = endpoint
+            if http_method: self.http_method = http_method
+            if http_status_code: self.http_status_code = str(http_status_code)
             self.endpoint_meta = meta
 
         class SDK_METHOD_WRAPPER:
@@ -351,7 +355,9 @@ class SDK(object):
                 "traceId": context.aws_request_id,
                 "transactionId": span_id,
                 "endpoint": self.endpoint,
-                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else None,
+                "httpMethod": self.http_method,
+                "httpStatusCode": self.http_status_code,
+                "endpointMechanism": self.endpoint_meta["mechanism"] if self.endpoint_meta else "explicit",
             }
             tags.update(error_data)
             if error_data["errorExceptionType"] == "TimeoutError":
@@ -574,12 +580,40 @@ class SDK(object):
                   return view_func(**req_args)
               finally:
                   try:
-                      set_endpoint(rule, meta={"mechanism": "flask-middleware"})
+                      from flask import request
+                      set_endpoint(
+                        rule,
+                        http_method=request.method,
+                        meta={"mechanism": "flask-middleware"}
+                      )
                   except:
                       pass
             wrap_view_func.__name__ = view_func.__name__
             return wrapped(rule, endpoint, wrap_view_func, *args, **kwargs)
+
+        def wrap_init(wrapped, app, args, kwargs):
+          wrapped(*args, **kwargs)
+          try:
+            def after(response):
+              try:
+                  from flask import request
+                  status = response.status_code or response.default_status
+                  path = request.path if status == 404 or status >= 500 else None
+                  set_endpoint(
+                    path,
+                    http_method=request.method,
+                    http_status_code=status,
+                    meta={"mechanism": "flask-middleware"}
+                  )
+              except:
+                pass
+              return response
+            app.after_request(after)
+          except:
+            pass
+
         try:
             wrapt.wrap_function_wrapper(module, "Flask.add_url_rule", wrap_add_url_rule)
+            wrapt.wrap_function_wrapper(module, "Flask.__init__", wrap_init)
         except ImportError:
             pass

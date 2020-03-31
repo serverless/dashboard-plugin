@@ -42,6 +42,10 @@ functions:
     runtime: nodejs10.x
   eventTags:
     handler: handler.eventTags
+  setEndpoint:
+    handler: handler.setEndpoint
+  setEndpointWithHttpMetadata:
+    handler: handler.setEndpointWithHttpMetadata
   timeout:
     handler: handler.timeout
   waitForEmptyLoop:
@@ -62,6 +66,9 @@ functions:
     runtime: python3.7
   pythonEventTags:
     handler: handler.event_tags
+    runtime: python3.7
+  pythonSetEndpoint:
+    handler: handler.set_endpoint
     runtime: python3.7
   pythonTimeout:
     handler: handler.timeout
