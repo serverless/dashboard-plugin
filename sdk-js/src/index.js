@@ -444,14 +444,7 @@ class ServerlessSDK {
   }
 
   static setEndpoint(endpoint) {
-    if (typeof endpoint === 'string' || endpoint instanceof String) {
-      // eslint-disable-next-line no-underscore-dangle
-      ServerlessSDK._setEndpoint(endpoint);
-    } else {
-      const { httpMethod, httpStatusCode, metadata } = endpoint;
-      // eslint-disable-next-line no-underscore-dangle
-      ServerlessSDK._setEndpoint(endpoint, { httpMethod, httpStatusCode, metadata });
-    }
+    ServerlessSDK._setEndpoint(endpoint);
   }
 }
 
