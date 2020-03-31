@@ -15,20 +15,26 @@ module.exports.init = (sdk, config) => {
           return path;
         };
 
-        api.finally((req, res) => {
-          try {
-            sdk._setEndpoint({
-              endpoint: req.route || strip(req.path),
-              httpMethod: req.method,
-              httpStatusCode: res._statusCode,
-              metadata: { mechanism: 'lambda-api-middleware' },
-            });
-          } catch (err) {
-            if (config && config.debug) {
-              console.debug('error setting endpoint with lambda-api route', err);
+        const wrapped = api.finally;
+        api.finally = function(handler) {
+          wrapped.call(this, (req, res) => {
+            try {
+              sdk._setEndpoint({
+                endpoint: req.route || strip(req.path),
+                httpMethod: req.method,
+                httpStatusCode: res._statusCode,
+                metadata: { mechanism: 'lambda-api-middleware' },
+              });
+            } catch (err) {
+              if (config && config.debug) {
+                console.debug('error setting endpoint with lambda-api route', err);
+              }
+            } finally {
+              handler(req, res);
             }
-          }
-        });
+          });
+        };
+        api.finally(() => {});
       } catch (err) {
         if (config && config.debug) {
           console.debug('error instrumenting lambda-api middleware', err);
