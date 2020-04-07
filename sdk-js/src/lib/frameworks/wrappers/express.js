@@ -31,36 +31,39 @@ module.exports.init = (sdk, config) => {
     }
 
     // set up response code proxy
-    return function() {
-      const app = express();
-      try {
-        const statusHandler = {
-          set(obj, property, value) {
-            try {
-              if (property === 'statusCode') {
-                // eslint-disable-next-line no-underscore-dangle
-                sdk._setEndpoint({
-                  httpStatusCode: value,
-                  metadata: { mechanism: 'express-middleware' },
-                });
+    return new Proxy(express, {
+      // eslint-disable-next-line no-unused-vars
+      apply(target, thisArg, args) {
+        const app = target();
+        try {
+          const statusHandler = {
+            set(obj, property, value) {
+              try {
+                if (property === 'statusCode') {
+                  // eslint-disable-next-line no-underscore-dangle
+                  sdk._setEndpoint({
+                    httpStatusCode: value,
+                    metadata: { mechanism: 'express-middleware' },
+                  });
+                }
+              } catch (err) {
+                if (config && config.debug === true) {
+                  console.debug('error setting express status code', err);
+                }
+              } finally {
+                obj[property] = value;
               }
-            } catch (err) {
-              if (config && config.debug === true) {
-                console.debug('error setting express status code', err);
-              }
-            } finally {
-              obj[property] = value;
-            }
-            return true;
-          },
-        };
-        app.response = new Proxy(app.response, statusHandler);
-      } catch (err) {
-        if (config && config.debug === true) {
-          console.debug('error setting up express response status code proxy', err);
+              return true;
+            },
+          };
+          app.response = new Proxy(app.response, statusHandler);
+        } catch (err) {
+          if (config && config.debug === true) {
+            console.debug('error setting up express response status code proxy', err);
+          }
         }
-      }
-      return app;
-    };
+        return app;
+      },
+    });
   });
 };
