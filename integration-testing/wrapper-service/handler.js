@@ -11,8 +11,8 @@ module.exports.syncError = () => {
   throw new Error('syncError');
 };
 
-module.exports.async = async () => {
-  return new Promise(resolve => setTimeout(() => resolve('asyncReturn'), 1000));
+module.exports.async = () => {
+  return new Promise(resolve => setTimeout(() => resolve('asyncReturn'), 100));
 };
 
 module.exports.asyncDanglingCallback = async () => {
@@ -20,7 +20,7 @@ module.exports.asyncDanglingCallback = async () => {
   return new Promise(resolve => setTimeout(() => resolve('asyncDanglyReturn'), 100));
 };
 
-module.exports.asyncError = async () => {
+module.exports.asyncError = () => {
   return new Promise((resolve, reject) => setTimeout(() => reject(new Error('asyncError')), 100));
 };
 
