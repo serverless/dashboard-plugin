@@ -5,6 +5,7 @@ process.env.SERVERLESS_PLATFORM_STAGE = 'dev';
 const setup = require('./setup');
 const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk');
 const awsRequest = require('@serverless/test/aws-request');
+const log = require('log').get('test');
 
 let sls;
 let teardown;
@@ -14,10 +15,13 @@ const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
 
 const resolveLog = encodedLogMsg => {
   const logMsg = new Buffer(encodedLogMsg, 'base64').toString();
+  log.debug('log buffer %s', logMsg);
   expect(logMsg).to.match(/SERVERLESS_ENTERPRISE/);
   const logLine = logMsg.split('\n').find(line => line.includes('SERVERLESS_ENTERPRISE'));
   const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
-  return JSON.parse(payloadString);
+  const result = JSON.parse(payloadString);
+  log.debug('log object %o', result);
+  return result;
 };
 
 describe('integration: wrapper', function() {
