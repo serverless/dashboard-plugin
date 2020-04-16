@@ -123,4 +123,4 @@ module.exports.waitForEmptyLoop = (event, context, callback) => {
   }, 10000);
 };
 
-module.exports.timeout = async () => await new Promise(resolve => setTimeout(resolve, 10000));
+module.exports.timeout = () => new Promise(resolve => setTimeout(resolve, 10000));
