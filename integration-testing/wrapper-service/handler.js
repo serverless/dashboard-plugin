@@ -1,7 +1,6 @@
 'use strict';
 const https = require('https');
 const AWS = require('aws-sdk');
-// eslint-disable-next-line import/no-unresolved
 
 module.exports.sync = () => {
   return 'syncReturn';
@@ -11,46 +10,46 @@ module.exports.syncError = () => {
   throw new Error('syncError');
 };
 
-module.exports.async = async () => {
-  return 'asyncReturn';
+module.exports.async = () => {
+  return new Promise(resolve => setTimeout(() => resolve('asyncReturn'), 100));
 };
 
 module.exports.asyncDanglingCallback = async () => {
-  setTimeout(() => true, 1000000);
-  return 'asyncDanglyReturn';
+  setTimeout(() => true, 1000);
+  return new Promise(resolve => setTimeout(() => resolve('asyncDanglyReturn'), 100));
 };
 
-module.exports.asyncError = async () => {
-  throw new Error('asyncError');
+module.exports.asyncError = () => {
+  return new Promise((resolve, reject) => setTimeout(() => reject(new Error('asyncError')), 100));
 };
 
 module.exports.callback = (event, context, callback) => {
-  setTimeout(() => callback(null, 'callbackReturn'), 5000);
+  setTimeout(() => callback(null, 'callbackReturn'), 100);
 };
 
 module.exports.callbackError = (event, context, callback) => {
-  callback('callbackError');
+  setTimeout(() => callback('callbackError'), 100);
 };
 
 module.exports.done = (event, context) => {
-  context.done(null, 'doneReturn');
+  setTimeout(() => context.done(null, 'doneReturn'), 100);
 };
 
 module.exports.doneError = (event, context) => {
-  context.done('doneError');
+  setTimeout(() => context.done('doneError'), 100);
 };
 
 module.exports.fail = (event, context) => {
-  context.fail('failError');
+  setTimeout(() => context.fail('failError'), 100);
 };
 
 module.exports.succeed = (event, context) => {
-  context.succeed('succeedReturn');
+  setTimeout(() => context.succeed('succeedReturn'), 100);
 };
 
 module.exports.promiseAndCallbackRace = async (event, context, callback) => {
-  callback(null, 'callbackEarlyReturn');
-  return 'asyncReturn';
+  setTimeout(() => callback(null, 'callbackEarlyReturn'), 100);
+  return new Promise(resolve => setTimeout(() => resolve('asyncReturn'), 300));
 };
 
 module.exports.eventTags = async (event, context) => {
@@ -124,4 +123,4 @@ module.exports.waitForEmptyLoop = (event, context, callback) => {
   }, 10000);
 };
 
-module.exports.timeout = async () => await new Promise(resolve => setTimeout(resolve, 10000));
+module.exports.timeout = () => new Promise(resolve => setTimeout(resolve, 10000));
