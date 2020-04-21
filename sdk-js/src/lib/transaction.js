@@ -9,6 +9,7 @@ const uuidv4 = require('uuid/v4');
 const { parseError } = require('./parsers');
 const flatten = require('flat');
 const isError = require('type/error/is');
+const zlib = require('zlib');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
@@ -243,6 +244,23 @@ class Transaction {
     }
   }
 
+  encodeBody(body) {
+    if (!body) return body;
+    return Buffer.from(body).toString('base64');
+  }
+
+  gzipBody(body) {
+    return new Promise((res, rej) => {
+      zlib.gzip(body, (error, result) => {
+        if (error) {
+          rej(error);
+        } else {
+          res(result);
+        }
+      });
+    });
+  }
+
   buildOutput(type) {
     if (!this.shouldLogMeta) return;
     if (!this.processed) {
@@ -289,8 +307,15 @@ class Transaction {
       envelope.payload.spans = this.$.spans;
       envelope.payload.eventTags = this.$.eventTags;
 
-      console.info('SERVERLESS_ENTERPRISE', JSON.stringify(envelope));
-      this.processed = this.$.schema.error.type !== 'TimeoutError';
+      this.gzipBody(JSON.stringify(envelope)).then(zipped => {
+        const encoded = this.encodeBody(zipped);
+
+        console.info(
+          'SERVERLESS_ENTERPRISE',
+          JSON.stringify({ compressed: true, body: encoded, origin: envelope.origin })
+        );
+        this.processed = this.$.schema.error.type !== 'TimeoutError';
+      });
     }
   }
 }
