@@ -63,13 +63,22 @@ class ServerlessSDK {
   /**
    * Start capturing log output
    */
-  async startDevMode() {
+  async startDevMode(awsContext) {
     if (this.$.devModeEnabled) {
       const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
 
       this.platformV2SDK = new PlatformSDK({
         platformStage: this.$.serverlessPlatformStage,
         accessKey: this.$.accessKey,
+        context: awsContext
+          ? {
+              awsLambda: {
+                functionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
+                awsRequestId: awsContext.awsRequestId,
+                invokeId: awsContext.invokeId,
+              },
+            }
+          : null,
       });
 
       await this.platformV2SDK.connect({
@@ -104,9 +113,9 @@ class ServerlessSDK {
   /**
    * Publish dev mode event asynchronously
    */
-  publishSync(event) {
+  async publishSync(event) {
     if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
-      this.platformV2SDK.publishSync(event);
+      return this.platformV2SDK.publishSync(event);
     }
   }
 
