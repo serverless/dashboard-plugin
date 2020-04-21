@@ -92,6 +92,24 @@ class ServerlessSDK {
     }
   }
 
+  /**
+   * Publish dev mode event asynchronously
+   */
+  publish(event) {
+    if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
+      this.platformV2SDK.publish(event);
+    }
+  }
+
+  /**
+   * Publish dev mode event asynchronously
+   */
+  publishSync(event) {
+    if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
+      this.platformV2SDK.publishSync(event);
+    }
+  }
+
   /*
    * Transaction
    * - Creates a new transaction
