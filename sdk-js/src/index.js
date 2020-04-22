@@ -63,7 +63,7 @@ class ServerlessSDK {
   /**
    * Start capturing log output
    */
-  async startDevMode(awsContext) {
+  async startDevMode(event, awsContext) {
     if (this.$.devModeEnabled) {
       const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
 
@@ -76,6 +76,7 @@ class ServerlessSDK {
                 functionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
                 awsRequestId: awsContext.awsRequestId,
                 invokeId: awsContext.invokeId,
+                transactionId: event.requestContext ? event.requestContext.requestId : null,
               },
             }
           : null,
@@ -85,9 +86,7 @@ class ServerlessSDK {
         orgName: this.$.orgId,
       });
 
-      this.platformV2SDK.startInterceptingLogs(
-        `service.logs.${process.env.AWS_LAMBDA_FUNCTION_NAME}`
-      );
+      this.platformV2SDK.startInterceptingLogs('service.logs');
     }
   }
 
