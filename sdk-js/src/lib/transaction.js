@@ -312,7 +312,7 @@ class Transaction {
 
         console.info(
           'SERVERLESS_ENTERPRISE',
-          JSON.stringify({ compressed: true, body: encoded, origin: envelope.origin })
+          JSON.stringify({ c: true, b: encoded, origin: envelope.origin })
         );
         this.processed = this.$.schema.error.type !== 'TimeoutError';
       });
