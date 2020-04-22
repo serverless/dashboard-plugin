@@ -63,22 +63,30 @@ class ServerlessSDK {
   /**
    * Start capturing log output
    */
-  async startDevMode() {
+  async startDevMode(event, awsContext) {
     if (this.$.devModeEnabled) {
       const { ServerlessSDK: PlatformSDK } = require('@serverless/platform-client');
 
       this.platformV2SDK = new PlatformSDK({
         platformStage: this.$.serverlessPlatformStage,
         accessKey: this.$.accessKey,
+        context: awsContext
+          ? {
+              awsLambda: {
+                functionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
+                awsRequestId: awsContext.awsRequestId,
+                invokeId: awsContext.invokeId,
+                transactionId: event.requestContext ? event.requestContext.requestId : null,
+              },
+            }
+          : null,
       });
 
       await this.platformV2SDK.connect({
         orgName: this.$.orgId,
       });
 
-      this.platformV2SDK.startInterceptingLogs(
-        `service.logs.${process.env.AWS_LAMBDA_FUNCTION_NAME}`
-      );
+      this.platformV2SDK.startInterceptingLogs('service.logs');
     }
   }
 
@@ -90,6 +98,25 @@ class ServerlessSDK {
       this.platformV2SDK.stopInterceptingLogs();
       this.platformV2SDK.disconnect();
     }
+  }
+
+  /**
+   * Publish dev mode event asynchronously
+   */
+  publish(event) {
+    if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
+      this.platformV2SDK.publish(event);
+    }
+  }
+
+  /**
+   * Publish dev mode event asynchronously
+   */
+  async publishSync(event) {
+    if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
+      return this.platformV2SDK.publishSync(event);
+    }
+    return null;
   }
 
   /*
