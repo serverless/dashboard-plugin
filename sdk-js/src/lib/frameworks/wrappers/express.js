@@ -50,10 +50,9 @@ module.exports.init = (sdk, config) => {
                 if (config && config.debug === true) {
                   console.debug('error setting express status code', err);
                 }
-              } finally {
-                obj[property] = value;
               }
-              return true;
+              // eslint-disable-next-line prefer-rest-params
+              return Reflect.set(...arguments);
             },
           };
           app.response = new Proxy(app.response, statusHandler);
