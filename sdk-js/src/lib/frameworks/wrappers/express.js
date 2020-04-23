@@ -51,6 +51,7 @@ module.exports.init = (sdk, config) => {
                   console.debug('error setting express status code', err);
                 }
               } finally {
+                // eslint-disable-next-line no-unsafe-finally,prefer-rest-params
                 return Reflect.set(...arguments);
               }
             },
