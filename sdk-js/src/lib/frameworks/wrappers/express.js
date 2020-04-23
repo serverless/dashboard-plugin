@@ -51,9 +51,8 @@ module.exports.init = (sdk, config) => {
                   console.debug('error setting express status code', err);
                 }
               } finally {
-                obj[property] = value;
+                return Reflect.set(...arguments);
               }
-              return true;
             },
           };
           app.response = new Proxy(app.response, statusHandler);
