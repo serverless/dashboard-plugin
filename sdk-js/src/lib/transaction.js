@@ -75,6 +75,7 @@ class Transaction {
 
     this.processed = false;
     this.shouldLogMeta = data.shouldLogMeta;
+    this.shouldCompressLogs = data.shouldCompressLogs;
     transactionCount += 1;
     this.$ = {
       schema: null,
@@ -261,6 +262,10 @@ class Transaction {
     });
   }
 
+  writeSlsTransaction(transaction) {
+    console.info('SERVERLESS_ENTERPRISE', JSON.stringify(transaction));
+  }
+
   buildOutput(type) {
     if (!this.shouldLogMeta) return;
     if (!this.processed) {
@@ -307,15 +312,15 @@ class Transaction {
       envelope.payload.spans = this.$.spans;
       envelope.payload.eventTags = this.$.eventTags;
 
-      this.gzipBody(JSON.stringify(envelope)).then(zipped => {
-        const encoded = this.encodeBody(zipped);
-
-        console.info(
-          'SERVERLESS_ENTERPRISE',
-          JSON.stringify({ c: true, b: encoded, origin: envelope.origin })
-        );
-        this.processed = this.$.schema.error.type !== 'TimeoutError';
-      });
+      if (this.shouldCompressLogs) {
+        this.gzipBody(JSON.stringify(envelope)).then(zipped => {
+          const encoded = this.encodeBody(zipped);
+          this.writeSlsTransaction({ c: true, b: encoded, origin: envelope.origin });
+        });
+      } else {
+        this.writeSlsTransaction({ c: false, b: envelope, origin: envelope.origin });
+      }
+      this.processed = this.$.schema.error.type !== 'TimeoutError';
     }
   }
 }
