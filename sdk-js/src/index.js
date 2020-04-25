@@ -86,7 +86,12 @@ class ServerlessSDK {
         orgName: this.$.orgId,
       });
 
-      this.platformV2SDK.startInterceptingLogs('service.logs');
+      this.platformV2SDK.startInterceptingLogs('service.logs', {
+        functionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
+        awsRequestId: awsContext.awsRequestId,
+        invokeId: awsContext.invokeId,
+        transactionId: event.requestContext ? event.requestContext.requestId : null,
+      });
     }
   }
 
