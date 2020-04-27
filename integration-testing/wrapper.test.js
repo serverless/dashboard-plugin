@@ -3,6 +3,7 @@
 process.env.SERVERLESS_PLATFORM_STAGE = 'dev';
 
 const setup = require('./setup');
+const zlib = require('zlib');
 const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk');
 const awsRequest = require('@serverless/test/aws-request');
 const log = require('log').get('test');
@@ -20,8 +21,10 @@ const resolveLog = encodedLogMsg => {
   const logLine = logMsg.split('\n').find(line => line.includes('SERVERLESS_ENTERPRISE'));
   const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
   const result = JSON.parse(payloadString);
-  log.debug('log object %o', result);
-  return result;
+  const zipped = new Buffer(result.b, 'base64');
+  const unzipped = JSON.parse(zlib.gunzipSync(zipped));
+  log.debug('log object %o', unzipped);
+  return unzipped;
 };
 
 const setupTests = (mode, env = {}) => {
@@ -143,7 +146,7 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-sync`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
+      const logResult = resolveLog(LogResult);
       expect(logResult).to.match(/"errorId":null/);
     });
 
@@ -152,8 +155,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-syncError`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":"Error!\$syncError"/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":"Error!\$syncError"/);
     });
 
     it('gets SFE log msg from wrapped async handler', async () => {
@@ -161,8 +164,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-async`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":null/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":null/);
     });
 
     it('gets SFE log msg from wrapped asyncError handler', async () => {
@@ -170,8 +173,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-asyncError`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":"Error!\$asyncError"/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":"Error!\$asyncError"/);
     });
 
     it('gets SFE log msg from wrapped asyncDanglingCallback handler', async () => {
@@ -179,8 +182,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-asyncDanglingCallback`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":null/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":null/);
     });
 
     it('gets SFE log msg from wrapped done handler', async () => {
@@ -188,8 +191,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-done`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":null/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":null/);
     });
 
     it('gets SFE log msg from wrapped doneError handler', async () => {
@@ -197,8 +200,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-doneError`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":"NotAnErrorType!\$doneError"/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":"NotAnErrorType!\$doneError"/);
     });
 
     it('gets SFE log msg from wrapped callback handler', async () => {
@@ -206,8 +209,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-callback`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":null/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":null/);
     });
 
     it('gets SFE log msg from wrapped callbackError handler', async () => {
@@ -215,8 +218,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-callbackError`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":"NotAnErrorType!\$callbackError"/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":"NotAnErrorType!\$callbackError"/);
     });
 
     it('gets SFE log msg from wrapped fail handler', async () => {
@@ -224,8 +227,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-fail`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":"NotAnErrorType!\$failError"/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":"NotAnErrorType!\$failError"/);
     });
 
     it('gets SFE log msg from wrapped succeed handler', async () => {
@@ -233,8 +236,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-succeed`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      expect(logResult).to.match(/"errorId":null/);
+      const logResult = resolveLog(LogResult);
+      expect(JSON.stringify(logResult)).to.match(/"errorId":null/);
     });
 
     it('gets right duration value from  wrapped callback handler', async () => {
@@ -242,8 +245,8 @@ const setupTests = (mode, env = {}) => {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-callback`,
       });
-      const logResult = new Buffer(LogResult, 'base64').toString();
-      const duration = parseFloat(logResult.match(/"duration":(\d+\.\d+)/)[1]);
+      const logResult = resolveLog(LogResult);
+      const duration = parseFloat(JSON.stringify(logResult).match(/"duration":(\d+\.\d+)/)[1]);
       expect(duration).to.be.above(5);
     });
 

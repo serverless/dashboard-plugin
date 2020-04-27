@@ -251,15 +251,7 @@ class Transaction {
   }
 
   gzipBody(body) {
-    return new Promise((res, rej) => {
-      zlib.gzip(body, (error, result) => {
-        if (error) {
-          rej(error);
-        } else {
-          res(result);
-        }
-      });
-    });
+    return zlib.gzipSync(body);
   }
 
   writeSlsTransaction(transaction) {
@@ -313,10 +305,9 @@ class Transaction {
       envelope.payload.eventTags = this.$.eventTags;
 
       if (this.shouldCompressLogs) {
-        this.gzipBody(JSON.stringify(envelope)).then(zipped => {
-          const encoded = this.encodeBody(zipped);
-          this.writeSlsTransaction({ c: true, b: encoded, origin: envelope.origin });
-        });
+        const zipped = this.gzipBody(JSON.stringify(envelope));
+        const encoded = this.encodeBody(zipped);
+        this.writeSlsTransaction({ c: true, b: encoded, origin: envelope.origin });
       } else {
         this.writeSlsTransaction({ c: false, b: envelope, origin: envelope.origin });
       }

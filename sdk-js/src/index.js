@@ -42,6 +42,7 @@ class ServerlessSDK {
     this.$.accessKey = obj.accessKey;
 
     this.shouldLogMeta = obj.shouldLogMeta;
+    this.shouldCompressLogs = obj.shouldCompressLogs;
 
     /*
      * Monkey patch spans using config
@@ -218,6 +219,7 @@ class ServerlessSDK {
           timeout: meta.timeout,
           computeType: meta.computeType,
           shouldLogMeta: this.shouldLogMeta,
+          shouldCompressLogs: this.shouldCompressLogs,
           eventType,
         });
 
