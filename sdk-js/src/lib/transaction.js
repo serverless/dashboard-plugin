@@ -9,6 +9,7 @@ const uuidv4 = require('uuid/v4');
 const { parseError } = require('./parsers');
 const flatten = require('flat');
 const isError = require('type/error/is');
+const zlib = require('zlib');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
@@ -74,6 +75,7 @@ class Transaction {
 
     this.processed = false;
     this.shouldLogMeta = data.shouldLogMeta;
+    this.shouldCompressLogs = data.shouldCompressLogs;
     transactionCount += 1;
     this.$ = {
       schema: null,
@@ -243,6 +245,19 @@ class Transaction {
     }
   }
 
+  encodeBody(body) {
+    if (!body) return body;
+    return Buffer.from(body).toString('base64');
+  }
+
+  gzipBody(body) {
+    return zlib.gzipSync(body);
+  }
+
+  writeSlsTransaction(transaction) {
+    console.info('SERVERLESS_ENTERPRISE', JSON.stringify(transaction));
+  }
+
   buildOutput(type) {
     if (!this.shouldLogMeta) return;
     if (!this.processed) {
@@ -289,7 +304,13 @@ class Transaction {
       envelope.payload.spans = this.$.spans;
       envelope.payload.eventTags = this.$.eventTags;
 
-      console.info('SERVERLESS_ENTERPRISE', JSON.stringify(envelope));
+      if (this.shouldCompressLogs) {
+        const zipped = this.gzipBody(JSON.stringify(envelope));
+        const encoded = this.encodeBody(zipped);
+        this.writeSlsTransaction({ c: true, b: encoded, origin: envelope.origin });
+      } else {
+        this.writeSlsTransaction({ c: false, b: envelope, origin: envelope.origin });
+      }
       this.processed = this.$.schema.error.type !== 'TimeoutError';
     }
   }
