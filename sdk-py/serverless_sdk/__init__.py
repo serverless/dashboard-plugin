@@ -7,6 +7,8 @@ import sys
 import time
 import traceback
 import uuid
+import zlib
+import base64
 from datetime import datetime
 from contextlib import contextmanager
 from importlib import import_module
@@ -91,6 +93,7 @@ class SDK(object):
         deployment_uid,
         service_name,
         should_log_meta,
+        should_compress_logs,
         disable_aws_spans,
         disable_http_spans,
         stage_name,
@@ -104,6 +107,7 @@ class SDK(object):
         self.deployment_uid = deployment_uid
         self.service_name = service_name
         self.should_log_meta = should_log_meta
+        self.should_compress_logs = should_compress_logs
         self.disable_aws_spans = disable_aws_spans
         self.disable_http_spans = disable_http_spans
         self.stage_name = stage_name
@@ -392,8 +396,21 @@ class SDK(object):
                 "timestamp": end_isoformat,
             }
             if self.should_log_meta:
+                if self.should_compress_logs:
+                    compressed = base64.b64encode(zlib.compress(json.dumps(transaction_data)))
+                    wrapped = {
+                        "c": True,
+                        "b": compressed,
+                        "origin": transaction_data["origin"]
+                    }
+                else:
+                    wrapped = {
+                        "c": False,
+                        "b": transaction_data,
+                        "origin": transaction_data["origin"]
+                    }
                 print("SERVERLESS_ENTERPRISE {}".format(
-                    json.dumps(transaction_data)))
+                    json.dumps(wrapped)))
             if exception and error_data["errorFatal"]:
                 raise exception
 
