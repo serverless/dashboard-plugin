@@ -7,12 +7,12 @@ import sys
 import time
 import traceback
 import uuid
-import zlib
+import gzip
 import base64
 from datetime import datetime
 from contextlib import contextmanager
 from importlib import import_module
-
+from io import BytesIO
 
 try:
     from urlparse import urlparse  # python 2
@@ -397,10 +397,12 @@ class SDK(object):
             }
             if self.should_log_meta:
                 if self.should_compress_logs:
-                    compressed = base64.b64encode(zlib.compress(json.dumps(transaction_data)))
+                    buf = BytesIO()
+                    with gzip.GzipFile(fileobj=buf, mode="wb") as c:
+                        c.write(json.dumps(transaction_data).encode('utf-8'))
                     wrapped = {
                         "c": True,
-                        "b": compressed,
+                        "b": base64.b64encode(buf.getvalue()).decode('utf-8'),
                         "origin": transaction_data["origin"]
                     }
                 else:
