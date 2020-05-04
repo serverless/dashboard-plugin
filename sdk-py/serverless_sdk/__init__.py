@@ -7,10 +7,12 @@ import sys
 import time
 import traceback
 import uuid
+import gzip
+import base64
 from datetime import datetime
 from contextlib import contextmanager
 from importlib import import_module
-
+from io import BytesIO
 
 try:
     from urlparse import urlparse  # python 2
@@ -91,6 +93,7 @@ class SDK(object):
         deployment_uid,
         service_name,
         should_log_meta,
+        should_compress_logs,
         disable_aws_spans,
         disable_http_spans,
         stage_name,
@@ -104,6 +107,7 @@ class SDK(object):
         self.deployment_uid = deployment_uid
         self.service_name = service_name
         self.should_log_meta = should_log_meta
+        self.should_compress_logs = should_compress_logs
         self.disable_aws_spans = disable_aws_spans
         self.disable_http_spans = disable_http_spans
         self.stage_name = stage_name
@@ -392,8 +396,23 @@ class SDK(object):
                 "timestamp": end_isoformat,
             }
             if self.should_log_meta:
+                if self.should_compress_logs:
+                    buf = BytesIO()
+                    with gzip.GzipFile(fileobj=buf, mode="wb") as c:
+                        c.write(json.dumps(transaction_data).encode('utf-8'))
+                    wrapped = {
+                        "c": True,
+                        "b": base64.b64encode(buf.getvalue()).decode('utf-8'),
+                        "origin": transaction_data["origin"]
+                    }
+                else:
+                    wrapped = {
+                        "c": False,
+                        "b": transaction_data,
+                        "origin": transaction_data["origin"]
+                    }
                 print("SERVERLESS_ENTERPRISE {}".format(
-                    json.dumps(transaction_data)))
+                    json.dumps(wrapped)))
             if exception and error_data["errorFatal"]:
                 raise exception
 
