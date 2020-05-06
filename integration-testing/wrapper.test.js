@@ -180,13 +180,22 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('succeedReturn');
     });
 
-    xit('gets SFE log msg from unresolved handler', async () => {
+    it('gets no SFE log msg from unresolved handler', async () => {
+      // Dashboard log is written either on resolution or right before invocation times out
+      // Therefore when lambda ends without resolution log is not written at all
+      if (env.SLS_DEV_MODE) {
+        // In dev mode unresolved lambda will timeout
+        // as by design websocket is closed only on lambda resolution
+        // and not closing websocket keeps invocation alive
+        // (it'll be great to figure out a more gentle form of communication)
+        this.skip();
+      }
       const { LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-unresolved`,
       });
-      const logResult = resolveAndValidateLog(LogResult);
-      expect(logResult).to.match(/"errorId":null/);
+      const logMsg = resolveLog(LogResult);
+      expect(logMsg).to.not.match(/SERVERLESS_ENTERPRISE/);
     });
 
     it('gets SFE log msg from wrapped syncError handler', async () => {
