@@ -15,7 +15,7 @@ const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
 
 const resolveLog = encodedLogMsg => {
-  const logMsg = new Buffer(encodedLogMsg, 'base64').toString();
+  const logMsg = String(Buffer.from(encodedLogMsg, 'base64'));
   log.debug('log buffer %s', logMsg);
   return logMsg;
 };
