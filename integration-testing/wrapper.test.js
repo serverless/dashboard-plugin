@@ -81,7 +81,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal(null);
     });
 
-    it('gets right return value from  wrapped syncError handler', async () => {
+    it('gets right return value from wrapped syncError handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-syncError`,
@@ -90,7 +90,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload).errorMessage).to.equal('syncError');
     });
 
-    it('gets right return value from  wrapped async handler', async () => {
+    it('gets right return value from wrapped async handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-async`,
@@ -99,7 +99,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('asyncReturn');
     });
 
-    it('gets right return value from  wrapped asyncError handler', async () => {
+    it('gets right return value from wrapped asyncError handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-asyncError`,
@@ -108,7 +108,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload).errorMessage).to.equal('asyncError');
     });
 
-    it('gets right return value from  wrapped asyncDanglingCallback handler', async () => {
+    it('gets right return value from wrapped asyncDanglingCallback handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-asyncDanglingCallback`,
@@ -117,7 +117,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('asyncDanglyReturn');
     });
 
-    it('gets right return value from  wrapped done handler', async () => {
+    it('gets right return value from wrapped done handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-done`,
@@ -126,7 +126,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('doneReturn');
     });
 
-    it('gets right return value from  wrapped doneError handler', async () => {
+    it('gets right return value from wrapped doneError handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-doneError`,
@@ -135,7 +135,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload).errorMessage).to.equal('doneError');
     });
 
-    it('gets right return value from  wrapped callback handler', async () => {
+    it('gets right return value from wrapped callback handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-callback`,
@@ -144,7 +144,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('callbackReturn');
     });
 
-    it('gets right return value from  wrapped callback handler with dangling events but callbackWaitsForEmptyEventLoop=false', async () => {
+    it('gets right return value from wrapped callback handler with dangling events but callbackWaitsForEmptyEventLoop=false', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-noWaitForEmptyLoop`,
@@ -153,7 +153,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('noWaitForEmptyLoop');
     });
 
-    it('gets right return value from  wrapped callbackError handler', async () => {
+    it('gets right return value from wrapped callbackError handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-callbackError`,
@@ -162,7 +162,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload).errorMessage).to.equal('callbackError');
     });
 
-    it('gets right return value from  wrapped fail handler', async () => {
+    it('gets right return value from wrapped fail handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-fail`,
@@ -171,7 +171,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload).errorMessage).to.equal('failError');
     });
 
-    it('gets right return value from  wrapped succeed handler', async () => {
+    it('gets right return value from wrapped succeed handler', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-succeed`,
@@ -279,7 +279,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.stringify(logResult)).to.match(/"errorId":null/);
     });
 
-    it('gets right duration value from  wrapped callback handler', async () => {
+    it('gets right duration value from wrapped callback handler', async () => {
       const { LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-callback`,
