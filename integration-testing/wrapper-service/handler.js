@@ -2,8 +2,8 @@
 const https = require('https');
 const AWS = require('aws-sdk');
 
-module.exports.sync = () => {
-  return 'syncReturn';
+module.exports.unresolved = () => {
+  // Neither promise returned nor callback called
 };
 
 module.exports.syncError = () => {

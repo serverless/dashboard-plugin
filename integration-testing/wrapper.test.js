@@ -60,11 +60,11 @@ const setupTests = (mode, env = {}) => {
       return null;
     });
 
-    it('gets right return value from  wrapped sync handler', async () => {
+    it('gets right return value from unresolved handler', async () => {
       const { Payload } = await awsRequest(lambdaService, 'invoke', {
-        FunctionName: `${serviceName}-dev-sync`,
+        FunctionName: `${serviceName}-dev-unresolved`,
       });
-      expect(JSON.parse(Payload)).to.equal(null); // why did i think this was possible?
+      expect(JSON.parse(Payload)).to.equal(null);
     });
 
     it('gets right return value from  wrapped syncError handler', async () => {
@@ -144,10 +144,10 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('succeedReturn');
     });
 
-    xit('gets SFE log msg from wrapped sync handler', async () => {
+    xit('gets SFE log msg from unresolved handler', async () => {
       const { LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
-        FunctionName: `${serviceName}-dev-sync`,
+        FunctionName: `${serviceName}-dev-unresolved`,
       });
       const logResult = resolveLog(LogResult);
       expect(logResult).to.match(/"errorId":null/);
