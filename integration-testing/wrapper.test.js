@@ -60,7 +60,14 @@ const setupTests = (mode, env = {}) => {
       return null;
     });
 
-    it('gets right return value from unresolved handler', async () => {
+    it('gets right return value from unresolved handler', async function() {
+      if (env.SLS_DEV_MODE) {
+        // In dev mode unresolved lambda will timeout
+        // as by design websocket is closed only on lambda resolution
+        // and not closing websocket keeps invocation alive
+        // (it'll be great to figure out a more gentle form of communication)
+        this.skip();
+      }
       const { Payload } = await awsRequest(lambdaService, 'invoke', {
         FunctionName: `${serviceName}-dev-unresolved`,
       });
