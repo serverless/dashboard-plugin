@@ -230,7 +230,7 @@ class ServerlessSDK {
 
         const timeoutHandler = setTimeout(
           () => trans.report(),
-          (config.timeout * 1000 || 6000) - 50
+          context.getRemainingTimeInMillis() - 50
         ).unref();
 
         // Capture Compute Data: aws.lambda
