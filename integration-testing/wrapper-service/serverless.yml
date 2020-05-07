@@ -9,8 +9,8 @@ provider:
 
 functions:
   # NodeJS handlers
-  sync:
-    handler: handler.sync
+  unresolved:
+    handler: handler.unresolved
   syncError:
     handler: handler.syncError
   async:

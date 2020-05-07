@@ -16,6 +16,8 @@ const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
 const detectEventType = require('./lib/eventDetection');
 
+let currentAwsCallback;
+
 /*
  * Serverless SDK Class
  */
@@ -195,6 +197,7 @@ class ServerlessSDK {
       }
 
       return (event, context, callback) => {
+        currentAwsCallback = callback;
         if (self.$.config.debug) {
           console.info(
             `ServerlessSDK: Handler: AWS Lambda wrapped handler executed with these values ${event} ${context} ${callback}...`
@@ -228,10 +231,9 @@ class ServerlessSDK {
           eventType,
         });
 
-        const timeoutHandler = setTimeout(
-          () => trans.report(),
-          (config.timeout * 1000 || 6000) - 50
-        ).unref();
+        const timeoutHandler = setTimeout(() => {
+          if (callback === currentAwsCallback) trans.report();
+        }, context.getRemainingTimeInMillis() - 50).unref();
 
         // Capture Compute Data: aws.lambda
         trans.set('compute.runtime', `aws.lambda.nodejs.${process.versions.node}`);
