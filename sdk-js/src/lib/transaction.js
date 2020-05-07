@@ -178,9 +178,7 @@ class Transaction {
         // sliced to 25 kb: 25 * 1024 / 8 = 3200
         this.set(
           'error.exception.message',
-          Buffer.from(errorStack.exception.message)
-            .slice(0, 3200)
-            .toString()
+          Buffer.from(errorStack.exception.message).slice(0, 3200).toString()
         );
         this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
 
@@ -198,9 +196,7 @@ class Transaction {
       console.info('');
       console.error(error);
       // sliced to 25 kb: 25 * 1024 / 8 = 3200
-      const message = Buffer.from(error)
-        .slice(0, 3200)
-        .toString();
+      const message = Buffer.from(error).slice(0, 3200).toString();
       this.set('error.culprit', message);
       this.set('error.fatal', fatal);
       this.set('error.exception.type', 'NotAnErrorType');

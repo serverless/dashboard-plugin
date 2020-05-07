@@ -44,7 +44,7 @@ function getModule(frames) {
   return match[1];
 }
 
-exports.parseMessage = function(msg) {
+exports.parseMessage = function (msg) {
   const error = { log: {} };
 
   if (typeof msg === 'string') {
@@ -66,7 +66,7 @@ exports.parseMessage = function(msg) {
   return error;
 };
 
-exports.parseError = function(err, agent, cb) {
+exports.parseError = function (err, agent, cb) {
   stackman.callsites(err, (_err, callsites) => {
     if (_err) {
       //   agent.logger.debug('error while getting error callsites: %s', _err.message)
@@ -106,7 +106,7 @@ exports.parseError = function(err, agent, cb) {
 
       // Filter frames that don't have a pre / post context
       // This is causing errors on the front end
-      frames = frames.filter(frame => frame.post_context && frame.pre_context);
+      frames = frames.filter((frame) => frame.post_context && frame.pre_context);
 
       if (frames) {
         const culprit = getCulprit(frames);
@@ -124,14 +124,14 @@ exports.parseError = function(err, agent, cb) {
     });
 
     if (callsites) {
-      callsites.forEach(callsite => {
+      callsites.forEach((callsite) => {
         exports.parseCallsite(callsite, true, null, next());
       });
     }
   });
 };
 
-exports.parseCallsite = function(callsite, isError, agent, cb) {
+exports.parseCallsite = function (callsite, isError, agent, cb) {
   const filename = callsite.getFileName();
   const frame = {
     filename: callsite.getRelativeFileName() || '',
@@ -165,7 +165,7 @@ exports.parseCallsite = function(callsite, isError, agent, cb) {
   });
 };
 
-module.exports.captureAwsRequestSpan = function(resp) {
+module.exports.captureAwsRequestSpan = function (resp) {
   const endTime = new Date();
 
   const awsRegion = resp.request.httpRequest.region || null;

@@ -14,5 +14,5 @@ function wrap(wrapper, sdk, config) {
 }
 
 module.exports = (sdk, config) => {
-  [express, lambdaApi].forEach(wrapper => wrap(wrapper, sdk, config));
+  [express, lambdaApi].forEach((wrapper) => wrap(wrapper, sdk, config));
 };

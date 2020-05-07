@@ -3,7 +3,7 @@
 const requireHook = require('require-in-the-middle');
 
 module.exports.init = (sdk, config) => {
-  requireHook(['express'], express => {
+  requireHook(['express'], (express) => {
     // patch request route dispatch
     try {
       const Route = express.Route;

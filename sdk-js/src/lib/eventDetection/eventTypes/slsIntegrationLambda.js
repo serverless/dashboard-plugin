@@ -18,10 +18,10 @@ const keysThatNeedValues = ['identity.userAgent', 'identity.sourceIp', 'identity
 
 module.exports = function eventType(event) {
   if (typeof event === 'object') {
-    const keysArePresent = keys.every(key => key in event);
+    const keysArePresent = keys.every((key) => key in event);
     const valuesArePresent =
       keysThatNeedValues
-        .map(key => {
+        .map((key) => {
           return typeof get(event, key) !== 'undefined';
         })
         .filter(Boolean).length === keysThatNeedValues.length;

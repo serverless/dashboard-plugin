@@ -9,8 +9,8 @@ const captureHosts = {};
 if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS) {
   const domainNames = process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_HOSTS.toLowerCase()
     .split(',')
-    .filter(domain => domain.length > 0);
-  Object.assign(captureHosts, ...domainNames.map(domain => ({ [domain]: true })));
+    .filter((domain) => domain.length > 0);
+  Object.assign(captureHosts, ...domainNames.map((domain) => ({ [domain]: true })));
 } else {
   captureHosts['*'] = true;
 }
@@ -18,11 +18,11 @@ const ignoreHosts = {};
 if (process.env.SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS) {
   const domainNames = process.env.SERVERLESS_ENTERPRISE_SPANS_IGNORE_HOSTS.toLowerCase()
     .split(',')
-    .filter(domain => domain.length > 0);
-  Object.assign(ignoreHosts, ...domainNames.map(domain => ({ [domain]: true })));
+    .filter((domain) => domain.length > 0);
+  Object.assign(ignoreHosts, ...domainNames.map((domain) => ({ [domain]: true })));
 }
 
-module.exports = emitter => {
+module.exports = (emitter) => {
   function patchModule(_http) {
     if (!_http.request) {
       return _http;
@@ -47,7 +47,7 @@ module.exports = emitter => {
         }
 
         if ((captureHosts['*'] || captureHosts[requestHostname]) && !ignoreHosts[requestHostname]) {
-          clientRequest.on('response', response => {
+          clientRequest.on('response', (response) => {
             const endTime = Date.now();
 
             let userAgent = (_args[0].headers || {})['User-Agent'] || '';

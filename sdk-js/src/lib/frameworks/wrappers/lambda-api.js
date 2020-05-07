@@ -4,11 +4,11 @@
 const requireHook = require('require-in-the-middle');
 
 module.exports.init = (sdk, config) => {
-  requireHook(['lambda-api'], lambdaApi => {
-    return function(args) {
+  requireHook(['lambda-api'], (lambdaApi) => {
+    return function (args) {
       const api = lambdaApi(args);
       try {
-        const strip = path => {
+        const strip = (path) => {
           if (api._base) {
             return path.slice(api._base.length + 1 /* leading '/' */);
           }
@@ -16,7 +16,7 @@ module.exports.init = (sdk, config) => {
         };
 
         const wrapped = api.finally;
-        api.finally = function(handler) {
+        api.finally = function (handler) {
           wrapped.call(this, (req, res) => {
             try {
               sdk._setEndpoint({

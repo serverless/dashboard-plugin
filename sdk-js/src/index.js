@@ -324,15 +324,15 @@ class ServerlessSDK {
                 finalize(err, () => target.done(err, res));
               };
             } else if (prop === 'succeed') {
-              return res => {
+              return (res) => {
                 finalize(null, () => target.succeed(res));
               };
             } else if (prop === 'fail') {
-              return err => {
+              return (err) => {
                 finalize(err, () => target.fail(err));
               };
             } else if (prop === 'captureError') {
-              return err => {
+              return (err) => {
                 capturedError = err;
               };
             }
@@ -341,7 +341,7 @@ class ServerlessSDK {
         });
 
         contextProxy.serverlessSdk = {};
-        contextProxy.captureError = err => {
+        contextProxy.captureError = (err) => {
           capturedError = err;
         };
         contextProxy.serverlessSdk.captureError = contextProxy.captureError; // TODO deprecate in next major rev
@@ -350,7 +350,7 @@ class ServerlessSDK {
 
         // Set up span listener
         let totalSpans = 0;
-        spanEmitter.on('span', span => {
+        spanEmitter.on('span', (span) => {
           totalSpans += 1;
           trans.set('totalSpans', totalSpans);
           if (transactionSpans >= 50) {
@@ -405,7 +405,7 @@ class ServerlessSDK {
         // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._tagEvent = contextProxy.serverlessSdk.tagEvent;
 
-        contextProxy.serverlessSdk.setEndpoint = endpoint => {
+        contextProxy.serverlessSdk.setEndpoint = (endpoint) => {
           let value;
           let httpMethod;
           let httpStatusCode;
@@ -441,17 +441,17 @@ class ServerlessSDK {
         // If promise was returned, handle it
         if (result && typeof result.then === 'function') {
           return result
-            .then(res => {
+            .then((res) => {
               // In a AWS Lambda 'async' handler, an error can be returned directly
               // This makes it look like a valid response, which it's not.
               // The SDK needs to look out for this here, so it can still log/report the error like all others.
               if (res instanceof Error) {
-                return new Promise(resolve => finalize(res, resolve)).then(() => res);
+                return new Promise((resolve) => finalize(res, resolve)).then(() => res);
               }
-              return new Promise(resolve => finalize(null, resolve)).then(() => res);
+              return new Promise((resolve) => finalize(null, resolve)).then(() => res);
             })
-            .catch(err => {
-              return new Promise(resolve => finalize(err, resolve)).then(() => {
+            .catch((err) => {
+              return new Promise((resolve) => finalize(err, resolve)).then(() => {
                 throw err;
               });
             });

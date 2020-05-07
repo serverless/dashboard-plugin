@@ -11,7 +11,7 @@ const scheduled = require('./eventTypes/scheduled');
 const sns = require('./eventTypes/sns');
 const sqs = require('./eventTypes/sqs');
 
-const detectEventType = event =>
+const detectEventType = (event) =>
   alexaSkill(event) ||
   // Custom authorizer must come before apiGateway because they share similar keys.
   customAuthorizer(event) ||

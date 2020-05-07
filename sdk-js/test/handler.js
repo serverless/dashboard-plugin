@@ -21,7 +21,7 @@ module.exports.contextFail = (evt, ctx) => {
 };
 
 module.exports.promise = () => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     resolve('success');
   });
 };
@@ -33,7 +33,7 @@ module.exports.promiseError = () => {
 };
 
 module.exports.async = async () => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     resolve('success');
   });
 };
