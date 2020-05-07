@@ -1,14 +1,9 @@
-.DS_Store
-*.sublime-project
-*.sublime-workspace
-*.log
-v8-compile-cache-*
-.vscode/
-.eslintcache
+/.eslintcache
 /.nyc_output
-/dist
 /coverage
+/dist
 /node_modules
+/sdk-js/.eslintcache
 /sdk-js/.nyc_output
 /sdk-js/coverage
 /sdk-js/node_modules
