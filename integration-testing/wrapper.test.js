@@ -180,7 +180,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('succeedReturn');
     });
 
-    it('gets no SFE log msg from unresolved handler', async () => {
+    it('gets no SFE log msg from unresolved handler', async function() {
       // Dashboard log is written either on resolution or right before invocation times out
       // Therefore when lambda ends without resolution log is not written at all
       if (env.SLS_DEV_MODE) {
