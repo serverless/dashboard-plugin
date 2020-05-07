@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@serverless/platform-client": "^0.25.6",
+    "@serverless/platform-client": "^0.25.7",
     "after-all-results": "^2.0.0",
     "flat": "^5.0.0",
     "lodash": "^4.17.15",
@@ -32,12 +32,12 @@
     "@serverless/eslint-config": "^1.2.1",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-import": "^2.20.2",
     "git-list-updated": "^1.2.1",
-    "mocha": "^6.2.2",
-    "nyc": "^15.0.0",
+    "mocha": "^6.2.3",
+    "nyc": "^15.0.1",
     "prettier": "^1.19.1",
-    "webpack": "^4.42.0",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
   "nyc": {
