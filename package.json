@@ -56,7 +56,7 @@
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/register": "^7.9.0",
-    "@serverless/eslint-config": "^1.2.1",
+    "@serverless/eslint-config": "^2.0.0",
     "@serverless/test": "^3.6.0",
     "aws-sdk": "^2.671.0",
     "chai": "^4.2.0",
