@@ -12,7 +12,7 @@ const tmpDir = os.tmpdir();
 
 const SERVERLESS_PLATFORM_STAGE = process.env.SERVERLESS_PLATFORM_STAGE || 'dev';
 
-module.exports = async function(templateName) {
+module.exports = async function (templateName) {
   const randomPostfix = crypto.randomBytes(2).toString('hex');
   const serviceTmpDir = path.join(tmpDir, `serverless-enterprise-plugin-test-${randomPostfix}`);
 
@@ -35,7 +35,7 @@ module.exports = async function(templateName) {
           .replace('APP_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
       );
     }),
-    setupServerless({ mode: 'compiled' }).then(data => data.binary),
+    setupServerless({ mode: 'compiled' }).then((data) => data.binary),
   ]);
 
   console.info('... (done)');

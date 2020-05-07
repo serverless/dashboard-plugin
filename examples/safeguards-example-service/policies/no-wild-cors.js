@@ -11,7 +11,7 @@ module.exports = function corsPolicy(policy, service) {
   Object.entries(functions).forEach(([functionName, functionConfig]) => {
     if (!functionConfig.events) return;
 
-    functionConfig.events.forEach(eventConfig => {
+    functionConfig.events.forEach((eventConfig) => {
       if (!eventConfig.http) return;
       if (!eventConfig.http.cors) {
         policy.warn(

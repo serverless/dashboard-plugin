@@ -11,12 +11,12 @@ module.exports.syncError = () => {
 };
 
 module.exports.async = () => {
-  return new Promise(resolve => setTimeout(() => resolve('asyncReturn'), 100));
+  return new Promise((resolve) => setTimeout(() => resolve('asyncReturn'), 100));
 };
 
 module.exports.asyncDanglingCallback = async () => {
   setTimeout(() => true, 1000);
-  return new Promise(resolve => setTimeout(() => resolve('asyncDanglyReturn'), 100));
+  return new Promise((resolve) => setTimeout(() => resolve('asyncDanglyReturn'), 100));
 };
 
 module.exports.asyncError = () => {
@@ -49,7 +49,7 @@ module.exports.succeed = (event, context) => {
 
 module.exports.promiseAndCallbackRace = async (event, context, callback) => {
   setTimeout(() => callback(null, 'callbackEarlyReturn'), 100);
-  return new Promise(resolve => setTimeout(() => resolve('asyncReturn'), 300));
+  return new Promise((resolve) => setTimeout(() => resolve('asyncReturn'), 300));
 };
 
 module.exports.eventTags = async (event, context) => {
@@ -67,9 +67,9 @@ module.exports.spans = async (event, context) => {
   });
   await sts.getCallerIdentity().promise();
   await new Promise((resolve, reject) => {
-    const req = https.request({ host: 'httpbin.org', path: '/post', method: 'POST' }, resp => {
+    const req = https.request({ host: 'httpbin.org', path: '/post', method: 'POST' }, (resp) => {
       let data = '';
-      resp.on('data', chunk => {
+      resp.on('data', (chunk) => {
         data += chunk;
       });
       resp.on('end', () => {
@@ -81,9 +81,9 @@ module.exports.spans = async (event, context) => {
   });
   await context.span('asynctest', async () => {
     await new Promise((resolve, reject) => {
-      const req = https.get({ host: 'example.com', path: '/', method: 'get' }, resp => {
+      const req = https.get({ host: 'example.com', path: '/', method: 'get' }, (resp) => {
         let data = '';
-        resp.on('data', chunk => {
+        resp.on('data', (chunk) => {
           data += chunk;
         });
         resp.on('end', () => {
@@ -123,4 +123,4 @@ module.exports.waitForEmptyLoop = (event, context, callback) => {
   }, 10000);
 };
 
-module.exports.timeout = () => new Promise(resolve => setTimeout(resolve, 10000));
+module.exports.timeout = () => new Promise((resolve) => setTimeout(resolve, 10000));

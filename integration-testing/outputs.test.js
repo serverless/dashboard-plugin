@@ -11,7 +11,7 @@ let serviceTmpDir;
 let teardown1;
 let teardown2;
 
-describe('integration: outputs', function() {
+describe('integration: outputs', function () {
   this.timeout(1000 * 60 * 5);
 
   beforeAll(async () => {

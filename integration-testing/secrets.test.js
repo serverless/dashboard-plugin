@@ -5,7 +5,7 @@ const setup = require('./setup');
 
 let sls;
 
-describe('integration: secrets', function() {
+describe('integration: secrets', function () {
   this.timeout(1000 * 60 * 3);
 
   beforeAll(async () => ({ sls } = await setup('service2')));

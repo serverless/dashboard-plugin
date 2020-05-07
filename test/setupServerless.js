@@ -8,9 +8,9 @@ const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
 
-const spawn = (childProcessSpawn => (...args) => {
+const spawn = ((childProcessSpawn) => (...args) => {
   const result = childProcessSpawn(...args);
-  result.catch(error => {
+  result.catch((error) => {
     if (error.stdoutBuffer) process.stdout.write(error.stdoutBuffer);
     if (error.stderrBuffer) process.stdout.write(error.stderrBuffer);
   });
@@ -19,7 +19,7 @@ const spawn = (childProcessSpawn => (...args) => {
 
 const tmpDir = os.tmpdir();
 
-const resolveMode = options => {
+const resolveMode = (options) => {
   if (!options) return 'direct';
   return options.mode === 'compiled' ? 'compiled' : 'direct';
 };

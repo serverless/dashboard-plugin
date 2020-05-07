@@ -6,7 +6,7 @@ const setup = require('./setup');
 let sls;
 let teardown;
 
-describe('integration: safeguards', function() {
+describe('integration: safeguards', function () {
   this.timeout(1000 * 60 * 5);
 
   beforeAll(async () => ({ sls, teardown } = await setup('service')));

@@ -5,8 +5,8 @@
 const Mocha = require('mocha/lib/mocha');
 const { EVENT_FILE_PRE_REQUIRE } = require('mocha/lib/suite').constants;
 
-Mocha.prototype.run = (run =>
-  function(...args) {
+Mocha.prototype.run = ((run) =>
+  function (...args) {
     this.suite.on(EVENT_FILE_PRE_REQUIRE, () => {
       global.expect = require('chai').expect;
       global.test = global.it;
