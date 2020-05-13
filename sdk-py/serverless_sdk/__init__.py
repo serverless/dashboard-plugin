@@ -616,7 +616,10 @@ class SDK(object):
             def after(response):
               try:
                   from flask import request
-                  status = response.status_code or response.default_status
+                  try:
+                    status = response.status_code.value # http.HTTPStatus?
+                  except:
+                    status = response.status_code or response.default_status
                   path = request.path if status == 404 or status >= 500 else None
                   set_endpoint(
                     path,
