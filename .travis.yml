@@ -104,8 +104,8 @@ jobs:
         - npm test
         - cd ..
 
-    - name: 'Unit Tests, Coverage - Node.js v13'
-      node_js: 13
+    - name: 'Unit Tests, Coverage - Node.js v14'
+      node_js: 14
       before_install:
         - npm install -g npm codecov
       script:
