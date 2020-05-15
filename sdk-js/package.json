@@ -45,24 +45,5 @@
       "html",
       "text-summary"
     ]
-  },
-  "eslintConfig": {
-    "extends": "@serverless/eslint-config/node",
-    "root": true,
-    "parserOptions": {
-      "ecmaVersion": 2018
-    },
-    "rules": {
-      "no-console": [
-        "error",
-        {
-          "allow": [
-            "debug",
-            "error",
-            "info"
-          ]
-        }
-      ]
-    }
   }
 }

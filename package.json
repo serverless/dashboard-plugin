@@ -112,10 +112,27 @@
             }
           ]
         }
+      },
+      {
+        "files": [
+          "sdk-js/**"
+        ],
+        "rules": {
+          "no-console": [
+            "error",
+            {
+              "allow": [
+                "debug",
+                "error",
+                "info"
+              ]
+            }
+          ]
+        }
       }
     ]
   },
-  "eslintignore": [
+  "eslintIgnore": [
     "/coverage",
     "/dist",
     "/node_modules",
