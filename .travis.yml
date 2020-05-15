@@ -82,9 +82,6 @@ jobs:
       script:
         - npm run prettier-check:updated
         - npm run lint:updated
-        - cd sdk-js
-        - npm run prettier-check:updated
-        - cd ..
         - npm test
         - cd sdk-js
         - npm test

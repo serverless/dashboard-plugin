@@ -7,10 +7,6 @@
     "build": "NODE_ENV=production npm run folder && npm run webpack",
     "cover": "nyc npm test",
     "folder": "rm -rf dist && mkdir dist",
-    "prettier-check": "prettier -c --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
-    "prettify": "prettier --write --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
     "test": "mocha \"!(node_modules|dist)/**/*.test.js\"",
     "webpack": "webpack"
   },
@@ -31,7 +27,6 @@
     "git-list-updated": "^1.2.1",
     "mocha": "^6.2.3",
     "nyc": "^15.0.1",
-    "prettier": "^2.0.5",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
