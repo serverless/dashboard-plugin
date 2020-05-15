@@ -5,7 +5,7 @@
  */
 
 const _ = require('lodash');
-const uuidv4 = require('uuid/v4');
+const uuidv4 = require('uuid').v4;
 const { parseError } = require('./parsers');
 const flatten = require('flat');
 const isError = require('type/error/is');

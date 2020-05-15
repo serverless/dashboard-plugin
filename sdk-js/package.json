@@ -26,7 +26,7 @@
     "require-in-the-middle": "^5.0.3",
     "stackman": "^4.0.1",
     "type": "^2.0.0",
-    "uuid": "^3.4.0"
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@serverless/eslint-config": "^2.0.0",
