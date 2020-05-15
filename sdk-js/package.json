@@ -7,8 +7,6 @@
     "build": "NODE_ENV=production npm run folder && npm run webpack",
     "cover": "nyc npm test",
     "folder": "rm -rf dist && mkdir dist",
-    "lint": "eslint --cache .",
-    "lint:updated": "pipe-git-updated --ext=js -- eslint --cache",
     "prettier-check": "prettier -c --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
     "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
     "prettify": "prettier --write --ignore-path .eslintignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
@@ -29,10 +27,7 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
-    "@serverless/eslint-config": "^2.0.0",
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.2",
     "git-list-updated": "^1.2.1",
     "mocha": "^6.2.3",
     "nyc": "^15.0.1",

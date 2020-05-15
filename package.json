@@ -115,6 +115,13 @@
       }
     ]
   },
+  "eslintignore": [
+    "/coverage",
+    "/dist",
+    "/node_modules",
+    "/sdk-js/dist",
+    "/sdk-js/node_modules"
+  ],
   "mocha": {
     "reporter": "@serverless/test/setup/mocha-reporter",
     "require": [
