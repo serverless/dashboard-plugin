@@ -60,7 +60,7 @@
     "@serverless/test": "^3.7.0",
     "aws-sdk": "^2.676.0",
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-plugin-import": "^2.20.2",
     "git-list-updated": "^1.2.1",
     "lint-staged": "^10.2.2",
