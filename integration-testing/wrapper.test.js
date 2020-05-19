@@ -14,16 +14,16 @@ let serviceName;
 const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
 
-const resolveLog = (encodedLogMsg) => {
+const resolveLog = encodedLogMsg => {
   const logMsg = String(Buffer.from(encodedLogMsg, 'base64'));
   log.debug('log buffer %s', logMsg);
   return logMsg;
 };
 
-const resolveAndValidateLog = (encodedLogMsg) => {
+const resolveAndValidateLog = encodedLogMsg => {
   const logMsg = resolveLog(encodedLogMsg);
   expect(logMsg).to.match(/SERVERLESS_ENTERPRISE/);
-  const logLine = logMsg.split('\n').find((line) => line.includes('SERVERLESS_ENTERPRISE'));
+  const logLine = logMsg.split('\n').find(line => line.includes('SERVERLESS_ENTERPRISE'));
   const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
   const result = JSON.parse(payloadString);
   if (result.b) {
@@ -65,7 +65,7 @@ const setupTests = (mode, env = {}) => {
       return null;
     });
 
-    it('gets right return value from unresolved handler', async function () {
+    it('gets right return value from unresolved handler', async function() {
       if (env.SLS_DEV_MODE) {
         // In dev mode unresolved lambda will timeout
         // as by design websocket is closed only on lambda resolution
@@ -180,7 +180,7 @@ const setupTests = (mode, env = {}) => {
       expect(JSON.parse(Payload)).to.equal('succeedReturn');
     });
 
-    it('gets no SFE log msg from unresolved handler', async function () {
+    it('gets no SFE log msg from unresolved handler', async function() {
       // Dashboard log is written either on resolution or right before invocation times out
       // Therefore when lambda ends without resolution log is not written at all
       if (env.SLS_DEV_MODE) {
@@ -644,10 +644,20 @@ const setupTests = (mode, env = {}) => {
       const payload = resolveAndValidateLog(LogResult);
       expect(payload.type).to.equal('report');
     });
+
+    it('supports handler nested in a python submodule', async () => {
+      const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
+        LogType: 'Tail',
+        FunctionName: `${serviceName}-dev-pythonSubModule`,
+      });
+      const result = resolveAndValidateLog(LogResult);
+      expect(result.type).to.equal('transaction');
+      expect(JSON.parse(Payload)).to.equal('success');
+    });
   });
 };
 
-describe('integration: wrapper', function () {
+describe('integration: wrapper', function() {
   this.timeout(1000 * 60 * 5);
 
   setupTests('regular');
