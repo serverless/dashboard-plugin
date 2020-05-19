@@ -73,3 +73,6 @@ functions:
   pythonTimeout:
     handler: handler.timeout
     runtime: python3.7
+  pythonSubModule:
+    handler: submodule/handler.success
+    runtime: python3.7

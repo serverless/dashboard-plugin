@@ -644,6 +644,16 @@ const setupTests = (mode, env = {}) => {
       const payload = resolveAndValidateLog(LogResult);
       expect(payload.type).to.equal('report');
     });
+
+    it('supports handler nested in a python submodule', async () => {
+      const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
+        LogType: 'Tail',
+        FunctionName: `${serviceName}-dev-pythonSubModule`,
+      });
+      const result = resolveAndValidateLog(LogResult);
+      expect(result.type).to.equal('transaction');
+      expect(JSON.parse(Payload)).to.equal('success');
+    });
   });
 };
 
