@@ -48,7 +48,7 @@
     "simple-git": "^1.132.0",
     "source-map-support": "^0.5.19",
     "update-notifier": "^2.5.0",
-    "uuid": "^8.0.0",
+    "uuid": "^3.4.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
