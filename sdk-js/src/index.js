@@ -364,7 +364,7 @@ class ServerlessSDK {
           const startTime = new Date().toISOString();
           const start = Date.now();
 
-          const end = () => {
+          const end = (result) => {
             const endTime = new Date().toISOString();
             spanEmitter.emit('span', {
               tags: {
@@ -375,6 +375,7 @@ class ServerlessSDK {
               endTime,
               duration: Date.now() - start,
             });
+            return result;
           };
 
           let result;
@@ -386,7 +387,7 @@ class ServerlessSDK {
           }
           if (isThenable(result)) return result.then(end);
           end();
-          return null;
+          return result;
         };
         contextProxy.serverlessSdk.span = contextProxy.span; // TODO deprecate in next major rev
         // eslint-disable-next-line no-underscore-dangle
