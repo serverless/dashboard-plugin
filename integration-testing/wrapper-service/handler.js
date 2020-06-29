@@ -61,10 +61,7 @@ module.exports.eventTags = async (event, context) => {
 };
 
 module.exports.spans = async (event, context) => {
-  let sts;
-  context.serverlessSdk.span('create sts client', () => {
-    sts = new AWS.STS();
-  });
+  const sts = context.serverlessSdk.span('create sts client', () => new AWS.STS());
   await sts.getCallerIdentity().promise();
   await new Promise((resolve, reject) => {
     const req = https.request({ host: 'httpbin.org', path: '/post', method: 'POST' }, (resp) => {
@@ -79,20 +76,36 @@ module.exports.spans = async (event, context) => {
     req.on('error', reject);
     req.end();
   });
-  await context.span('asynctest', async () => {
-    await new Promise((resolve, reject) => {
-      const req = https.get({ host: 'example.com', path: '/', method: 'get' }, (resp) => {
-        let data = '';
-        resp.on('data', (chunk) => {
-          data += chunk;
-        });
-        resp.on('end', () => {
-          resolve(data);
-        });
-      });
-      req.on('error', reject);
-    });
-  });
+  const response = await context.serverlessSdk.span(
+    'asynctest',
+    () =>
+      new Promise((resolve, reject) => {
+        const req = https.get(
+          {
+            host: 'httpbin.org',
+            path: '/get',
+            method: 'get',
+            headers: {
+              accept: 'application/json',
+            },
+          },
+          (resp) => {
+            let data = '';
+            resp.on('data', (chunk) => {
+              data += chunk;
+            });
+            resp.on('end', () => {
+              resolve(JSON.parse(data));
+            });
+          }
+        );
+        req.on('error', reject);
+      })
+  );
+  if (response.url === 'https://httpbin.org/get') {
+    return 'asyncReturn';
+  }
+  throw new Error(`invalid span result: ${response.url}`);
 };
 
 module.exports.setEndpoint = async (event, context) => {
