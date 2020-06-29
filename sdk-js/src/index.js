@@ -361,19 +361,18 @@ class ServerlessSDK {
 
         // user spans
         contextProxy.span = (tag, userCode) => {
-          const startTime = new Date().toISOString();
-          const start = Date.now();
+          const startTime = new Date();
 
           const end = (result) => {
-            const endTime = new Date().toISOString();
+            const endTime = new Date();
             spanEmitter.emit('span', {
               tags: {
                 type: 'custom',
                 label: tag,
               },
-              startTime,
-              endTime,
-              duration: Date.now() - start,
+              startTime: startTime.toISOString(),
+              endTime: endTime.toISOString(),
+              duration: endTime.getTime() - startTime.getTime(),
             });
             return result;
           };
@@ -386,8 +385,7 @@ class ServerlessSDK {
             throw e;
           }
           if (isThenable(result)) return result.then(end);
-          end();
-          return result;
+          return end(result);
         };
         contextProxy.serverlessSdk.span = contextProxy.span; // TODO deprecate in next major rev
         // eslint-disable-next-line no-underscore-dangle
@@ -472,7 +470,7 @@ class ServerlessSDK {
 
   static span(label, userCode) {
     // eslint-disable-next-line no-underscore-dangle
-    ServerlessSDK._span(label, userCode);
+    return ServerlessSDK._span(label, userCode);
   }
 
   static tagEvent(label, tag, custom) {

@@ -29,7 +29,6 @@ const resolveAndValidateLog = (encodedLogMsg) => {
   if (result.b) {
     const zipped = new Buffer(result.b, 'base64');
     const unzipped = JSON.parse(zlib.gunzipSync(zipped));
-    log.debug('log object %o', unzipped);
     return unzipped;
   }
   return result;
@@ -348,8 +347,8 @@ const setupTests = (mode, env = {}) => {
       );
       expect(payload.payload.spans[3].tags).to.deep.equal({
         type: 'http',
-        requestHostname: 'example.com',
-        requestPath: '/',
+        requestHostname: 'httpbin.org',
+        requestPath: '/get',
         httpMethod: 'GET',
         httpStatus: 200,
       });
@@ -404,8 +403,8 @@ const setupTests = (mode, env = {}) => {
       );
       expect(payload.payload.spans[3].tags).to.deep.equal({
         type: 'http',
-        requestHostname: 'example.com',
-        requestPath: '/',
+        requestHostname: 'httpbin.org',
+        requestPath: '/get',
         httpMethod: 'GET',
         httpStatus: 200,
       });
