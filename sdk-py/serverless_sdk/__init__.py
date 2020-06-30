@@ -583,59 +583,42 @@ class SDK(object):
             pass
 
     def instrument_flask(self, module):
-        def wrap_add_url_rule(wrapped, app, args, kwargs):
-            args = list(args)
-            rule = args.pop(0)
-            try:
-                endpoint = kwargs.pop('endpoint')
-            except KeyError:
-                endpoint = args.pop(0)
-            try:
-                view_func = kwargs.pop('view_func')
-            except KeyError:
-                view_func = args.pop(0)
-            def wrap_view_func(**req_args):
-              try:
-                  return view_func(**req_args)
-              finally:
-                  try:
-                      from flask import request
-                      set_endpoint(
-                        rule,
-                        http_method=request.method,
-                        meta={"mechanism": "flask-middleware"}
-                      )
-                  except:
-                      pass
-            wrap_view_func.__name__ = view_func.__name__
-            return wrapped(rule, endpoint, wrap_view_func, *args, **kwargs)
-
         def wrap_init(wrapped, app, args, kwargs):
-          wrapped(*args, **kwargs)
-          try:
-            def after(response):
-              try:
-                  from flask import request
-                  try:
-                    status = response.status_code.value # http.HTTPStatus?
-                  except:
-                    status = response.status_code or response.default_status
-                  path = request.path if status == 404 or status >= 500 else None
-                  set_endpoint(
-                    path,
-                    http_method=request.method,
-                    http_status_code=status,
-                    meta={"mechanism": "flask-middleware"}
-                  )
-              except:
+            wrapped(*args, **kwargs)
+            app_dispatch_request = app.dispatch_request
+            def dispatch_request(self):
+                try:
+                    from flask import _request_ctx_stack
+                    req = _request_ctx_stack.top.request
+                    set_endpoint(endpoint=req.url_rule.rule, meta={"mechanism": "flask-middleware"})
+                except:
+                    pass
+                return app_dispatch_request()
+            from types import MethodType
+            app.dispatch_request = MethodType(dispatch_request, app)
+
+            try:
+                def after(response):
+                    try:
+                        from flask import request
+                        try:
+                            status = response.status_code.value # http.HTTPStatus?
+                        except:
+                            status = response.status_code or response.default_status
+                        set_endpoint(
+                            endpoint=None,
+                            http_method=request.method,
+                            http_status_code=status,
+                            meta={"mechanism": "flask-middleware"}
+                        )
+                    except:
+                        pass
+                    return response
+                app.after_request(after)
+            except:
                 pass
-              return response
-            app.after_request(after)
-          except:
-            pass
 
         try:
-            wrapt.wrap_function_wrapper(module, "Flask.add_url_rule", wrap_add_url_rule)
             wrapt.wrap_function_wrapper(module, "Flask.__init__", wrap_init)
         except ImportError:
             pass
