@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
-    "@serverless/platform-client": "^0.25.14",
+    "@serverless/platform-client": "^1.0.8",
     "@serverless/platform-sdk": "^2.3.1",
     "chalk": "^2.4.2",
     "child-process-ext": "^2.1.1",
