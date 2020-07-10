@@ -1,7 +1,4 @@
 {
-  "private": true,
-  "name": "@serverless/sdk-js",
-  "version": "0.0.0",
   "main": "dist/index.js",
   "scripts": {
     "build": "NODE_ENV=production npm run folder && npm run webpack",
@@ -11,8 +8,6 @@
     "test:isolated": "mocha-isolated \"!(node_modules|dist)/**/*.test.js\"",
     "webpack": "webpack"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@serverless/platform-client": "^1.0.8",
     "after-all-results": "^2.0.0",
