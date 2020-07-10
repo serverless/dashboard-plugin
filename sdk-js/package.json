@@ -8,6 +8,7 @@
     "cover": "nyc npm test",
     "folder": "rm -rf dist && mkdir dist",
     "test": "mocha \"!(node_modules|dist)/**/*.test.js\"",
+    "test:isolated": "mocha-isolated \"!(node_modules|dist)/**/*.test.js\"",
     "webpack": "webpack"
   },
   "author": "",
