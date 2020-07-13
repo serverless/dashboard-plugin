@@ -17,7 +17,7 @@
     "prettify": "prettier --write\"**/*.{css,html,js,json,md,yaml,yml}\"",
     "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
     "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
-    "test-isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
+    "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
     "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
     "webpack": "webpack"
   },
@@ -63,6 +63,7 @@
     "eslint": "^7.3.1",
     "eslint-plugin-import": "^2.22.0",
     "git-list-updated": "^1.2.1",
+    "github-release-from-cc-changelog": "^2.2.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "log": "^6.0.0",
@@ -133,6 +134,7 @@
     ]
   },
   "eslintIgnore": [
+    "!/.github",
     "/coverage",
     "/dist",
     "/node_modules",
@@ -155,6 +157,7 @@
     "all": true,
     "exclude": [
       "**/*.test.js",
+      ".github/**",
       "coverage/**",
       "dist/**",
       "examples/**",
