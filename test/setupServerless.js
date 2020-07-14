@@ -3,12 +3,14 @@
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
+const { spawnSync } = require('child_process');
+const spawn = require('child-process-ext/spawn');
 const { ensureDir, ensureSymlink, writeJson, realpath, removeSync } = require('fs-extra');
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
-const spawn = require('child-process-ext/spawn');
 
+const nodeVersion = Number(process.version.split('.')[0].slice(1));
 const tmpDir = os.tmpdir();
 
 const resolveMode = (options) => {
@@ -78,8 +80,16 @@ module.exports = memoize(async (options = {}) => {
   delete pkgJson.scripts.postinstall;
   await writeJson(pkgJsonPath, pkgJson);
 
-  console.info('... npm install');
-  await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
+  if (nodeVersion === 6 && process.platform !== 'win32') {
+    // Usync async spawn when testing with Node.js v6 occasionally paves path to
+    // "Segmentation fault" error (which happen on bebel patched require to linked plugin)
+    // Reason is unknown, workaround seems to use sync spawn
+    console.info('... npm install (sync)');
+    spawnSync('npm', ['install', '--production'], { cwd: serverlessTmpDir });
+  } else {
+    console.info('... npm install');
+    await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
+  }
 
   console.info('... link @serverless/enterprise-plugin dependency');
   const mode = resolveMode(options);
