@@ -5,6 +5,7 @@
     "node": ">=6.0"
   },
   "description": "The Serverless Enterprise plugin",
+  "repository": "serverless/enterprise-plugin",
   "scripts": {
     "build": "./scripts/build.sh",
     "cover": "nyc npm test",
