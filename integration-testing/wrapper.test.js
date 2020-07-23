@@ -27,7 +27,7 @@ const resolveAndValidateLog = (encodedLogMsg) => {
   const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
   const result = JSON.parse(payloadString);
   if (result.b) {
-    const zipped = new Buffer(result.b, 'base64');
+    const zipped = Buffer.from(result.b, 'base64');
     const unzipped = JSON.parse(zlib.gunzipSync(zipped));
     return unzipped;
   }
