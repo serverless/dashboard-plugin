@@ -1,0 +1,4 @@
+{
+  "extends": "@serverless/eslint-config/node/6",
+  "root": true
+}
