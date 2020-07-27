@@ -59,7 +59,7 @@
     "@babel/register": "^7.10.5",
     "@serverless/eslint-config": "^2.1.1",
     "@serverless/test": "^4.3.2",
-    "aws-sdk": "^2.718.0",
+    "aws-sdk": "^2.720.0",
     "chai": "^4.2.0",
     "eslint": "^7.5.0",
     "eslint-plugin-import": "^2.22.0",
