@@ -317,7 +317,7 @@ jobs:
           npm ci
 
       - name: Unit tests
-        run: npm test -- --require "@babel/register" -b
+        run: npm test -- -b
       - name: SDK JS Unit tests
         run: |
           cd sdk-js
@@ -374,7 +374,9 @@ jobs:
           npm install
 
       - name: Unit tests
-        run: npm test -- --require "@babel/register" -b
+        run: |
+          export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setupTestServerless.js`
+          npm test -- --require "@babel/register" -b
       - name: SDK JS Unit tests
         run: |
           cd sdk-js
