@@ -31,7 +31,7 @@ module.exports = memoize((options = {}) => {
   if (process.env.LOCAL_SERVERLESS_LINK_PATH) {
     // Test against local serverless installation which is expected to have
     // this instance of `@serverless/enterprise-plugin` linked in its node_modules
-    const serverlessPath = path.join(process.cwd(), process.env.LOCAL_SERVERLESS_LINK_PATH);
+    const serverlessPath = path.resolve(process.env.LOCAL_SERVERLESS_LINK_PATH);
     return Promise.all([
       realpath(path.join(__dirname, '../..')),
       realpath(path.join(serverlessPath, 'node_modules/@serverless/enterprise-plugin')).catch(
