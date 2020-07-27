@@ -63,6 +63,7 @@
     "chai": "^4.2.0",
     "eslint": "^7.5.0",
     "eslint-plugin-import": "^2.22.0",
+    "essentials": "^1.1.1",
     "git-list-updated": "^1.2.1",
     "github-release-from-cc-changelog": "^2.2.0",
     "husky": "^4.2.5",

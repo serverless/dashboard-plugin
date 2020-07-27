@@ -53,13 +53,15 @@ module.exports = memoize(async (options = {}) => {
   }
   log.notice(`Setup 'serverless' at ${serverlessTmpDir}`);
   await ensureDir(serverlessTmpDir);
-  process.on('exit', () => {
-    try {
-      removeSync(serverlessTmpDir);
-    } catch (error) {
-      // Safe to ignore
-    }
-  });
+  if (!options.shouldKeepServerlessDir) {
+    process.on('exit', () => {
+      try {
+        removeSync(serverlessTmpDir);
+      } catch (error) {
+        // Safe to ignore
+      }
+    });
+  }
 
   log.debug('... fetch tarball');
   const res = await fetch('https://github.com/serverless/serverless/archive/master.tar.gz');
