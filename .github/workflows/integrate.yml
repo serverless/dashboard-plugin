@@ -345,6 +345,10 @@ jobs:
           cd sdk-js
           npm install
 
+      # It's to workaround "segmentation fault" errors
+      - name: Upgrade npm
+        run: npm install -g npm@6.14.6
+
       - name: Unit tests
         run: npm test -- --require "@babel/register" -b
       - name: SDK JS Unit tests
