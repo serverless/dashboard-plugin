@@ -40,7 +40,7 @@ module.exports = memoize(async (options = {}) => {
     }
     if (!pluginPath || pluginPath !== serverlessPluginPath) {
       throw new Error(
-        `SERVERLESS_LINK_PATH which resolves to ${serverlessPath}, doesn't point a ` +
+        `LOCAL_SERVERLESS_LINK_PATH which resolves to ${serverlessPath}, doesn't point a ` +
           'serverless installation which links this installation of a plugin'
       );
     }
