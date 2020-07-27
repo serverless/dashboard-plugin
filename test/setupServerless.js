@@ -44,6 +44,7 @@ module.exports = memoize(async (options = {}) => {
           'serverless installation which links this installation of a plugin'
       );
     }
+    log.notice(`Rely on 'serverless' at ${serverlessPath}`);
     return {
       root: serverlessPath,
       binary: path.join(serverlessPath, 'bin/serverless.js'),
