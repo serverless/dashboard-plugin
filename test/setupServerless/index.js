@@ -34,11 +34,15 @@ module.exports = memoize((options = {}) => {
     const serverlessPath = path.resolve(process.env.LOCAL_SERVERLESS_LINK_PATH);
     return Promise.all([
       realpath(path.join(__dirname, '../..')),
+      realpath(path.join(__dirname, '../../dist')).catch(ignoreIfDoesntExist),
       realpath(path.join(serverlessPath, 'node_modules/@serverless/enterprise-plugin')).catch(
         ignoreIfDoesntExist
       ),
-    ]).then(([pluginPath, serverlessPluginPath]) => {
-      if (!pluginPath || pluginPath !== serverlessPluginPath) {
+    ]).then(([pluginPath, pluginDistPath, serverlessPluginPath]) => {
+      if (
+        !serverlessPluginPath ||
+        (pluginPath !== serverlessPluginPath && pluginDistPath !== serverlessPluginPath)
+      ) {
         throw new Error(
           `LOCAL_SERVERLESS_LINK_PATH which resolves to ${serverlessPath}, doesn't point a ` +
             'serverless installation which links this installation of a plugin'
