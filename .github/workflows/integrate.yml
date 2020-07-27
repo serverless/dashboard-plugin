@@ -337,10 +337,12 @@ jobs:
           node-version: 6.x
 
       - name: Install dependencies
+        if: steps.cacheNodeModules.outputs.cache-hit != 'true'
         run: |
           npm update --no-save
           npm update --save-dev --no-save
       - name: Install sdk-js dependencies
+        if: steps.cacheSdkJsNodeModules.outputs.cache-hit != 'true'
         run: |
           cd sdk-js
           npm install
