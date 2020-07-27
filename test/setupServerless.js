@@ -9,6 +9,7 @@ const { ensureDir, ensureSymlink, writeJson, realpath, removeSync } = require('f
 const fetch = require('node-fetch');
 const tar = require('tar');
 const { memoize } = require('lodash');
+const log = require('log').get('test');
 
 const nodeVersion = Number(process.version.split('.')[0].slice(1));
 const tmpDir = os.tmpdir();
@@ -50,7 +51,7 @@ module.exports = memoize(async (options = {}) => {
       plugin: pluginPath,
     };
   }
-  console.info(`Setup 'serverless' at ${serverlessTmpDir}`);
+  log.notice(`Setup 'serverless' at ${serverlessTmpDir}`);
   await ensureDir(serverlessTmpDir);
   process.on('exit', () => {
     try {
@@ -60,7 +61,7 @@ module.exports = memoize(async (options = {}) => {
     }
   });
 
-  console.info('... fetch tarball');
+  log.debug('... fetch tarball');
   const res = await fetch('https://github.com/serverless/serverless/archive/master.tar.gz');
   const tarDeferred = tar.x({ cwd: serverlessTmpDir, strip: 1 });
   res.body.pipe(tarDeferred);
@@ -70,7 +71,7 @@ module.exports = memoize(async (options = {}) => {
     tarDeferred.on('finish', resolve);
   });
 
-  console.info('... patch serverless/package.json');
+  log.debug('... patch serverless/package.json');
   const pkgJsonPath = `${serverlessTmpDir}/package.json`;
   const pkgJson = require(pkgJsonPath);
   // Do not npm install @serverless/enterprise-plugin
@@ -84,14 +85,14 @@ module.exports = memoize(async (options = {}) => {
     // Usync async spawn when testing with Node.js v6 occasionally paves path to
     // "Segmentation fault" error (which happen on bebel patched require to linked plugin)
     // Reason is unknown, workaround seems to use sync spawn
-    console.info('... npm install (sync)');
+    log.debug('... npm install (sync)');
     spawnSync('npm', ['install', '--production'], { cwd: serverlessTmpDir });
   } else {
-    console.info('... npm install');
+    log.debug('... npm install');
     await spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
   }
 
-  console.info('... link @serverless/enterprise-plugin dependency');
+  log.debug('... link @serverless/enterprise-plugin dependency');
   const mode = resolveMode(options);
   await ensureSymlink(
     path.join(__dirname, `../${mode === 'direct' ? '' : 'dist'}`),
