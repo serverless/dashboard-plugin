@@ -363,6 +363,7 @@ jobs:
           node-version: 6.x
 
       - name: Install dependencies
+        if: steps.cacheNodeModules.outputs.cache-hit != 'true'
         run: |
           npm update --no-save
           npm update --save-dev --no-save
