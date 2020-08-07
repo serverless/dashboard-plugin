@@ -83,6 +83,11 @@ jobs:
           then
             npx dump-release-notes-from-cc-changelog $NEW_VERSION
           fi
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
       - name: Unit tests
         run: npm test -- -b
       - name: SDK JS Unit tests
@@ -139,7 +144,11 @@ jobs:
         run: |
           cd sdk-js
           npm ci
-
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run webpack
       - name: Unit tests
         run: npm test -- -b
       - name: SDK JS Unit tests
@@ -196,7 +205,11 @@ jobs:
         run: |
           cd sdk-js
           npm ci
-
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
       - name: Unit tests
         run: npm run cover
       - name: SDK JS Unit tests
@@ -263,6 +276,11 @@ jobs:
           cd sdk-js
           npm ci
 
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
       - name: Unit tests (isolated)
         run: npm run test:isolated -- -b
       - name: SDK JS Unit tests (isolated)
@@ -320,6 +338,11 @@ jobs:
           cd sdk-js
           npm ci
 
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
       - name: Unit tests
         run: npm test -- -b
       - name: SDK JS Unit tests
@@ -377,6 +400,11 @@ jobs:
           cd sdk-js
           npm install
 
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
       - name: Unit tests
         run: |
           export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setupTestServerless.js`
