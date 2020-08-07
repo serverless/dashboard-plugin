@@ -29,6 +29,7 @@ const resolveAndValidateLog = (encodedLogMsg) => {
   if (result.b) {
     const zipped = Buffer.from(result.b, 'base64');
     const unzipped = JSON.parse(zlib.gunzipSync(zipped));
+    log.debug('unzipped %o', unzipped);
     return unzipped;
   }
   return result;
