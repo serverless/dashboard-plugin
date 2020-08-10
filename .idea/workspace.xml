@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ada01bc8-ce92-408d-80d4-d0b97fa3adf2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1fvAySrfwrFfDAea0D4aqAEkd7v" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ada01bc8-ce92-408d-80d4-d0b97fa3adf2" name="Default Changelist" comment="" />
+      <created>1597088446694</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1597088446694</updated>
+      <workItem from="1597088450240" duration="618000" />
+      <workItem from="1597089550294" duration="254000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1878" height="282" key="GridCell.Tab.0.bottom" timestamp="1597089615713">
+      <screen x="1440" y="-305" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="282" key="GridCell.Tab.0.bottom/1440.-305.1920.1080/0.0.1440.900@1440.-305.1920.1080" timestamp="1597089615713" />
+    <state width="1878" height="282" key="GridCell.Tab.0.center" timestamp="1597089615708">
+      <screen x="1440" y="-305" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="282" key="GridCell.Tab.0.center/1440.-305.1920.1080/0.0.1440.900@1440.-305.1920.1080" timestamp="1597089615708" />
+    <state width="1878" height="282" key="GridCell.Tab.0.left" timestamp="1597089615705">
+      <screen x="1440" y="-305" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="282" key="GridCell.Tab.0.left/1440.-305.1920.1080/0.0.1440.900@1440.-305.1920.1080" timestamp="1597089615705" />
+    <state width="1878" height="282" key="GridCell.Tab.0.right" timestamp="1597089615711">
+      <screen x="1440" y="-305" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="282" key="GridCell.Tab.0.right/1440.-305.1920.1080/0.0.1440.900@1440.-305.1920.1080" timestamp="1597089615711" />
+    <state x="2063" y="-66" width="672" height="678" key="search.everywhere.popup" timestamp="1597088457509">
+      <screen x="1440" y="-305" width="1920" height="1080" />
+    </state>
+    <state x="2063" y="-66" width="672" height="678" key="search.everywhere.popup/1440.-305.1920.1080/0.0.1440.900@1440.-305.1920.1080" timestamp="1597088457509" />
+  </component>
+</project>
