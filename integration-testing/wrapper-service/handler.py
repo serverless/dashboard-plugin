@@ -1,12 +1,15 @@
 import time
 import boto3
-from botocore.vendored import requests
+try:
+  from urllib2 import urlopen
+except ImportError:
+  from urllib.request import urlopen
 
 def success(event, context):
     with context.serverless_sdk.span('create sts client'):
         sts = boto3.client('sts')
     sts.get_caller_identity()
-    requests.get('https://httpbin.org/get')
+    urlopen('https://httpbin.org/get').read()
     return 'success'
 
 def error(event, context):
@@ -14,6 +17,7 @@ def error(event, context):
 
 def http_error(event, context):
     try:
+        from botocore.vendored import requests
         requests.get("https://asdfkasdjsdf")
     except:
         pass
