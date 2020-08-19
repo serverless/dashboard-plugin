@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.1](https://github.com/serverless/enterprise-plugin/compare/v3.7.0...v3.7.1) (2020-08-19)
+
+### Bug Fixes
+
+- Ensure to not write meta log with local invocation ([#467](https://github.com/serverless/enterprise-plugin/issues/467)) ([7fd2504](https://github.com/serverless/enterprise-plugin/commit/7fd2504868e4e44cffec8868ed9e80cd95067656)) ([Mariusz Nowak](https://github.com/medikoo))
+- Mark "dashboard", "help" and "plugin" as unconditional commands ([#465](https://github.com/serverless/enterprise-plugin/issues/465)) ([2ec2172](https://github.com/serverless/enterprise-plugin/commit/2ec21728eafbe682a5c2d0619ee7f4c581616b03)) ([Mariusz Nowak](https://github.com/medikoo))
+- Report unsupported region meaningfully ([#466](https://github.com/serverless/enterprise-plugin/issues/466)) ([d4eedb8](https://github.com/serverless/enterprise-plugin/commit/d4eedb8ccbee41bb3bde7d51db8faa200d5c84c7)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ## [3.7.0](https://github.com/serverless/enterprise-plugin/compare/v3.6.18...v3.7.0) (2020-08-03)
 
 ### Features
