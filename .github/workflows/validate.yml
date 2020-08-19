@@ -324,7 +324,7 @@ jobs:
       - name: Unit tests
         run: |
           export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setupTestServerless.js`
-          npm test -- --require "@babel/register" -b
+          npm run test:isolated -- --require "@babel/register" -b
       - name: SDK JS Unit tests
         run: |
           cd sdk-js
