@@ -25,6 +25,7 @@
     "ncjsm": "^4.1.0",
     "node-dir": "^0.1.17",
     "node-fetch": "^2.6.0",
+    "open": "^7.2.0",
     "semver": "^6.3.0",
     "simple-git": "^1.132.0",
     "update-notifier": "^2.5.0",
