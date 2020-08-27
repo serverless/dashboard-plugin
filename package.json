@@ -1,27 +1,9 @@
 {
   "name": "@serverless/enterprise-plugin",
   "version": "3.8.0",
-  "engines": {
-    "node": ">=6.0"
-  },
-  "description": "The Serverless Enterprise plugin",
+  "description": "The Serverless Dashboard plugin",
+  "author": "serverless.com",
   "repository": "serverless/enterprise-plugin",
-  "scripts": {
-    "build": "./scripts/build.sh",
-    "cover": "nyc npm test",
-    "integration-test": "mocha-isolated --pass-through-aws-creds --skip-fs-cleanup-check --max-workers=20 \"integration-testing/**/*.test.js\"",
-    "lint": "eslint .",
-    "lint:staged": "lint-staged",
-    "lint:updated": "pipe-git-updated --ext=js -- eslint",
-    "prettier-check": "prettier -c \"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
-    "prettify": "prettier --write\"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
-    "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
-    "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
-    "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
-    "webpack": "webpack"
-  },
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
     "@serverless/platform-client": "^1.1.7",
@@ -175,8 +157,6 @@
       "text-summary"
     ]
   },
-  "author": "",
-  "license": "Apache-2.0",
   "lint-staged": {
     "*.js": [
       "eslint"
@@ -189,5 +169,25 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "cover": "nyc npm test",
+    "integration-test": "mocha-isolated --pass-through-aws-creds --skip-fs-cleanup-check --max-workers=20 \"integration-testing/**/*.test.js\"",
+    "lint": "eslint .",
+    "lint:staged": "lint-staged",
+    "lint:updated": "pipe-git-updated --ext=js -- eslint",
+    "prettier-check": "prettier -c \"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
+    "prettify": "prettier --write\"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
+    "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
+    "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
+    "uglify": "./node_modules/uglify-es/bin/uglifyjs dist/index.js --output dist/index.js --beautify",
+    "webpack": "webpack"
+  },
+  "engines": {
+    "node": ">=6.0"
+  },
+  "license": "MIT"
 }
