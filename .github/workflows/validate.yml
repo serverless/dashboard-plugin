@@ -114,7 +114,7 @@ jobs:
       - name: Build SDK JS
         run: |
           cd sdk-js
-          npm run webpack
+          npm run build
       - name: Unit tests
         run: npm test -- -b
       - name: SDK JS Unit tests
@@ -226,26 +226,6 @@ jobs:
           cd sdk-js
           npm run test:isolated -- -b
 
-  linuxNode8:
-    name: '[Linux] Node.js v8: Unit tests'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Retrieve dependencies from cache
-        id: cacheNpm
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            sdk-js/node_modules
-          key: npm-v8-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
-          restore-keys: |
-            npm-v8-${{ runner.os }}-${{ github.ref }}-
-            npm-v8-${{ runner.os }}-refs/heads/v4-
-
       - name: Install Node.js and npm
         uses: actions/setup-node@v1
         with:
@@ -269,56 +249,6 @@ jobs:
           npm run build
       - name: Unit tests
         run: npm test -- -b
-      - name: SDK JS Unit tests
-        run: |
-          cd sdk-js
-          npm test -- -b
-
-  linuxNode6:
-    name: '[Linux] Node.js v6: Unit tests'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Retrieve dependencies from cache
-        id: cacheNpm
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            sdk-js/node_modules
-          key: npm-v6-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
-          restore-keys: |
-            npm-v6-${{ runner.os }}-${{ github.ref }}-
-            npm-v6-${{ runner.os }}-refs/heads/v4-
-
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v1
-        with:
-          node-version: 6.x
-
-      - name: Install dependencies
-        if: steps.cacheNpm.outputs.cache-hit != 'true'
-        run: |
-          npm update --no-save
-          npm update --save-dev --no-save
-      - name: Install sdk-js dependencies
-        if: steps.cacheNpm.outputs.cache-hit != 'true'
-        run: |
-          cd sdk-js
-          npm install
-
-      # Some unit tests backed by runServerless involve SDK build
-      - name: Build SDK JS
-        run: |
-          cd sdk-js
-          npm run build
-      - name: Unit tests
-        run: |
-          export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setupTestServerless.js`
-          npm run test:isolated -- --require "@babel/register" -b
       - name: SDK JS Unit tests
         run: |
           cd sdk-js
