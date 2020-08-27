@@ -25,19 +25,13 @@
     "ncjsm": "^4.1.0",
     "node-dir": "^0.1.17",
     "node-fetch": "^2.6.0",
-    "regenerator-runtime": "^0.13.7",
     "semver": "^6.3.0",
     "simple-git": "^1.132.0",
-    "source-map-support": "^0.5.19",
     "update-notifier": "^2.5.0",
     "uuid": "^3.4.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.11.4",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/register": "^7.10.5",
     "@serverless/eslint-config": "^2.2.0",
     "@serverless/test": "^4.6.0",
     "aws-sdk": "^2.740.0",
@@ -171,7 +165,6 @@
     }
   },
   "scripts": {
-    "build": "./scripts/build.sh",
     "cover": "nyc npm test",
     "integration-test": "mocha-isolated --pass-through-aws-creds --skip-fs-cleanup-check --max-workers=20 \"integration-testing/**/*.test.js\"",
     "lint": "eslint .",
@@ -181,11 +174,11 @@
     "prettier-check:updated": "pipe-git-updated --base=v4 --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
     "prettify": "prettier --write\"**/*.{css,html,js,json,md,yaml,yml}\"",
     "prettify:updated": "pipe-git-updated --base=v4 --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
-    "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\"",
-    "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\" \"*.test.js\""
+    "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\"",
+    "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\""
   },
   "engines": {
-    "node": ">=6.0"
+    "node": ">=10.0"
   },
   "license": "MIT"
 }
