@@ -35,7 +35,7 @@ module.exports = async function (templateName) {
           .replace('APP_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
       );
     }),
-    setupServerless({ mode: 'compiled' }).then((data) => data.binary),
+    setupServerless().then((data) => data.binary),
   ]);
 
   console.info('... (done)');
