@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/serverless/enterprise-plugin/compare/v3.8.1...v4.0.0) (2020-08-28)
+
+### ⚠ BREAKING CHANGES
+
+- At least Node.js v10 is required (dropped support for v6 and v8)
+- Safeguards validation functionality has been removed from the core.Use [@serverless/safeguards](https://github.com/serverless/safeguards-plugin) plugin instead
+- `dev` command was removed (Use `studio` instead)
+
+### Features
+
+- **New dashboard ([app.serverless.com](https://app.serverless.com/)):**
+
+  - Switch login/logout to new dashboard ([#477](https://github.com/serverless/enterprise-plugin/issues/477)) ([29dcc76](https://github.com/serverless/enterprise-plugin/commit/29dcc765b161869c420eb81dfea0a8bb9a49034b)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Update dashboard link to point new one ([#477](https://github.com/serverless/enterprise-plugin/issues/477)) ([eb68551](https://github.com/serverless/enterprise-plugin/commit/eb68551887d2c7a23830f0f67c041d99520b7441)) ([Mariusz Nowak](https://github.com/medikoo))
+
+- Remove Safeguards implementation ([#483](https://github.com/serverless/enterprise-plugin/issues/483)) ([3e26d29](https://github.com/serverless/enterprise-plugin/commit/3e26d299fb63d2216325d467336938c825ddeccc)) ([Mariusz Nowak](https://github.com/medikoo))
+- Drop support for Node.js versions lower than v10 ([#480](https://github.com/serverless/enterprise-plugin/issues/480)) ([e08f549](https://github.com/serverless/enterprise-plugin/commit/e08f549e711547dd9d1b86e373079046100f20e5)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove `dev` command ([#484](https://github.com/serverless/enterprise-plugin/issues/484)) ([e3a4261](https://github.com/serverless/enterprise-plugin/commit/e3a4261e543cdea674506fee60b99f283c2d14fd)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Bug Fixes
+
+- Fix browser window openning issues ([#477](https://github.com/serverless/enterprise-plugin/issues/477)) ([345411e](https://github.com/serverless/enterprise-plugin/commit/345411ecf49e1eafa22eb1956418231eaaa1b377)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove enforced process.exit ([#477](https://github.com/serverless/enterprise-plugin/issues/477)) ([9682a97](https://github.com/serverless/enterprise-plugin/commit/9682a97ed38da9ea1ae5d8f4266760773ce8d5ce)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [3.8.1](https://github.com/serverless/enterprise-plugin/compare/v3.8.0...v3.8.1) (2020-08-28)
 
 ### Bug Fixes
