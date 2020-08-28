@@ -33,7 +33,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@serverless/eslint-config": "^2.2.0",
+    "@serverless/eslint-config": "^3.0.0",
     "@serverless/test": "^4.6.0",
     "aws-sdk": "^2.741.0",
     "chai": "^4.2.0",
@@ -58,9 +58,6 @@
   "eslintConfig": {
     "extends": "@serverless/eslint-config/node",
     "root": true,
-    "parserOptions": {
-      "ecmaVersion": 2018
-    },
     "rules": {
       "import/no-extraneous-dependencies": [
         "error",
