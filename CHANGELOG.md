@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.8.1](https://github.com/serverless/enterprise-plugin/compare/v3.8.0...v3.8.1) (2020-08-28)
+
+### Bug Fixes
+
+- Ensure to extend schema only for supported providers ([79e5535](https://github.com/serverless/enterprise-plugin/commit/79e55353251fdd08dc1067d27e685962a1c3432e)) ([Mariusz Nowak](https://github.com/medikoo))
+- Notify of new version only on patch and minor update ([#485](https://github.com/serverless/enterprise-plugin/issues/485)) ([d5fdc36](https://github.com/serverless/enterprise-plugin/commit/d5fdc363f67ef009b9aed20f604507ec63435df3)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ## [3.8.0](https://github.com/serverless/enterprise-plugin/compare/v3.7.1...v3.8.0) (2020-08-27)
 
 ### Features
