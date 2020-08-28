@@ -37,8 +37,10 @@ jobs:
       # Note: No need to install dependencies as we have retrieved cached `node_modules` for very
       #       same `package.json` as stored with recent `master `build
 
-      - name: Build
-        run: npm run build
+      - name: Build SDK
+        run: |
+          cd sdk-js
+          npm run build
 
       - name: Publish new version
         # Note: Setting NODE_AUTH_TOKEN as job|workspace wide env var won't work
@@ -46,7 +48,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd dist
           npm publish
 
       - name: Publish release notes
