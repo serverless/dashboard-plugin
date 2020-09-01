@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.8.2](https://github.com/serverless/enterprise-plugin/compare/v3.8.1...v3.8.2) (2020-09-01)
+
+### Bug Fixes
+
+- Fix Safeguards config schema definition ([#488](https://github.com/serverless/enterprise-plugin/issues/488)) ([acd47e3](https://github.com/serverless/enterprise-plugin/commit/acd47e37a0a014738625f6a0323b57207ec6ee67)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [3.8.1](https://github.com/serverless/enterprise-plugin/compare/v3.8.0...v3.8.1) (2020-08-28)
 
 ### Bug Fixes
