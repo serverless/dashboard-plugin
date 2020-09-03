@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/serverless/enterprise-plugin/compare/v4.0.0...v4.0.1) (2020-09-03)
+
+### Bug Fixes
+
+- Fix schema config for safeguards ([e7b1b4a](https://github.com/serverless/enterprise-plugin/commit/e7b1b4a2a010ddd85c6a528c05e205e9eb2c0354))([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintanance improvements
+
+- Remove new plugin version notifications ([#488](https://github.com/serverless/enterprise-plugin/issues/488)) ([c8e85c0](https://github.com/serverless/enterprise-plugin/commit/c8e85c0db5d6416445ad89d959a39afd89b67b5c)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ## [4.0.0](https://github.com/serverless/enterprise-plugin/compare/v3.8.1...v4.0.0) (2020-08-28)
 
 ### ⚠ BREAKING CHANGES
