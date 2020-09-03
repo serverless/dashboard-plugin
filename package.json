@@ -25,7 +25,6 @@
     "open": "^7.2.1",
     "semver": "^6.3.0",
     "simple-git": "^1.132.0",
-    "update-notifier": "^4.1.1",
     "uuid": "^3.4.0",
     "yamljs": "^0.3.0"
   },
