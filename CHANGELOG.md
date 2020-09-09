@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.2](https://github.com/serverless/enterprise-plugin/compare/v4.0.1...v4.0.2) (2020-09-09)
+
+### Bug Fixes
+
+- Configure missing "outputs" schema ([#494](https://github.com/serverless/enterprise-plugin/issues/494)) ([ec4552c](https://github.com/serverless/enterprise-plugin/commit/ec4552c8e7a154db155caaa298727279f54cd086)) ([Mariusz Nowak](https://github.com/medikoo))
+- Fix handling of lack of API Gateway request headers ([#495](https://github.com/serverless/enterprise-plugin/issues/495)) ([4ba389b](https://github.com/serverless/enterprise-plugin/commit/4ba389bbd01db631bdb7df14a3e8ac0ab843f580)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.0.1](https://github.com/serverless/enterprise-plugin/compare/v4.0.0...v4.0.1) (2020-09-03)
 
 ### Bug Fixes
@@ -35,6 +42,13 @@ All notable changes to this project will be documented in this file. See [standa
 
 - Fix browser window openning issues ([#477](https://github.com/serverless/enterprise-plugin/issues/477)) ([345411e](https://github.com/serverless/enterprise-plugin/commit/345411ecf49e1eafa22eb1956418231eaaa1b377)) ([Mariusz Nowak](https://github.com/medikoo))
 - Remove enforced process.exit ([#477](https://github.com/serverless/enterprise-plugin/issues/477)) ([9682a97](https://github.com/serverless/enterprise-plugin/commit/9682a97ed38da9ea1ae5d8f4266760773ce8d5ce)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### [3.8.4](https://github.com/serverless/enterprise-plugin/compare/v3.8.3...v3.8.4) (2020-09-09)
+
+### Bug Fixes
+
+- Configure missing "outputs" schema ([#494](https://github.com/serverless/enterprise-plugin/issues/494)) ([11d31fe](https://github.com/serverless/enterprise-plugin/commit/11d31fe74a1e332a1e62730c216d8de92805846a)) ([Mariusz Nowak](https://github.com/medikoo))
+- Fix handling of lack of API Gateway request headers ([#495](https://github.com/serverless/enterprise-plugin/issues/495)) ([574fca7](https://github.com/serverless/enterprise-plugin/commit/574fca79f0b9ad8569cb9f829481e055b87914b6)) ([Mariusz Nowak](https://github.com/medikoo))
 
 ### [3.8.3](https://github.com/serverless/enterprise-plugin/compare/v3.8.2...v3.8.3) (2020-09-03)
 
