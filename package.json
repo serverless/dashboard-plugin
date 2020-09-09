@@ -1,6 +1,6 @@
 {
   "name": "@serverless/enterprise-plugin",
-  "version": "3.8.3",
+  "version": "3.8.4",
   "description": "The Serverless Dashboard plugin",
   "author": "serverless.com",
   "repository": "serverless/enterprise-plugin",
