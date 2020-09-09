@@ -459,10 +459,7 @@ class SDK(object):
                         response = wrapped(*args, **kwargs)
                         return response
                     except Exception as error:
-                        if getattr(error, "response", None) is not None:
-                            response = error.response
-                        else:
-                            response = {}
+                        response = getattr(error, "response", {})
                         raise error
                     finally:
                         span.set_tag(
@@ -563,6 +560,13 @@ class SDK(object):
                     try:
                         response = wrapped(*args, **kwargs)
                         return response
+                    except Exception as error:
+                        if getattr(error, "code", None) is not None:
+                            response = error
+                        else:
+                            response = None
+                            span.set_tag("httpStatus", "Exc")
+                        raise error
                     finally:
                         if response:
                             status = response.code
