@@ -8,7 +8,7 @@
     "@serverless/event-mocks": "^1.1.1",
     "@serverless/platform-client": "^2.0.0",
     "@serverless/platform-sdk": "^2.3.1",
-    "chalk": "^2.4.2",
+    "chalk": "^4.1.0",
     "child-process-ext": "^2.1.1",
     "chokidar": "^3.4.2",
     "cli-color": "^2.0.0",
