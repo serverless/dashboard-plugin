@@ -24,7 +24,7 @@
     "node-fetch": "^2.6.1",
     "open": "^7.2.1",
     "semver": "^7.3.2",
-    "simple-git": "^1.132.0",
+    "simple-git": "^2.20.1",
     "uuid": "^3.4.0",
     "yamljs": "^0.3.0"
   },
