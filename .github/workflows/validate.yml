@@ -231,31 +231,3 @@ jobs:
         run: |
           cd sdk-js
           npm run test:isolated -- -b
-
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v1
-        with:
-          node-version: 8.x
-
-      - name: Install dependencies
-        if: steps.cacheNpm.outputs.cache-hit != 'true'
-        run: |
-          npm update --no-save
-          npm update --save-dev --no-save
-      - name: Install sdk-js dependencies
-        if: steps.cacheNpm.outputs.cache-hit != 'true'
-        run: |
-          cd sdk-js
-          npm ci
-
-      # Some unit tests backed by runServerless involve SDK build
-      - name: Build SDK JS
-        run: |
-          cd sdk-js
-          npm run build
-      - name: Unit tests
-        run: npm test -- -b
-      - name: SDK JS Unit tests
-        run: |
-          cd sdk-js
-          npm test -- -b
