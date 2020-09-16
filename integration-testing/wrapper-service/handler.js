@@ -137,3 +137,11 @@ module.exports.waitForEmptyLoop = (event, context, callback) => {
 };
 
 module.exports.timeout = () => new Promise((resolve) => setTimeout(resolve, 10000));
+
+module.exports.getTransactionId = async (event, context) => {
+  const transactionId = context.serverlessSdk.getTransactionId();
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(transactionId)) {
+    return 'asyncReturn';
+  }
+  throw new Error(`transactionId not set/uuid: ${transactionId}`);
+};

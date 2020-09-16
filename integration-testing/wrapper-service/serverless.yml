@@ -50,6 +50,8 @@ functions:
     handler: handler.timeout
   waitForEmptyLoop:
     handler: handler.waitForEmptyLoop
+  getTransactionId:
+    handler: handler.getTransactionId
 
   # Python handlers
   pythonSuccess:
@@ -76,3 +78,6 @@ functions:
   pythonSubModule:
     handler: submodule/handler.success
     runtime: python3.7
+  pythonTransactionId:
+    handler: handler.get_transaction_id
+    runtime: python3.8
