@@ -4,7 +4,6 @@ const util = require('util');
 const afterAll = require('after-all-results');
 const stackman = require('stackman')();
 
-// eslint-disable-next-line no-underscore-dangle
 exports._MAX_HTTP_BODY_CHARS = 2048; // expose for testing purposes
 
 const mysqlErrorMsg = /(ER_[A-Z_]+): /;

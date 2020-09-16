@@ -58,9 +58,8 @@ module.exports = (emitter) => {
             if (
               (!userAgent.startsWith('aws-sdk-nodejs/') ||
                 process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) &&
-              !clientRequest.__slsCapturedRequest // eslint-disable-line no-underscore-dangle
+              !clientRequest.__slsCapturedRequest
             ) {
-              // eslint-disable-next-line no-underscore-dangle
               clientRequest.__slsCapturedRequest = true;
               emitter.emit('span', {
                 tags: {
