@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.3](https://github.com/serverless/enterprise-plugin/compare/v4.0.2...v4.0.3) (2020-09-16)
+
+### Bug Fixes
+
+- Fix request resolution in Python SDK ([#496](https://github.com/serverless/enterprise-plugin/issues/496)) ([5b1a07a](https://github.com/serverless/enterprise-plugin/commit/5b1a07a68309aa774478872de0f01e161e80174b)) ([Sandesh Devaraju](https://github.com/scouredimage))
+
 ### [4.0.2](https://github.com/serverless/enterprise-plugin/compare/v4.0.1...v4.0.2) (2020-09-09)
 
 ### Bug Fixes
