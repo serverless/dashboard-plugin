@@ -25,7 +25,7 @@
     "open": "^7.2.1",
     "semver": "^7.3.2",
     "simple-git": "^2.20.1",
-    "uuid": "^3.4.0",
+    "uuid": "^8.3.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
