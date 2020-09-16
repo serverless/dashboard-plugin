@@ -10,7 +10,6 @@ module.exports.init = (sdk, config) => {
       const defaultImplementation = Route.prototype.dispatch;
       Route.prototype.dispatch = function handle(req, res, next) {
         try {
-          // eslint-disable-next-line no-underscore-dangle
           sdk._setEndpoint({
             endpoint: req.route ? req.route.path : req.path,
             httpMethod: req.method,
@@ -40,7 +39,6 @@ module.exports.init = (sdk, config) => {
             set(obj, property, value) {
               try {
                 if (property === 'statusCode') {
-                  // eslint-disable-next-line no-underscore-dangle
                   sdk._setEndpoint({
                     httpStatusCode: value,
                     metadata: { mechanism: 'express-middleware' },

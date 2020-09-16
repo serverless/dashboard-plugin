@@ -50,7 +50,6 @@ class ServerlessSDK {
      * Monkey patch spans using config
      */
     if (process.env.SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP) {
-      // eslint-disable-next-line no-console
       console.warn(
         'The environment variable SERVERLESS_ENTERPRISE_SPANS_CAPTURE_AWS_SDK_HTTP is deprecated and will be removed in the future. ' +
           'To disable HTTP span collection, in your serverless.yml file add this key: custom.enterprise.disableHttpSpans: true'
@@ -246,7 +245,6 @@ class ServerlessSDK {
         trans.set('compute.custom.memorySize', process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE);
         trans.set('compute.custom.invokeId', context.invokeId);
         trans.set('compute.custom.awsRequestId', context.awsRequestId);
-        // eslint-disable-next-line no-underscore-dangle
         trans.set('compute.custom.xTraceId', process.env._X_AMZN_TRACE_ID);
         trans.set('compute.custom.logGroupName', process.env.AWS_LAMBDA_LOG_GROUP_NAME);
         trans.set('compute.custom.logStreamName', process.env.AWS_LAMBDA_LOG_STREAM_NAME);
@@ -292,7 +290,6 @@ class ServerlessSDK {
         let finalized = false;
         const finalize = (error, cb) => {
           if (finalized) {
-            // eslint-disable-next-line no-console
             console.warn(
               'WARNING: Callback/response already delivered.  Did your function invoke the callback and also return a promise? ' +
                 'For more details, see: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html'
@@ -345,7 +342,6 @@ class ServerlessSDK {
           capturedError = err;
         };
         contextProxy.serverlessSdk.captureError = contextProxy.captureError; // TODO deprecate in next major rev
-        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._captureError = contextProxy.captureError;
 
         // Set up span listener
@@ -388,7 +384,6 @@ class ServerlessSDK {
           return end(result);
         };
         contextProxy.serverlessSdk.span = contextProxy.span; // TODO deprecate in next major rev
-        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._span = contextProxy.span;
 
         contextProxy.serverlessSdk.tagEvent = (tagName, tagValue = '', custom = {}) => {
@@ -401,7 +396,6 @@ class ServerlessSDK {
             transactionEventTags.pop();
           }
         };
-        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._tagEvent = contextProxy.serverlessSdk.tagEvent;
 
         contextProxy.serverlessSdk.setEndpoint = (endpoint) => {
@@ -419,7 +413,6 @@ class ServerlessSDK {
           if (httpStatusCode) trans.$.schema.httpStatusCode = String(httpStatusCode);
           trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
         };
-        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
 
         /*
@@ -464,22 +457,18 @@ class ServerlessSDK {
   }
 
   static captureError(error) {
-    // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._captureError(error);
   }
 
   static span(label, userCode) {
-    // eslint-disable-next-line no-underscore-dangle
     return ServerlessSDK._span(label, userCode);
   }
 
   static tagEvent(label, tag, custom) {
-    // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._tagEvent(label, tag, custom);
   }
 
   static setEndpoint(endpoint) {
-    // eslint-disable-next-line no-underscore-dangle
     ServerlessSDK._setEndpoint(endpoint);
   }
 }

@@ -96,6 +96,7 @@
               "allow": [
                 "debug",
                 "error",
+                "warn",
                 "info"
               ]
             }
