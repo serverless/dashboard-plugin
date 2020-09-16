@@ -423,7 +423,6 @@ class ServerlessSDK {
         ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
 
         contextProxy.serverlessSdk.getTransactionId = () => trans.$.schema.transactionId;
-        // eslint-disable-next-line no-underscore-dangle
         ServerlessSDK._getTransactionId = contextProxy.serverlessSdk.getTransactionId;
 
         /*
