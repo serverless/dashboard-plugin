@@ -14,7 +14,7 @@
     "cli-color": "^2.0.0",
     "find-process": "^1.4.3",
     "flat": "^5.0.2",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.1",
     "js-yaml": "^3.14.0",
     "jszip": "^3.5.0",
     "lodash": "^4.17.20",
