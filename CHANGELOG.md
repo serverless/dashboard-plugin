@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.4](https://github.com/serverless/enterprise-plugin/compare/v4.0.3...v4.0.4) (2020-09-17)
+
+### Bug Fixes
+
+- Ensure to resolve git remote url for `vcs.originUrl` deployment data ([#502](https://github.com/serverless/enterprise-plugin/issues/502)) ([5fa5539](https://github.com/serverless/enterprise-plugin/commit/5fa553945120e02318379d4640978283815daca4)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.0.3](https://github.com/serverless/enterprise-plugin/compare/v4.0.2...v4.0.3) (2020-09-16)
 
 ### Bug Fixes
