@@ -93,7 +93,8 @@ module.exports = memoizee(
         log.debug('... link @serverless/enterprise-plugin dependency');
         return ensureSymlink(
           path.join(__dirname, '../../'),
-          path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin')
+          path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin'),
+          'junction'
         );
       })
       .then(() => {
