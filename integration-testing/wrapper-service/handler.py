@@ -1,5 +1,6 @@
 import time
 import boto3
+import re
 try:
   from urllib2 import urlopen
 except ImportError:
@@ -33,3 +34,10 @@ def set_endpoint(event, context):
 
 def timeout(event, context):
     time.sleep(10)
+
+def get_transaction_id(event, context):
+    transaction_id = context.serverless_sdk.get_transaction_id()
+    print(transaction_id)
+    if re.match(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", transaction_id):
+        return "success"
+    raise Exception("transactionId not set/uuid: {}".format(transaction_id))

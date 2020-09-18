@@ -83,6 +83,10 @@ def set_endpoint(endpoint, http_method=None, http_status_code=None, meta=None):
     _set_endpoint(endpoint, http_method=http_method, http_status_code=http_status_code, meta=meta)
 
 
+def get_transaction_id():
+    return _get_transaction_id()
+
+
 class SDK(object):
     def __init__(
         self,
@@ -214,12 +218,39 @@ class SDK(object):
             if http_status_code: self.http_status_code = str(http_status_code)
             self.endpoint_meta = meta
 
+        is_custom_authorizer = "methodArn" in event and event.get("type") in (
+            "TOKEN",
+            "REQUEST",
+        )
+        is_apig = (
+            all(
+                key in event
+                for key in [
+                    "path",
+                    "headers",
+                    "requestContext",
+                    "resource",
+                    "httpMethod",
+                ]
+            )
+            and "requestId" in event["requestContext"]
+        )
+        if not is_custom_authorizer and is_apig:
+            # For APIGW access logs
+            span_id = event["requestContext"]["requestId"]
+        else:
+            span_id = str(uuid.uuid4())
+
+        def get_transaction_id():
+            return span_id
+
         class SDK_METHOD_WRAPPER:
-            def __init__(self, capture_exception, tag_event, span, set_endpoint):
+            def __init__(self, capture_exception, tag_event, span, set_endpoint, get_transaction_id):
                 self.capture_exception = capture_exception
                 self.tag_event = tag_event
                 self.span = span
                 self.set_endpoint = set_endpoint
+                self.get_transaction_id = get_transaction_id
 
         global _capture_exception
         _capture_exception = capture_exception
@@ -235,8 +266,11 @@ class SDK(object):
         global _set_endpoint
         _set_endpoint = set_endpoint
 
+        global _get_transaction_id
+        _get_transaction_id = get_transaction_id
+
         context.serverless_sdk = SDK_METHOD_WRAPPER(
-            capture_exception, tag_event, span, set_endpoint)
+            capture_exception, tag_event, span, set_endpoint, get_transaction_id)
 
         # handle getting a SIGTERM, which represents an imminent timeout
         def sigterm_handler(signal, frame):
@@ -270,28 +304,6 @@ class SDK(object):
                 meminfo = {}
             self.invokation_count += 1
             end_isoformat = datetime.utcnow().isoformat() + "Z"
-            is_custom_authorizer = "methodArn" in event and event.get("type") in (
-                "TOKEN",
-                "REQUEST",
-            )
-            is_apig = (
-                all(
-                    key in event
-                    for key in [
-                        "path",
-                        "headers",
-                        "requestContext",
-                        "resource",
-                        "httpMethod",
-                    ]
-                )
-                and "requestId" in event["requestContext"]
-            )
-            if not is_custom_authorizer and is_apig:
-                # For APIGW access logs
-                span_id = event["requestContext"]["requestId"]
-            else:
-                span_id = str(uuid.uuid4())
             tags = {
                 "appUid": self.app_uid,
                 "applicationName": self.application_name,

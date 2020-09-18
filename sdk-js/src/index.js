@@ -415,6 +415,9 @@ class ServerlessSDK {
         };
         ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
 
+        contextProxy.serverlessSdk.getTransactionId = () => trans.$.schema.transactionId;
+        ServerlessSDK._getTransactionId = contextProxy.serverlessSdk.getTransactionId;
+
         /*
          * Try Running Code
          */
@@ -470,6 +473,10 @@ class ServerlessSDK {
 
   static setEndpoint(endpoint) {
     ServerlessSDK._setEndpoint(endpoint);
+  }
+
+  static getTransactionId() {
+    return ServerlessSDK._getTransactionId();
   }
 }
 
