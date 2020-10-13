@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.0](https://github.com/serverless/enterprise-plugin/compare/v4.0.4...v4.1.0) (2020-10-13)
+
+### Features
+
+- Support retrieving providers credentials from backend dashbaord service ([10a2abb](https://github.com/serverless/enterprise-plugin/commit/10a2abb23a198352171055f6a181ae5494f06e27)) ([AJ Stuyvenberg](https://github.com/astuyve))
+- `sdk.getTransactionId` method for retrieving transaction id ([c8ade1c](https://github.com/serverless/enterprise-plugin/commit/c8ade1cdc8c8736de907207c55e9988114cec671)) ([Sandesh Devaraju](https://github.com/scouredimage))
+
+### Bug Fixes
+
+- **Fix `outputs` schema:**
+  - Ensure to not convert output strings to arrays ([3bcd0bd](https://github.com/serverless/enterprise-plugin/commit/3bcd0bdcb17e51f35cf2eb454ced2882264ba368)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Fix schema for property names ([689e9b2](https://github.com/serverless/enterprise-plugin/commit/689e9b2c22e80e8708e603628ad669b2c59c2b35)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.0.4](https://github.com/serverless/enterprise-plugin/compare/v4.0.3...v4.0.4) (2020-09-17)
 
 ### Bug Fixes
