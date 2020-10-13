@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-- Support retrieving providers credentials from backend dashbaord service ([10a2abb](https://github.com/serverless/enterprise-plugin/commit/10a2abb23a198352171055f6a181ae5494f06e27)) ([AJ Stuyvenberg](https://github.com/astuyve))
+- Support retrieving provider credentials from backend dashboard service ([10a2abb](https://github.com/serverless/enterprise-plugin/commit/10a2abb23a198352171055f6a181ae5494f06e27)) ([AJ Stuyvenberg](https://github.com/astuyve))
 - `sdk.getTransactionId` method for retrieving transaction id ([c8ade1c](https://github.com/serverless/enterprise-plugin/commit/c8ade1cdc8c8736de907207c55e9988114cec671)) ([Sandesh Devaraju](https://github.com/scouredimage))
 
 ### Bug Fixes
