@@ -145,3 +145,25 @@ module.exports.getTransactionId = async (event, context) => {
   }
   throw new Error(`transactionId not set/uuid: ${transactionId}`);
 };
+
+module.exports.getDashboardUrl = async (event, context) => {
+  const url = context.serverlessSdk.getDashboardUrl();
+  const domain = process.env.PLATFORM_STAGE === 'prod' ? 'serverless' : 'serverless-dev';
+  const re = new RegExp(
+    [
+      `https://app.${domain}.com`,
+      process.env.ORG,
+      'apps',
+      process.env.APP,
+      process.env.SERVICE,
+      process.env.STAGE,
+      process.env.REGION,
+      'explorer',
+      '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+    ].join('/')
+  );
+  if (re.test(url)) {
+    return 'success';
+  }
+  throw new Error(`dashboard url incorrect: ${url}`);
+};

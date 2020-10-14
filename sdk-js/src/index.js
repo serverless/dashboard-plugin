@@ -418,6 +418,23 @@ class ServerlessSDK {
         contextProxy.serverlessSdk.getTransactionId = () => trans.$.schema.transactionId;
         ServerlessSDK._getTransactionId = contextProxy.serverlessSdk.getTransactionId;
 
+        contextProxy.serverlessSdk.getDashboardUrl = (transactionId) => {
+          const domain =
+            this.$.serverlessPlatformStage === 'prod' ? 'serverless' : 'serverless-dev';
+          return [
+            `https://app.${domain}.com`,
+            trans.$.schema.tenantId,
+            'apps',
+            trans.$.schema.applicationName,
+            trans.$.schema.serviceName,
+            trans.$.schema.stageName,
+            trans.$.schema.compute.region,
+            'explorer',
+            transactionId || contextProxy.serverlessSdk.getTransactionId(),
+          ].join('/');
+        };
+        ServerlessSDK._getDashboardUrl = contextProxy.serverlessSdk.getDashboardUrl;
+
         /*
          * Try Running Code
          */
@@ -477,6 +494,10 @@ class ServerlessSDK {
 
   static getTransactionId() {
     return ServerlessSDK._getTransactionId();
+  }
+
+  static getDashboardUrl(transactionId) {
+    return ServerlessSDK._getDashboardUrl(transactionId);
   }
 }
 

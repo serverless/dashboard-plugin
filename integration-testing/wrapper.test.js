@@ -446,6 +446,15 @@ const setupTests = (mode, env = {}) => {
       expect(payload.type).to.equal('transaction');
     });
 
+    it('gets dashboard url for current transaction in wrapped node handler', async () => {
+      const { LogResult } = await awsRequest(lambdaService, 'invoke', {
+        LogType: 'Tail',
+        FunctionName: `${serviceName}-dev-getDashboardUrl`,
+      });
+      const payload = resolveAndValidateLog(LogResult);
+      expect(payload.type).to.equal('transaction');
+    });
+
     it('gets the return value when calling python', async () => {
       const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
@@ -668,6 +677,15 @@ const setupTests = (mode, env = {}) => {
       const { LogResult } = await awsRequest(lambdaService, 'invoke', {
         LogType: 'Tail',
         FunctionName: `${serviceName}-dev-pythonTransactionId`,
+      });
+      const payload = resolveAndValidateLog(LogResult);
+      expect(payload.type).to.equal('transaction');
+    });
+
+    it('gets dashboard url for current transaction in wrapped python handler', async () => {
+      const { LogResult } = await awsRequest(lambdaService, 'invoke', {
+        LogType: 'Tail',
+        FunctionName: `${serviceName}-dev-pythonDashboardUrl`,
       });
       const payload = resolveAndValidateLog(LogResult);
       expect(payload.type).to.equal('transaction');
