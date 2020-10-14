@@ -52,6 +52,15 @@ functions:
     handler: handler.waitForEmptyLoop
   getTransactionId:
     handler: handler.getTransactionId
+  getDashboardUrl:
+    handler: handler.getDashboardUrl
+    environment:
+      PLATFORM_STAGE: ${env:SERVERLESS_PLATFORM_STAGE}
+      ORG: ORG_PLACEHOLDER
+      APP: APP_PLACEHOLDER
+      SERVICE: SERVICE_PLACEHOLDER
+      STAGE: STAGE_PLACEHOLDER
+      REGION: REGION_PLACEHOLDER
 
   # Python handlers
   pythonSuccess:
@@ -81,3 +90,13 @@ functions:
   pythonTransactionId:
     handler: handler.get_transaction_id
     runtime: python3.8
+  pythonDashboardUrl:
+    handler: handler.get_dashboard_url
+    runtime: python3.8
+    environment:
+      PLATFORM_STAGE: ${env:SERVERLESS_PLATFORM_STAGE}
+      ORG: ORG_PLACEHOLDER
+      APP: APP_PLACEHOLDER
+      SERVICE: SERVICE_PLACEHOLDER
+      STAGE: STAGE_PLACEHOLDER
+      REGION: REGION_PLACEHOLDER

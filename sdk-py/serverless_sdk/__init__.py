@@ -87,6 +87,10 @@ def get_transaction_id():
     return _get_transaction_id()
 
 
+def get_dashboard_url(transaction_id=None):
+    return _get_dashboard_url(transaction_id)
+
+
 class SDK(object):
     def __init__(
         self,
@@ -103,6 +107,7 @@ class SDK(object):
         stage_name,
         plugin_version,
         disable_frameworks_instrumentation,
+        serverless_platform_stage,
     ):
         self.org_id = org_id
         self.application_name = application_name
@@ -116,6 +121,7 @@ class SDK(object):
         self.disable_http_spans = disable_http_spans
         self.stage_name = stage_name
         self.plugin_version = plugin_version
+        self.serverless_platform_stage = serverless_platform_stage
         self.invokation_count = 0
         self.spans = []
         self.event_tags = []
@@ -244,6 +250,20 @@ class SDK(object):
         def get_transaction_id():
             return span_id
 
+        def get_dashboard_url(transaction_id=None):
+            domain = "serverless" if self.serverless_platform_stage == "prod" else "serverless-dev"
+            return "/".join([
+              "https://app.{}.com".format(domain),
+              self.org_id,
+              "apps",
+              self.application_name,
+              self.service_name,
+              self.stage_name,
+              os.environ.get("AWS_REGION"),
+              "explorer",
+              span_id if transaction_id is None else transaction_id,
+            ])
+
         class SDK_METHOD_WRAPPER:
             def __init__(self, capture_exception, tag_event, span, set_endpoint, get_transaction_id):
                 self.capture_exception = capture_exception
@@ -251,6 +271,7 @@ class SDK(object):
                 self.span = span
                 self.set_endpoint = set_endpoint
                 self.get_transaction_id = get_transaction_id
+                self.get_dashboard_url = get_dashboard_url
 
         global _capture_exception
         _capture_exception = capture_exception
@@ -268,6 +289,9 @@ class SDK(object):
 
         global _get_transaction_id
         _get_transaction_id = get_transaction_id
+
+        global _get_dashboard_url
+        _get_dashboard_url = get_dashboard_url
 
         context.serverless_sdk = SDK_METHOD_WRAPPER(
             capture_exception, tag_event, span, set_endpoint, get_transaction_id)

@@ -29,10 +29,11 @@ module.exports = async function (templateName) {
       return writeFile(
         slsYamlPath,
         slsYamlString
-          .replace('SERVICE_PLACEHOLDER', serviceName)
-          .replace('REGION_PLACEHOLDER', region)
-          .replace('ORG_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration')
-          .replace('APP_PLACEHOLDER', process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
+          .replace(/SERVICE_PLACEHOLDER/g, serviceName)
+          .replace(/REGION_PLACEHOLDER/g, region)
+          .replace(/ORG_PLACEHOLDER/g, process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration')
+          .replace(/APP_PLACEHOLDER/g, process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration')
+          .replace(/STAGE_PLACEHOLDER/g, process.env.SERVERLESS_PLATFORM_TEST_STAGE || 'dev')
       );
     }),
     setupServerless().then((data) => data.binary),
