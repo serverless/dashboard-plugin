@@ -121,7 +121,7 @@ class ServerlessSDK {
    */
   async publishSync(event) {
     if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
-      return this.platformV2SDK.publishSync(event);
+      return this.platformV2SDK.events.publish(event);
     }
     return null;
   }
