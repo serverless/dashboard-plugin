@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/serverless/enterprise-plugin/compare/v4.1.0...v4.1.1) (2020-10-13)
+
+### Bug Fixes
+
+- Major upgrade of platform-client which moves to namespaced SDK methods
+- Includes a fix to encodeURI for instanceUIDs which may not be URI safe
+
 ### [4.1.0](https://github.com/serverless/enterprise-plugin/compare/v4.0.4...v4.1.0) (2020-10-13)
 
 ### Features
