@@ -6,8 +6,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-- Major upgrade of platform-client which moves to namespaced SDK methods
-- Includes a fix to encodeURI for instanceUIDs which may not be URI safe
+- Includes a fix to encodeURI for instanceUIDs which may not be URI safe ([cb412b1](https://github.com/serverless/enterprise-plugin/commit/cb412b11f217772453679be57f3e29885af7762c)) ([AJ Stuyvenberg](https://github.com/astuyve))
+- Major upgrade of platform-client which moves to namespaced SDK methods ([20b375f](https://github.com/serverless/enterprise-plugin/commit/20b375fd9ef935cf4aab44bff84d7daaeaa55f00)) ([AJ Stuyvenberg](https://github.com/astuyve))
+- Expose SDK method to fetch dashboard url for current transaction ([5feba87](https://github.com/serverless/enterprise-plugin/commit/5feba8703eed6e41a76d9085135928bad91f7765)) ([Sandesh Devaraju](https://github.com/scouredimage))
 
 ### [4.1.0](https://github.com/serverless/enterprise-plugin/compare/v4.0.4...v4.1.0) (2020-10-13)
 
