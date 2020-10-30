@@ -53,7 +53,7 @@ npm link
 Then clone & link sls & link the plugin into sls:
 
 ```
-git clone https://github.com/serverl/serverless
+git clone https://github.com/serverless/serverless
 cd serverless
 npm i
 npm link
