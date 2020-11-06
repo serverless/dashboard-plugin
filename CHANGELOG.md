@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [4.1.1](https://github.com/serverless/enterprise-plugin/compare/v4.1.0...v4.1.1) (2020-10-13)
+### [4.1.2](https://github.com/serverless/enterprise-plugin/compare/v4.1.1...v4.1.2) (2020-11-06)
+
+### Bug Fixes
+
+- Ensure `test` command exits with non zero code on fail ([#516](https://github.com/serverless/enterprise-plugin/issues/516)) ([8f217db](https://github.com/serverless/enterprise-plugin/commit/8f217dbbeab0e982b2b9ed17ff8f62911fd92f0a)) ([Mariusz Nowak](https://github.com/medikoo))
+- Fix internal processes handling in `studio` commmand ([#515](https://github.com/serverless/enterprise-plugin/issues/515)) ([465ea01](https://github.com/serverless/enterprise-plugin/commit/465ea0141ca6ba621c8fe7452b1c3963e39735be)) ([Steve Willard](https://github.com/stevewillard))
+
+### [4.1.1](https://github.com/serverless/enterprise-plugin/compare/v4.1.0...v4.1.1) (2020-10-15)
 
 ### Bug Fixes
 
