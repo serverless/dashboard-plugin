@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/serverless/enterprise-plugin/compare/v4.1.2...v4.2.0) (2020-12-04)
+
+### Features
+
+- Recognize lambdas referencing ECR images ([#517](https://github.com/serverless/enterprise-plugin/issues/517) ([b95f6aa](https://github.com/serverless/enterprise-plugin/commit/b95f6aa9b59f23c149f0377af8ba03664e514c19)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.1.2](https://github.com/serverless/enterprise-plugin/compare/v4.1.1...v4.1.2) (2020-11-06)
 
 ### Bug Fixes
