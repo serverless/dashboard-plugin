@@ -124,7 +124,10 @@ class Transaction {
       this.$.schema.event.timestamp = new Date().toISOString();
     }
     // Extend Schema: If "event" is "aws.apigateway"
-    if (this.$.schema.event.type === 'aws.apigateway.http') {
+    if (
+      this.$.schema.event.type === 'aws.apigateway.http' ||
+      this.$.schema.event.type === 'aws.apigatewayv2.http'
+    ) {
       if (!schemas.eventAwsApiGatewayHttp) {
         schemas.eventAwsApiGatewayHttp = require('./schemas/transaction-function-event-awsapigatewayhttp.json');
       }

@@ -276,6 +276,26 @@ class ServerlessSDK {
           // For APIGW access logs
           trans.$.schema.transactionId = event.requestContext.requestId;
         }
+        // Capture Event Data: aws.apigatewayv2.http
+        else if (eventType === 'aws.apigatewayv2.http') {
+          const timestamp = event.requestContext.timeEpoch || Date.now().valueOf();
+          trans.set('event.timestamp', new Date(timestamp).toISOString());
+          trans.set('event.source', 'aws.apigatewayv2');
+          trans.set('event.custom.accountId', event.requestContext.accountId);
+          trans.set('event.custom.apiId', event.requestContext.apiId);
+          trans.set('event.custom.domainPrefix', event.requestContext.domainPrefix);
+          trans.set('event.custom.domain', event.requestContext.domainName);
+          trans.set('event.custom.requestId', event.requestContext.requestId);
+          trans.set('event.custom.requestTime', event.requestContext.time);
+          trans.set('event.custom.requestTimeEpoch', event.requestContext.timeEpoch);
+          trans.set('event.custom.httpPath', event.requestContext.http.path);
+          trans.set('event.custom.httpMethod', event.requestContext.http.method);
+          trans.set('event.custom.xTraceId', event.headers && event.headers['x-amzn-trace-id']);
+          trans.set('event.custom.userAgent', event.headers && event.headers['user-agent']);
+
+          // For APIGW access logs
+          trans.$.schema.transactionId = event.requestContext.requestId;
+        }
         trans.set('event.custom.stage', meta.stageName);
 
         const transactionSpans = trans.$.spans;
