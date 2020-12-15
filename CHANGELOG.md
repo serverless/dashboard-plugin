@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/serverless/enterprise-plugin/compare/v4.2.0...v4.3.0) (2020-12-15)
+
+### Bug Fixes
+
+- Support API Gateway event payload format version 2.0 ([#518](https://github.com/serverless/enterprise-plugin/pull/518)) ([37ff190](https://github.com/serverless/enterprise-plugin/commit/37ff190caaaa19c5fa922858e0b39f178e64e792)) ([Sandesh Devaraju](https://github.com/scouredimage))
+
 ## [4.2.0](https://github.com/serverless/enterprise-plugin/compare/v4.1.2...v4.2.0) (2020-12-04)
 
 ### Features
