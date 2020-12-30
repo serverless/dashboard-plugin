@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.4.1](https://github.com/serverless/enterprise-plugin/compare/v4.4.0...v4.4.1) (2020-12-30)
+
+### Bug Fixes
+
+- Fix handling of deploymentProfile resolution ([#526](https://github.com/serverless/enterprise-plugin/issues/526)) ([61a872b](https://github.com/serverless/enterprise-plugin/commit/61a872b2f3010905187b665b61d6236663948e35)) ([AJ Stuyvenberg](https://github.com/astuyve))
+
 ## [4.4.0](https://github.com/serverless/enterprise-plugin/compare/v4.3.0...v4.4.0) (2020-12-30)
 
 ### Features
