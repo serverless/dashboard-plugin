@@ -2,6 +2,7 @@
 
 process.env.SERVERLESS_PLATFORM_STAGE = 'dev';
 
+const { expect } = require('chai');
 const setup = require('./setup');
 const zlib = require('zlib');
 const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk');
@@ -39,7 +40,7 @@ const setupTests = (mode, env = {}) => {
   let lambdaService;
 
   describe(mode, () => {
-    beforeAll(async () => {
+    before(async () => {
       const accessKey = await getAccessKeyForTenant(org);
       lambdaService = {
         name: 'Lambda',
@@ -60,7 +61,7 @@ const setupTests = (mode, env = {}) => {
       await sls(['deploy'], { env });
     });
 
-    afterAll(() => {
+    after(() => {
       if (teardown) return teardown();
       return null;
     });
