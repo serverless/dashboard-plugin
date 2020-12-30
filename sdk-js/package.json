@@ -17,21 +17,20 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@serverless/test": "^4.9.2",
+    "@serverless/test": "^7.0.0",
     "chai": "^4.2.0",
     "git-list-updated": "^1.2.1",
-    "mocha": "^6.2.3",
+    "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   },
   "mocha": {
-    "reporter": "@serverless/test/setup/mocha-reporter",
     "require": [
+      "@serverless/test/setup/patch",
       "@serverless/test/setup/log",
-      "@serverless/test/setup/async-leaks-detector",
       "@serverless/test/setup/mock-homedir",
-      "@serverless/test/setup/restore-cwd",
+      "@serverless/test/setup/mock-cwd",
       "@serverless/test/setup/restore-env"
     ],
     "timeout": 5000
