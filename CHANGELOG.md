@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.4.0](https://github.com/serverless/enterprise-plugin/compare/v4.3.0...v4.4.0) (2020-12-30)
+
+### Features
+
+- Support Parameters, override Profiles with Providers/Parameters ([#520](https://github.com/serverless/enterprise-plugin/issues/520)) ([5c56e2d](https://github.com/serverless/enterprise-plugin/commit/5c56e2d266d726abd5897739fe3f2825dde3cfb5)) ([AJ Stuyvenberg](https://github.com/astuyve))
+- Deprecate variables usage in core properties ([#524](https://github.com/serverless/enterprise-plugin/issues/524)) ([697d701](https://github.com/serverless/enterprise-plugin/commit/697d701041dff5fd154de3e4d641851aa02d3e99)) ([AJ Stuyvenberg](https://github.com/astuyve))
+
+### Bug Fixes
+
+- Remove safeguards traces to not collide with safeguards-plugin ([#522](https://github.com/serverless/enterprise-plugin/issues/522)) ([28cf1ec](https://github.com/serverless/enterprise-plugin/commit/28cf1ecbfe24c69b2510a885ee732db7a1046797)) ([Martin Litvaj](https://github.com/Kamahl19))
+
 ## [4.3.0](https://github.com/serverless/enterprise-plugin/compare/v4.2.0...v4.3.0) (2020-12-15)
 
 ### Bug Fixes
