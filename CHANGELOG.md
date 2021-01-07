@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.4.2](https://github.com/serverless/enterprise-plugin/compare/v4.4.1...v4.4.2) (2021-01-07)
+
+### Bug Fixes
+
+- Update dependency on `@serverless/platform-client` to avoid security vulnerability of `axios` ([#528](https://github.com/serverless/enterprise-plugin/pull/528)) ([d7b6ac8](https://github.com/serverless/enterprise-plugin/pull/528/commits/d7b6ac8175dd13cf8134225b11031367a52fb165)) ([pgrzesik](https://github.com/pgrzesik))
+
 ### [4.4.1](https://github.com/serverless/enterprise-plugin/compare/v4.4.0...v4.4.1) (2020-12-30)
 
 ### Bug Fixes
