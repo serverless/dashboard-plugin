@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.4.3](https://github.com/serverless/enterprise-plugin/compare/v4.4.2...v4.4.3) (2021-02-09)
+
+### Maintenance
+
+- Migrate `@serverless/platform-sdk` methods to corresponding `@serverless/utils` methods ([#536](https://github.com/serverless/enterprise-plugin/pull/536)) ([4416651](https://github.com/serverless/enterprise-plugin/commit/4416651c965c4d5a0ef98db41032fc87c8539852)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Remove deprecated use of `git.silent` ([#537](https://github.com/serverless/enterprise-plugin/pull/537)) ([fab4f50](https://github.com/serverless/enterprise-plugin/commit/fab4f50733aa9ccbd90c4b4cc2d51d0843ac3be2)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [4.4.2](https://github.com/serverless/enterprise-plugin/compare/v4.4.1...v4.4.2) (2021-01-07)
 
 ### Bug Fixes
