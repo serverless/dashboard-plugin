@@ -468,6 +468,7 @@ class ServerlessSDK {
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
         } catch (error) {
           finalize(error, () => context.fail(error));
+          return null;
         }
 
         // If promise was returned, handle it
