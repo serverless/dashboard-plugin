@@ -33,6 +33,7 @@
     "@serverless/test": "^7.8.0",
     "aws-sdk": "^2.840.0",
     "chai": "^4.3.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^7.19.0",
     "eslint-plugin-import": "^2.22.1",
     "essentials": "^1.1.1",
