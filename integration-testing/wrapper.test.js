@@ -61,7 +61,13 @@ const setupTests = (mode, env = {}) => {
     expect(logMsg).to.match(/SERVERLESS_ENTERPRISE/);
     const logLine = logMsg.split('\n').find((line) => line.includes('SERVERLESS_ENTERPRISE'));
     const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
-    const result = JSON.parse(payloadString);
+    const result = (() => {
+      try {
+        return JSON.parse(payloadString);
+      } catch (error) {
+        throw new Error(`Resolved log payloed is not a valid JSON: ${payloadString}`);
+      }
+    })();
     if (result.b) {
       const zipped = Buffer.from(result.b, 'base64');
       const unzipped = JSON.parse(zlib.gunzipSync(zipped));
