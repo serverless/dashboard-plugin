@@ -6,7 +6,7 @@ const { expect } = require('chai');
 const setup = require('./setup');
 const zlib = require('zlib');
 const wait = require('timers-ext/promise/sleep');
-const { getAccessKeyForTenant, getDeployProfile } = require('@serverless/platform-sdk');
+const { getPlatformClientWithAccessKey } = require('../lib/clientUtils');
 const awsRequest = require('@serverless/test/aws-request');
 const log = require('log').get('test');
 
@@ -79,19 +79,17 @@ const setupTests = (mode, env = {}) => {
 
   describe(mode, () => {
     before(async () => {
-      const accessKey = await getAccessKeyForTenant(org);
+      const sdk = await getPlatformClientWithAccessKey(org);
+      const deploymentProfile = await sdk.deploymentProfiles.get({
+        orgName: org,
+        appName: app,
+        stageName: 'dev',
+      });
       lambdaService = {
         name: 'Lambda',
         params: {
           region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
-          credentials: (
-            await getDeployProfile({
-              tenant: org,
-              app,
-              stage: 'dev',
-              accessKey,
-            })
-          ).providerCredentials.secretValue,
+          credentials: deploymentProfile.providerCredentials.secretValue,
         },
       };
 
