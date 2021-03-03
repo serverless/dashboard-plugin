@@ -4,5 +4,5 @@ const platformClientVersion = require('@serverless/platform-client/package').ver
 
 module.exports = require('./lib/plugin');
 
-module.exports.sdkVersion = platformClientVersion;
+module.exports.sdkVersion = 'n/a';
 module.exports.platformClientVersion = platformClientVersion;
