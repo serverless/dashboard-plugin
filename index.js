@@ -1,7 +1,8 @@
 'use strict';
 
-const { version } = require('@serverless/platform-sdk/package.json');
+const platformClientVersion = require('@serverless/platform-client/package').version;
 
 module.exports = require('./lib/plugin');
 
-module.exports.sdkVersion = version;
+module.exports.sdkVersion = platformClientVersion;
+module.exports.platformClientVersion = platformClientVersion;
