@@ -112,7 +112,7 @@ class ServerlessSDK {
    */
   publish(event) {
     if (this.$.devModeEnabled && this.platformV2SDK.isConnected()) {
-      this.platformV2SDK.publish(event);
+      this.platformV2SDK.events.publish(event);
     }
   }
 
