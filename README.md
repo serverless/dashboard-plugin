@@ -14,21 +14,14 @@ Upon deployment, the Serverless Framwork Enteprise Plugin will automatically wra
 
 ## Dev notes
 
-### Install dependencies
+### Install dependencies and build SDK JS
 
 ```
 npm i
 cd sdk-js
 npm i
-cd -
-```
-
-### Build
-
-`sdk-js` needs to be compile, & tests use the `dist` build for integration purposes.
-
-```
 npm run build
+cd -
 ```
 
 ### Test
@@ -38,41 +31,20 @@ npm t
 cd sdk-js
 npm t
 cd -
-npm run integration-test
 ```
 
-### Using your checked out version of the plugin for test/dev purposes:
+#### Integration tests
 
-First build & link your plugin globally:
+For integration tests run you need an access to `integration` dashboard organization, and generated for it access key.
 
-```
-npm run build
-npm link
-```
-
-Then clone & link sls & link the plugin into sls:
+Then tests can be run as:
 
 ```
-git clone https://github.com/serverless/serverless
-cd serverless
-npm i
-npm link
-npm link @serverless/enterprise-plugin
+SERVERLESS_ACCESS_KEY=xxx npm run integration-test
 ```
-
-If you need to work with a development version of the platform SDK too, in the sdk, run:
-
-```
-npm run build
-npm link
-```
-
-and then in both serverless & this plugin, run `npm link @serverless/platform-sdk`
 
 ### Release process
 
 - Create a PR updating version in `package.json`
 - Create a draft release on github with a change log
-- Have it approved & merge
-- Publish the release, Travis CI will publish it to NPM
-- Verify the release is in the versions tab of NPM
+- Have it approved & merge (Release is automatically published via CI)
