@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.0](https://github.com/serverless/enterprise-plugin/compare/v4.4.3...v4.5.0) (2021-03-04)
+
+### Features
+
+- Support `--use-local-credentials` flag to skip provider resolution ([#539](https://github.com/serverless/enterprise-plugin/pull/539)) ([c6048d1](https://github.com/serverless/enterprise-plugin/commit/c6048d162597441f0ad3e2c35509a3f00805c20e)) ([AJ Stuyvenberg](https://github.com/astuyve))
+
+### Bug fixes
+
+- Properly use namespaced `events` module ([#548](https://github.com/serverless/enterprise-plugin/pull/548)) ([72019bd](https://github.com/serverless/enterprise-plugin/commit/72019bd3d2657f3a558972d37772d0fc4379d9fa)) ([AJ Stuyvenberg](https://github.com/astuyve))
+
+### Maintenance
+
+- Drop dependency on `@serverless/platform-sdk` by replacing it with corresponding `@serverless/platform-client` methods ([#546](https://github.com/serverless/enterprise-plugin/pull/546)) ([924360f](https://github.com/serverless/enterprise-plugin/pull/546/commits/924360f7067d713bb6678af58709ee0cc1a4d9ab)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [4.4.3](https://github.com/serverless/enterprise-plugin/compare/v4.4.2...v4.4.3) (2021-02-09)
 
 ### Maintenance
