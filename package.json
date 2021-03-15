@@ -158,6 +158,30 @@
       "pre-commit": "lint-staged"
     }
   },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true
+    },
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "perf",
+        "section": "Performance Improvements"
+      },
+      {
+        "type": "refactor",
+        "section": "Maintenance Improvements"
+      }
+    ]
+  },
   "scripts": {
     "cover": "nyc npm test",
     "integration-test": "mocha-isolated --pass-through-aws-creds --skip-fs-cleanup-check --max-workers=20 \"integration-testing/**/*.test.js\"",
