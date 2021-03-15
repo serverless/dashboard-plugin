@@ -13,14 +13,14 @@
     "lodash": "^4.17.21",
     "require-in-the-middle": "^5.1.0",
     "stackman": "^4.0.1",
-    "type": "^2.3.0",
+    "type": "^2.5.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@serverless/test": "^7.10.0",
-    "chai": "^4.3.3",
+    "@serverless/test": "^7.10.1",
+    "chai": "^4.3.4",
     "git-list-updated": "^1.2.1",
-    "mocha": "^8.3.0",
+    "mocha": "^8.3.2",
     "nyc": "^15.1.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
