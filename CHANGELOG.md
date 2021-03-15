@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.1](https://github.com/serverless/enterprise-plugin/compare/v4.5.0...v4.5.1) (2021-03-15)
+
+### Bug Fixes
+
+- Fix error handling in `sls test` command ([#551](https://github.com/serverless/enterprise-plugin/pull/551)) ([3fbcdb1](https://github.com/serverless/enterprise-plugin/commit/3fbcdb1c352251ef257bf0a0ba3baba3a97d14e0)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintenance Improvements
+
+- Adapt to commands schema as configured in `serverless` ([#552](https://github.com/serverless/enterprise-plugin/pull/552)) ([0a703fe](https://github.com/serverless/enterprise-plugin/commit/0a703fe5b49e783748a3f220f0d30b698561da06)) ([Mariusz Nowak](https://github.com/medikoo))
+- Recognize container commands ([#552](https://github.com/serverless/enterprise-plugin/pull/552)) ([c263f2f](https://github.com/serverless/enterprise-plugin/commit/c263f2f1f4a347bd33dc4b3daf717d56b83dfc33)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.5.0](https://github.com/serverless/enterprise-plugin/compare/v4.4.3...v4.5.0) (2021-03-04)
 
 ### Features
