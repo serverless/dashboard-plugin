@@ -6,15 +6,13 @@ const { expect } = require('chai');
 const setup = require('./setup');
 const zlib = require('zlib');
 const wait = require('timers-ext/promise/sleep');
-const { getPlatformClientWithAccessKey } = require('../lib/clientUtils');
 const awsRequest = require('@serverless/test/aws-request');
 const log = require('log').get('test');
+const { ServerlessSDK } = require('@serverless/platform-client');
 
 let sls;
 let teardown;
 let serviceName;
-const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
-const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
 
 describe('integration: wrapper', function () {
   this.timeout(1000 * 60 * 5);
@@ -67,7 +65,7 @@ describe('integration: wrapper', function () {
       try {
         return JSON.parse(payloadString);
       } catch (error) {
-        throw new Error(`Resolved log payloed is not a valid JSON: ${payloadString}`);
+        throw new Error(`Resolved log payload is not a valid JSON: ${payloadString}`);
       }
     })();
     if (result.b) {
@@ -80,17 +78,22 @@ describe('integration: wrapper', function () {
   };
 
   before(async () => {
-    const sdk = await getPlatformClientWithAccessKey(org);
-    const deploymentProfile = await sdk.deploymentProfiles.get({
-      orgName: org,
-      appName: app,
-      stageName: 'dev',
+    const sdk = new ServerlessSDK({
+      platformStage: 'dev',
+      accessKey: process.env.SERVERLESS_ACCESS_KEY,
     });
+    const providerCredentials = await sdk.getProvider('PDxHFZVJfCK8X8274S', 'bQE3Yljcl');
+    let providerDetails;
+    if (providerCredentials.result) {
+      ({ providerDetails } = providerCredentials.result);
+    } else {
+      throw new Error(`Unable to fetch providers: ${providerCredentials.error}`);
+    }
     lambdaService = {
       name: 'Lambda',
       params: {
         region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
-        credentials: deploymentProfile.providerCredentials.secretValue,
+        credentials: providerDetails,
       },
     };
 
