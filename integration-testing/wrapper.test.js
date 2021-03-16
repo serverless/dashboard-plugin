@@ -13,6 +13,7 @@ const { ServerlessSDK } = require('@serverless/platform-client');
 let sls;
 let teardown;
 let serviceName;
+const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 
 describe('integration: wrapper', function () {
   this.timeout(1000 * 60 * 5);
@@ -82,7 +83,25 @@ describe('integration: wrapper', function () {
       platformStage: 'dev',
       accessKey: process.env.SERVERLESS_ACCESS_KEY,
     });
-    const providerCredentials = await sdk.getProvider('PDxHFZVJfCK8X8274S', 'bQE3Yljcl');
+    const orgResult = await sdk.organizations.get({ orgName: org });
+    let orgUid;
+    if (orgResult.orgUid) {
+      orgUid = orgResult.orgUid;
+    } else {
+      throw new Error(`Unable to fetch org details for ${org}. Result: ${orgResult}`);
+    }
+    const listProvidersResult = await sdk.getProviders(orgUid);
+    let listedProviders;
+    if (listProvidersResult.result) {
+      listedProviders = listProvidersResult.result;
+    } else {
+      throw new Error(`Unable to list providers for ${org}. Result: ${listProvidersResult.errors}`);
+    }
+    const defaultProvider = listedProviders.find((provider) => provider.isDefault);
+    if (!defaultProvider) {
+      throw new Error(`Unable to find default provider in: ${listedProviders}`);
+    }
+    const providerCredentials = await sdk.getProvider(orgUid, defaultProvider.providerUid);
     let providerDetails;
     if (providerCredentials.result) {
       ({ providerDetails } = providerCredentials.result);
