@@ -80,7 +80,7 @@ describe('integration: wrapper', function () {
 
   before(async () => {
     const sdk = new ServerlessSDK({
-      platformStage: 'dev',
+      platformStage: process.env.SERVERLESS_PLATFORM_STAGE || 'dev',
       accessKey: process.env.SERVERLESS_ACCESS_KEY,
     });
     const orgResult = await sdk.organizations.get({ orgName: org });
