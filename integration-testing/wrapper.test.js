@@ -6,15 +6,14 @@ const { expect } = require('chai');
 const setup = require('./setup');
 const zlib = require('zlib');
 const wait = require('timers-ext/promise/sleep');
-const { getPlatformClientWithAccessKey } = require('../lib/clientUtils');
 const awsRequest = require('@serverless/test/aws-request');
 const log = require('log').get('test');
+const { ServerlessSDK } = require('@serverless/platform-client');
 
 let sls;
 let teardown;
 let serviceName;
 const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
-const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
 
 describe('integration: wrapper', function () {
   this.timeout(1000 * 60 * 5);
@@ -67,7 +66,7 @@ describe('integration: wrapper', function () {
       try {
         return JSON.parse(payloadString);
       } catch (error) {
-        throw new Error(`Resolved log payloed is not a valid JSON: ${payloadString}`);
+        throw new Error(`Resolved log payload is not a valid JSON: ${payloadString}`);
       }
     })();
     if (result.b) {
@@ -80,17 +79,40 @@ describe('integration: wrapper', function () {
   };
 
   before(async () => {
-    const sdk = await getPlatformClientWithAccessKey(org);
-    const deploymentProfile = await sdk.deploymentProfiles.get({
-      orgName: org,
-      appName: app,
-      stageName: 'dev',
+    const sdk = new ServerlessSDK({
+      platformStage: process.env.SERVERLESS_PLATFORM_STAGE || 'dev',
+      accessKey: process.env.SERVERLESS_ACCESS_KEY,
     });
+    const orgResult = await sdk.organizations.get({ orgName: org });
+    let orgUid;
+    if (orgResult.orgUid) {
+      orgUid = orgResult.orgUid;
+    } else {
+      throw new Error(`Unable to fetch org details for ${org}. Result: ${orgResult}`);
+    }
+    const listProvidersResult = await sdk.getProviders(orgUid);
+    let listedProviders;
+    if (listProvidersResult.result) {
+      listedProviders = listProvidersResult.result;
+    } else {
+      throw new Error(`Unable to list providers for ${org}. Result: ${listProvidersResult.errors}`);
+    }
+    const defaultProvider = listedProviders.find((provider) => provider.isDefault);
+    if (!defaultProvider) {
+      throw new Error(`Unable to find default provider in: ${listedProviders}`);
+    }
+    const providerCredentials = await sdk.getProvider(orgUid, defaultProvider.providerUid);
+    let providerDetails;
+    if (providerCredentials.result) {
+      ({ providerDetails } = providerCredentials.result);
+    } else {
+      throw new Error(`Unable to fetch providers: ${providerCredentials.errors}`);
+    }
     lambdaService = {
       name: 'Lambda',
       params: {
         region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
-        credentials: deploymentProfile.providerCredentials.secretValue,
+        credentials: providerDetails,
       },
     };
 
