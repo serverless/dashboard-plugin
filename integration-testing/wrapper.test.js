@@ -106,7 +106,7 @@ describe('integration: wrapper', function () {
     if (providerCredentials.result) {
       ({ providerDetails } = providerCredentials.result);
     } else {
-      throw new Error(`Unable to fetch providers: ${providerCredentials.error}`);
+      throw new Error(`Unable to fetch providers: ${providerCredentials.errors}`);
     }
     lambdaService = {
       name: 'Lambda',
