@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.2](https://github.com/serverless/enterprise-plugin/compare/v4.5.1...v4.5.2) (2021-03-19)
+
+### Maintenance Improvements
+
+- Recognize `user_uid` during `login` and `register` command and persist it in local config file ([#555](https://github.com/serverless/enterprise-plugin/pull/555)) ([1fdf9ba](https://github.com/serverless/enterprise-plugin/commit/1fdf9bae4429f69b6b6b6b8c478ad8aed111a25b)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [4.5.1](https://github.com/serverless/enterprise-plugin/compare/v4.5.0...v4.5.1) (2021-03-15)
 
 ### Bug Fixes
