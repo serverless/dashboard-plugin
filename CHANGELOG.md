@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.3](https://github.com/serverless/enterprise-plugin/compare/v4.5.2...v4.5.3) (2021-03-30)
+
+### Maintenance Improvements
+
+- Update to resolve variables with a new resolver ([#558](https://github.com/serverless/enterprise-plugin/pull/558)) ([2aa0040](https://github.com/serverless/enterprise-plugin/commit/2aa0040241ffd3f3193908add3b9709b72a5209c)) ([Mariusz Nowak](https://github.com/medikoo))
+- Upgrade "js-yaml" to v4 ([#559](https://github.com/serverless/enterprise-plugin/pull/559)) ([17e5b3f](https://github.com/serverless/enterprise-plugin/commit/17e5b3fc77edbdc7def5d4caa306dcd67122835d)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.5.2](https://github.com/serverless/enterprise-plugin/compare/v4.5.1...v4.5.2) (2021-03-19)
 
 ### Maintenance Improvements
