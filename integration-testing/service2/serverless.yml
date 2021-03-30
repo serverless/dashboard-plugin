@@ -18,6 +18,8 @@ service: SERVICE_PLACEHOLDER
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 frameworkVersion: '>=1.37.1'
+variablesResolutionMode: 20210326
+
 provider:
   name: aws
   runtime: nodejs12.x
