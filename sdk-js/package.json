@@ -7,7 +7,7 @@
     "test:isolated": "mocha-isolated \"!(node_modules|dist)/**/*.test.js\""
   },
   "dependencies": {
-    "@serverless/platform-client": "^4.2.0",
+    "@serverless/platform-client": "^4.2.2",
     "after-all-results": "^2.0.0",
     "flat": "^5.0.2",
     "lodash": "^4.17.21",
@@ -17,7 +17,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@serverless/test": "^7.10.1",
+    "@serverless/test": "^7.11.0",
     "chai": "^4.3.4",
     "git-list-updated": "^1.2.1",
     "mocha": "^8.3.2",
