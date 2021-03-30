@@ -2,6 +2,8 @@ org: ORG_PLACEHOLDER
 app: APP_PLACEHOLDER
 service: SERVICE_PLACEHOLDER
 
+variablesResolutionMode: 20210326
+
 provider:
   name: aws
   runtime: nodejs12.x
