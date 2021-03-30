@@ -27,5 +27,5 @@ functions:
     handler: handler.hello
 
 custom:
-  testSecret: ${secrets:test}
+  testParam: ${param:test}
   testOutput: ${output:service.outputVariable, 'missingValue'}
