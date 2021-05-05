@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.6.0](https://github.com/serverless/enterprise-plugin/compare/v4.5.3...v4.6.0) (2021-05-05)
+
+### Features
+
+- Expose `areProvidersUsed` boolean on deployment data ([#557](https://github.com/serverless/enterprise-plugin/pull/557)) ([de7ecf9](https://github.com/serverless/enterprise-plugin/commit/de7ecf9d295a6f728d21b1b9d16bfbeaccb7964b)) ([AJ Stuyvenberg](https://github.com/astuyve))
+
 ### [4.5.3](https://github.com/serverless/enterprise-plugin/compare/v4.5.2...v4.5.3) (2021-03-30)
 
 ### Maintenance Improvements
