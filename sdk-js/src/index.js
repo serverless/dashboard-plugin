@@ -230,9 +230,29 @@ class ServerlessSDK {
           eventType,
         });
 
+        const timeoutTime = context.getRemainingTimeInMillis() - 50;
+        const setTimeoutTime = Date.now();
         const timeoutHandler = setTimeout(() => {
-          if (callback === currentAwsCallback) trans.report();
-        }, context.getRemainingTimeInMillis() - 50).unref();
+          if (
+            callback === currentAwsCallback &&
+            // If function ended as unresolved, this timeout will not be cleared and will fire
+            // in next invocation
+            //
+            // We try to overcome that by inspecting the latest received callback
+            // (whether it's same as when registering the timeout)
+            //
+            // Still AWS tends to trigger this timeout callback before lambda handler is invoked
+            // and in such scenario our callback based validation is ineffective
+            // (as we still confirm against callback from previous invocation).
+            //
+            // Following time based patch narrows the margin of error when handling such scenarios.
+            // We assume that if we're in a moment in time which is past the allowed invocation
+            // time, we cannot be in invocation in which this timeout handler was registered
+            Date.now() - (setTimeoutTime + timeoutTime) < 100
+          ) {
+            trans.report();
+          }
+        }, timeoutTime).unref();
 
         // Capture Compute Data: aws.lambda
         trans.set('compute.runtime', `aws.lambda.nodejs.${process.versions.node}`);
