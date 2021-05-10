@@ -7,6 +7,7 @@ const setup = require('./setup');
 const zlib = require('zlib');
 const wait = require('timers-ext/promise/sleep');
 const awsRequest = require('@serverless/test/aws-request');
+const hasFailed = require('@serverless/test/has-failed');
 const log = require('log').get('test');
 const { ServerlessSDK } = require('@serverless/platform-client');
 
@@ -125,7 +126,9 @@ describe('integration: wrapper', function () {
     await sls(['deploy']);
   });
 
-  after(() => {
+  after(function () {
+    // Do not remove on fail, to allow further investigation
+    if (hasFailed(this.test.parent)) return null;
     if (teardown) return teardown();
     return null;
   });
