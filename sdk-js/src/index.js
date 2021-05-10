@@ -344,7 +344,8 @@ class ServerlessSDK {
               trans.error(error, true, cb);
             } else {
               trans.end();
-              cb();
+              // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
+              setTimeout(cb);
             }
           } finally {
             finalized = true;

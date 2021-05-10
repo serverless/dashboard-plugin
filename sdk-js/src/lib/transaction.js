@@ -188,7 +188,8 @@ class Transaction {
         // End transaction
         this.buildOutput(ERROR); // set this to transaction for now.
         self.end();
-        cb();
+        // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
+        setTimeout(cb);
       });
     } else {
       // Create Error ID
@@ -209,7 +210,8 @@ class Transaction {
       // End transaction
       this.buildOutput(ERROR); // set this to transaction for now.
       self.end();
-      cb();
+      // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
+      setTimeout(cb);
     }
   }
 
