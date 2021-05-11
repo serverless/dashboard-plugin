@@ -60,27 +60,32 @@ jobs:
           cd sdk-js
           npm ci
 
-      - name: Publish canary
-        # Note: Setting NODE_AUTH_TOKEN as job|workspace wide env var won't work
-        #       as it appears actions/setup-node sets own value
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # 01dd......71cc
-        run: |
-          ./.github/prepare-canary.js
-          cd sdk-js
-          npm run build
-          cd ..
-          npm publish --tag canary
-          git checkout .
+      # TODO: Temporararily turned off as it cannot work until `serverless` in `master`
+      #       is updated to work with published `@serverlesss/dashboard-plugin`
+      # - name: Publish canary
+      #   # Note: Setting NODE_AUTH_TOKEN as job|workspace wide env var won't work
+      #   #       as it appears actions/setup-node sets own value
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # 01dd......71cc
+      #   run: |
+      #     ./.github/prepare-canary.js
+      #     cd sdk-js
+      #     npm run build
+      #     cd ..
+      #     npm publish --tag canary
+      #     git checkout .
 
-      - name: Unit tests
-        run: npm test -- -b
-      - name: SDK JS Unit tests
-        run: |
-          cd sdk-js
-          npm test -- -b
+      # - name: Unit tests
+      #   run: npm test -- -b
+      # - name: SDK JS Unit tests
+      #   run: |
+      #     cd sdk-js
+      #     npm test -- -b
 
   windowsNode14:
+    # TODO: Temporararily turned off as it cannot work until `serverless` in `master`
+    #       is updated to work with published `@serverlesss/dashboard-plugin`
+    if: false
     name: '[Windows] Node.js v14: Unit tests'
     runs-on: windows-latest
     steps:
@@ -130,6 +135,9 @@ jobs:
           npm test -- -b
 
   linuxNode12:
+    # TODO: Temporararily turned off as it cannot work until `serverless` in `master`
+    #       is updated to work with published `@serverlesss/dashboard-plugin`
+    if: false
     name: '[Linux] Node.js 12: Unit tests with coverage'
     runs-on: ubuntu-latest
     steps:
@@ -185,6 +193,9 @@ jobs:
           npx codecov -p sdk-js
 
   linuxNode10:
+    # TODO: Temporararily turned off as it cannot work until `serverless` in `master`
+    #       is updated to work with published `@serverlesss/dashboard-plugin`
+    if: false
     name: '[Linux] Node.js v10: Isolated unit tests'
     runs-on: ubuntu-latest
     steps:
@@ -233,7 +244,9 @@ jobs:
   integrate:
     name: Integrate
     runs-on: ubuntu-latest
-    needs: [linuxNode14, windowsNode14, linuxNode12, linuxNode10]
+    # TODO: Temporararily minized dependency as it cannot work until `serverless` in `master`
+    #       is updated to work with published `@serverlesss/dashboard-plugin`
+    needs: [linuxNode14]
     timeout-minutes: 30 # Default is 360
     env:
       SERVERLESS_PLATFORM_TEST_REGION: us-east-2
@@ -270,9 +283,10 @@ jobs:
         run: |
           cd sdk-js
           npm run build
-
-      - name: Integration tests
-        run: npm run integration-test
+      # TODO: Temporararily turned off as it cannot work until `serverless` in `master`
+      #       is updated to work with published `@serverlesss/dashboard-plugin`
+      # - name: Integration tests
+      #   run: npm run integration-test
 
       - name: Resolve last validated commit hash (for `git diff` purposes)
         uses: actions/download-artifact@v2
