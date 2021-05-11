@@ -14,7 +14,7 @@ const SERVERLESS_PLATFORM_STAGE = process.env.SERVERLESS_PLATFORM_STAGE || 'dev'
 
 module.exports = async function (templateName) {
   const randomPostfix = crypto.randomBytes(2).toString('hex');
-  const serviceTmpDir = path.join(tmpDir, `serverless-enterprise-plugin-test-${randomPostfix}`);
+  const serviceTmpDir = path.join(tmpDir, `serverless-dashboard-plugin-test-${randomPostfix}`);
 
   const serviceName = `plugin-test-${randomPostfix}`;
   const region = process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1';

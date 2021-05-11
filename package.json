@@ -1,9 +1,9 @@
 {
-  "name": "@serverless/enterprise-plugin",
+  "name": "@serverless/dashboard-plugin",
   "version": "4.6.0",
   "description": "The Serverless Dashboard plugin",
   "author": "serverless.com",
-  "repository": "serverless/enterprise-plugin",
+  "repository": "serverless/dashboard-plugin",
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
     "@serverless/platform-client": "^4.2.2",
