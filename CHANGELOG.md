@@ -2,11 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [4.6.0](https://github.com/serverless/enterprise-plugin/compare/v4.5.3...v4.6.0) (2021-05-05)
+### [4.6.0](https://github.com/serverless/enterprise-plugin/compare/v4.5.3...v4.6.0) (2021-05-11)
 
 ### Features
 
 - Expose `areProvidersUsed` boolean on deployment data ([#557](https://github.com/serverless/enterprise-plugin/pull/557)) ([de7ecf9](https://github.com/serverless/enterprise-plugin/commit/de7ecf9d295a6f728d21b1b9d16bfbeaccb7964b)) ([AJ Stuyvenberg](https://github.com/astuyve))
+
+### Bug Fixes
+
+- Ensure dashboard logs are flushed before invocation is closed ([#568](https://github.com/serverless/enterprise-plugin/pull/568)) ([ed4e12e](https://github.com/serverless/enterprise-plugin/commit/ed4e12e6bcb87adfd6f156f3f5ed254d00f82eee)) ([Mariusz Nowak](https://github.com/medikoo))
+- Ensure dashboard logs do not leak to next invocation in case of unresolved invocations ([#568](https://github.com/serverless/enterprise-plugin/pull/568)) ([5cd0356](https://github.com/serverless/enterprise-plugin/commit/5cd03564760af5ecdb127554e54ba316f958ad82)) ([Mariusz Nowak](https://github.com/medikoo))
 
 ### [4.5.3](https://github.com/serverless/enterprise-plugin/compare/v4.5.2...v4.5.3) (2021-03-30)
 
