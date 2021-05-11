@@ -1,9 +1,8 @@
 # Serverless Framework Enterprise Plugin
 
-[![Build Status](https://travis-ci.com/serverless/enterprise-plugin.svg)](https://travis-ci.com/serverless/enterprise-plugin)
-[![license](https://img.shields.io/npm/l/@serverless/enterprise-plugin.svg)](https://www.npmjs.com/package/@serverless/enterprise-plugin)
-[![coverage](https://img.shields.io/codecov/c/github/serverless/enterprise-plugin.svg)](https://codecov.io/gh/serverless/enterprise-plugin)
-[![Known Vulnerabilities](https://snyk.io/test/github/serverless/enterprise-plugin/badge.svg?targetFile=package.json)](https://snyk.io/test/github/serverless/enterprise-plugin?targetFile=package.json)
+[![Build Status](https://github.com/serverless/enterprise-plugin/workflows/Integrate/badge.svg)](https://github.com/serverless/enterprise-plugin/actions?query=workflow%3AIntegrate)
+[![npm version](https://img.shields.io/npm/v/@serverless/enterprise-plugin.svg)](https://badge.fury.io/js/@serverless/enterprise-plugin)
+[![codecov](https://codecov.io/gh/serverless/enterprise-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/serverless/enterprise-plugin)
 
 To enable the various features of the [Serverless Framework Enterprise](https://github.com/serverless/enterprise) for a particular Service you must deploy or redeploy that Service, using Serverless Framework open-source CLI version 1.45.1 or later.
 
