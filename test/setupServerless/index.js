@@ -21,12 +21,12 @@ module.exports = memoizee(
   (options = {}) => {
     const serverlessTmpDir = path.join(
       tmpDir,
-      `serverless-enterprise-plugin-test-serverless-${crypto.randomBytes(2).toString('hex')}`
+      `serverless-dashboard-plugin-test-serverless-${crypto.randomBytes(2).toString('hex')}`
     );
 
     if (process.env.LOCAL_SERVERLESS_LINK_PATH) {
       // Test against local serverless installation which is expected to have
-      // this instance of `@serverless/enterprise-plugin` linked in its node_modules
+      // this instance of `@serverless/dashboard-plugin` linked in its node_modules
       const serverlessPath = path.resolve(
         __dirname,
         '../..',
@@ -34,7 +34,7 @@ module.exports = memoizee(
       );
       return Promise.all([
         realpath(path.join(__dirname, '../..')),
-        realpath(path.join(serverlessPath, 'node_modules/@serverless/enterprise-plugin')).catch(
+        realpath(path.join(serverlessPath, 'node_modules/@serverless/dashboard-plugin')).catch(
           ignoreIfDoesntExist
         ),
       ]).then(([pluginPath, serverlessPluginPath]) => {
@@ -83,9 +83,9 @@ module.exports = memoizee(
         log.debug('... patch serverless/package.json');
         const pkgJsonPath = `${serverlessTmpDir}/package.json`;
         const pkgJson = require(pkgJsonPath);
-        // Do not npm install @serverless/enterprise-plugin
+        // Do not npm install @serverless/dashboard-plugin
         // (local installation will be linked in further steps)
-        delete pkgJson.dependencies['@serverless/enterprise-plugin'];
+        delete pkgJson.dependencies['@serverless/dashboard-plugin'];
         // Prevent any postinstall setup (stats requests, automcomplete setup, logs etc.)
         delete pkgJson.scripts.postinstall;
         return writeJson(pkgJsonPath, pkgJson);
@@ -94,15 +94,15 @@ module.exports = memoizee(
         return spawn('npm', ['install', '--production'], { cwd: serverlessTmpDir });
       })
       .then(() => {
-        log.debug('... link @serverless/enterprise-plugin dependency');
+        log.debug('... link @serverless/dashboard-plugin dependency');
         return ensureSymlink(
           path.join(__dirname, '../../'),
-          path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin'),
+          path.join(serverlessTmpDir, 'node_modules/@serverless/dashboard-plugin'),
           'junction'
         );
       })
       .then(() => {
-        return realpath(path.join(serverlessTmpDir, 'node_modules/@serverless/enterprise-plugin'));
+        return realpath(path.join(serverlessTmpDir, 'node_modules/@serverless/dashboard-plugin'));
       })
       .then((pluginPath) => {
         return {
