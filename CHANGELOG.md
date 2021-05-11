@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/serverless/dashboard-plugin/compare/v4.6.0...v5.0.0) (2021-05-11)
+
+### ⚠ BREAKING CHANGES
+
+- Rename from `@serverless/enterprise-plugin` to `@serverless/dashboard-plugin`
+- Unconditionally depend on `serviceDir` and `configurationFilename` as exposed by the Framework
+- Internals now depend unconditionally on CLI commands schemas configured in context of `serverless` package
+- **CLI:** Interactive CLI setup steps are not longer configured into lifecycle engine, but exposed as a standalone utils to be required directly by the Framework
+
+### Features
+
+- Rename to `@serverless/dashboard-plugin` ([#570](https://github.com/serverless/enterprise-plugin/pull/570)) ([b2507a2](https://github.com/serverless/dashboard-plugin/commit/b2507a2a412f518429326b2eb1faaafe105d11b9)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Bug Fixes
+
+- **CLI:** Output url expected to be opened in a browser ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([8de558e](https://github.com/serverless/dashboard-plugin/commit/8de558ea1dd75bb34f78e522bc7c1e6baf6462af)) ([Mariusz Nowak](https://github.com/medikoo))
+- **CLI Onboarding:** Do not show, unexpected in this context, interactive onboarding invitation ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([1b4e9b7](https://github.com/serverless/dashboard-plugin/commit/1b4e9b7990627915f7b78a6009b766ee6a60a310)) ([Mariusz Nowak](https://github.com/medikoo))
+- **CLI Onboarding:** Do not present login & set org steps when `SERVERLESS_ACCESS_KEY` is provided ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([fa99403](https://github.com/serverless/dashboard-plugin/commit/fa99403adbbfdd8f58d8a347ea636bc07816ba65)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintenance Improvements
+
+- **CLI:** Seclude interactive CLI configuration from internals ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([85c7f85](https://github.com/serverless/dashboard-plugin/commit/85c7f85a5b96c9f51940ac0d3609b6bbd7e0e9e8)) ([Mariusz Nowak](https://github.com/medikoo))
+- **CLI Onboarding:** Make login testable offline ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([82c0556](https://github.com/serverless/dashboard-plugin/commit/82c0556de4fd69f72b7013ded95e8b98c133c93d)) ([Mariusz Nowak](https://github.com/medikoo))
+- Depend unconditionally on external CLI command schemas (([#570](https://github.com/serverless/enterprise-plugin/pull/570)) [e1d86ac](https://github.com/serverless/dashboard-plugin/commit/e1d86acb27cec4d1f636b312146fcd5fcee24fed)) ([Mariusz Nowak](https://github.com/medikoo))
+- Rely on @serverless/utils/log ([#565](https://github.com/serverless/enterprise-plugin/pull/565)) ([1961078](https://github.com/serverless/dashboard-plugin/commit/1961078fd4c22f55d5aa6459fe443c6728326cca)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove internal serverless file path resolution ([#570](https://github.com/serverless/enterprise-plugin/pull/570)) ([4c7b4fe](https://github.com/serverless/dashboard-plugin/commit/4c7b4fe095c82889aa2e9b41bcfd166602535543)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove obsolete interactive CLI constructs ([#570](https://github.com/serverless/enterprise-plugin/pull/570)) ([c7ed50f](https://github.com/serverless/dashboard-plugin/commit/c7ed50fd90b379b05ddacb2f234cd945bfb2c4cb)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove refactor leftover, unused `default` module export ([#570](https://github.com/serverless/enterprise-plugin/pull/570)) ([96d965e](https://github.com/serverless/dashboard-plugin/commit/96d965e83222af8ec6b5ef706040d717d6020cfc)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove unused CLI command schema setting ([#570](https://github.com/serverless/enterprise-plugin/pull/570)) ([7d7305e](https://github.com/serverless/dashboard-plugin/commit/7d7305eee15d4afb7dc17ec2541c405c8757bbbd)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [4.6.0](https://github.com/serverless/enterprise-plugin/compare/v4.5.3...v4.6.0) (2021-05-11)
 
 ### Features
