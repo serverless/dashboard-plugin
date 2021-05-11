@@ -60,21 +60,21 @@ jobs:
           cd sdk-js
           npm ci
 
+      - name: Publish canary
+        # Note: Setting NODE_AUTH_TOKEN as job|workspace wide env var won't work
+        #       as it appears actions/setup-node sets own value
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # 01dd......71cc
+        run: |
+          ./.github/prepare-canary.js
+          cd sdk-js
+          npm run build
+          cd ..
+          npm publish --tag canary
+          git checkout .
+
       # TODO: Temporararily turned off as it cannot work until `serverless` in `master`
       #       is updated to work with published `@serverlesss/dashboard-plugin`
-      # - name: Publish canary
-      #   # Note: Setting NODE_AUTH_TOKEN as job|workspace wide env var won't work
-      #   #       as it appears actions/setup-node sets own value
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # 01dd......71cc
-      #   run: |
-      #     ./.github/prepare-canary.js
-      #     cd sdk-js
-      #     npm run build
-      #     cd ..
-      #     npm publish --tag canary
-      #     git checkout .
-
       # - name: Unit tests
       #   run: npm test -- -b
       # - name: SDK JS Unit tests
