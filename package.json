@@ -1,6 +1,6 @@
 {
   "name": "@serverless/dashboard-plugin",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "The Serverless Dashboard plugin",
   "author": "serverless.com",
   "repository": "serverless/dashboard-plugin",
@@ -48,6 +48,7 @@
     "process-utils": "^4.0.0",
     "proxyquire": "^2.1.3",
     "sinon": "^10.0.0",
+    "standard-version": "^9.3.0",
     "strip-ansi": "^6.0.0",
     "tar": "^6.1.0",
     "timers-ext": "^0.1.7"
@@ -188,6 +189,7 @@
     "lint": "eslint .",
     "lint:staged": "lint-staged",
     "lint:updated": "pipe-git-updated --ext=js -- eslint",
+    "prepare-release": "standard-version && prettier --write CHANGELOG.md",
     "prettier-check": "prettier -c \"**/*.{css,html,js,json,md,yaml,yml}\"",
     "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
     "prettify": "prettier --write \"**/*.{css,html,js,json,md,yaml,yml}\"",

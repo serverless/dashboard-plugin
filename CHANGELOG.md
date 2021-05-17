@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/serverless/dashboard-plugin/compare/v5.0.0...v5.1.0) (2021-05-17)
+
+### Features
+
+- Always redirect to dashboard for `login/register` ([#574](https://github.com/serverless/dashboard-plugin/pull/574)) ([75a9b74](https://github.com/serverless/dashboard-plugin/commit/75a9b74a6d6a001ce2a81bb5adb5ce77baa9f846)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Create default app if needed during interactive flow ([#575](https://github.com/serverless/dashboard-plugin/pull/575)) ([0ad1aa2](https://github.com/serverless/dashboard-plugin/commit/0ad1aa21cf5dfa2a9ba02fac4cfb6006b3d1e260)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Maintenance Improvements
+
+- Remove `enable` step from interactive CLI ([#574](https://github.com/serverless/dashboard-plugin/pull/574)) ([1cf06bb](https://github.com/serverless/dashboard-plugin/commit/1cf06bb4582a35b293ac490852d48e89d7f56a1e)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Do not create/assign `deployProfiles` to apps in interactive flow ([#576](https://github.com/serverless/dashboard-plugin/pull/576)) ([62b79ec](https://github.com/serverless/dashboard-plugin/commit/62b79ec0d4f5bbb50e5d492206c789376a09bf04)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Allow skipping interactive setup during org selection ([#577](https://github.com/serverless/dashboard-plugin/pull/577)) ([093e5a4](https://github.com/serverless/dashboard-plugin/commit/093e5a4f584ef1276091a459d72d3cfaceebc8b9)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ## [5.0.0](https://github.com/serverless/dashboard-plugin/compare/v4.6.0...v5.0.0) (2021-05-11)
 
 ### ⚠ BREAKING CHANGES
