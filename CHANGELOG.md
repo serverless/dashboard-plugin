@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.1.2](https://github.com/serverless/dashboard-plugin/compare/v5.1.1...v5.1.2) (2021-05-19)
+
+### Bug Fixes
+
+- Ensure to communicate user errors with `ServerlessError` ([#582](https://github.com/serverless/dashboard-plugin/pull/582)) ([9e21582](https://github.com/serverless/dashboard-plugin/commit/9e215821f81b714e1e4f19af9fe6d2a17824ce65)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintenance Improvements
+
+- Pass through original error ([caf4a7d](https://github.com/serverless/dashboard-plugin/commit/caf4a7ddb3ca8124e52e158f64b10d7255989cfa))
+
 ### [5.1.1](https://github.com/serverless/dashboard-plugin/compare/v5.1.0...v5.1.1) (2021-05-19)
 
 ### Bug Fixes
