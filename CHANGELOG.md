@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.1.1](https://github.com/serverless/dashboard-plugin/compare/v5.1.0...v5.1.1) (2021-05-19)
+
+### Bug Fixes
+
+- Ensure compatibility by always allowing to skip during `org` selection if `context.history` missing in interactive flow ([#580](https://github.com/serverless/dashboard-plugin/pull/580)) ([9f3cc44](https://github.com/serverless/dashboard-plugin/commit/9f3cc44785c03a324ef5b390ad6b40024d1cbfeb)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ## [5.1.0](https://github.com/serverless/dashboard-plugin/compare/v5.0.0...v5.1.0) (2021-05-17)
 
 ### Features
