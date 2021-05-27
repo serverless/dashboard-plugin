@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.1.4](https://github.com/serverless/dashboard-plugin/compare/v5.1.3...v5.1.4) (2021-05-27)
+
+### Maintenance Improvements
+
+- Improve messaging for org setup step in interactive flow ([#587](https://github.com/serverless/dashboard-plugin/pull/587)) ([8aafaa2](https://github.com/serverless/dashboard-plugin/commit/8aafaa2b351027e4f8f4f2ff8d35c1cbc3f9defd)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Strip prefix and remove color in `login` logs in interactive flow ([#587](https://github.com/serverless/dashboard-plugin/pull/587)) ([423574d](https://github.com/serverless/dashboard-plugin/commit/423574d78c8c0ee326e79044e4d8e60e4314d5ed)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.1.3](https://github.com/serverless/dashboard-plugin/compare/v5.1.2...v5.1.3) (2021-05-20)
 
 ### Maintenance Improvements
