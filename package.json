@@ -30,11 +30,11 @@
   "devDependencies": {
     "@serverless/eslint-config": "^3.0.0",
     "@serverless/test": "^8.1.0",
-    "aws-sdk": "^2.916.0",
+    "aws-sdk": "^2.919.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "eslint": "^7.27.0",
-    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-import": "^2.23.4",
     "essentials": "^1.1.1",
     "git-list-updated": "^1.2.1",
     "github-release-from-cc-changelog": "^2.2.0",
