@@ -6,7 +6,7 @@
   "repository": "serverless/dashboard-plugin",
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
-    "@serverless/platform-client": "^4.2.2",
+    "@serverless/platform-client": "^4.2.3",
     "@serverless/utils": "^5.2.0",
     "chalk": "^4.1.1",
     "child-process-ext": "^2.1.1",
