@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.2.0](https://github.com/serverless/dashboard-plugin/compare/v5.1.4...v5.2.0) (2021-06-02)
+
+### Features
+
+- Always ask for `org` in CLI when invoked for existing service ([#589](https://github.com/serverless/dashboard-plugin/pull/589)) ([16b58d0](https://github.com/serverless/dashboard-plugin/commit/16b58d0ddc016b446d7c15c78ecafd1816bacbdf)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Support `SERVERLESS_ACCESS_KEY` in interactive flow ([#589](https://github.com/serverless/dashboard-plugin/pull/589)) ([1de3131](https://github.com/serverless/dashboard-plugin/commit/1de31317af09980dce5cd09926afc1266691120c)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Maintenance Improvements
+
+- Do not rely on `variablesSyntax` ([#590](https://github.com/serverless/dashboard-plugin/pull/590)) ([ea662fc](https://github.com/serverless/dashboard-plugin/commit/ea662fcf03e8f2f5c1f435d24249c72025a24dbf)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [5.1.4](https://github.com/serverless/dashboard-plugin/compare/v5.1.3...v5.1.4) (2021-05-27)
 
 ### Maintenance Improvements
