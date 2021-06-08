@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.3.0](https://github.com/serverless/dashboard-plugin/compare/v5.2.0...v5.3.0) (2021-06-08)
+
+### Maintenance Improvements
+
+- Improve message formatting for `dashboard-set-org` step ([#593](https://github.com/serverless/dashboard-plugin/pull/593)) ([41c6daa](https://github.com/serverless/dashboard-plugin/commit/41c6daa95db8707ad999d918e7f92f1658193aec)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Add `getDashboardInteractUrl` util ([#593](https://github.com/serverless/dashboard-plugin/pull/593)) [0182e87](https://github.com/serverless/dashboard-plugin/commit/0182e8764dbac17ce4e70326408b1ba35a4e96c6)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Add `resolveProviderCredentials` util ([#594](https://github.com/serverless/dashboard-plugin/pull/594)) ([478f7b4](https://github.com/serverless/dashboard-plugin/commit/478f7b42576060c05bec0e15b74fd0194d595091)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ## [5.2.0](https://github.com/serverless/dashboard-plugin/compare/v5.1.4...v5.2.0) (2021-06-02)
 
 ### Features
