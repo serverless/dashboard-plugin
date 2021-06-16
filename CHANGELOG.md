@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.4.0](https://github.com/serverless/dashboard-plugin/compare/v5.3.0...v5.4.0) (2021-06-16)
+
+### Features
+
+- Add telemetry to interactive flow steps ([#598](https://github.com/serverless/dashboard-plugin/pull/598)) ([aa32f56](https://github.com/serverless/dashboard-plugin/commit/aa32f566264ebe9f7513b71dab836d9904307e9a)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Maintenance Improvements
+
+- Fix logging output for `login/register` interactive step ([a294a6e](https://github.com/serverless/dashboard-plugin/commit/a294a6eb49764ef8126e4706af256f17b32f12ef))
+- Use `confirm` prompt in `login/register` question ([f786583](https://github.com/serverless/dashboard-plugin/commit/f786583cb1a1f7771fee01a25cb7e691a21396ff))
+
 ## [5.3.0](https://github.com/serverless/dashboard-plugin/compare/v5.2.0...v5.3.0) (2021-06-08)
 
 ### Maintenance Improvements
