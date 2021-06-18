@@ -24,6 +24,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: REGION_PLACEHOLDER
+  lambdaHashingVersion: 20201221
 functions:
   hello:
     handler: handler.hello
