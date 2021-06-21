@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.4.1](https://github.com/serverless/dashboard-plugin/compare/v5.4.0...v5.4.1) (2021-06-21)
+
+### Maintenance Improvements
+
+- Ensure to record `inapplicabilityReasonCode` for not applicable onboarding steps ([#602](https://github.com/serverless/dashboard-plugin/pull/602)) ([f2a9c9a](https://github.com/serverless/dashboard-plugin/commit/f2a9c9a025b0202af20f3ebb858e694752fce158)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ## [5.4.0](https://github.com/serverless/dashboard-plugin/compare/v5.3.0...v5.4.0) (2021-06-16)
 
 ### Features
