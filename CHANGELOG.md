@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.2](https://github.com/serverless/dashboard-plugin/compare/v5.4.1...v5.4.2) (2021-06-23)
+
+### Maintenance Improvements
+
+- Export `configuredQuestions` in interactive steps ([#604](https://github.com/serverless/dashboard-plugin/pull/604)) ([1673f4a](https://github.com/serverless/dashboard-plugin/commit/1673f4a7c329dcbe8260d008a7f31e3d38cf320e)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ## [5.4.1](https://github.com/serverless/dashboard-plugin/compare/v5.4.0...v5.4.1) (2021-06-21)
 
 ### Maintenance Improvements
