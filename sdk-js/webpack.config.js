@@ -13,4 +13,10 @@ module.exports = {
     filename: 'index.js',
     libraryTarget: 'umd',
   },
+  externals: {
+    // Dynamic imports that are never used (gets rid of bundle warning).
+    'bufferutil': 'bufferutil',
+    'original-fs': 'original-fs',
+    'utf-8-validate': 'utf-8-validate',
+  },
 };
