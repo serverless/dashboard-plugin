@@ -14,9 +14,10 @@ module.exports = {
     libraryTarget: 'umd',
   },
   externals: {
-    // Dynamic imports that are never used (gets rid of bundle warning).
+    // Module (if required) is provided by Electron
+    'original-fs': 'original-fs', 
+    // Optional WS modules - https://github.com/websockets/ws#opt-in-for-performance
     'bufferutil': 'bufferutil',
-    'original-fs': 'original-fs',
     'utf-8-validate': 'utf-8-validate',
   },
 };
