@@ -15,7 +15,7 @@ module.exports = {
   },
   externals: {
     // Module (if required) is provided by Electron
-    'original-fs': 'original-fs', 
+    'original-fs': 'original-fs',
     // Optional WS modules - https://github.com/websockets/ws#opt-in-for-performance
     'bufferutil': 'bufferutil',
     'utf-8-validate': 'utf-8-validate',
