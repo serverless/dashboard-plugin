@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.3](https://github.com/serverless/dashboard-plugin/compare/v5.4.2...v5.4.3) (2021-06-29)
+
+### Maintenance Improvements
+
+- Improve formatting of org setup messaging ([#607](https://github.com/serverless/dashboard-plugin/pull/607)) ([bfd328c](https://github.com/serverless/dashboard-plugin/commit/bfd328c8da537ffa5e84134ffa24c3b5763aa9cf)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.4.2](https://github.com/serverless/dashboard-plugin/compare/v5.4.1...v5.4.2) (2021-06-23)
 
 ### Maintenance Improvements
