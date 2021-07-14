@@ -16,6 +16,8 @@ const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
 const detectEventType = require('./lib/eventDetection');
 
+const { startInterceptingLogs, stopInterceptingLogs, sendIpc } = require('./lib/ipcLogs');
+
 let currentAwsCallback;
 
 /*
@@ -43,6 +45,8 @@ class ServerlessSDK {
     this.$.serverlessPlatformStage = obj.serverlessPlatformStage || 'prod';
     this.$.accessKey = obj.accessKey;
 
+    this.$.useExtension = obj.useExtension;
+
     this.shouldLogMeta = obj.shouldLogMeta;
     this.shouldCompressLogs = obj.shouldCompressLogs;
 
@@ -60,6 +64,14 @@ class ServerlessSDK {
     if (!obj.disableFrameworksInstrumentation) {
       require('./lib/frameworks')(ServerlessSDK, this.$.config);
     }
+  }
+
+  async startIpcMode(event, awsContext) {
+    startInterceptingLogs(event, awsContext);
+  }
+
+  async stopIpcMode() {
+    stopInterceptingLogs();
   }
 
   /**
@@ -203,6 +215,10 @@ class ServerlessSDK {
           );
         }
 
+        if (self.$.useExtension) {
+          self.startIpcMode(event, context);
+        }
+
         // Defaults
         event = event || {};
         context = context || {};
@@ -341,8 +357,10 @@ class ServerlessSDK {
             if (capturedError) {
               trans.error(capturedError, false, cb);
             } else if (error) {
+              sendIpc('error', error);
               trans.error(error, true, cb);
             } else {
+              sendIpc('tag', trans.$.eventTags);
               trans.end();
               // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
               setTimeout(cb);
@@ -350,6 +368,9 @@ class ServerlessSDK {
           } finally {
             finalized = true;
             // Remove the span listeners
+            if (self.$.useExtension) {
+              self.stopIpcMode();
+            }
             spanEmitter.removeAllListeners('span');
           }
         };
@@ -381,6 +402,10 @@ class ServerlessSDK {
         contextProxy.serverlessSdk = {};
         contextProxy.captureError = (err) => {
           capturedError = err;
+
+          if (self.$.useExtension) {
+            sendIpc('capturedError', err);
+          }
         };
         contextProxy.serverlessSdk.captureError = contextProxy.captureError; // TODO deprecate in next major rev
         ServerlessSDK._captureError = contextProxy.captureError;
@@ -402,7 +427,7 @@ class ServerlessSDK {
 
           const end = (result) => {
             const endTime = new Date();
-            spanEmitter.emit('span', {
+            const spanData = {
               tags: {
                 type: 'custom',
                 label: tag,
@@ -410,7 +435,13 @@ class ServerlessSDK {
               startTime: startTime.toISOString(),
               endTime: endTime.toISOString(),
               duration: endTime.getTime() - startTime.getTime(),
-            });
+            };
+            spanEmitter.emit('span', spanData);
+
+            if (self.$.useExtension) {
+              sendIpc('span', spanData);
+            }
+
             return result;
           };
 
@@ -502,6 +533,8 @@ class ServerlessSDK {
               if (res instanceof Error) {
                 return new Promise((resolve) => finalize(res, resolve)).then(() => res);
               }
+
+              sendIpc('result', res);
               return new Promise((resolve) => finalize(null, resolve)).then(() => res);
             })
             .catch((err) => {
@@ -510,6 +543,8 @@ class ServerlessSDK {
               });
             });
         }
+
+        sendIpc('result', result);
         return result;
       };
     }
