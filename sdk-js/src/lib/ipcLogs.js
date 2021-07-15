@@ -11,6 +11,7 @@ const sendIpc = (type, dataObj) => {
     type,
     requestId: this.intercepts.requestId,
     data: util.inspect(dataObj),
+    timestamp: Date.now(),
   };
 
   const message = Buffer.from(JSON.stringify(messageObj)).toString('base64');
