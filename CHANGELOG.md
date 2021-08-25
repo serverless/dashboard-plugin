@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.4](https://github.com/serverless/dashboard-plugin/compare/v5.4.3...v5.4.4) (2021-08-25)
+
+### Bug Fixes
+
+- Ensure `dashboard` command redirects to service page or displays correct message ([#615](https://github.com/serverless/dashboard-plugin/pull/615)) ([2aa66ac](https://github.com/serverless/dashboard-plugin/commit/2aa66ac8163ff2225747cf9809da7376633f3255)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Recognize if user is not in service context in onboarding flow ([#609](https://github.com/serverless/dashboard-plugin/pull/609)) ([8a86187](https://github.com/serverless/dashboard-plugin/commit/8a86187c23ef1f6296e84ef5ca9e17fef10a9266)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.4.3](https://github.com/serverless/dashboard-plugin/compare/v5.4.2...v5.4.3) (2021-06-29)
 
 ### Maintenance Improvements
