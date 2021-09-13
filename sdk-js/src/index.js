@@ -217,6 +217,7 @@ class ServerlessSDK {
 
         if (self.$.useExtension) {
           self.startIpcMode(event, context);
+          sendIpc('init');
         }
 
         // Defaults
@@ -354,13 +355,21 @@ class ServerlessSDK {
           }
           clearTimeout(timeoutHandler);
           try {
-            if (capturedError) {
+            if (self.$.useExtension) {
+              if (capturedError) {
+                sendIpc('capturedError', capturedError);
+              }
+              if (error) {
+                sendIpc('error', error);
+              }
+              trans.end();
+              // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
+              setTimeout(cb);
+            } else if (capturedError) {
               trans.error(capturedError, false, cb);
             } else if (error) {
-              sendIpc('error', error);
               trans.error(error, true, cb);
             } else {
-              sendIpc('tag', trans.$.eventTags);
               trans.end();
               // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
               setTimeout(cb);
@@ -402,10 +411,6 @@ class ServerlessSDK {
         contextProxy.serverlessSdk = {};
         contextProxy.captureError = (err) => {
           capturedError = err;
-
-          if (self.$.useExtension) {
-            sendIpc('capturedError', err);
-          }
         };
         contextProxy.serverlessSdk.captureError = contextProxy.captureError; // TODO deprecate in next major rev
         ServerlessSDK._captureError = contextProxy.captureError;
@@ -423,18 +428,18 @@ class ServerlessSDK {
 
         // user spans
         contextProxy.span = (tag, userCode) => {
-          const startTime = new Date();
+          const startTime = new Date().getTime();
 
           const end = (result) => {
-            const endTime = new Date();
+            const endTime = new Date().getTime();
             const spanData = {
               tags: {
                 type: 'custom',
                 label: tag,
               },
-              startTime: startTime.toISOString(),
-              endTime: endTime.toISOString(),
-              duration: endTime.getTime() - startTime.getTime(),
+              startTime,
+              endTime,
+              duration: endTime - startTime,
             };
             spanEmitter.emit('span', spanData);
 
@@ -459,11 +464,14 @@ class ServerlessSDK {
         ServerlessSDK._span = contextProxy.span;
 
         contextProxy.serverlessSdk.tagEvent = (tagName, tagValue = '', custom = {}) => {
-          transactionEventTags.push({
+          const tag = {
             tagName: tagName.toString(),
             tagValue: tagValue.toString(),
             custom: JSON.stringify(custom),
-          });
+          };
+
+          transactionEventTags.push(tag);
+          sendIpc('tag', tag);
           if (transactionEventTags.length > 10) {
             transactionEventTags.pop();
           }
@@ -484,6 +492,12 @@ class ServerlessSDK {
           if (httpMethod) trans.$.schema.httpMethod = httpMethod;
           if (httpStatusCode) trans.$.schema.httpStatusCode = String(httpStatusCode);
           trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
+
+          sendIpc('endpoint', {
+            endpoint: value,
+            httpMethod: httpMethod || null,
+            httpStatusCode: httpStatusCode || null,
+          });
         };
         ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
 
