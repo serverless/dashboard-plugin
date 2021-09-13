@@ -205,7 +205,7 @@ class SDK(object):
                         }
                         for frame in reversed(stack_frames)
                     ]
-                )
+                )[:3200]
                 error_data["errorExceptionType"] = exc_type.__name__
                 error_data["errorFatal"] = False
                 error_data["errorId"] = "{}!${}".format(
@@ -476,7 +476,7 @@ class SDK(object):
                     }
                     for frame in reversed(stack_frames)
                 ]
-            )
+            )[:3200]
             error_data["errorExceptionType"] = exc_type.__name__
             error_data["errorFatal"] = True
             error_data["errorId"] = "{}!${}".format(

@@ -16,7 +16,7 @@ const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
 const detectEventType = require('./lib/eventDetection');
 
-const { startInterceptingLogs, stopInterceptingLogs, sendIpc } = require('./lib/ipcLogs');
+const { startInterceptingLogs, stopInterceptingLogs } = require('./lib/ipcLogs');
 
 let currentAwsCallback;
 
@@ -217,7 +217,6 @@ class ServerlessSDK {
 
         if (self.$.useExtension) {
           self.startIpcMode(event, context);
-          sendIpc('init');
         }
 
         // Defaults
@@ -244,6 +243,7 @@ class ServerlessSDK {
           computeType: meta.computeType,
           shouldLogMeta: this.shouldLogMeta,
           shouldCompressLogs: this.shouldCompressLogs,
+          shouldLogViaIpc: self.$.useExtension,
           eventType,
         });
 
@@ -355,17 +355,7 @@ class ServerlessSDK {
           }
           clearTimeout(timeoutHandler);
           try {
-            if (self.$.useExtension) {
-              if (capturedError) {
-                sendIpc('capturedError', capturedError);
-              }
-              if (error) {
-                sendIpc('error', error);
-              }
-              trans.end();
-              // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
-              setTimeout(cb);
-            } else if (capturedError) {
+            if (capturedError) {
               trans.error(capturedError, false, cb);
             } else if (error) {
               trans.error(error, true, cb);
@@ -376,10 +366,10 @@ class ServerlessSDK {
             }
           } finally {
             finalized = true;
-            // Remove the span listeners
             if (self.$.useExtension) {
               self.stopIpcMode();
             }
+            // Remove the span listeners
             spanEmitter.removeAllListeners('span');
           }
         };
@@ -443,10 +433,6 @@ class ServerlessSDK {
             };
             spanEmitter.emit('span', spanData);
 
-            if (self.$.useExtension) {
-              sendIpc('span', spanData);
-            }
-
             return result;
           };
 
@@ -471,7 +457,6 @@ class ServerlessSDK {
           };
 
           transactionEventTags.push(tag);
-          sendIpc('tag', tag);
           if (transactionEventTags.length > 10) {
             transactionEventTags.pop();
           }
@@ -492,12 +477,6 @@ class ServerlessSDK {
           if (httpMethod) trans.$.schema.httpMethod = httpMethod;
           if (httpStatusCode) trans.$.schema.httpStatusCode = String(httpStatusCode);
           trans.$.schema.endpointMechanism = metadata ? metadata.mechanism : 'explicit';
-
-          sendIpc('endpoint', {
-            endpoint: value,
-            httpMethod: httpMethod || null,
-            httpStatusCode: httpStatusCode || null,
-          });
         };
         ServerlessSDK._setEndpoint = contextProxy.serverlessSdk.setEndpoint;
 
@@ -548,7 +527,6 @@ class ServerlessSDK {
                 return new Promise((resolve) => finalize(res, resolve)).then(() => res);
               }
 
-              sendIpc('result', res);
               return new Promise((resolve) => finalize(null, resolve)).then(() => res);
             })
             .catch((err) => {
@@ -558,7 +536,6 @@ class ServerlessSDK {
             });
         }
 
-        sendIpc('result', result);
         return result;
       };
     }

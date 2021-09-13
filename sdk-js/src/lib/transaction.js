@@ -10,6 +10,7 @@ const { parseError } = require('./parsers');
 const flatten = require('flat');
 const isError = require('type/error/is');
 const zlib = require('zlib');
+const { sendIpc } = require('./ipcLogs');
 
 const TRANSACTION = 'transaction';
 const ERROR = 'error';
@@ -76,6 +77,7 @@ class Transaction {
     this.processed = false;
     this.shouldLogMeta = data.shouldLogMeta;
     this.shouldCompressLogs = data.shouldCompressLogs;
+    this.shouldLogViaIpc = data.shouldLogViaIpc;
     transactionCount += 1;
     this.$ = {
       schema: null,
@@ -256,7 +258,13 @@ class Transaction {
   }
 
   writeSlsTransaction(transaction) {
-    console.info('SERVERLESS_ENTERPRISE', JSON.stringify(transaction));
+    if (this.shouldLogViaIpc) {
+      // eslint-disable-next-line
+      console.log('Sending transaction IPC');
+      sendIpc('transaction', transaction);
+    } else {
+      console.info('SERVERLESS_ENTERPRISE', JSON.stringify(transaction));
+    }
   }
 
   buildOutput(type) {
