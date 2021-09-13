@@ -1,16 +1,47 @@
 /* eslint-disable no-console */
 'use strict';
 
+const { isError } = require('lodash');
 const net = require('net');
 const util = require('util');
 
 const IPC_SOCK = '/tmp/ipcLogs.sock';
 
+const MAX_STR_LEN = 3200;
+const truncateString = (str) => {
+  return str.length < MAX_STR_LEN ? str : Buffer.from(str).slice(0, MAX_STR_LEN).toString();
+};
+
+const errToObj = (err) => {
+  if (isError(err)) {
+    return {
+      type: err.name,
+      message: truncateString(err.message),
+      stacktrace: truncateString(err.stack),
+    };
+  }
+
+  return {
+    type: 'CapturedError',
+    message: truncateString(err),
+  };
+};
+
 const sendIpc = (type, dataObj) => {
+  if (!this.intercepts || !this.intercepts.socket) {
+    // Must not be using extension, bail
+    return;
+  }
+
+  if (!['open', 'opening'].includes(this.intercepts.socket.readyState)) {
+    throw new Error(`IPC socket is closed attempting to write ${type}: ${util.inspect(dataObj)}`);
+  }
+
   const messageObj = {
     type,
     requestId: this.intercepts.requestId,
-    data: util.inspect(dataObj),
+    // Error types get mangled when inspected and stringified
+    data: ['error', 'capturedError'].includes(type) ? errToObj(dataObj) : dataObj || {},
     timestamp: Date.now(),
   };
 
