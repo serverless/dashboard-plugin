@@ -259,8 +259,6 @@ class Transaction {
 
   writeSlsTransaction(transaction) {
     if (this.shouldLogViaIpc) {
-      // eslint-disable-next-line
-      console.log('Sending transaction IPC');
       sendIpc('transaction', transaction);
     } else {
       console.info('SERVERLESS_ENTERPRISE', JSON.stringify(transaction));
