@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.5](https://github.com/serverless/dashboard-plugin/compare/v5.4.4...v5.4.5) (2021-09-29)
+
+### Maintenance Improvements
+
+- **CLI: New logs (experimental):**
+  - Modern logs for `deploy` command ([#622](https://github.com/serverless/dashboard-plugin/pull/622)) ([2548eb2](https://github.com/serverless/dashboard-plugin/commit/2548eb2ef06f418d75f243a0910a0841dd7ee6df)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `login` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([ae1c254](https://github.com/serverless/dashboard-plugin/commit/ae1c2548c5771d0564ca82de207b75b5b111168e)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `logout` command ([bf30bd8](https://github.com/serverless/dashboard-plugin/commit/bf30bd8fa56c574238242ee4131d4b8312fdde46))([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `output get` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([9e872a3](https://github.com/serverless/dashboard-plugin/commit/9e872a3b74f0c453cb8d8722727b699ffc5814b3)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `output list` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([62dccc2](https://github.com/serverless/dashboard-plugin/commit/62dccc2ef91a159b93e5e2c518722369efc10930)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `param get` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([63bd89f](https://github.com/serverless/dashboard-plugin/commit/63bd89facbe6ce9e46e85c833ff9a41694678ede)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `param list` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([c2b8c4b](https://github.com/serverless/dashboard-plugin/commit/c2b8c4bf999fa5bdcfef81e51f02d9f7ddac6272)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for interactive setup ([#622](https://github.com/serverless/dashboard-plugin/pull/622)) ([bf4aa84](https://github.com/serverless/dashboard-plugin/commit/bf4aa84518d9af11b6eaaaa234475bf7f8f87932)) ([Mariusz Nowak](https://github.com/medikoo))
+- Rely on native `Object.entries` ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([8ebbbbb](https://github.com/serverless/dashboard-plugin/commit/8ebbbbb56ca88de0ae24227652e6e73f98d8e7d2)) ([Mariusz Nowak](https://github.com/medikoo))
+- Rely on native `Object.entries` ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([138375d](https://github.com/serverless/dashboard-plugin/commit/138375da06d554b35b51e1427baea7e734ee85f4)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [5.4.4](https://github.com/serverless/dashboard-plugin/compare/v5.4.3...v5.4.4) (2021-08-25)
 
 ### Bug Fixes
