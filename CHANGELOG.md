@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.6](https://github.com/serverless/dashboard-plugin/compare/v5.4.5...v5.4.6) (2021-10-08)
+
+### Maintenance Improvements
+
+- **CLI: New logs (experimental):**
+  - `dashboard` command ([#626](https://github.com/serverless/dashboard-plugin/pull/626)) ([b0e2397](https://github.com/serverless/dashboard-plugin/commit/b0e239797f424056b6effe647ad0615b99757364)) ([Piotr Grzesik](https://github.com/pgrzesik))
+  - AWS creds resolution ([#625](https://github.com/serverless/dashboard-plugin/pull/625)) ([662f809](https://github.com/serverless/dashboard-plugin/commit/662f809a2b4b64949a3ac0c714d851b4bacd7689)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [5.4.5](https://github.com/serverless/dashboard-plugin/compare/v5.4.4...v5.4.5) (2021-09-29)
 
 ### Maintenance Improvements
