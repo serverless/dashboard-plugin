@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.7](https://github.com/serverless/dashboard-plugin/compare/v5.4.6...v5.4.7) (2021-10-13)
+
+### Maintenance Improvements
+
+- Modern logs for `test` command ([#628](https://github.com/serverless/dashboard-plugin/pull/628)) ([48f59ec](https://github.com/serverless/dashboard-plugin/commit/48f59ec3c5813271c5ddf556beb6a0391f1eb3e5)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.4.6](https://github.com/serverless/dashboard-plugin/compare/v5.4.5...v5.4.6) (2021-10-08)
 
 ### Maintenance Improvements
