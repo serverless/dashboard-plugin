@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.4.8](https://github.com/serverless/dashboard-plugin/compare/v5.4.7...v5.4.8) (2021-10-15)
+
+### Maintenance Improvements
+
+- **CLI New logs (experimental):**
+  - Convert `console.log` logs ([#630](https://github.com/serverless/dashboard-plugin/pull/630)) ([c9dcd8b](https://github.com/serverless/dashboard-plugin/commit/c9dcd8b6cc3c050fda9976bdf2807ed408d1e7e6)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Ensure to list dashboard url also in `info` command ([#630](https://github.com/serverless/dashboard-plugin/pull/630)) ([5e04892](https://github.com/serverless/dashboard-plugin/commit/5e04892feff05bed31e2cd3dbc33ac4cc5c5f54d)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [5.4.7](https://github.com/serverless/dashboard-plugin/compare/v5.4.6...v5.4.7) (2021-10-13)
 
 ### Maintenance Improvements
