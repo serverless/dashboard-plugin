@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.5.0](https://github.com/serverless/dashboard-plugin/compare/v5.4.8...v5.5.0) (2021-10-19)
+
+### Features
+
+- Introduce `getDashboardProvidersUrl` util ([#632](https://github.com/serverless/dashboard-plugin/pull/632)) ([6adcd3a](https://github.com/serverless/dashboard-plugin/commit/6adcd3afc0358ad9281ad1c71375839741566797)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Maintenance Improvements
+
+- Expose `dashboardProviderAlias` on credentials ([#632](https://github.com/serverless/dashboard-plugin/pull/632)) ([d790b59](https://github.com/serverless/dashboard-plugin/commit/d790b59b7c4dec5b469da7e5de50755121feed8a)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.4.8](https://github.com/serverless/dashboard-plugin/compare/v5.4.7...v5.4.8) (2021-10-15)
 
 ### Maintenance Improvements
