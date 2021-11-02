@@ -16,9 +16,7 @@ let teardown;
 let serviceName;
 const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 
-describe('integration: wrapper', function () {
-  this.timeout(1000 * 60 * 5);
-
+describe('integration: wrapper', () => {
   let lambdaService;
   let cloudwatchLogsService;
 
