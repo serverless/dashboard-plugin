@@ -12,9 +12,7 @@ let serviceTmpDir;
 let teardown1;
 let teardown2;
 
-describe('integration: outputs', function () {
-  this.timeout(1000 * 60 * 5);
-
+describe('integration: outputs', () => {
   before(async () => {
     [
       { sls: sls1, serviceName, teardown: teardown1 },
