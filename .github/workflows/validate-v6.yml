@@ -1,0 +1,225 @@
+# PR's only
+
+name: Validate v6
+
+on:
+  pull_request:
+    branches: [v6]
+
+env:
+  SLS_IGNORE_WARNING: 1
+  FORCE_COLOR: 1
+
+jobs:
+  linuxNode14:
+    name: '[Linux] Node.js v14: Lint, Formatting, & Unit tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          # Workaround unexplained "no merge base" error
+          # https://github.com/serverless/enterprise-plugin/pull/466/checks?check_run_id=954633250
+          fetch-depth: 2
+
+      - name: Retrieve last v6 commit (for `git diff` purposes)
+        run: |
+          git checkout -b pr
+          git fetch --prune --depth=1 origin +refs/heads/v6:refs/remotes/origin/v6
+          git checkout v6
+          git checkout pr
+
+      - name: Retrieve dependencies from cache
+        id: cacheNpm
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            sdk-js/node_modules
+          key: npm-v14-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
+          restore-keys: |
+            npm-v14-${{ runner.os }}-${{ github.ref }}-
+            npm-v14-${{ runner.os }}-refs/heads/v6-
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Install dependencies
+        run: |
+          npm update --no-save
+          npm update --save-dev --no-save
+          npm install @serverless/utils @serverless/test
+      - name: Install sdk-js dependencies
+        if: steps.cacheNpm.outputs.cache-hit != 'true'
+        run: |
+          cd sdk-js
+          npm ci
+
+      - name: Validate formatting
+        run: npm run prettier-check:updated
+      - name: Validate lint rules
+        run: npm run lint:updated
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
+      - name: Unit tests
+        run: npm test -- -b
+      - name: SDK JS Unit tests
+        run: |
+          cd sdk-js
+          npm test -- -b
+
+  windowsNode14:
+    name: '[Windows] Node.js v14: Unit tests'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Retrieve dependencies from cache
+        id: cacheNpm
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            sdk-js/node_modules
+          key: npm-v14-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
+          restore-keys: |
+            npm-v14-${{ runner.os }}-${{ github.ref }}-
+            npm-v14-${{ runner.os }}-refs/heads/v6-
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Install dependencies
+        run: |
+          npm update --no-save
+          npm update --save-dev --no-save
+          npm install @serverless/utils @serverless/test
+      - name: Install sdk-js dependencies
+        if: steps.cacheNpm.outputs.cache-hit != 'true'
+        run: |
+          cd sdk-js
+          npm ci
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
+      - name: Unit tests
+        shell: bash
+        run: |
+          export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setup-test-serverless.js`
+          npm test -- -b
+      - name: SDK JS Unit tests
+        run: |
+          cd sdk-js
+          npm test -- -b
+
+  linuxNode16:
+    name: '[Linux] Node.js v16: Isolated unit tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Retrieve dependencies from cache
+        id: cacheNpm
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            sdk-js/node_modules
+          key: npm-v16-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
+          restore-keys: |
+            npm-v16-${{ runner.os }}-${{ github.ref }}-
+            npm-v16-${{ runner.os }}-refs/heads/v6-
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: |
+          npm update --no-save
+          npm update --save-dev --no-save
+          npm install @serverless/utils @serverless/test
+      - name: Install sdk-js dependencies
+        if: steps.cacheNpm.outputs.cache-hit != 'true'
+        run: |
+          cd sdk-js
+          npm ci
+
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
+      - name: Unit tests (isolated)
+        run: npm run test:isolated -- -b
+      - name: SDK JS Unit tests (isolated)
+        run: |
+          cd sdk-js
+          npm run test:isolated -- -b
+
+  linuxNode12:
+    name: '[Linux] Node.js v12: Unit tests with coverage'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Retrieve dependencies from cache
+        id: cacheNpm
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            sdk-js/node_modules
+          key: npm-v12-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
+          restore-keys: |
+            npm-v12-${{ runner.os }}-${{ github.ref }}-
+            npm-v12-${{ runner.os }}-refs/heads/v6-
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: |
+          npm update --no-save
+          npm update --save-dev --no-save
+          npm install @serverless/utils @serverless/test
+      - name: Install sdk-js dependencies
+        if: steps.cacheNpm.outputs.cache-hit != 'true'
+        run: |
+          cd sdk-js
+          npm ci
+      # Some unit tests backed by runServerless involve SDK build
+      - name: Build SDK JS
+        run: |
+          cd sdk-js
+          npm run build
+      - name: Unit tests
+        run: npm run cover
+      - name: SDK JS Unit tests
+        run: |
+          cd sdk-js
+          npm run cover
+
+      - name: Push coverage
+        run: |
+          npx codecov
+          npx codecov -p sdk-js
