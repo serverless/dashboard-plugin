@@ -1,6 +1,6 @@
 {
   "name": "@serverless/dashboard-plugin",
-  "version": "5.5.1",
+  "version": "6.0.0-pre",
   "description": "The Serverless Dashboard plugin",
   "author": "serverless.com",
   "repository": "serverless/dashboard-plugin",
@@ -189,12 +189,12 @@
     "integration-test": "mocha-isolated --pass-through-aws-creds --skip-fs-cleanup-check --max-workers=20 \"integration-testing/**/*.test.js\"",
     "lint": "eslint .",
     "lint:staged": "lint-staged",
-    "lint:updated": "pipe-git-updated --ext=js -- eslint",
+    "lint:updated": "pipe-git-updated --base=v6 --ext=js -- eslint",
     "prepare-release": "standard-version && prettier --write CHANGELOG.md",
     "prettier-check": "prettier -c \"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
+    "prettier-check:updated": "pipe-git-updated --base=v6 --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
     "prettify": "prettier --write \"**/*.{css,html,js,json,md,yaml,yml}\"",
-    "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
+    "prettify:updated": "pipe-git-updated --base=v3 --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
     "test": "mocha \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\"",
     "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\""
   },
