@@ -599,51 +599,6 @@ describe('integration: wrapper', () => {
     });
   });
 
-  it('gets the return value when calling python2', async () => {
-    const functionName = `${serviceName}-dev-pythonSuccess2`;
-    const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
-      LogType: 'Tail',
-      FunctionName: functionName,
-    });
-    await resolveLog(functionName, LogResult); // Expose debug logs
-    expect(JSON.parse(Payload)).to.equal('success');
-  });
-
-  it('gets SFE log msg from wrapped python2 handler', async () => {
-    const functionName = `${serviceName}-dev-pythonSuccess2`;
-    const { LogResult } = await awsRequest(lambdaService, 'invoke', {
-      LogType: 'Tail',
-      FunctionName: functionName,
-    });
-    const payload = await resolveAndValidateLog(functionName, LogResult);
-    expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(3);
-    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[0].tags).to.deep.equal({
-      type: 'custom',
-      label: 'create sts client',
-    });
-    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[1].tags.type).to.equal('aws');
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
-      type: 'http',
-      requestHostname: 'httpbin.org',
-      requestPath: '/get',
-      httpMethod: 'GET',
-      httpStatus: 200,
-    });
-  });
-
   it('gets the error value when calling python error', async () => {
     const functionName = `${serviceName}-dev-pythonError`;
     const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
