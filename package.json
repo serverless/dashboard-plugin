@@ -28,7 +28,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@serverless/eslint-config": "^3.0.1",
+    "@serverless/eslint-config": "^4.0.0",
     "@serverless/test": "^8.4.0",
     "aws-sdk": "^2.1020.0",
     "chai": "^4.3.4",
@@ -55,7 +55,7 @@
     "timers-ext": "^0.1.7"
   },
   "eslintConfig": {
-    "extends": "@serverless/eslint-config/node",
+    "extends": "@serverless/eslint-config/node/10",
     "root": true,
     "rules": {
       "import/no-extraneous-dependencies": [
