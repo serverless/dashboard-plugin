@@ -212,56 +212,10 @@ jobs:
           npx codecov
           npx codecov -p sdk-js
 
-  linuxNode10:
-    name: '[Linux] Node.js v10: Unit tests'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Retrieve dependencies from cache
-        id: cacheNpm
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            sdk-js/node_modules
-          key: npm-v10-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
-          restore-keys: npm-v10-${{ runner.os }}-${{ github.ref }}-
-
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v1
-        with:
-          node-version: 10.x
-
-      - name: Install dependencies
-        if: steps.cacheNpm.outputs.cache-hit != 'true'
-        run: |
-          npm update --no-save
-          npm update --save-dev --no-save
-      - name: Install sdk-js dependencies
-        if: steps.cacheNpm.outputs.cache-hit != 'true'
-        run: |
-          cd sdk-js
-          npm ci
-
-      # Some unit tests backed by runServerless involve SDK build
-      - name: Build SDK JS
-        run: |
-          cd sdk-js
-          npm run build
-      - name: Unit tests
-        run: npm run test -- -b
-      - name: SDK JS Unit tests
-        run: |
-          cd sdk-js
-          npm run test -- -b
-
   integrate:
     name: Integrate
     runs-on: ubuntu-latest
-    needs: [linuxNode14, windowsNode14, linuxNode16, linuxNode12, linuxNode10]
+    needs: [linuxNode14, windowsNode14, linuxNode16, linuxNode12]
     timeout-minutes: 30 # Default is 360
     env:
       SERVERLESS_PLATFORM_TEST_REGION: us-east-2
