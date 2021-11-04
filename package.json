@@ -55,7 +55,7 @@
     "timers-ext": "^0.1.7"
   },
   "eslintConfig": {
-    "extends": "@serverless/eslint-config/node/10",
+    "extends": "@serverless/eslint-config/node",
     "root": true,
     "rules": {
       "import/no-extraneous-dependencies": [
@@ -199,7 +199,7 @@
     "test:isolated": "mocha-isolated \"!(node_modules|integration-testing|dist|sdk-js)/**/*.test.js\""
   },
   "engines": {
-    "node": ">=10.0"
+    "node": ">=12.0"
   },
   "publishConfig": {
     "access": "public"
