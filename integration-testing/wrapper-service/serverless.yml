@@ -40,9 +40,6 @@ functions:
     handler: handler.promiseAndCallbackRace
   spans:
     handler: handler.spans
-  spans10:
-    handler: handler.spans
-    runtime: nodejs10.x
   eventTags:
     handler: handler.eventTags
   setEndpoint:
