@@ -8,6 +8,9 @@ module.exports = {
   entry: {
     app: [path.resolve(__dirname, './src/index.js')],
   },
+  optimization: {
+    minimize: false
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'index.js',

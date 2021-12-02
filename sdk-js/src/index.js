@@ -4,6 +4,7 @@
  * Spans and Monkey Patching
  */
 const EventEmitter = require('events');
+const { gql } = require('graphql-tag/lib/graphql-tag.umd');
 const isThenable = require('type/thenable/is');
 
 const spanEmitter = new EventEmitter();
@@ -276,6 +277,25 @@ class ServerlessSDK {
 
         // Capture Event Data: aws.apigateway.http
         if (eventType === 'aws.apigateway.http') {
+          if (event.body !== null && event.body !== undefined) {
+            try {
+              const data = JSON.parse(event.body);
+              if (data.query) {
+                try {
+                  const out = gql`
+                    ${data.query}
+                  `;
+                  console.log(JSON.stringify(out, null, 2));
+                } catch(error) {
+                  console.log(error)
+                } // Not graphql or not detectable graphql
+              }
+            } catch(error) {
+              console.log(error)
+              // Not graphql or not detectable graphql
+            }
+          }
+
           const timestamp = event.requestContext.requestTimeEpoch || Date.now().valueOf(); // local testing does not contain a requestTimeEpoc
           trans.set('event.timestamp', new Date(timestamp).toISOString());
           trans.set('event.source', 'aws.apigateway');
