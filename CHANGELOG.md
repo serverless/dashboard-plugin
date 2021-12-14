@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.5.1](https://github.com/serverless/dashboard-plugin/compare/v5.5.0...v5.5.1) (2021-11-03)
+
+### Maintenance Improvements
+
+- Use internal `serviceOutputs` handler ([#634](https://github.com/serverless/dashboard-plugin/pull/634)) ([8d8b965](https://github.com/serverless/dashboard-plugin/commit/8d8b965d690f6865e3e3b3c0c5f03b37e705d272)) ([Mariusz Nowak](https://github.com/medikoo))
+
+## [5.5.0](https://github.com/serverless/dashboard-plugin/compare/v5.4.8...v5.5.0) (2021-10-19)
+
+### Features
+
+- Introduce `getDashboardProvidersUrl` util ([#632](https://github.com/serverless/dashboard-plugin/pull/632)) ([6adcd3a](https://github.com/serverless/dashboard-plugin/commit/6adcd3afc0358ad9281ad1c71375839741566797)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Maintenance Improvements
+
+- Expose `dashboardProviderAlias` on credentials ([#632](https://github.com/serverless/dashboard-plugin/pull/632)) ([d790b59](https://github.com/serverless/dashboard-plugin/commit/d790b59b7c4dec5b469da7e5de50755121feed8a)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### [5.4.8](https://github.com/serverless/dashboard-plugin/compare/v5.4.7...v5.4.8) (2021-10-15)
+
+### Maintenance Improvements
+
+- **CLI New logs (experimental):**
+  - Convert `console.log` logs ([#630](https://github.com/serverless/dashboard-plugin/pull/630)) ([c9dcd8b](https://github.com/serverless/dashboard-plugin/commit/c9dcd8b6cc3c050fda9976bdf2807ed408d1e7e6)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Ensure to list dashboard url also in `info` command ([#630](https://github.com/serverless/dashboard-plugin/pull/630)) ([5e04892](https://github.com/serverless/dashboard-plugin/commit/5e04892feff05bed31e2cd3dbc33ac4cc5c5f54d)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### [5.4.7](https://github.com/serverless/dashboard-plugin/compare/v5.4.6...v5.4.7) (2021-10-13)
+
+### Maintenance Improvements
+
+- Modern logs for `test` command ([#628](https://github.com/serverless/dashboard-plugin/pull/628)) ([48f59ec](https://github.com/serverless/dashboard-plugin/commit/48f59ec3c5813271c5ddf556beb6a0391f1eb3e5)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### [5.4.6](https://github.com/serverless/dashboard-plugin/compare/v5.4.5...v5.4.6) (2021-10-08)
+
+### Maintenance Improvements
+
+- **CLI: New logs (experimental):**
+  - `dashboard` command ([#626](https://github.com/serverless/dashboard-plugin/pull/626)) ([b0e2397](https://github.com/serverless/dashboard-plugin/commit/b0e239797f424056b6effe647ad0615b99757364)) ([Piotr Grzesik](https://github.com/pgrzesik))
+  - AWS creds resolution ([#625](https://github.com/serverless/dashboard-plugin/pull/625)) ([662f809](https://github.com/serverless/dashboard-plugin/commit/662f809a2b4b64949a3ac0c714d851b4bacd7689)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### [5.4.5](https://github.com/serverless/dashboard-plugin/compare/v5.4.4...v5.4.5) (2021-09-29)
+
+### Maintenance Improvements
+
+- **CLI: New logs (experimental):**
+  - Modern logs for `deploy` command ([#622](https://github.com/serverless/dashboard-plugin/pull/622)) ([2548eb2](https://github.com/serverless/dashboard-plugin/commit/2548eb2ef06f418d75f243a0910a0841dd7ee6df)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `login` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([ae1c254](https://github.com/serverless/dashboard-plugin/commit/ae1c2548c5771d0564ca82de207b75b5b111168e)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `logout` command ([bf30bd8](https://github.com/serverless/dashboard-plugin/commit/bf30bd8fa56c574238242ee4131d4b8312fdde46))([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `output get` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([9e872a3](https://github.com/serverless/dashboard-plugin/commit/9e872a3b74f0c453cb8d8722727b699ffc5814b3)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `output list` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([62dccc2](https://github.com/serverless/dashboard-plugin/commit/62dccc2ef91a159b93e5e2c518722369efc10930)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `param get` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([63bd89f](https://github.com/serverless/dashboard-plugin/commit/63bd89facbe6ce9e46e85c833ff9a41694678ede)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for `param list` command ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([c2b8c4b](https://github.com/serverless/dashboard-plugin/commit/c2b8c4bf999fa5bdcfef81e51f02d9f7ddac6272)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Modern logs for interactive setup ([#622](https://github.com/serverless/dashboard-plugin/pull/622)) ([bf4aa84](https://github.com/serverless/dashboard-plugin/commit/bf4aa84518d9af11b6eaaaa234475bf7f8f87932)) ([Mariusz Nowak](https://github.com/medikoo))
+- Rely on native `Object.entries` ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([8ebbbbb](https://github.com/serverless/dashboard-plugin/commit/8ebbbbb56ca88de0ae24227652e6e73f98d8e7d2)) ([Mariusz Nowak](https://github.com/medikoo))
+- Rely on native `Object.entries` ([#621](https://github.com/serverless/dashboard-plugin/pull/621)) ([138375d](https://github.com/serverless/dashboard-plugin/commit/138375da06d554b35b51e1427baea7e734ee85f4)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### [5.4.4](https://github.com/serverless/dashboard-plugin/compare/v5.4.3...v5.4.4) (2021-08-25)
+
+### Bug Fixes
+
+- Ensure `dashboard` command redirects to service page or displays correct message ([#615](https://github.com/serverless/dashboard-plugin/pull/615)) ([2aa66ac](https://github.com/serverless/dashboard-plugin/commit/2aa66ac8163ff2225747cf9809da7376633f3255)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Recognize if user is not in service context in onboarding flow ([#609](https://github.com/serverless/dashboard-plugin/pull/609)) ([8a86187](https://github.com/serverless/dashboard-plugin/commit/8a86187c23ef1f6296e84ef5ca9e17fef10a9266)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.4.3](https://github.com/serverless/dashboard-plugin/compare/v5.4.2...v5.4.3) (2021-06-29)
 
 ### Maintenance Improvements

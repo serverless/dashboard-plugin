@@ -16,9 +16,7 @@ let teardown;
 let serviceName;
 const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 
-describe('integration: wrapper', function () {
-  this.timeout(1000 * 60 * 5);
-
+describe('integration: wrapper', () => {
   let lambdaService;
   let cloudwatchLogsService;
 
@@ -441,63 +439,6 @@ describe('integration: wrapper', function () {
     });
   });
 
-  it('gets spans in node 10', async () => {
-    const functionName = `${serviceName}-dev-spans10`;
-    const { LogResult } = await awsRequest(lambdaService, 'invoke', {
-      LogType: 'Tail',
-      FunctionName: functionName,
-    });
-    const payload = await resolveAndValidateLog(functionName, LogResult);
-    expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(5);
-    // first custom span (create sts client)
-    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[0].tags).to.deep.equal({
-      type: 'custom',
-      label: 'create sts client',
-    });
-    // aws span
-    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[1].tags.type).to.equal('aws');
-    // first http span (POST w/ https.request)
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
-      type: 'http',
-      requestHostname: 'httpbin.org',
-      requestPath: '/post',
-      httpMethod: 'POST',
-      httpStatus: 200,
-    });
-    // second http span (https.get)
-    expect(new Set(Object.keys(payload.payload.spans[3]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[3].tags).to.deep.equal({
-      type: 'http',
-      requestHostname: 'httpbin.org',
-      requestPath: '/get',
-      httpMethod: 'GET',
-      httpStatus: 200,
-    });
-    // second custom span (asynctest)
-    expect(new Set(Object.keys(payload.payload.spans[4]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[4].tags).to.deep.equal({
-      type: 'custom',
-      label: 'asynctest',
-    });
-  });
-
   it('gets SFE log msg from wrapped node timeout handler', async () => {
     const functionName = `${serviceName}-dev-timeout`;
     const { LogResult } = await awsRequest(lambdaService, 'invoke', {
@@ -598,51 +539,6 @@ describe('integration: wrapper', function () {
       requestPath: '/',
       httpMethod: 'GET',
       httpStatus: 'Exc',
-    });
-  });
-
-  it('gets the return value when calling python2', async () => {
-    const functionName = `${serviceName}-dev-pythonSuccess2`;
-    const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
-      LogType: 'Tail',
-      FunctionName: functionName,
-    });
-    await resolveLog(functionName, LogResult); // Expose debug logs
-    expect(JSON.parse(Payload)).to.equal('success');
-  });
-
-  it('gets SFE log msg from wrapped python2 handler', async () => {
-    const functionName = `${serviceName}-dev-pythonSuccess2`;
-    const { LogResult } = await awsRequest(lambdaService, 'invoke', {
-      LogType: 'Tail',
-      FunctionName: functionName,
-    });
-    const payload = await resolveAndValidateLog(functionName, LogResult);
-    expect(payload.type).to.equal('transaction');
-    expect(payload.payload.spans.length).to.equal(3);
-    expect(new Set(Object.keys(payload.payload.spans[0]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[0].tags).to.deep.equal({
-      type: 'custom',
-      label: 'create sts client',
-    });
-    expect(new Set(Object.keys(payload.payload.spans[1]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(new Set(Object.keys(payload.payload.spans[1].tags.aws))).to.deep.equal(
-      new Set(['errorCode', 'operation', 'region', 'requestId', 'service'])
-    );
-    expect(payload.payload.spans[1].tags.type).to.equal('aws');
-    expect(new Set(Object.keys(payload.payload.spans[2]))).to.deep.equal(
-      new Set(['duration', 'endTime', 'startTime', 'tags'])
-    );
-    expect(payload.payload.spans[2].tags).to.deep.equal({
-      type: 'http',
-      requestHostname: 'httpbin.org',
-      requestPath: '/get',
-      httpMethod: 'GET',
-      httpStatus: 200,
     });
   });
 
