@@ -6,9 +6,8 @@ variablesResolutionMode: 20210326
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   region: REGION_PLACEHOLDER
-  lambdaHashingVersion: 20201221
 
 functions:
   # NodeJS handlers
