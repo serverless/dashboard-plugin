@@ -1,8 +1,7 @@
 service: some-aws-service
 provider:
   name: aws
-  runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
+  runtime: nodejs14.x
 
 org: testinteractivecli
 app: some-aws-service-app
