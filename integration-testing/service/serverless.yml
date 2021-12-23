@@ -15,11 +15,6 @@ org: ORG_PLACEHOLDER
 app: APP_PLACEHOLDER
 service: SERVICE_PLACEHOLDER
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-frameworkVersion: '>=1.37.1'
-variablesResolutionMode: 20210326
-
 outputs:
   outputVariable: outputValue
 
@@ -39,9 +34,8 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   region: REGION_PLACEHOLDER
-  lambdaHashingVersion: 20201221
 
   # you can overwrite defaults here
   #  stage: dev
