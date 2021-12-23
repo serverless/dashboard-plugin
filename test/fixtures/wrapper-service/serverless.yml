@@ -2,13 +2,10 @@ org: ORG_PLACEHOLDER
 app: APP_PLACEHOLDER
 service: SERVICE_PLACEHOLDER
 
-variablesResolutionMode: 20210326
-
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   region: REGION_PLACEHOLDER
-  lambdaHashingVersion: 20201221
 
 functions:
   # NodeJS handlers
