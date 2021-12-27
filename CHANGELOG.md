@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.5.2](https://github.com/serverless/dashboard-plugin/compare/v5.5.1...v5.5.2) (2021-12-27)
+
+### Bug Fixes
+
+- Fix variable resolution of nested output structure ([#647](https://github.com/serverless/dashboard-plugin/pull/647)) ([450a512](https://github.com/serverless/dashboard-plugin/commit/450a51273d675f9e3cf2c913b4cd5f5047bf1f26)) ([Mariusz Nowak](https://github.com/medikoo))
+- Fix definition of `custom.enterprise.disableFrameworksInstrumentation` ([#649](https://github.com/serverless/dashboard-plugin/pull/649)) ([cbdb7cf](https://github.com/serverless/dashboard-plugin/commit/cbdb7cfdbac788d3d1e5abd4b86dbabe1210cddd)) ([Mariusz Nowak](https://github.com/medikoo))
+- Fix resolution of default runtime ([#649](https://github.com/serverless/dashboard-plugin/pull/649)) ([e9be679](https://github.com/serverless/dashboard-plugin/commit/e9be679313adccecf8253ae0b1f7659b6595f738)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintenance Improvements
+
+- **CLI New Logs:**
+  - Refactor `sls.cli` based logs to modern logs ([#642](https://github.com/serverless/dashboard-plugin/pull/642)) ([af281e2](https://github.com/serverless/dashboard-plugin/commit/af281e2747bf277e3d70f78c8de1d750299b2305)) ([Mariusz Nowak](https://github.com/medikoo))
+  - Use namespaced logger ([#642](https://github.com/serverless/dashboard-plugin/pull/642)) ([9ecbe9f](https://github.com/serverless/dashboard-plugin/commit/9ecbe9f18b9d2271b2164ed21e00b6cc31ac28ed)) ([Mariusz Nowak](https://github.com/medikoo))
+- Move variable resolvers to variables module ([#647](https://github.com/serverless/dashboard-plugin/pull/647)) ([6b878e5](https://github.com/serverless/dashboard-plugin/commit/6b878e5fbd0d127dcd29a5b1af7008f18e5e4646)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [5.5.1](https://github.com/serverless/dashboard-plugin/compare/v5.5.0...v5.5.1) (2021-11-03)
 
 ### Maintenance Improvements
