@@ -1,18 +1,54 @@
 'use strict';
 
 const { expect } = require('chai');
-const stripAnsi = require('strip-ansi');
-const setup = require('./setup');
-
-let sls;
+const spawn = require('child-process-ext/spawn');
+const fixturesEngine = require('../test/fixtures');
+const setupServerless = require('../test/setupServerless');
+const { serviceSlug } = require('../lib/utils');
+const { getPlatformClientWithAccessKey } = require('../lib/clientUtils');
 
 describe('integration: params', () => {
-  before(async () => ({ sls } = await setup('service2')));
+  let serviceDir;
+  let serverlessExec;
+  before(async () => {
+    const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
+    const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
+    const result = await Promise.all([
+      fixturesEngine.setup('function', {
+        configExt: {
+          org,
+          app,
+          provider: {
+            stage: process.env.SERVERLESS_PLATFORM_TEST_STAGE || 'dev',
+            region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
+          },
+          custom: {
+            testServiceParam: '${param:testService, null}',
+          },
+        },
+      }),
+      setupServerless().then((data) => data.binary),
+    ]);
+    serviceDir = result[0].servicePath;
+    const serviceName = result[0].serviceConfig.service;
+    serverlessExec = result[1];
+    const sdk = await getPlatformClientWithAccessKey(org);
+    const { orgUid } = await sdk.getOrgByName(org);
+    await sdk.createParam(orgUid, 'service', serviceSlug({ app, service: serviceName }), {
+      paramName: 'testService',
+      paramValue: 'testServiceParamValue',
+    });
+  });
 
-  it('print contains the params in the deploy profile', async () => {
-    const stdout = stripAnsi(
-      String((await sls(['print', '--path', 'custom.testParam'])).stdoutBuffer)
-    );
-    expect(stdout).to.include('testSecretValue\n\n');
+  it('print contains the params', async () => {
+    expect(
+      String(
+        (
+          await spawn(serverlessExec, ['print', '--path', 'custom.testServiceParam'], {
+            cwd: serviceDir,
+          })
+        ).stdoutBuffer
+      )
+    ).to.include('testServiceParamValue');
   });
 });
