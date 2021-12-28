@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@serverless/eslint-config": "^4.0.0",
-    "@serverless/test": "^8.6.0",
+    "@serverless/test": "^8.7.0",
     "aws-sdk": "^2.1048.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
