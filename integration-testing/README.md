@@ -13,5 +13,5 @@ Currently covers safegaurds implementation.
 3. Run the tests locally by running:
 
 ```
-SERVERLESS_ACCESS_KEY=<your_key_here> npm run integration-test
+SERVERLESS_PLATFORM_STAGE=dev SERVERLESS_ACCESS_KEY=<your_key_here> npm run integration-test
 ```

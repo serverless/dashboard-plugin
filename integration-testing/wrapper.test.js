@@ -1,24 +1,24 @@
 'use strict';
 
-process.env.SERVERLESS_PLATFORM_STAGE = 'dev';
-
 const { expect } = require('chai');
-const setup = require('./setup');
 const zlib = require('zlib');
 const wait = require('timers-ext/promise/sleep');
 const awsRequest = require('@serverless/test/aws-request');
 const hasFailed = require('@serverless/test/has-failed');
 const log = require('log').get('test');
 const { ServerlessSDK } = require('@serverless/platform-client');
-
-let sls;
-let teardown;
-let serviceName;
-const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
+const spawn = require('child-process-ext/spawn');
+const fixturesEngine = require('../test/fixtures');
+const setupServerless = require('../test/setupServerless');
 
 describe('integration: wrapper', () => {
   let lambdaService;
   let cloudwatchLogsService;
+  let serviceName;
+  let serviceDir;
+  let serverlessExec;
+  let isDeployed;
+  const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 
   const resolveFunctionInvocationLogs = async (functionName, requestId) => {
     const logs = (
@@ -120,15 +120,42 @@ describe('integration: wrapper', () => {
       params: lambdaService.params,
     };
 
-    ({ sls, teardown, serviceName } = await setup('wrapper-service'));
-    await sls(['deploy']);
+    const app = process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration';
+    const stage = process.env.SERVERLESS_PLATFORM_TEST_STAGE || 'dev';
+    const region = process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1';
+    const result = await Promise.all([
+      fixturesEngine.setup('wrapper-service', {
+        configExt: {
+          org,
+          app,
+          provider: { stage, region },
+          functions: {
+            getDashboardUrl: { environment: { ORG: org, APP: app, STAGE: stage, REGION: region } },
+            pythonDashboardUrl: {
+              environment: { ORG: org, APP: app, STAGE: stage, REGION: region },
+            },
+          },
+        },
+      }),
+      setupServerless().then((data) => data.binary),
+    ]);
+    serviceDir = result[0].servicePath;
+    serviceName = result[0].serviceConfig.service;
+    serverlessExec = result[1];
+    await result[0].updateConfig({
+      functions: {
+        getDashboardUrl: { environment: { SERVICE: serviceName } },
+        pythonDashboardUrl: { environment: { SERVICE: serviceName } },
+      },
+    });
+    await spawn(serverlessExec, ['deploy'], { cwd: serviceDir });
+    isDeployed = true;
   });
 
-  after(function () {
+  after(async function () {
     // Do not remove on fail, to allow further investigation
-    if (hasFailed(this.test.parent)) return null;
-    if (teardown) return teardown();
-    return null;
+    if (!isDeployed || hasFailed(this.test.parent)) return;
+    await spawn(serverlessExec, ['remove'], { cwd: serviceDir });
   });
 
   it('gets right return value from unresolved handler', async () => {
