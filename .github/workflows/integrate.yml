@@ -264,6 +264,7 @@ jobs:
     needs: [linuxNode14, windowsNode14, linuxNode16, linuxNode12, linuxNode10]
     timeout-minutes: 30 # Default is 360
     env:
+      SERVERLESS_PLATFORM_STAGE: dev
       SERVERLESS_PLATFORM_TEST_REGION: us-east-2
       SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
     steps:
