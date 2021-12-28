@@ -1,44 +1,68 @@
 'use strict';
 
 const { expect } = require('chai');
-const fs = require('fs');
-const stripAnsi = require('strip-ansi');
-const setup = require('./setup');
-
-let sls1;
-let sls2;
-let serviceName;
-let serviceTmpDir;
-let teardown1;
-let teardown2;
+const spawn = require('child-process-ext/spawn');
+const fixturesEngine = require('../test/fixtures');
+const setupServerless = require('../test/setupServerless');
 
 describe('integration: outputs', () => {
+  let setupServiceDir;
+  let consumerServiceDir;
+  let isSetupDeployed;
+  let serverlessExec;
   before(async () => {
-    [
-      { sls: sls1, serviceName, teardown: teardown1 },
-      { sls: sls2, teardown: teardown2, serviceTmpDir },
-    ] = await Promise.all([setup('service'), setup('service2')]);
+    const result = await Promise.all([
+      fixturesEngine.setup('function', {
+        configExt: {
+          org: process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration',
+          app: process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration',
+          provider: {
+            stage: process.env.SERVERLESS_PLATFORM_TEST_STAGE || 'dev',
+            region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
+          },
+          outputs: { outputVariable: 'outputValue' },
+        },
+      }),
+      setupServerless().then((data) => data.binary),
+    ]);
+    setupServiceDir = result[0].servicePath;
+    const serviceName = result[0].serviceConfig.service;
+    serverlessExec = result[1];
 
-    let slsYaml = fs.readFileSync(`${serviceTmpDir}/serverless.yml`).toString();
-    slsYaml = slsYaml.replace(
-      'output:service.outputVariable',
-      `output:${serviceName}.outputVariable`
-    );
-    fs.writeFileSync(`${serviceTmpDir}/serverless.yml`, slsYaml);
+    [, { servicePath: consumerServiceDir }] = await Promise.all([
+      spawn(serverlessExec, ['deploy'], { cwd: setupServiceDir }).then(() => {
+        isSetupDeployed = true;
+      }),
+      fixturesEngine.setup('function', {
+        configExt: {
+          org: process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration',
+          app: process.env.SERVERLESS_PLATFORM_TEST_APP || 'integration',
+          provider: {
+            stage: process.env.SERVERLESS_PLATFORM_TEST_STAGE || 'dev',
+            region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
+          },
+          custom: {
+            testOutput: `\${output:${serviceName}.outputVariable, 'missingValue'}`,
+          },
+        },
+      }),
+    ]);
   });
 
-  after(() => {
-    if (teardown1) return teardown1();
-    if (teardown2) return teardown2();
-    return null;
+  after(async () => {
+    if (!isSetupDeployed) return;
+    await spawn(serverlessExec, ['remove'], { cwd: setupServiceDir });
   });
 
   it('can publish and consume outputs', async () => {
-    await sls1(['deploy']);
-
-    const printStdout = stripAnsi(
-      String((await sls2(['print', '--path', 'custom.testOutput'])).stdoutBuffer)
-    );
-    expect(printStdout).to.include('outputValue\n\n');
+    expect(
+      String(
+        (
+          await spawn(serverlessExec, ['print', '--path', 'custom.testOutput'], {
+            cwd: consumerServiceDir,
+          })
+        ).stdoutBuffer
+      )
+    ).to.include('outputValue');
   });
 });
