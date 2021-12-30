@@ -52,7 +52,7 @@ def get_user_handler(user_handler_value):
     else:
         user_module_and_handler = user_handler_value
 
-    user_module_name, user_handler_name = user_module_and_handler.split(".")
+    user_module_name, user_handler_name = user_module_and_handler.rsplit(".", 1)
     user_module = import_module(user_module_name)
     if "/" in user_handler_value:
         sys.path.pop()
