@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.5.3](https://github.com/serverless/dashboard-plugin/compare/v5.5.2...v5.5.3) (2022-01-03)
+
+### Bug Fixes
+
+- Support nested paths for Python handlers ([#652](https://github.com/serverless/dashboard-plugin/pull/652)) ([7f84a76](https://github.com/serverless/dashboard-plugin/commit/7f84a76b89b28a786a0e3bc0a44abb8f5f1e8739)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.5.2](https://github.com/serverless/dashboard-plugin/compare/v5.5.1...v5.5.2) (2021-12-27)
 
 ### Bug Fixes
