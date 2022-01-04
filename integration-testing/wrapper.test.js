@@ -20,44 +20,61 @@ describe('integration: wrapper', () => {
   let isDeployed;
   const org = process.env.SERVERLESS_PLATFORM_TEST_ORG || 'integration';
 
-  const resolveFunctionInvocationLogs = async (functionName, requestId) => {
-    const logs = (
+  const resolveFunctionInvocationLogs = async (functionName, requestId, options = {}) => {
+    const logMessages = (
       await awsRequest(cloudwatchLogsService, 'filterLogEvents', {
         logGroupName: `/aws/lambda/${functionName}`,
       })
-    ).events
-      .map(({ message }) => message)
-      .join('');
-    const invocationLastLog = `END RequestId: ${requestId}`;
-    if (!logs.includes(invocationLastLog)) {
-      await wait(1000);
-      return resolveFunctionInvocationLogs(functionName, requestId);
-    }
-
-    return logs.slice(
-      logs.indexOf(`START RequestId: ${requestId}`),
-      logs.indexOf(invocationLastLog) + invocationLastLog.length
+    ).events.map(({ message }) => message);
+    const startLogIndex = logMessages.findIndex((message) =>
+      message.includes(`START RequestId: ${requestId}`)
     );
+    const endLogIndex = logMessages.findIndex((message) =>
+      message.includes(`END RequestId: ${requestId}`)
+    );
+    if (endLogIndex === -1) {
+      await wait(1000);
+      return resolveFunctionInvocationLogs(functionName, requestId, options);
+    }
+    if (!options.containsDataLog) {
+      return logMessages.slice(startLogIndex, endLogIndex + 1).join('');
+    }
+    const dataLogIndex =
+      startLogIndex +
+      logMessages
+        .slice(startLogIndex)
+        .findIndex((message) => message.includes('SERVERLESS_ENTERPRISE'));
+
+    if (dataLogIndex === -1) {
+      const timeoutTime = options.timeoutTime || Date.now() + 10 * 60 * 1000;
+      if (Date.now() > timeoutTime) {
+        throw new Error('Data (SERVERLESS_ENTERPRISE) log not recorded as expected');
+      }
+      return resolveFunctionInvocationLogs(functionName, requestId, { ...options, timeoutTime });
+    }
+    return logMessages.slice(startLogIndex, Math.max(endLogIndex, dataLogIndex) + 1).join('');
   };
 
-  const resolveLog = async (functionName, encodedLogMsg) => {
+  const resolveLog = async (functionName, encodedLogMsg, options = {}) => {
     let invocationLogs = String(Buffer.from(encodedLogMsg, 'base64'));
-    if (!invocationLogs.includes('START RequestId:')) {
+    const requestId = invocationLogs.match(/END RequestId: ([a-f0-9-]+)/)[1];
+    if (
+      !invocationLogs.includes('START RequestId:') ||
+      (options.containsDataLog && !invocationLogs.includes('SERVERLESS_ENTERPRISE'))
+    ) {
       // Received incomplete logs
       // ("Logtype: 'Tail' guarantees to return only the last 4 KB of the logs)
       // In this case retrieve request logs form Cloudwatch log directly
       log.debug('incomplete log buffer %s', invocationLogs);
-      invocationLogs = await resolveFunctionInvocationLogs(
-        functionName,
-        invocationLogs.match(/END RequestId: ([a-f0-9-]+)/)[1]
-      );
+      invocationLogs = await resolveFunctionInvocationLogs(functionName, requestId, options);
     }
+
     log.debug('log buffer %s', invocationLogs);
     return invocationLogs;
   };
 
   const resolveAndValidateLog = async (functionName, encodedLogMsg) => {
-    const logMsg = await resolveLog(functionName, encodedLogMsg);
+    const logMsg = await resolveLog(functionName, encodedLogMsg, { containsDataLog: true });
     expect(logMsg).to.match(/SERVERLESS_ENTERPRISE/);
     const logLine = logMsg.split('\n').find((line) => line.includes('SERVERLESS_ENTERPRISE'));
     const payloadString = logLine.split('SERVERLESS_ENTERPRISE')[1].split('END RequestId')[0];
