@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.5.4](https://github.com/serverless/dashboard-plugin/compare/v5.5.3...v5.5.4) (2022-01-19)
+
+### Maintenance Improvements
+
+- Remove direct use of `@serverless/utils/log` ([#658](https://github.com/serverless/dashboard-plugin/pull/658)) ([1363594](https://github.com/serverless/dashboard-plugin/commit/1363594915257d84155f96f3f5f667ac83d65cda)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [5.5.3](https://github.com/serverless/dashboard-plugin/compare/v5.5.2...v5.5.3) (2022-01-03)
 
 ### Bug Fixes
