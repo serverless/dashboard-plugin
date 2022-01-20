@@ -1,7 +1,7 @@
 'use strict';
 
 const alexaSkill = require('./event-types/alexa-skill');
-const apiGateway = require('./event-types/apiGateway');
+const apiGateway = require('./event-types/api-gateway');
 const apiGatewayV2 = require('./event-types/api-gateway-v2');
 const customAuthorizer = require('./event-types/customAuthorizer');
 const cloudFront = require('./event-types/cloudFront');
