@@ -109,7 +109,7 @@ jobs:
       - name: Unit tests
         shell: bash
         run: |
-          export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setupTestServerless.js`
+          export LOCAL_SERVERLESS_LINK_PATH=`./scripts/setup-test-serverless.js`
           npm test -- -b
       - name: SDK JS Unit tests
         run: |
