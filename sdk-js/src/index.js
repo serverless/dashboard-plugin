@@ -14,7 +14,7 @@ const spanEmitter = new EventEmitter();
 
 const os = require('os');
 const ServerlessTransaction = require('./lib/transaction.js');
-const detectEventType = require('./lib/eventDetection');
+const detectEventType = require('./lib/event-detection');
 
 let currentAwsCallback;
 

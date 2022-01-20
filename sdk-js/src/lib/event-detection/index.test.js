@@ -1,7 +1,7 @@
 'use strict';
 
 const { expect } = require('chai');
-const detectEventType = require('./');
+const detectEventType = require('../event-detection');
 
 const alexaSkill = {
   session: {
