@@ -3,7 +3,7 @@
 const { expect } = require('chai');
 const spawn = require('child-process-ext/spawn');
 const fixturesEngine = require('../test/fixtures');
-const setupServerless = require('../test/setupServerless');
+const setupServerless = require('../test/setup-serverless');
 
 describe('integration: outputs', () => {
   let setupServiceDir;
