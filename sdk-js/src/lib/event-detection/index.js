@@ -1,20 +1,20 @@
 'use strict';
 
-const alexaSkill = require('./eventTypes/alexaSkill');
-const apiGateway = require('./eventTypes/apiGateway');
-const apiGatewayV2 = require('./eventTypes/apiGatewayV2');
-const customAuthorizer = require('./eventTypes/customAuthorizer');
-const cloudFront = require('./eventTypes/cloudFront');
-const cloudwatchEvent = require('./eventTypes/cloudwatchEvent');
-const cloudwatchLogs = require('./eventTypes/cloudwatchLog');
-const dynamodb = require('./eventTypes/dynamodb');
-const firehose = require('./eventTypes/firehose');
-const kinesis = require('./eventTypes/kinesis');
-const s3 = require('./eventTypes/s3');
-const scheduled = require('./eventTypes/scheduled');
-const ses = require('./eventTypes/ses');
-const sns = require('./eventTypes/sns');
-const sqs = require('./eventTypes/sqs');
+const alexaSkill = require('./event-types/alexaSkill');
+const apiGateway = require('./event-types/apiGateway');
+const apiGatewayV2 = require('./event-types/apiGatewayV2');
+const customAuthorizer = require('./event-types/customAuthorizer');
+const cloudFront = require('./event-types/cloudFront');
+const cloudwatchEvent = require('./event-types/cloudwatchEvent');
+const cloudwatchLogs = require('./event-types/cloudwatchLog');
+const dynamodb = require('./event-types/dynamodb');
+const firehose = require('./event-types/firehose');
+const kinesis = require('./event-types/kinesis');
+const s3 = require('./event-types/s3');
+const scheduled = require('./event-types/scheduled');
+const ses = require('./event-types/ses');
+const sns = require('./event-types/sns');
+const sqs = require('./event-types/sqs');
 
 const detectEventType = (event) =>
   alexaSkill(event) ||
