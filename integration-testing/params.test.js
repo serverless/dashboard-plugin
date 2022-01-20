@@ -5,7 +5,7 @@ const spawn = require('child-process-ext/spawn');
 const fixturesEngine = require('../test/fixtures');
 const setupServerless = require('../test/setup-serverless');
 const { serviceSlug } = require('../lib/utils');
-const { getPlatformClientWithAccessKey } = require('../lib/clientUtils');
+const { getPlatformClientWithAccessKey } = require('../lib/client-utils');
 
 describe('integration: params', () => {
   let serviceDir;
