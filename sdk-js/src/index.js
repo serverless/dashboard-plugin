@@ -55,7 +55,7 @@ class ServerlessSDK {
           'To disable HTTP span collection, in your serverless.yml file add this key: custom.enterprise.disableHttpSpans: true'
       );
     }
-    if (!obj.disableAwsSpans) require('./lib/span-hooks/hookAwsSdk')(spanEmitter);
+    if (!obj.disableAwsSpans) require('./lib/span-hooks/hook-aws-sdk')(spanEmitter);
     if (!obj.disableHttpSpans) require('./lib/span-hooks/hook-http')(spanEmitter);
     if (!obj.disableFrameworksInstrumentation) {
       require('./lib/frameworks')(ServerlessSDK, this.$.config);
