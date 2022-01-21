@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/serverless/dashboard-plugin/workflows/Integrate/badge.svg)](https://github.com/serverless/dashboard-plugin/actions?query=workflow%3AIntegrate)
 [![npm version](https://img.shields.io/npm/v/@serverless/dashboard-plugin.svg)](https://badge.fury.io/js/@serverless/dashboard-plugin)
-[![codecov](https://codecov.io/gh/serverless/dashboard-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/serverless/dashboard-plugin)
+[![codecov](https://codecov.io/gh/serverless/dashboard-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/serverless/dashboard-plugin)
 
 To enable the various features of the [Serverless Framework Dashboard](https://app.serverless.com) for a particular Service you must deploy or redeploy that Service, using Serverless Framework open-source CLI version 1.45.1 or later.
 
