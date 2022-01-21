@@ -26,7 +26,7 @@ jobs:
             ~/.npm
             node_modules
             sdk-js/node_modules
-          key: npm-v14-${{ runner.os }}-refs/heads/master-${{ hashFiles('**package*.json') }}
+          key: npm-v14-${{ runner.os }}-refs/heads/main-${{ hashFiles('**package*.json') }}
 
       - name: Install Node.js and npm
         uses: actions/setup-node@v1
@@ -35,7 +35,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       # Note: No need to install dependencies as we have retrieved cached `node_modules` for very
-      #       same `package.json` as stored with recent `master `build
+      #       same `package.json` as stored with recent `main` build
 
       - name: Build SDK
         run: |
