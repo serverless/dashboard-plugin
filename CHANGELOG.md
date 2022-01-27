@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/serverless/dashboard-plugin/compare/v5.5.4...v6.0.0) (2022-01-27)
+
+### ⚠ BREAKING CHANGES
+
+- Old Framework variables resolver is no longer supported
+- Deployment profile based params are no longer resolved
+- `tenant` will no longer be recognized. Use `org` instead
+- `studio` command is removed
+- Internal setup of dashboard related interactive CLI steps is removed
+- Node.js version 12 or later is required (dropped support for v10)
+
+### Features
+
+- Support new `params` configuration ([#648](https://github.com/serverless/dashboard-plugin/pull/648) & [#655](https://github.com/serverless/dashboard-plugin/pull/655)) ([ad0ba91](https://github.com/serverless/dashboard-plugin/commit/ad0ba918ddb0fd12d3f8ea26a6d80d990adea3d8)) ([Mariusz Nowak](https://github.com/medikoo))
+- Drop support for deployment profile based params ([#648](https://github.com/serverless/dashboard-plugin/pull/648)) ([c4ef4ff](https://github.com/serverless/dashboard-plugin/commit/c4ef4ff7e8a893ecf8416bf366ca4772990f51f7)) ([Mariusz Nowak](https://github.com/medikoo))
+- Drop support for old framework variables resolver ([#648](https://github.com/serverless/dashboard-plugin/pull/648)) ([3677ffd](https://github.com/serverless/dashboard-plugin/commit/3677ffd4b5ebedf51d109b830138d9e3e58eb1c3)) ([Mariusz Nowak](https://github.com/medikoo))
+- Drop support for `tenant` ([#656](https://github.com/serverless/dashboard-plugin/pull/656)) ([765169e](https://github.com/serverless/dashboard-plugin/commit/765169e82f00226332a9120056be27107f4af150)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove _legacy_ logs ([#657](https://github.com/serverless/dashboard-plugin/pull/657)) ([2775471](https://github.com/serverless/dashboard-plugin/commit/277547117cc10ffe817545b774583eb533236ad2)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Remove `studio` command ([#638](https://github.com/serverless/dashboard-plugin/pull/638)) ([8220a32](https://github.com/serverless/dashboard-plugin/commit/8220a32a7ac7ff04d5b455e1ff5f52a75bbdf53e)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Maintenance Improvements
+
+- Drop support for Node.js versions below v12 ([#641](https://github.com/serverless/dashboard-plugin/pull/641)) ([bd2a1e4](https://github.com/serverless/dashboard-plugin/commit/bd2a1e40d05a9eb8e63c946d7187c6320ffb8f42)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove check for `serviceOutputs` ([#663](https://github.com/serverless/dashboard-plugin/pull/663)) ([3cdcb47](https://github.com/serverless/dashboard-plugin/commit/3cdcb47a7f0ccacebb188aa4d49b637215fa086d)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Remove checks related to vars resolution ([#663](https://github.com/serverless/dashboard-plugin/pull/6)) ([7a2fb7f](https://github.com/serverless/dashboard-plugin/commit/7a2fb7fb928d4af803de42fece580cca5b92a96c)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Expose param meta in `resolveParams` response ([#648](https://github.com/serverless/dashboard-plugin/pull/648)) ([647cfdd](https://github.com/serverless/dashboard-plugin/commit/647cfdd9ef3c81c3e04c083c95e33184a4383e12)) ([Mariusz Nowak](https://github.com/medikoo))
+- Remove no longer used, interactive setup related modules ([#656](https://github.com/serverless/dashboard-plugin/pull/656)) ([2423e13](https://github.com/serverless/dashboard-plugin/commit/2423e131218dfa7c795ab2e4655ff39cc0657f60)) ([Mariusz Nowak](https://github.com/medikoo))
+- Unify file naming convention ([#661](https://github.com/serverless/dashboard-plugin/pull/6)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [5.5.4](https://github.com/serverless/dashboard-plugin/compare/v5.5.3...v5.5.4) (2022-01-19)
 
 ### Maintenance Improvements
