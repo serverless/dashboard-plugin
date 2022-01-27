@@ -68,7 +68,8 @@ module.exports = memoizee(
         }
 
         log.debug('... fetch tarball');
-        return fetch('https://github.com/serverless/serverless/archive/master.tar.gz');
+        // TODO: Switch to main, once v3 is merged to main
+        return fetch('https://github.com/serverless/serverless/archive/v3.tar.gz');
       })
       .then((res) => {
         const tarDeferred = tar.x({ cwd: serverlessTmpDir, strip: 1 });
