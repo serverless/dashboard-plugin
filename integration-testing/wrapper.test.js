@@ -4,6 +4,8 @@ const { expect } = require('chai');
 const zlib = require('zlib');
 const wait = require('timers-ext/promise/sleep');
 const awsRequest = require('@serverless/test/aws-request');
+const CloudWatchLogsService = require('aws-sdk').CloudWatchLogs;
+const LambdaService = require('aws-sdk').LambdaService;
 const hasFailed = require('@serverless/test/has-failed');
 const log = require('log').get('test');
 const { ServerlessSDK } = require('@serverless/platform-client');
@@ -125,7 +127,7 @@ describe('integration: wrapper', () => {
       throw new Error(`Unable to fetch providers: ${providerCredentials.errors}`);
     }
     lambdaService = {
-      name: 'Lambda',
+      client: LambdaService,
       params: {
         region: process.env.SERVERLESS_PLATFORM_TEST_REGION || 'us-east-1',
         credentials: providerDetails,
@@ -133,7 +135,7 @@ describe('integration: wrapper', () => {
     };
 
     cloudwatchLogsService = {
-      name: 'CloudWatchLogs',
+      client: CloudWatchLogsService,
       params: lambdaService.params,
     };
 
