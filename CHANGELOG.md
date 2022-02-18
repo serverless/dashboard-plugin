@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/serverless/dashboard-plugin/compare/v6.0.0...v6.1.0) (2022-02-18)
+
+### Features
+
+- Deprecate `test` command ([#667](https://github.com/serverless/dashboard-plugin/pull/667)) ([dd221cd](https://github.com/serverless/dashboard-plugin/commit/dd221cd9666c0a874d4c67f63960baf5020821f3)) ([Piotr Grzesik](https://github.com/pgrzesik))
+- Support for CLI options during `param` variable resolution ([#670](https://github.com/serverless/dashboard-plugin/pull/670)) ([b8281c7](https://github.com/serverless/dashboard-plugin/commit/b8281c79178d9d05a8d04e23ca5df171aafd0c75)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
+### Bug Fixes
+
+- Fix support for custom service level package artifacts ([#669](https://github.com/serverless/dashboard-plugin/issues/669)) ([8e51da1](https://github.com/serverless/dashboard-plugin/commit/8e51da18ccc6ec5e010f073d915eb19598684c7d)) ([Sam Chung](https://github.com/samchungy))
+
+### Maintenance Improvements
+
+- Use `main` when downloading Framework ([#666](https://github.com/serverless/dashboard-plugin/pull/666))([73f4e7c](https://github.com/serverless/dashboard-plugin/commit/73f4e7c60e147413dc8332beae74eccb920841c6)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ## [6.0.0](https://github.com/serverless/dashboard-plugin/compare/v5.5.4...v6.0.0) (2022-01-27)
 
 ### ⚠ BREAKING CHANGES
