@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.1](https://github.com/serverless/dashboard-plugin/compare/v6.1.0...v6.1.1) (2022-02-25)
+
+### Bug Fixes
+
+- Fix conditional in notification resolver ([#674](https://github.com/serverless/dashboard-plugin/pull/674)) ([0402e86](https://github.com/serverless/dashboard-plugin/commit/0402e86352117a0e6a7a687fda79cc3bff058a3b)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintenance Improvements
+
+- Unify `isDashboardEnabled` resolution ([#674](https://github.com/serverless/dashboard-plugin/pull/674)) ([30c0b89](https://github.com/serverless/dashboard-plugin/commit/30c0b89cbc36b02f3e49f7b73a7fd69e159c7c5a)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ## [6.1.0](https://github.com/serverless/dashboard-plugin/compare/v6.0.0...v6.1.0) (2022-02-18)
 
 ### Features
