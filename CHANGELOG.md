@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.2](https://github.com/serverless/dashboard-plugin/compare/v6.1.1...v6.1.2) (2022-02-25)
+
+### Bug Fixes
+
+- Fix handling of `app` setting when `console: true` ([806888e](https://github.com/serverless/dashboard-plugin/commit/806888e5204879e9653e75c0de68e79a20a7681a)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [6.1.1](https://github.com/serverless/dashboard-plugin/compare/v6.1.0...v6.1.1) (2022-02-25)
 
 ### Bug Fixes
