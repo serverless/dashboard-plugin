@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.4](https://github.com/serverless/dashboard-plugin/compare/v6.1.3...v6.1.4) (2022-03-01)
+
+### Maintenance Improvements
+
+- Improve wording during console login ([#678](https://github.com/serverless/dashboard-plugin/pull/678)) ([3c6ec71](https://github.com/serverless/dashboard-plugin/commit/3c6ec716640cfb1fb5b1f12c0a46de71af39bc69)) ([Piotr Grzesik](https://github.com/pgrzesik))
+
 ### [6.1.3](https://github.com/serverless/dashboard-plugin/compare/v6.1.2...v6.1.3) (2022-03-01)
 
 ### Maintenance Improvements
