@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.6](https://github.com/serverless/dashboard-plugin/compare/v6.1.5...v6.1.6) (2022-03-18)
+
+### Bug Fixes
+
+- Update dependency on `simple-git` to avoid security vulnerability ([#683](https://github.com/serverless/enterprise-plugin/pull/683)) ([168b168](https://github.com/serverless/dashboard-plugin/commit/168b1684b8cfc55fe23e9284eda2704845695733)) ([pgrzesik](https://github.com/pgrzesik))
+
 ### [6.1.5](https://github.com/serverless/dashboard-plugin/compare/v6.1.4...v6.1.5) (2022-03-02)
 
 ### Maintenance Improvements
