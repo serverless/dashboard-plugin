@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/serverless/dashboard-plugin/compare/v6.1.6...v6.2.0) (2022-03-24)
+
+### Features
+
+- Support providers with explicitly disabled dashboard ([#685](https://github.com/serverless/enterprise-plugin/pull/685)) ([ecbef10](https://github.com/serverless/dashboard-plugin/commit/ecbef10dd81021f94f5c3b4e03fc531488c9c28a)) ([Mariusz Nowak](https://github.com/medikoo))
+
+### Maintenance Improvements
+
+- Generalize dashboard setup validation ([#685](https://github.com/serverless/enterprise-plugin/pull/685)) ([dc19abd](https://github.com/serverless/dashboard-plugin/commit/dc19abd838825fecb73104ab93dce480ff96e444)) ([Mariusz Nowak](https://github.com/medikoo))
+
 ### [6.1.6](https://github.com/serverless/dashboard-plugin/compare/v6.1.5...v6.1.6) (2022-03-18)
 
 ### Bug Fixes
