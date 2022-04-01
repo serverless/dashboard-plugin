@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.2.1](https://github.com/serverless/dashboard-plugin/compare/v6.2.0...v6.2.1) (2022-04-01)
+
+### Maintenance Improvements
+
+- Clarify unsupported runtimes warning message ([#687](https://github.com/serverless/dashboard-plugin/pull/687)) ([193cd0f](https://github.com/serverless/dashboard-plugin/commit/193cd0f187ea530db34278a8e19b22737dbd7353)) ([pgrzesik](https://github.com/pgrzesik))
+
 ## [6.2.0](https://github.com/serverless/dashboard-plugin/compare/v6.1.6...v6.2.0) (2022-03-24)
 
 ### Features
