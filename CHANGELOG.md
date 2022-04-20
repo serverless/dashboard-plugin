@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.2.2](https://github.com/serverless/dashboard-plugin/compare/v6.2.1...v6.2.2) (2022-04-20)
+
+### Maintenance Improvements
+
+- Add detailed error message for params resolution ([#690](https://github.com/serverless/dashboard-plugin/pull/690)) ([c588286](https://github.com/serverless/dashboard-plugin/commit/c5882863a0e0f4d9311c1d275640cb35710cfbcc)) ([pgrzesik](https://github.com/pgrzesik))
+
 ### [6.2.1](https://github.com/serverless/dashboard-plugin/compare/v6.2.0...v6.2.1) (2022-04-01)
 
 ### Maintenance Improvements
