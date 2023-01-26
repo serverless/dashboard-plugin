@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.2.3](https://github.com/serverless/dashboard-plugin/compare/v6.2.2...v6.2.3) (2023-01-26)
+
+### Maintenance Improvements
+
+- Use `patterns` instead of `include` ([#694](https://github.com/serverless/dashboard-plugin/issues/694)) ([47374d4](https://github.com/serverless/dashboard-plugin/commit/47374d460e0a5455ce81d68610b577e996c9438c))
+
 ### [6.2.2](https://github.com/serverless/dashboard-plugin/compare/v6.2.1...v6.2.2) (2022-04-20)
 
 ### Maintenance Improvements
