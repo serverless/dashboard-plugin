@@ -7,7 +7,7 @@
   "dependencies": {
     "@serverless/event-mocks": "^1.1.1",
     "@serverless/platform-client": "^4.3.2",
-    "@serverless/utils": "^6.8.2",
+    "@serverless/utils": "^6.11.2",
     "child-process-ext": "^2.1.1",
     "chokidar": "^3.5.3",
     "flat": "^5.0.2",
