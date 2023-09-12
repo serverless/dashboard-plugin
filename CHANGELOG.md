@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.3.0](https://github.com/serverless/dashboard-plugin/compare/v6.2.3...v6.3.0) (2023-09-12)
+
+### Features
+
+- Add support to disable wrapping manually, automatically disable or ESM projects, and for python projects with 3.11 ([#712](https://github.com/serverless/dashboard-plugin/issues/712)) ([287875f](https://github.com/serverless/dashboard-plugin/commit/287875f5d394d4116ae1033066dc96b7c76cc84e))
+
 ### [6.2.3](https://github.com/serverless/dashboard-plugin/compare/v6.2.2...v6.2.3) (2023-01-26)
 
 ### Maintenance Improvements
