@@ -174,7 +174,7 @@ class Transaction {
       console.info('');
       console.error(error);
 
-      parseError(error, null, (res, errorStack) => {
+      parseError(error, null, (_res, errorStack) => {
         this.set('error.culprit', errorStack.culprit);
         this.set('error.fatal', fatal);
         this.set('error.exception.type', errorStack.exception.type);
@@ -255,9 +255,8 @@ class Transaction {
     return zlib.gzipSync(body);
   }
 
-  writeSlsTransaction(transaction) {
-    console.info('SERVERLESS_ENTERPRISE', JSON.stringify(transaction));
-  }
+  // eslint-disable-next-line no-unused-vars
+  writeSlsTransaction(_transaction) {}
 
   buildOutput(type) {
     if (!this.shouldLogMeta) return;
@@ -275,7 +274,7 @@ class Transaction {
       // Flatten and camelCase schema because EAPM tags are only key/value=string
       // not using lodash's flatten bc its for Arrays and schema is an Object
       let tags = flatten(this.$.schema);
-      tags = _.mapKeys(tags, (value, key) => _.camelCase(key));
+      tags = _.mapKeys(tags, (_value, key) => _.camelCase(key));
       tags.traceId = tags.computeCustomAwsRequestId;
 
       // if transaction add the request id as the transaction trace

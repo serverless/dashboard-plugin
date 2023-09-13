@@ -431,24 +431,7 @@ class SDK(object):
                 "schemaVersion": "0.0",
                 "timestamp": end_isoformat,
             }
-            if self.should_log_meta:
-                if self.should_compress_logs:
-                    buf = BytesIO()
-                    with gzip.GzipFile(fileobj=buf, mode="wb") as c:
-                        c.write(json.dumps(transaction_data).encode('utf-8'))
-                    wrapped = {
-                        "c": True,
-                        "b": base64.b64encode(buf.getvalue()).decode('utf-8'),
-                        "origin": transaction_data["origin"]
-                    }
-                else:
-                    wrapped = {
-                        "c": False,
-                        "b": transaction_data,
-                        "origin": transaction_data["origin"]
-                    }
-                print("SERVERLESS_ENTERPRISE {}".format(
-                    json.dumps(wrapped)))
+
             if exception and error_data["errorFatal"]:
                 raise exception
 
