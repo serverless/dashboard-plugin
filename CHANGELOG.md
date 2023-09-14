@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.4.0](https://github.com/serverless/dashboard-plugin/compare/v6.3.0...v6.4.0) (2023-09-14)
+
+### Features
+
+- Remove Dashboard Monitoring Logline ([#716](https://github.com/serverless/dashboard-plugin/issues/716)) ([7257403](https://github.com/serverless/dashboard-plugin/commit/725740397275b6ed6d22844b1b610ce91a2ad5e6))
+- Remove Log Subscription setup ([#718](https://github.com/serverless/dashboard-plugin/issues/718)) ([a657f42](https://github.com/serverless/dashboard-plugin/commit/a657f427936092e9545c3eb12104f95ef585e695))
+
 ## [6.3.0](https://github.com/serverless/dashboard-plugin/compare/v6.2.3...v6.3.0) (2023-09-13)
 
 ### Features
