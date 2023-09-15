@@ -222,6 +222,8 @@ jobs:
         run: |
           cd sdk-js
           npm run build
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
       - name: Unit tests (isolated)
         run: npm run test:isolated -- -b
         env:
