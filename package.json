@@ -1,6 +1,6 @@
 {
   "name": "@serverless/dashboard-plugin",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "The Serverless Dashboard plugin",
   "author": "serverless.com",
   "repository": "serverless/dashboard-plugin",
