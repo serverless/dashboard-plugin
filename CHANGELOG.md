@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/serverless/dashboard-plugin/compare/v6.4.0...v7.0.0) (2023-09-15)
+
+### Features
+
+- Move dashboard onboarding into plugin ([#720](https://github.com/serverless/dashboard-plugin/issues/720)) ([647b217](https://github.com/serverless/dashboard-plugin/commit/647b21771ce7bd6d9ab7e9562a19bb5347093fd2))
+
+### Bug Fixes
+
+- MonitoringIntegrationService must be configured last in init ([#721](https://github.com/serverless/dashboard-plugin/issues/721)) ([be2567f](https://github.com/serverless/dashboard-plugin/commit/be2567f7414e3a4da7c6a828507b6449116b9f4f))
+
 ## [6.4.0](https://github.com/serverless/dashboard-plugin/compare/v6.3.0...v6.4.0) (2023-09-14)
 
 ### Features
