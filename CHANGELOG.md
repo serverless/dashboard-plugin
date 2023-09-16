@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.0.2](https://github.com/serverless/dashboard-plugin/compare/v7.0.1...v7.0.2) (2023-09-16)
+
+### Bug Fixes
+
+- Adjust copy ([#725](https://github.com/serverless/dashboard-plugin/issues/725)) ([04e3d12](https://github.com/serverless/dashboard-plugin/commit/04e3d12560c31b278f545e554ac8af4130b91082))
+
 ### [7.0.1](https://github.com/serverless/dashboard-plugin/compare/v7.0.0...v7.0.1) (2023-09-15)
 
 ### Bug Fixes
