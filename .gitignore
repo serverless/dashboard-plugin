@@ -9,3 +9,4 @@
 /sdk-js/node_modules
 /sdk-js/dist
 /package-lock.json
+/sdk-js/package-lock.json
