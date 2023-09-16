@@ -7,7 +7,7 @@
     "test:isolated": "mocha-isolated \"!(node_modules|dist)/**/*.test.js\""
   },
   "dependencies": {
-    "@serverless/platform-client": "^4.3.0",
+    "@serverless/platform-client": "^4.4.0",
     "after-all-results": "^2.0.0",
     "flat": "^5.0.2",
     "lodash": "^4.17.21",
