@@ -9,7 +9,7 @@
     "@aws-sdk/client-sts": "^3.410.0",
     "@serverless/event-mocks": "^1.1.1",
     "@serverless/platform-client": "^4.4.0",
-    "@serverless/utils": "^6.8.2",
+    "@serverless/utils": "^6.14.0",
     "child-process-ext": "^3.0.1",
     "chokidar": "^3.5.3",
     "flat": "^5.0.2",
