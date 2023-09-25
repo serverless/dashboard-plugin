@@ -326,32 +326,11 @@ class ServerlessSDK {
          * - TODO: Inspect outgoing HTTP status codes
          */
 
-        let capturedError = null;
-        let finalized = false;
         const finalize = (error, cb) => {
-          if (finalized) {
-            console.warn(
-              'WARNING: Callback/response already delivered.  Did your function invoke the callback and also return a promise? ' +
-                'For more details, see: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html'
-            );
-            return;
-          }
           clearTimeout(timeoutHandler);
-          try {
-            if (capturedError) {
-              trans.error(capturedError, false, cb);
-            } else if (error) {
-              trans.error(error, true, cb);
-            } else {
-              trans.end();
-              // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
-              setTimeout(cb);
-            }
-          } finally {
-            finalized = true;
-            // Remove the span listeners
-            spanEmitter.removeAllListeners('span');
-          }
+          trans.end();
+          spanEmitter.removeAllListeners('span');
+          cb();
         };
 
         // Patch context methods
@@ -370,18 +349,16 @@ class ServerlessSDK {
                 finalize(err, () => target.fail(err));
               };
             } else if (prop === 'captureError') {
-              return (err) => {
-                capturedError = err;
-              };
+              // eslint-disable-next-line no-unused-vars
+              return (_err) => {};
             }
             return target[prop];
           },
         });
 
         contextProxy.serverlessSdk = {};
-        contextProxy.captureError = (err) => {
-          capturedError = err;
-        };
+        // eslint-disable-next-line no-unused-vars
+        contextProxy.captureError = (_err) => {};
         contextProxy.serverlessSdk.captureError = contextProxy.captureError; // TODO deprecate in next major rev
         ServerlessSDK._captureError = contextProxy.captureError;
 
@@ -488,7 +465,9 @@ class ServerlessSDK {
            */
           result = fn(event, contextProxy, (err, res) => finalize(err, () => callback(err, res)));
         } catch (error) {
-          finalize(error, () => context.fail(error));
+          finalize(error, () => {
+            return context.fail(error);
+          });
           return null;
         }
 
