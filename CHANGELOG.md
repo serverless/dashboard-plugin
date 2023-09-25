@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.0.4](https://github.com/serverless/dashboard-plugin/compare/v7.0.3...v7.0.4) (2023-09-25)
+
+### Bug Fixes
+
+- Remove wrapped error logic that was breaking Dashboard V2 error reporting ([#730](https://github.com/serverless/dashboard-plugin/issues/730)) ([4ae5260](https://github.com/serverless/dashboard-plugin/commit/4ae5260798ae13e79b6d245abb58f26cce00cb51))
+
 ### [7.0.3](https://github.com/serverless/dashboard-plugin/compare/v7.0.2...v7.0.3) (2023-09-19)
 
 ### [7.0.2](https://github.com/serverless/dashboard-plugin/compare/v7.0.1...v7.0.2) (2023-09-16)
