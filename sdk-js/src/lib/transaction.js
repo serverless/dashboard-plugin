@@ -6,7 +6,6 @@
 
 const _ = require('lodash');
 const uuidv4 = require('uuid').v4;
-const { parseError } = require('./parsers');
 const flatten = require('flat');
 const isError = require('type/error/is');
 const zlib = require('zlib');
@@ -173,24 +172,12 @@ class Transaction {
       // Log
       console.info('');
       console.error(error);
-
-      parseError(error, null, (_res, errorStack) => {
-        this.set('error.culprit', errorStack.culprit);
-        this.set('error.fatal', fatal);
-        this.set('error.exception.type', errorStack.exception.type);
-        // sliced to 25 kb: 25 * 1024 / 8 = 3200
-        this.set(
-          'error.exception.message',
-          Buffer.from(errorStack.exception.message).slice(0, 3200).toString()
-        );
-        this.set('error.exception.stacktrace', JSON.stringify(errorStack.exception.stacktrace));
-
-        // End transaction
-        this.buildOutput(ERROR); // set this to transaction for now.
-        self.end();
-        // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
-        setTimeout(cb);
-      });
+      this.set('error.fatal', fatal);
+      // End transaction
+      this.buildOutput(ERROR); // set this to transaction for now.
+      self.end();
+      // Resolve in next tick, so dashboard log is flushed before lambda invocation is closed
+      setTimeout(cb);
     } else {
       // Create Error ID
       // since the user didn't actually thrown an error, just include it with a prefix
