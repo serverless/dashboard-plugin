@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.1.0](https://github.com/serverless/dashboard-plugin/compare/v7.0.5...v7.1.0) (2023-10-20)
+
+### Features
+
+- Remove stackman dependency to enable use of the native Node solution ([#734](https://github.com/serverless/dashboard-plugin/issues/734)) ([1b62a2a](https://github.com/serverless/dashboard-plugin/commit/1b62a2a96db4164c9c98178e7867f4efcb5af0d1))
+
 ### [7.0.5](https://github.com/serverless/dashboard-plugin/compare/v7.0.4...v7.0.5) (2023-09-27)
 
 ### Bug Fixes
