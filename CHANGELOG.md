@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.2.0](https://github.com/serverless/dashboard-plugin/compare/v7.1.0...v7.2.1) (2023-11-16)
+
+### Bug Fixes
+
+- Bump platform-client version for axios ([#737](https://github.com/serverless/dashboard-plugin/issues/737)) ([a0700f9](https://github.com/serverless/dashboard-plugin/commit/a0700f97762c60cc38e1e3756e391b3fae3c5652))
+
 ## [7.1.0](https://github.com/serverless/dashboard-plugin/compare/v7.0.5...v7.1.0) (2023-10-20)
 
 ### Features
