@@ -7,12 +7,10 @@
     "test:isolated": "mocha-isolated \"!(node_modules|dist)/**/*.test.js\""
   },
   "dependencies": {
-    "@serverless/platform-client": "^4.3.0",
-    "after-all-results": "^2.0.0",
+    "@serverless/platform-client": "^4.4.0",
     "flat": "^5.0.2",
     "lodash": "^4.17.21",
     "require-in-the-middle": "^5.1.0",
-    "stackman": "^4.0.1",
     "type": "^2.5.0",
     "uuid": "^8.3.2"
   },

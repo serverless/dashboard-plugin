@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.2.0](https://github.com/serverless/dashboard-plugin/compare/v7.1.0...v7.2.1) (2023-11-16)
+
+### Bug Fixes
+
+- Bump platform-client version for axios ([#737](https://github.com/serverless/dashboard-plugin/issues/737)) ([a0700f9](https://github.com/serverless/dashboard-plugin/commit/a0700f97762c60cc38e1e3756e391b3fae3c5652))
+
+## [7.1.0](https://github.com/serverless/dashboard-plugin/compare/v7.0.5...v7.1.0) (2023-10-20)
+
+### Features
+
+- Remove stackman dependency to enable use of the native Node solution ([#734](https://github.com/serverless/dashboard-plugin/issues/734)) ([1b62a2a](https://github.com/serverless/dashboard-plugin/commit/1b62a2a96db4164c9c98178e7867f4efcb5af0d1))
+
+### [7.0.5](https://github.com/serverless/dashboard-plugin/compare/v7.0.4...v7.0.5) (2023-09-27)
+
+### Bug Fixes
+
+- Use clearer error message for credential resolution ([#732](https://github.com/serverless/dashboard-plugin/issues/732)) ([1a17de3](https://github.com/serverless/dashboard-plugin/commit/1a17de357ab7e3742e7925100c62bbac54821c30))
+
+### [7.0.4](https://github.com/serverless/dashboard-plugin/compare/v7.0.3...v7.0.4) (2023-09-25)
+
+### Bug Fixes
+
+- Remove wrapped error logic that was breaking Dashboard V2 error reporting ([#730](https://github.com/serverless/dashboard-plugin/issues/730)) ([4ae5260](https://github.com/serverless/dashboard-plugin/commit/4ae5260798ae13e79b6d245abb58f26cce00cb51))
+
+### [7.0.3](https://github.com/serverless/dashboard-plugin/compare/v7.0.2...v7.0.3) (2023-09-19)
+
+### [7.0.2](https://github.com/serverless/dashboard-plugin/compare/v7.0.1...v7.0.2) (2023-09-16)
+
+### Bug Fixes
+
+- Adjust copy ([#725](https://github.com/serverless/dashboard-plugin/issues/725)) ([04e3d12](https://github.com/serverless/dashboard-plugin/commit/04e3d12560c31b278f545e554ac8af4130b91082))
+
+### [7.0.1](https://github.com/serverless/dashboard-plugin/compare/v7.0.0...v7.0.1) (2023-09-15)
+
+### Bug Fixes
+
+- Only setup monitoringIntegrationService when logged into dashboard ([#723](https://github.com/serverless/dashboard-plugin/issues/723)) ([f0ad3ba](https://github.com/serverless/dashboard-plugin/commit/f0ad3bac37995c5a38fe54dcae37e5c3c5b75c3c))
+
+## [7.0.0](https://github.com/serverless/dashboard-plugin/compare/v6.4.0...v7.0.0) (2023-09-15)
+
+### Features
+
+- Move dashboard onboarding into plugin ([#720](https://github.com/serverless/dashboard-plugin/issues/720)) ([647b217](https://github.com/serverless/dashboard-plugin/commit/647b21771ce7bd6d9ab7e9562a19bb5347093fd2))
+
+### Bug Fixes
+
+- MonitoringIntegrationService must be configured last in init ([#721](https://github.com/serverless/dashboard-plugin/issues/721)) ([be2567f](https://github.com/serverless/dashboard-plugin/commit/be2567f7414e3a4da7c6a828507b6449116b9f4f))
+
+## [6.4.0](https://github.com/serverless/dashboard-plugin/compare/v6.3.0...v6.4.0) (2023-09-14)
+
+### Features
+
+- Remove Dashboard Monitoring Logline ([#716](https://github.com/serverless/dashboard-plugin/issues/716)) ([7257403](https://github.com/serverless/dashboard-plugin/commit/725740397275b6ed6d22844b1b610ce91a2ad5e6))
+- Remove Log Subscription setup ([#718](https://github.com/serverless/dashboard-plugin/issues/718)) ([a657f42](https://github.com/serverless/dashboard-plugin/commit/a657f427936092e9545c3eb12104f95ef585e695))
+
+## [6.3.0](https://github.com/serverless/dashboard-plugin/compare/v6.2.3...v6.3.0) (2023-09-13)
+
+### Features
+
+- Add support to disable wrapping manually, automatically disable or ESM projects, and for python projects with 3.11 ([#712](https://github.com/serverless/dashboard-plugin/issues/712)) ([287875f](https://github.com/serverless/dashboard-plugin/commit/287875f5d394d4116ae1033066dc96b7c76cc84e))
+
 ### [6.2.3](https://github.com/serverless/dashboard-plugin/compare/v6.2.2...v6.2.3) (2023-01-26)
 
 ### Maintenance Improvements

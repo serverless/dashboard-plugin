@@ -1,13 +1,15 @@
 {
   "name": "@serverless/dashboard-plugin",
-  "version": "6.2.3",
+  "version": "7.2.0",
   "description": "The Serverless Dashboard plugin",
   "author": "serverless.com",
   "repository": "serverless/dashboard-plugin",
   "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.410.0",
+    "@aws-sdk/client-sts": "^3.410.0",
     "@serverless/event-mocks": "^1.1.1",
-    "@serverless/platform-client": "^4.3.2",
-    "@serverless/utils": "^6.8.2",
+    "@serverless/platform-client": "^4.5.1",
+    "@serverless/utils": "^6.14.0",
     "child-process-ext": "^3.0.1",
     "chokidar": "^3.5.3",
     "flat": "^5.0.2",
@@ -22,6 +24,7 @@
     "open": "^7.4.2",
     "semver": "^7.3.8",
     "simple-git": "^3.19.1",
+    "timers-ext": "^0.1.7",
     "type": "^2.7.2",
     "uuid": "^8.3.2",
     "yamljs": "^0.3.0"
@@ -50,8 +53,7 @@
     "sinon-chai": "^3.7.0",
     "standard-version": "^9.5.0",
     "strip-ansi": "^6.0.1",
-    "tar": "^6.1.13",
-    "timers-ext": "^0.1.7"
+    "tar": "^6.1.13"
   },
   "eslintConfig": {
     "extends": "@serverless/eslint-config/node",

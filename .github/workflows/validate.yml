@@ -174,13 +174,15 @@ jobs:
           npm run build
       - name: Unit tests (isolated)
         run: npm run test:isolated -- -b
+        env:
+          SERVERLESS_PLATFORM_STAGE: dev
       - name: SDK JS Unit tests (isolated)
         run: |
           cd sdk-js
           npm run test:isolated -- -b
 
-  linuxNode12:
-    name: '[Linux] Node.js 12: Unit tests with coverage'
+  linuxNode18:
+    name: '[Linux] Node.js v18: Isolated unit tests'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -194,15 +196,15 @@ jobs:
             ~/.npm
             node_modules
             sdk-js/node_modules
-          key: npm-v12-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
+          key: npm-v18-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('**package*.json') }}
           restore-keys: |
-            npm-v12-${{ runner.os }}-${{ github.ref }}-
-            npm-v12-${{ runner.os }}-refs/heads/main-
+            npm-v18-${{ runner.os }}-${{ github.ref }}-
+            npm-v18-${{ runner.os }}-refs/heads/main-
 
       - name: Install Node.js and npm
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 18.x
 
       - name: Install dependencies
         if: steps.cacheNpm.outputs.cache-hit != 'true'
@@ -214,19 +216,19 @@ jobs:
         run: |
           cd sdk-js
           npm ci
+
       # Some unit tests backed by runServerless involve SDK build
       - name: Build SDK JS
         run: |
           cd sdk-js
           npm run build
-      - name: Unit tests
-        run: npm run cover
-      - name: SDK JS Unit tests
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+      - name: Unit tests (isolated)
+        run: npm run test:isolated -- -b
+        env:
+          SERVERLESS_PLATFORM_STAGE: dev
+      - name: SDK JS Unit tests (isolated)
         run: |
           cd sdk-js
-          npm run cover
-
-      - name: Push coverage
-        run: |
-          npx codecov
-          npx codecov -p sdk-js
+          npm run test:isolated -- -b
