@@ -4,7 +4,7 @@ service: SERVICE_PLACEHOLDER
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs18.x
   region: REGION_PLACEHOLDER
 
 functions:
@@ -62,31 +62,31 @@ functions:
   # Python handlers
   pythonSuccess:
     handler: handler.success
-    runtime: python3.7
+    runtime: python3.9
   pythonError:
     handler: handler.error
-    runtime: python3.7
+    runtime: python3.9
   pythonHttpError:
     handler: handler.http_error
-    runtime: python3.7
+    runtime: python3.9
   pythonEventTags:
     handler: handler.event_tags
-    runtime: python3.7
+    runtime: python3.9
   pythonSetEndpoint:
     handler: handler.set_endpoint
-    runtime: python3.7
+    runtime: python3.9
   pythonTimeout:
     handler: handler.timeout
-    runtime: python3.7
+    runtime: python3.9
   pythonSubModule:
     handler: submodule/handler.success
-    runtime: python3.7
+    runtime: python3.9
   pythonTransactionId:
     handler: handler.get_transaction_id
-    runtime: python3.8
+    runtime: python3.9
   pythonDashboardUrl:
     handler: handler.get_dashboard_url
-    runtime: python3.8
+    runtime: python3.9
     environment:
       PLATFORM_STAGE: ${env:SERVERLESS_PLATFORM_STAGE}
       ORG: ORG_PLACEHOLDER
