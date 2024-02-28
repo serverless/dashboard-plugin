@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.2.1](https://github.com/serverless/dashboard-plugin/compare/v7.2.0...v7.2.1) (2024-02-28)
+
+### Features
+
+- Add disableMonitoringSetup config ([#739](https://github.com/serverless/dashboard-plugin/issues/739)) ([792064d](https://github.com/serverless/dashboard-plugin/commit/792064d8bf831a9bacd85152858c51df32d4973a))
+
 ### [7.2.0](https://github.com/serverless/dashboard-plugin/compare/v7.1.0...v7.2.1) (2023-11-16)
 
 ### Bug Fixes
