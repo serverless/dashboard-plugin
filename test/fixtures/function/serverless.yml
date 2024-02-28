@@ -1,7 +1,7 @@
 service: some-aws-service
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs16.x
 
 org: testinteractivecli
 app: some-aws-service-app
