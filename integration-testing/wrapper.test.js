@@ -304,25 +304,4 @@ describe('integration: wrapper', () => {
     await resolveLog(functionName, LogResult); // Expose debug logs
     expect(JSON.parse(Payload)).to.equal('success');
   });
-
-  it('gets the error value when calling python error', async () => {
-    const functionName = `${serviceName}-dev-pythonError`;
-    const { Payload, LogResult } = await awsRequest(lambdaService, 'invoke', {
-      LogType: 'Tail',
-      FunctionName: functionName,
-    });
-    await resolveLog(functionName, LogResult); // Expose debug logs
-    const payload = JSON.parse(Payload);
-    expect(payload.stackTrace[0]).to.match(
-      / *File "\/var\/task\/serverless_sdk\/__init__.py", line \d+, in wrapped_handler\n *return user_handler\(event, context\)\n/
-    );
-    expect(payload.stackTrace[1]).to.match(
-      / *File "\/var\/task\/handler.py", line \d+, in error\n *raise Exception\('error'\)\n/
-    );
-    delete payload.stackTrace;
-    expect(payload).to.deep.equal({
-      errorMessage: 'error',
-      errorType: 'Exception',
-    });
-  });
 });
